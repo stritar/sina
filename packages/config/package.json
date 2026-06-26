@@ -17,7 +17,8 @@
   "scripts": {
     "lint": "echo \"(config) no lint\" && exit 0",
     "typecheck": "echo \"(config) no typecheck\" && exit 0",
-    "build": "echo \"(config) no build\" && exit 0"
+    "build": "echo \"(config) no build\" && exit 0",
+    "test": "echo \"(config) no tests\" && exit 0"
   },
   "dependencies": {
     "@eslint/js": "^9.18.0",

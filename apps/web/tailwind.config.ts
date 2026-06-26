@@ -1,8 +1,9 @@
 import type { Config } from "tailwindcss";
 
-// NOTE: once @sina-design-system/theme exposes its preset, wire it here:
-//   presets: [require("@sina-design-system/theme/tailwind")],
 const config: Config = {
+  // Tailwind loads this config via jiti; the preset is CommonJS, so require() is correct here.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  presets: [require("@sina-design-system/theme/tailwind")],
   content: [
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",

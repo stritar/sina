@@ -22,6 +22,7 @@
     "dev": "tsc -p tsconfig.json --watch",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "clean": "rimraf dist"
   },
   "dependencies": {

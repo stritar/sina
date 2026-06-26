@@ -9,6 +9,7 @@
     "start": "next start --port 3001",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "test": "echo \"(playground) no tests\" && exit 0",
     "clean": "rimraf .next"
   },
   "dependencies": {
