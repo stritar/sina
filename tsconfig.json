@@ -1,0 +1,8 @@
+{
+  "// note": "Root base config. Editors resolve this; each workspace has its own tsconfig that extends @sina-design-system/config.",
+  "extends": "./packages/config/tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "exclude": ["node_modules", "**/dist", "**/.next"]
+}
