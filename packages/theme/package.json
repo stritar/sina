@@ -13,17 +13,18 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./tailwind": "./tailwind.cjs"
+    "./tailwind": "./tailwind.cjs",
+    "./css": "./theme.css"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist", "tailwind.cjs"],
+  "files": ["dist", "tailwind.cjs", "theme.css"],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "echo \"(theme) no tests\" && exit 0",
+    "test": "vitest run",
     "clean": "rimraf dist"
   },
   "peerDependencies": {

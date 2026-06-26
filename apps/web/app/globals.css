@@ -1,3 +1,12 @@
+/* SINA design tokens (--sina-* CSS variables). Must precede @tailwind. */
+@import "@sina-design-system/theme/css";
+
+/* Point the SINA font tokens at the next/font self-hosted faces (see layout.tsx). */
+:root {
+  --sina-font--sans: var(--font-rubik), ui-sans-serif, system-ui, sans-serif;
+  --sina-font--mono: var(--font-ibm-plex-mono), ui-monospace, monospace;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

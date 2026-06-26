@@ -1,0 +1,317 @@
+/**
+ * SINA design tokens — the runtime source of truth.
+ *
+ * Every value lives here as a `--sina-*` CSS custom property; the Tailwind preset
+ * (`tailwind.cjs`) maps utilities onto these vars, so changing one line here
+ * propagates to every app and every utility. No React, no JS — tokens only.
+ *
+ * Conventions:
+ *   - `--sina-` prefix on every token.
+ *   - Scale steps are MODIFIERS joined by a double dash: `--sina-space--4`,
+ *     `--sina-text--xl`, `--sina-radius--lg`, `--sina-size--xl`.
+ *   - Semantic roles use single-dash role names: `--sina-color-text-muted`.
+ *   - Colors are stored as space-separated RGB CHANNELS so Tailwind opacity
+ *     modifiers work: `rgb(var(--sina-color-primary) / <alpha-value>)`.
+ *
+ * Apps consume this via `@import "@sina-design-system/theme/css";`.
+ */
+
+:root {
+  /* ===================================================================== */
+  /* Color primitives — RGB channels                                       */
+  /* ===================================================================== */
+
+  /* Neutral (warm sage) — the workhorse ramp, anchored on the Figma frame */
+  --sina-color-neutral--50: 245 246 244;
+  --sina-color-neutral--100: 233 236 232;
+  --sina-color-neutral--200: 221 224 217;
+  --sina-color-neutral--300: 203 208 197;
+  --sina-color-neutral--400: 167 173 160;
+  --sina-color-neutral--500: 132 137 126;
+  --sina-color-neutral--600: 105 108 102;
+  --sina-color-neutral--700: 82 86 78;
+  --sina-color-neutral--800: 67 72 65;
+  --sina-color-neutral--900: 53 59 49;
+  --sina-color-neutral--950: 33 37 30;
+
+  /* Brand (sage green) — brand--700 is the primary action color (#353b31)  */
+  --sina-color-brand--50: 238 241 236;
+  --sina-color-brand--100: 217 224 212;
+  --sina-color-brand--200: 185 196 177;
+  --sina-color-brand--300: 148 163 137;
+  --sina-color-brand--400: 111 126 99;
+  --sina-color-brand--500: 84 95 73;
+  --sina-color-brand--600: 68 77 59;
+  --sina-color-brand--700: 53 59 49;
+  --sina-color-brand--800: 43 48 40;
+  --sina-color-brand--900: 33 37 30;
+  --sina-color-brand--950: 22 25 19;
+
+  /* Danger — seeded on the Figma error color (#c64c35 = step 500)          */
+  --sina-color-danger--50: 251 238 235;
+  --sina-color-danger--100: 245 216 209;
+  --sina-color-danger--200: 234 179 167;
+  --sina-color-danger--300: 222 139 121;
+  --sina-color-danger--400: 210 106 83;
+  --sina-color-danger--500: 198 76 53;
+  --sina-color-danger--600: 168 62 42;
+  --sina-color-danger--700: 136 49 33;
+  --sina-color-danger--800: 107 39 26;
+  --sina-color-danger--900: 79 29 19;
+
+  /* Success — muted green (derived; pending design sign-off)               */
+  --sina-color-success--50: 236 245 239;
+  --sina-color-success--100: 211 232 218;
+  --sina-color-success--200: 168 210 182;
+  --sina-color-success--300: 116 180 137;
+  --sina-color-success--400: 79 153 104;
+  --sina-color-success--500: 63 138 82;
+  --sina-color-success--600: 47 122 69;
+  --sina-color-success--700: 38 98 57;
+  --sina-color-success--800: 31 78 47;
+  --sina-color-success--900: 25 61 38;
+
+  /* Warning — muted amber (derived)                                        */
+  --sina-color-warning--50: 250 243 230;
+  --sina-color-warning--100: 244 228 196;
+  --sina-color-warning--200: 234 201 138;
+  --sina-color-warning--300: 222 170 80;
+  --sina-color-warning--400: 201 138 26;
+  --sina-color-warning--500: 184 121 31;
+  --sina-color-warning--600: 152 99 24;
+  --sina-color-warning--700: 120 77 20;
+  --sina-color-warning--800: 94 60 18;
+  --sina-color-warning--900: 74 47 15;
+
+  /* Info — muted slate-blue (derived)                                      */
+  --sina-color-info--50: 235 241 248;
+  --sina-color-info--100: 211 226 240;
+  --sina-color-info--200: 168 199 224;
+  --sina-color-info--300: 117 165 203;
+  --sina-color-info--400: 71 130 173;
+  --sina-color-info--500: 54 100 143;
+  --sina-color-info--600: 44 82 118;
+  --sina-color-info--700: 36 66 95;
+  --sina-color-info--800: 30 53 75;
+  --sina-color-info--900: 25 43 60;
+
+  /* ===================================================================== */
+  /* Color — semantic roles (LIGHT). Components reference these, not ramps. */
+  /* ===================================================================== */
+
+  /* Surfaces */
+  --sina-color-bg: 245 246 244; /* neutral--50  — page background        */
+  --sina-color-surface: 255 255 255; /* cards, panels                    */
+  --sina-color-surface-raised: 255 255 255; /* popovers, dialogs          */
+  --sina-color-surface-sunken: 245 246 244; /* wells, code blocks         */
+
+  /* Text */
+  --sina-color-text: 53 59 49; /* neutral--900 — headings & body         */
+  --sina-color-text-muted: 105 108 102; /* neutral--600 — secondary text  */
+  --sina-color-text-subtle: 167 173 160; /* neutral--400 — placeholders   */
+  --sina-color-text-inverse: 255 255 255; /* text on dark surfaces        */
+
+  /* Borders */
+  --sina-color-border: 221 224 217; /* neutral--200                       */
+  --sina-color-border-subtle: 237 239 235; /* hairlines (#edefeb)         */
+
+  /* Actions */
+  --sina-color-primary: 53 59 49; /* brand--700                           */
+  --sina-color-primary-hover: 68 77 59; /* brand--600                     */
+  --sina-color-primary-fg: 255 255 255;
+  --sina-color-secondary: 229 231 226; /* #e5e7e2                         */
+  --sina-color-secondary-hover: 221 224 217;
+  --sina-color-secondary-fg: 53 59 49;
+
+  /* Status */
+  --sina-color-danger: 198 76 53;
+  --sina-color-danger-fg: 255 255 255;
+  --sina-color-danger-bg: 251 238 235;
+  --sina-color-success: 47 122 69;
+  --sina-color-success-fg: 255 255 255;
+  --sina-color-success-bg: 236 245 239;
+  --sina-color-warning: 184 121 31;
+  --sina-color-warning-fg: 33 37 30;
+  --sina-color-warning-bg: 250 243 230;
+  --sina-color-info: 54 100 143;
+  --sina-color-info-fg: 255 255 255;
+  --sina-color-info-bg: 235 241 248;
+
+  /* Accessibility */
+  --sina-color-focus-ring: 84 95 73; /* brand--500 — focus-visible ring   */
+
+  /* Governance-flavored aliases (ROADMAP §1) — semantic, not new colors   */
+  --sina-color-intent-danger: var(--sina-color-danger);
+  --sina-color-intent-safe: var(--sina-color-success);
+  --sina-color-surface-secure: 238 241 236; /* brand--50 tinted surface    */
+
+  /* ===================================================================== */
+  /* Typography                                                            */
+  /* ===================================================================== */
+  --sina-font--sans:
+    "Rubik", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --sina-font--mono:
+    "IBM Plex Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  /* Font size — t-shirt scale (rem on a 16px base) */
+  --sina-text--xs: 0.75rem; /* 12 */
+  --sina-text--sm: 0.875rem; /* 14 */
+  --sina-text--base: 1rem; /* 16 */
+  --sina-text--lg: 1.125rem; /* 18 */
+  --sina-text--xl: 1.25rem; /* 20 */
+  --sina-text--2xl: 1.5rem; /* 24 */
+  --sina-text--3xl: 1.875rem; /* 30 */
+  --sina-text--4xl: 2.25rem; /* 36 */
+  --sina-text--5xl: 2.5rem; /* 40 — Figma hero */
+
+  /* Font weight */
+  --sina-font-weight--regular: 400;
+  --sina-font-weight--medium: 500;
+  --sina-font-weight--semibold: 600;
+  --sina-font-weight--bold: 700;
+
+  /* Line height */
+  --sina-leading--none: 1;
+  --sina-leading--tight: 1.1;
+  --sina-leading--snug: 1.3;
+  --sina-leading--normal: 1.5;
+  --sina-leading--relaxed: 1.7;
+
+  /* Letter spacing */
+  --sina-tracking--tight: -0.01em;
+  --sina-tracking--normal: 0em;
+  --sina-tracking--wide: 0.02em;
+
+  /* ===================================================================== */
+  /* Spacing — 8pt grid (4px base). step N = N x 4px.                      */
+  /* ===================================================================== */
+  --sina-space--0: 0rem;
+  --sina-space--1: 0.25rem; /* 4  */
+  --sina-space--2: 0.5rem; /* 8  */
+  --sina-space--3: 0.75rem; /* 12 */
+  --sina-space--4: 1rem; /* 16 */
+  --sina-space--5: 1.25rem; /* 20 */
+  --sina-space--6: 1.5rem; /* 24 */
+  --sina-space--8: 2rem; /* 32 */
+  --sina-space--10: 2.5rem; /* 40 */
+  --sina-space--12: 3rem; /* 48 */
+  --sina-space--16: 4rem; /* 64 */
+  --sina-space--20: 5rem; /* 80 */
+  --sina-space--24: 6rem; /* 96 */
+
+  /* ===================================================================== */
+  /* Radius — t-shirt                                                      */
+  /* ===================================================================== */
+  --sina-radius--none: 0px;
+  --sina-radius--xs: 2px;
+  --sina-radius--sm: 4px;
+  --sina-radius--md: 6px;
+  --sina-radius--lg: 8px; /* default control radius (Figma) */
+  --sina-radius--xl: 12px;
+  --sina-radius--2xl: 16px;
+  --sina-radius--full: 9999px;
+
+  /* ===================================================================== */
+  /* Size — control heights / icon dims (t-shirt)                         */
+  /* ===================================================================== */
+  --sina-size--xs: 1rem; /* 16 — icon          */
+  --sina-size--sm: 1.5rem; /* 24 — small control */
+  --sina-size--md: 2rem; /* 32 — control       */
+  --sina-size--lg: 2.5rem; /* 40 — button (Figma)*/
+  --sina-size--xl: 3rem; /* 48 — large control  */
+
+  /* ===================================================================== */
+  /* Shadow — composed from the Figma shadow color (#383e33)              */
+  /* ===================================================================== */
+  --sina-shadow-color: 56 62 51;
+  --sina-shadow--xs: 0 1px 2px rgb(var(--sina-shadow-color) / 0.06);
+  --sina-shadow--sm:
+    0 1px 3px rgb(var(--sina-shadow-color) / 0.08),
+    0 1px 2px rgb(var(--sina-shadow-color) / 0.06);
+  --sina-shadow--md:
+    0 4px 8px rgb(var(--sina-shadow-color) / 0.08),
+    0 2px 4px rgb(var(--sina-shadow-color) / 0.06);
+  --sina-shadow--lg:
+    0 12px 24px rgb(var(--sina-shadow-color) / 0.1),
+    0 4px 8px rgb(var(--sina-shadow-color) / 0.06);
+  --sina-shadow--xl:
+    0 30px 60px rgb(var(--sina-shadow-color) / 0.15),
+    0 50px 100px rgb(var(--sina-shadow-color) / 0.12); /* Figma card */
+  --sina-shadow--focus: 0 0 0 3px rgb(var(--sina-color-focus-ring) / 0.45);
+
+  /* ===================================================================== */
+  /* Z-index                                                               */
+  /* ===================================================================== */
+  --sina-z--base: 0;
+  --sina-z--dropdown: 1000;
+  --sina-z--overlay: 1300;
+  --sina-z--modal: 1400;
+  --sina-z--toast: 1600;
+
+  /* ===================================================================== */
+  /* Motion                                                                */
+  /* ===================================================================== */
+  --sina-duration--fast: 120ms;
+  --sina-duration--base: 200ms;
+  --sina-duration--slow: 320ms;
+  --sina-ease--standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ======================================================================= */
+/* Dark theme hook — scaffolded. Overrides SEMANTIC ROLES only (ramps are  */
+/* constant). Values mirror light for now; real dark palette is a later    */
+/* value-only change, no refactor.                                         */
+/* ======================================================================= */
+.dark,
+[data-theme="dark"] {
+  --sina-color-bg: 33 37 30; /* neutral--950 */
+  --sina-color-surface: 53 59 49; /* neutral--900 */
+  --sina-color-surface-raised: 67 72 65; /* neutral--800 */
+  --sina-color-surface-sunken: 33 37 30;
+
+  --sina-color-text: 245 246 244; /* neutral--50  */
+  --sina-color-text-muted: 167 173 160; /* neutral--400 */
+  --sina-color-text-subtle: 132 137 126; /* neutral--500 */
+  --sina-color-text-inverse: 53 59 49;
+
+  --sina-color-border: 67 72 65; /* neutral--800 */
+  --sina-color-border-subtle: 82 86 78; /* neutral--700 */
+
+  --sina-color-primary: 185 196 177; /* brand--200 */
+  --sina-color-primary-hover: 148 163 137; /* brand--300 */
+  --sina-color-primary-fg: 33 37 30;
+  --sina-color-secondary: 67 72 65;
+  --sina-color-secondary-hover: 82 86 78;
+  --sina-color-secondary-fg: 245 246 244;
+
+  --sina-color-danger-bg: 79 29 19;
+  --sina-color-success-bg: 25 61 38;
+  --sina-color-warning-bg: 74 47 15;
+  --sina-color-info-bg: 25 43 60;
+
+  --sina-color-focus-ring: 148 163 137; /* brand--300 */
+  --sina-color-surface-secure: 43 48 40; /* brand--800 */
+}
+
+/* Respect reduced-motion at the token layer. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --sina-duration--fast: 0ms;
+    --sina-duration--base: 0ms;
+    --sina-duration--slow: 0ms;
+  }
+}
+
+/*
+ * Base styles: apps inherit the SINA look without re-declaring it. Kept as a
+ * plain element selector (not @layer) so this file stays valid standalone when
+ * @import'd above the host app's @tailwind directives; utility classes still
+ * override it on specificity.
+ */
+body {
+  background-color: rgb(var(--sina-color-bg));
+  color: rgb(var(--sina-color-text));
+  font-family: var(--sina-font--sans);
+}

@@ -1,8 +1,9 @@
 /**
  * @sina-design-system/theme
  *
- * Design tokens for SINA: Tailwind presets and foundational CSS variables.
- * Scaffold stub — tokens land here in the next step (pending design sign-off).
+ * Design tokens for SINA: Tailwind preset (`@sina-design-system/theme/tailwind`),
+ * foundational CSS variables (`@sina-design-system/theme/css`), and the typed
+ * token surface re-exported below. No React — tokens only.
  */
 
-export {};
+export * from "./tokens.js";
