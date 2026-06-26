@@ -10,16 +10,23 @@
  * AI agent can reach for an off-system `bg-red-500` or `p-7`. Tailwind's
  * structural utilities (flex/grid/position/…) are left untouched.
  *
- * Colors are consumed via `rgb(var(--sina-*) / <alpha-value>)` so opacity
- * modifiers (`bg-primary/50`) keep working. Authored as CommonJS on purpose:
- * Tailwind loads this via require()/jiti, and the package's tsc build emits ESM —
- * keeping the preset out of the TS build graph makes it load deterministically.
+ * Tokens are authored in hex (`#rrggbb`). To keep Tailwind opacity modifiers
+ * (`bg-primary/50`) working, colors are consumed via
+ * `color-mix(in srgb, var(--sina-*) calc(<alpha-value> * 100%), transparent)` —
+ * Tailwind substitutes `1` when no modifier is present (full color) and the
+ * fraction otherwise. Authored as CommonJS on purpose: Tailwind loads this via
+ * require()/jiti, and the package's tsc build emits ESM — keeping the preset out
+ * of the TS build graph makes it load deterministically.
  *
  * @type {import("tailwindcss").Config}
  */
 
-/** Build a color value that supports Tailwind's `<alpha-value>` opacity modifier. */
-const c = (name) => `rgb(var(${name}) / <alpha-value>)`;
+/** Wrap any color so it honors Tailwind's `<alpha-value>` opacity modifier. */
+const mix = (color) =>
+  `color-mix(in srgb, ${color} calc(<alpha-value> * 100%), transparent)`;
+
+/** Build a color value from a `--sina-*` custom property. */
+const c = (name) => mix(`var(${name})`);
 
 const ramp = (base) =>
   [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950].reduce((acc, step) => {
@@ -40,8 +47,8 @@ module.exports = {
       transparent: "transparent",
       current: "currentColor",
       inherit: "inherit",
-      white: "rgb(255 255 255 / <alpha-value>)",
-      black: "rgb(0 0 0 / <alpha-value>)",
+      white: mix("#ffffff"),
+      black: mix("#000000"),
 
       // Primitive ramps
       neutral: ramp("neutral"),

@@ -37,16 +37,41 @@ describe("token drift — css ↔ tailwind preset", () => {
 });
 
 /* ----------------------------------------------------------------------- */
+/* Hex authoring rule — colors are written in hex, never channels/rgb/named */
+/* (CLAUDE.md "Conventions"). Opacity comes from the preset's color-mix.    */
+/* ----------------------------------------------------------------------- */
+
+describe("color tokens are authored in hex", () => {
+  it("every literal --sina-color-* / --sina-shadow-color value is #rrggbb(aa)", () => {
+    const offenders = [
+      ...themeCss.matchAll(
+        /(--sina-(?:color-[\w-]+|shadow-color))\s*:\s*([^;]+);/g,
+      ),
+    ]
+      .map(([, name, value]) => ({ name, value: value.trim() }))
+      .filter(({ value }) => !value.startsWith("var(")) // aliases are references
+      .filter(({ value }) => !/^#([0-9a-f]{6}|[0-9a-f]{8})$/i.test(value));
+
+    expect(offenders).toEqual([]);
+  });
+});
+
+/* ----------------------------------------------------------------------- */
 /* WCAG 2.2 contrast — honoring the "Enforcing: WCAG-2.2" promise.         */
 /* ----------------------------------------------------------------------- */
 
-/** Read a semantic color role's RGB channels from theme.css (`r g b`). */
+/** Read a semantic color role's RGB channels from theme.css (`#rrggbb`). */
 function channels(role: string): [number, number, number] {
   const m = themeCss.match(
-    new RegExp(`--sina-color-${role}:\\s*(\\d+)\\s+(\\d+)\\s+(\\d+)\\s*;`),
+    new RegExp(`--sina-color-${role}:\\s*#([0-9a-fA-F]{6})\\b`),
   );
-  if (!m) throw new Error(`no literal channels for --sina-color-${role}`);
-  return [Number(m[1]), Number(m[2]), Number(m[3])];
+  if (!m) throw new Error(`no literal hex for --sina-color-${role}`);
+  const hex = m[1];
+  return [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16)) as [
+    number,
+    number,
+    number,
+  ];
 }
 
 /** Relative luminance per WCAG 2.x. */

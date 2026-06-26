@@ -10,140 +10,140 @@
  *   - Scale steps are MODIFIERS joined by a double dash: `--sina-space--4`,
  *     `--sina-text--xl`, `--sina-radius--lg`, `--sina-size--xl`.
  *   - Semantic roles use single-dash role names: `--sina-color-text-muted`.
- *   - Colors are stored as space-separated RGB CHANNELS so Tailwind opacity
- *     modifiers work: `rgb(var(--sina-color-primary) / <alpha-value>)`.
+ *   - Colors are authored in HEX (`#rrggbb`). Opacity is provided by the Tailwind
+ *     preset's `color-mix()` wrapper, so modifiers still work: `bg-primary/50`.
  *
  * Apps consume this via `@import "@sina-design-system/theme/css";`.
  */
 
 :root {
   /* ===================================================================== */
-  /* Color primitives — RGB channels                                       */
+  /* Color primitives — hex                                                */
   /* ===================================================================== */
 
   /* Neutral (warm sage) — the workhorse ramp, anchored on the Figma frame */
-  --sina-color-neutral--50: 245 246 244;
-  --sina-color-neutral--100: 233 236 232;
-  --sina-color-neutral--200: 221 224 217;
-  --sina-color-neutral--300: 203 208 197;
-  --sina-color-neutral--400: 167 173 160;
-  --sina-color-neutral--500: 132 137 126;
-  --sina-color-neutral--600: 105 108 102;
-  --sina-color-neutral--700: 82 86 78;
-  --sina-color-neutral--800: 67 72 65;
-  --sina-color-neutral--900: 53 59 49;
-  --sina-color-neutral--950: 33 37 30;
+  --sina-color-neutral--50: #f5f6f4;
+  --sina-color-neutral--100: #e9ece8;
+  --sina-color-neutral--200: #dde0d9;
+  --sina-color-neutral--300: #cbd0c5;
+  --sina-color-neutral--400: #a7ada0;
+  --sina-color-neutral--500: #84897e;
+  --sina-color-neutral--600: #696c66;
+  --sina-color-neutral--700: #52564e;
+  --sina-color-neutral--800: #434841;
+  --sina-color-neutral--900: #353b31;
+  --sina-color-neutral--950: #21251e;
 
-  /* Brand (sage green) — brand--700 is the primary action color (#353b31)  */
-  --sina-color-brand--50: 238 241 236;
-  --sina-color-brand--100: 217 224 212;
-  --sina-color-brand--200: 185 196 177;
-  --sina-color-brand--300: 148 163 137;
-  --sina-color-brand--400: 111 126 99;
-  --sina-color-brand--500: 84 95 73;
-  --sina-color-brand--600: 68 77 59;
-  --sina-color-brand--700: 53 59 49;
-  --sina-color-brand--800: 43 48 40;
-  --sina-color-brand--900: 33 37 30;
-  --sina-color-brand--950: 22 25 19;
+  /* Brand (sage green) — brand--700 is the primary action color           */
+  --sina-color-brand--50: #eef1ec;
+  --sina-color-brand--100: #d9e0d4;
+  --sina-color-brand--200: #b9c4b1;
+  --sina-color-brand--300: #94a389;
+  --sina-color-brand--400: #6f7e63;
+  --sina-color-brand--500: #545f49;
+  --sina-color-brand--600: #444d3b;
+  --sina-color-brand--700: #353b31;
+  --sina-color-brand--800: #2b3028;
+  --sina-color-brand--900: #21251e;
+  --sina-color-brand--950: #161913;
 
-  /* Danger — seeded on the Figma error color (#c64c35 = step 500)          */
-  --sina-color-danger--50: 251 238 235;
-  --sina-color-danger--100: 245 216 209;
-  --sina-color-danger--200: 234 179 167;
-  --sina-color-danger--300: 222 139 121;
-  --sina-color-danger--400: 210 106 83;
-  --sina-color-danger--500: 198 76 53;
-  --sina-color-danger--600: 168 62 42;
-  --sina-color-danger--700: 136 49 33;
-  --sina-color-danger--800: 107 39 26;
-  --sina-color-danger--900: 79 29 19;
+  /* Danger — seeded on the Figma error color (step 500)                   */
+  --sina-color-danger--50: #fbeeeb;
+  --sina-color-danger--100: #f5d8d1;
+  --sina-color-danger--200: #eab3a7;
+  --sina-color-danger--300: #de8b79;
+  --sina-color-danger--400: #d26a53;
+  --sina-color-danger--500: #c64c35;
+  --sina-color-danger--600: #a83e2a;
+  --sina-color-danger--700: #883121;
+  --sina-color-danger--800: #6b271a;
+  --sina-color-danger--900: #4f1d13;
 
   /* Success — muted green (derived; pending design sign-off)               */
-  --sina-color-success--50: 236 245 239;
-  --sina-color-success--100: 211 232 218;
-  --sina-color-success--200: 168 210 182;
-  --sina-color-success--300: 116 180 137;
-  --sina-color-success--400: 79 153 104;
-  --sina-color-success--500: 63 138 82;
-  --sina-color-success--600: 47 122 69;
-  --sina-color-success--700: 38 98 57;
-  --sina-color-success--800: 31 78 47;
-  --sina-color-success--900: 25 61 38;
+  --sina-color-success--50: #ecf5ef;
+  --sina-color-success--100: #d3e8da;
+  --sina-color-success--200: #a8d2b6;
+  --sina-color-success--300: #74b489;
+  --sina-color-success--400: #4f9968;
+  --sina-color-success--500: #3f8a52;
+  --sina-color-success--600: #2f7a45;
+  --sina-color-success--700: #266239;
+  --sina-color-success--800: #1f4e2f;
+  --sina-color-success--900: #193d26;
 
   /* Warning — muted amber (derived)                                        */
-  --sina-color-warning--50: 250 243 230;
-  --sina-color-warning--100: 244 228 196;
-  --sina-color-warning--200: 234 201 138;
-  --sina-color-warning--300: 222 170 80;
-  --sina-color-warning--400: 201 138 26;
-  --sina-color-warning--500: 184 121 31;
-  --sina-color-warning--600: 152 99 24;
-  --sina-color-warning--700: 120 77 20;
-  --sina-color-warning--800: 94 60 18;
-  --sina-color-warning--900: 74 47 15;
+  --sina-color-warning--50: #faf3e6;
+  --sina-color-warning--100: #f4e4c4;
+  --sina-color-warning--200: #eac98a;
+  --sina-color-warning--300: #deaa50;
+  --sina-color-warning--400: #c98a1a;
+  --sina-color-warning--500: #b8791f;
+  --sina-color-warning--600: #986318;
+  --sina-color-warning--700: #784d14;
+  --sina-color-warning--800: #5e3c12;
+  --sina-color-warning--900: #4a2f0f;
 
   /* Info — muted slate-blue (derived)                                      */
-  --sina-color-info--50: 235 241 248;
-  --sina-color-info--100: 211 226 240;
-  --sina-color-info--200: 168 199 224;
-  --sina-color-info--300: 117 165 203;
-  --sina-color-info--400: 71 130 173;
-  --sina-color-info--500: 54 100 143;
-  --sina-color-info--600: 44 82 118;
-  --sina-color-info--700: 36 66 95;
-  --sina-color-info--800: 30 53 75;
-  --sina-color-info--900: 25 43 60;
+  --sina-color-info--50: #ebf1f8;
+  --sina-color-info--100: #d3e2f0;
+  --sina-color-info--200: #a8c7e0;
+  --sina-color-info--300: #75a5cb;
+  --sina-color-info--400: #4782ad;
+  --sina-color-info--500: #36648f;
+  --sina-color-info--600: #2c5276;
+  --sina-color-info--700: #24425f;
+  --sina-color-info--800: #1e354b;
+  --sina-color-info--900: #192b3c;
 
   /* ===================================================================== */
   /* Color — semantic roles (LIGHT). Components reference these, not ramps. */
   /* ===================================================================== */
 
   /* Surfaces */
-  --sina-color-bg: 245 246 244; /* neutral--50  — page background        */
-  --sina-color-surface: 255 255 255; /* cards, panels                    */
-  --sina-color-surface-raised: 255 255 255; /* popovers, dialogs          */
-  --sina-color-surface-sunken: 245 246 244; /* wells, code blocks         */
+  --sina-color-bg: #f5f6f4; /* neutral--50  — page background            */
+  --sina-color-surface: #ffffff; /* cards, panels                        */
+  --sina-color-surface-raised: #ffffff; /* popovers, dialogs              */
+  --sina-color-surface-sunken: #f5f6f4; /* wells, code blocks             */
 
   /* Text */
-  --sina-color-text: 53 59 49; /* neutral--900 — headings & body         */
-  --sina-color-text-muted: 105 108 102; /* neutral--600 — secondary text  */
-  --sina-color-text-subtle: 167 173 160; /* neutral--400 — placeholders   */
-  --sina-color-text-inverse: 255 255 255; /* text on dark surfaces        */
+  --sina-color-text: #353b31; /* neutral--900 — headings & body           */
+  --sina-color-text-muted: #696c66; /* neutral--600 — secondary text      */
+  --sina-color-text-subtle: #a7ada0; /* neutral--400 — placeholders       */
+  --sina-color-text-inverse: #ffffff; /* text on dark surfaces            */
 
   /* Borders */
-  --sina-color-border: 221 224 217; /* neutral--200                       */
-  --sina-color-border-subtle: 237 239 235; /* hairlines (#edefeb)         */
+  --sina-color-border: #dde0d9; /* neutral--200                           */
+  --sina-color-border-subtle: #edefeb; /* hairlines                       */
 
   /* Actions */
-  --sina-color-primary: 53 59 49; /* brand--700                           */
-  --sina-color-primary-hover: 68 77 59; /* brand--600                     */
-  --sina-color-primary-fg: 255 255 255;
-  --sina-color-secondary: 229 231 226; /* #e5e7e2                         */
-  --sina-color-secondary-hover: 221 224 217;
-  --sina-color-secondary-fg: 53 59 49;
+  --sina-color-primary: #353b31; /* brand--700                            */
+  --sina-color-primary-hover: #444d3b; /* brand--600                      */
+  --sina-color-primary-fg: #ffffff;
+  --sina-color-secondary: #e5e7e2;
+  --sina-color-secondary-hover: #dde0d9;
+  --sina-color-secondary-fg: #353b31;
 
   /* Status */
-  --sina-color-danger: 198 76 53;
-  --sina-color-danger-fg: 255 255 255;
-  --sina-color-danger-bg: 251 238 235;
-  --sina-color-success: 47 122 69;
-  --sina-color-success-fg: 255 255 255;
-  --sina-color-success-bg: 236 245 239;
-  --sina-color-warning: 184 121 31;
-  --sina-color-warning-fg: 33 37 30;
-  --sina-color-warning-bg: 250 243 230;
-  --sina-color-info: 54 100 143;
-  --sina-color-info-fg: 255 255 255;
-  --sina-color-info-bg: 235 241 248;
+  --sina-color-danger: #c64c35;
+  --sina-color-danger-fg: #ffffff;
+  --sina-color-danger-bg: #fbeeeb;
+  --sina-color-success: #2f7a45;
+  --sina-color-success-fg: #ffffff;
+  --sina-color-success-bg: #ecf5ef;
+  --sina-color-warning: #b8791f;
+  --sina-color-warning-fg: #21251e;
+  --sina-color-warning-bg: #faf3e6;
+  --sina-color-info: #36648f;
+  --sina-color-info-fg: #ffffff;
+  --sina-color-info-bg: #ebf1f8;
 
   /* Accessibility */
-  --sina-color-focus-ring: 84 95 73; /* brand--500 — focus-visible ring   */
+  --sina-color-focus-ring: #545f49; /* brand--500 — focus-visible ring     */
 
   /* Governance-flavored aliases (ROADMAP §1) — semantic, not new colors   */
   --sina-color-intent-danger: var(--sina-color-danger);
   --sina-color-intent-safe: var(--sina-color-success);
-  --sina-color-surface-secure: 238 241 236; /* brand--50 tinted surface    */
+  --sina-color-surface-secure: #eef1ec; /* brand--50 tinted surface        */
 
   /* ===================================================================== */
   /* Typography                                                            */
@@ -223,23 +223,27 @@
   --sina-size--xl: 3rem; /* 48 — large control  */
 
   /* ===================================================================== */
-  /* Shadow — composed from the Figma shadow color (#383e33)              */
+  /* Shadow — composed from the Figma shadow color. Alpha via color-mix     */
+  /* so the shadow color stays a single hex token.                          */
   /* ===================================================================== */
-  --sina-shadow-color: 56 62 51;
-  --sina-shadow--xs: 0 1px 2px rgb(var(--sina-shadow-color) / 0.06);
+  --sina-shadow-color: #383e33;
+  --sina-shadow--xs: 0 1px 2px
+    color-mix(in srgb, var(--sina-shadow-color) 6%, transparent);
   --sina-shadow--sm:
-    0 1px 3px rgb(var(--sina-shadow-color) / 0.08),
-    0 1px 2px rgb(var(--sina-shadow-color) / 0.06);
+    0 1px 3px color-mix(in srgb, var(--sina-shadow-color) 8%, transparent),
+    0 1px 2px color-mix(in srgb, var(--sina-shadow-color) 6%, transparent);
   --sina-shadow--md:
-    0 4px 8px rgb(var(--sina-shadow-color) / 0.08),
-    0 2px 4px rgb(var(--sina-shadow-color) / 0.06);
+    0 4px 8px color-mix(in srgb, var(--sina-shadow-color) 8%, transparent),
+    0 2px 4px color-mix(in srgb, var(--sina-shadow-color) 6%, transparent);
   --sina-shadow--lg:
-    0 12px 24px rgb(var(--sina-shadow-color) / 0.1),
-    0 4px 8px rgb(var(--sina-shadow-color) / 0.06);
+    0 12px 24px color-mix(in srgb, var(--sina-shadow-color) 10%, transparent),
+    0 4px 8px color-mix(in srgb, var(--sina-shadow-color) 6%, transparent);
   --sina-shadow--xl:
-    0 30px 60px rgb(var(--sina-shadow-color) / 0.15),
-    0 50px 100px rgb(var(--sina-shadow-color) / 0.12); /* Figma card */
-  --sina-shadow--focus: 0 0 0 3px rgb(var(--sina-color-focus-ring) / 0.45);
+    0 30px 60px color-mix(in srgb, var(--sina-shadow-color) 15%, transparent),
+    0 50px 100px
+      color-mix(in srgb, var(--sina-shadow-color) 12%, transparent); /* Figma card */
+  --sina-shadow--focus: 0 0 0 3px
+    color-mix(in srgb, var(--sina-color-focus-ring) 45%, transparent);
 
   /* ===================================================================== */
   /* Z-index                                                               */
@@ -266,33 +270,33 @@
 /* ======================================================================= */
 .dark,
 [data-theme="dark"] {
-  --sina-color-bg: 33 37 30; /* neutral--950 */
-  --sina-color-surface: 53 59 49; /* neutral--900 */
-  --sina-color-surface-raised: 67 72 65; /* neutral--800 */
-  --sina-color-surface-sunken: 33 37 30;
+  --sina-color-bg: #21251e; /* neutral--950 */
+  --sina-color-surface: #353b31; /* neutral--900 */
+  --sina-color-surface-raised: #434841; /* neutral--800 */
+  --sina-color-surface-sunken: #21251e;
 
-  --sina-color-text: 245 246 244; /* neutral--50  */
-  --sina-color-text-muted: 167 173 160; /* neutral--400 */
-  --sina-color-text-subtle: 132 137 126; /* neutral--500 */
-  --sina-color-text-inverse: 53 59 49;
+  --sina-color-text: #f5f6f4; /* neutral--50  */
+  --sina-color-text-muted: #a7ada0; /* neutral--400 */
+  --sina-color-text-subtle: #84897e; /* neutral--500 */
+  --sina-color-text-inverse: #353b31;
 
-  --sina-color-border: 67 72 65; /* neutral--800 */
-  --sina-color-border-subtle: 82 86 78; /* neutral--700 */
+  --sina-color-border: #434841; /* neutral--800 */
+  --sina-color-border-subtle: #52564e; /* neutral--700 */
 
-  --sina-color-primary: 185 196 177; /* brand--200 */
-  --sina-color-primary-hover: 148 163 137; /* brand--300 */
-  --sina-color-primary-fg: 33 37 30;
-  --sina-color-secondary: 67 72 65;
-  --sina-color-secondary-hover: 82 86 78;
-  --sina-color-secondary-fg: 245 246 244;
+  --sina-color-primary: #b9c4b1; /* brand--200 */
+  --sina-color-primary-hover: #94a389; /* brand--300 */
+  --sina-color-primary-fg: #21251e;
+  --sina-color-secondary: #434841;
+  --sina-color-secondary-hover: #52564e;
+  --sina-color-secondary-fg: #f5f6f4;
 
-  --sina-color-danger-bg: 79 29 19;
-  --sina-color-success-bg: 25 61 38;
-  --sina-color-warning-bg: 74 47 15;
-  --sina-color-info-bg: 25 43 60;
+  --sina-color-danger-bg: #4f1d13;
+  --sina-color-success-bg: #193d26;
+  --sina-color-warning-bg: #4a2f0f;
+  --sina-color-info-bg: #192b3c;
 
-  --sina-color-focus-ring: 148 163 137; /* brand--300 */
-  --sina-color-surface-secure: 43 48 40; /* brand--800 */
+  --sina-color-focus-ring: #94a389; /* brand--300 */
+  --sina-color-surface-secure: #2b3028; /* brand--800 */
 }
 
 /* Respect reduced-motion at the token layer. */
@@ -311,7 +315,7 @@
  * override it on specificity.
  */
 body {
-  background-color: rgb(var(--sina-color-bg));
-  color: rgb(var(--sina-color-text));
+  background-color: var(--sina-color-bg);
+  color: var(--sina-color-text);
   font-family: var(--sina-font--sans);
 }

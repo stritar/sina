@@ -23,6 +23,7 @@ These mirror the per-package ESLint `no-restricted-imports` messages, so the age
 - **Naming:** libraries are scoped `@sina-design-system/*`; apps are bare (`web`, `playground`).
 - **Layout:** `src/index.ts` is the public surface (named exports only — no default exports for library code); tests co-located as `src/**/*.test.ts(x)`; ESM (`"type": "module"`), `sideEffects: false`, built via `tsc` → `dist/`, `exports` map points at `dist`.
 - **Stub/banner style:** every `src/index.ts` opens with a block comment naming the package and its boundary; match the existing stubs when adding files.
+- **Colors are authored in hex only** (`#rrggbb`, or `#rrggbbaa` for baked-in alpha) in `packages/theme/theme.css` — never RGB channels, `rgb()/hsl()/oklch()`, or named colors. Opacity comes from the Tailwind preset's `color-mix()` wrapper (so `bg-primary/50` works) or an explicit `color-mix(...)` for one-off translucency (see the shadow tokens). A vitest guard in `packages/theme/src/tokens.test.ts` fails the build on any non-hex color token.
 - **The a11y bar** — every `core` primitive must meet **all four**: focus-trap + correct ARIA + full keyboard operability + **automated `axe` (jest-axe) pass**. Tests reuse core's `vitest.config.ts` (jsdom) and `vitest.setup.ts` (`toHaveNoViolations` already registered).
 
 ## Contracts
