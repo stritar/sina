@@ -22,5 +22,19 @@
       "WebFetch(domain:registry.npmjs.org)",
       "Bash(pnpm install *)"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/post-edit-check.mjs\"",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
   }
 }
