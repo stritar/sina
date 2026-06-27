@@ -1,0 +1,115 @@
+/**
+ * @sina-design-system/core — Select
+ *
+ * Single-select listbox on Radix Select, styled via theme tokens. Ships as a set
+ * of named exports: Select (root) / SelectTrigger / SelectValue / SelectContent /
+ * SelectItem / SelectGroup / SelectLabel / SelectSeparator. Radix provides
+ * typeahead, arrow-key navigation, and `aria-activedescendant`.
+ *
+ * Exported individually (not as one object) so each is its own client reference
+ * — a single object export from a "use client" module loses deep property access
+ * across the RSC server/client boundary. Domain-agnostic — option contents
+ * (accounts, etc.) are the caller's concern.
+ */
+"use client";
+
+import { Select as Primitive } from "radix-ui";
+import { Check, ChevronDown } from "lucide-react";
+import { forwardRef } from "react";
+import type { ComponentPropsWithoutRef, ComponentRef } from "react";
+import { cn } from "../utils/cn.js";
+
+export const Select = Primitive.Root;
+export const SelectValue = Primitive.Value;
+export const SelectGroup = Primitive.Group;
+
+export const SelectTrigger = forwardRef<
+  ComponentRef<typeof Primitive.Trigger>,
+  ComponentPropsWithoutRef<typeof Primitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <Primitive.Trigger
+    ref={ref}
+    className={cn(
+      "inline-flex h-10 w-full items-center justify-between gap-2 rounded-lg border border-border bg-surface px-3 text-sm text-text",
+      "data-[placeholder]:text-text-subtle transition-colors duration-fast ease-standard",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+      "disabled:cursor-not-allowed disabled:opacity-50",
+      className,
+    )}
+    {...props}
+  >
+    {children}
+    <Primitive.Icon asChild>
+      <ChevronDown aria-hidden className="size-control-xs text-text-muted" />
+    </Primitive.Icon>
+  </Primitive.Trigger>
+));
+SelectTrigger.displayName = "SelectTrigger";
+
+export const SelectContent = forwardRef<
+  ComponentRef<typeof Primitive.Content>,
+  ComponentPropsWithoutRef<typeof Primitive.Content>
+>(({ className, children, position = "popper", ...props }, ref) => (
+  <Primitive.Portal>
+    <Primitive.Content
+      ref={ref}
+      position={position}
+      className={cn(
+        "z-dropdown overflow-hidden rounded-lg border border-border bg-surface-raised shadow-lg",
+        className,
+      )}
+      {...props}
+    >
+      <Primitive.Viewport
+        className={cn("p-1", position === "popper" && "w-[var(--radix-select-trigger-width)]")}
+      >
+        {children}
+      </Primitive.Viewport>
+    </Primitive.Content>
+  </Primitive.Portal>
+));
+SelectContent.displayName = "SelectContent";
+
+export const SelectItem = forwardRef<
+  ComponentRef<typeof Primitive.Item>,
+  ComponentPropsWithoutRef<typeof Primitive.Item>
+>(({ className, children, ...props }, ref) => (
+  <Primitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center gap-2 rounded-md py-2 pl-8 pr-3 text-sm text-text outline-none",
+      "data-[highlighted]:bg-secondary data-[state=checked]:font-medium",
+      "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className,
+    )}
+    {...props}
+  >
+    <span className="absolute left-2 inline-flex items-center">
+      <Primitive.ItemIndicator>
+        <Check aria-hidden className="size-control-xs" />
+      </Primitive.ItemIndicator>
+    </span>
+    <Primitive.ItemText>{children}</Primitive.ItemText>
+  </Primitive.Item>
+));
+SelectItem.displayName = "SelectItem";
+
+export const SelectLabel = forwardRef<
+  ComponentRef<typeof Primitive.Label>,
+  ComponentPropsWithoutRef<typeof Primitive.Label>
+>(({ className, ...props }, ref) => (
+  <Primitive.Label
+    ref={ref}
+    className={cn("px-2 py-1 text-xs font-medium text-text-muted", className)}
+    {...props}
+  />
+));
+SelectLabel.displayName = "SelectLabel";
+
+export const SelectSeparator = forwardRef<
+  ComponentRef<typeof Primitive.Separator>,
+  ComponentPropsWithoutRef<typeof Primitive.Separator>
+>(({ className, ...props }, ref) => (
+  <Primitive.Separator ref={ref} className={cn("-mx-1 my-1 h-px bg-border", className)} {...props} />
+));
+SelectSeparator.displayName = "SelectSeparator";

@@ -65,6 +65,21 @@ Decomposing those into the smallest reusable, domain-agnostic pieces yields the 
 | **Combobox** | `@radix-ui/react-combobox` or Select + filter | Searchable account picker | upgrade over `Select` when account lists grow |
 | **RadioGroup** | `@radix-ui/react-radio-group` | Exclusive choice | e.g. transfer speed / type, if design calls for it |
 
+## Tier AI — AI-Native primitives (governed agent surface)
+
+Added during the Phase 2 design exploration (full Figma showcase: page **`Primitives / AI-Native`**). SINA is a design system *for AI agents*, and the current AI-UX conventions — full-width role-attributed messages (not bubbles), streaming with a stop control, inline tool-use disclosure, and human-in-the-loop confirmation — map directly onto the **validate-then-mount** interception beat. These are the "static/controlled generative UI" surface the model emits *intent* into.
+
+| Primitive | Base | Role | a11y focus | SINA surface |
+|---|---|---|---|---|
+| **Message** | role-based article | Full-width, role-attributed turn (`user`/`assistant`/`system`/`tool`); `streaming`/`complete`/`error`; markdown + code + citations | `role`, live-region announce on streaming, `aria-busy` while streaming | the conversation; the **governed variant** mounts a validated component inline |
+| **Composer** / PromptInput | native `<textarea>` in `Field` | Auto-resizing input; attachments, token counter, **send vs stop** while streaming, suggestion chips | label, keyboard-operable suggestions, focus ring, stop is a real button | the chat's primary action |
+| **ToolCallCard** | `@radix-ui/react-collapsible` | Tool-use disclosure — name + status (`pending`/`running`/`success`/`error`) + collapsible args/result | `role=status` on the status, expandable region wired with `aria-controls` | where the interception result (`requiredComponent`) surfaces inline |
+| **StreamingIndicator** | role-based (`role=status`) | Typing dots / shimmer + the SINA-specific **"validating…"** beat while the constitution gate runs server-side | `role=status`, `aria-live=polite`, reduced-motion aware | the pending moment before pass/block resolves |
+| **InlineConfirm** | role-based (built on `Alert`+`Button`) | Human-in-the-loop approval inline in the conversation; `pending`/`approved`/`rejected` | focus moves to the prompt, Approve/Reject keyboard-operable | the high-stakes pause (e.g. over-limit send) |
+| **Citation** / Source | role-based | Numbered inline marker → expanded source card (title / url / snippet) | marker is a `button` with `aria-describedby` the source | grounds an answer; lets the user audit it |
+
+> **Boundary — these stay inside `core`.** Every AI-native primitive is **domain-agnostic**: no `zod`, no `fintech`/`defense` import, and no domain vocabulary baked in. `Message`, `Composer`, `ToolCallCard`, `StreamingIndicator`, `InlineConfirm`, `Citation` are neutral chat/agent parts; fintech meaning (limits, approval codes, "$50,000") is applied only when `fintech`/Phase 5 composes them — exactly as for `Dialog`/`Field`/`Alert`. They still owe the full a11y bar + an axe test like every other `core` primitive.
+
 ---
 
 ## Design-decision notes (not new primitives)
