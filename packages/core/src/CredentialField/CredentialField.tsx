@@ -12,7 +12,7 @@
  */
 "use client";
 
-import { Eye, EyeOff, Lock } from "lucide-react";
+import { Eye, EyeSlash, Lock } from "@phosphor-icons/react/dist/ssr";
 import {
   forwardRef,
   useRef,
@@ -41,7 +41,7 @@ const SecretInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputEl
       <div className="relative">
         <Lock
           aria-hidden
-          className="pointer-events-none absolute inset-y-0 left-3 my-auto size-4 text-text-muted"
+          className="pointer-events-none absolute inset-y-0 left-2.5 my-auto size-control-2xs text-text-muted"
         />
         <input
           ref={ref}
@@ -49,10 +49,10 @@ const SecretInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputEl
           disabled={disabled}
           {...inputProps}
           className={cn(
-            "h-10 w-full rounded-lg border border-border bg-surface pl-9 pr-10 text-sm text-text",
+            "h-7 w-full rounded-md border border-subtle bg-surface pl-7 pr-8 text-ui text-text",
             "placeholder:text-text-subtle transition-colors duration-fast ease-standard",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-            "disabled:cursor-not-allowed disabled:opacity-50",
+            "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
+            "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",
             "aria-[invalid=true]:border-danger",
             className,
           )}
@@ -65,16 +65,16 @@ const SecretInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputEl
           aria-label={revealed ? "Hide code" : "Show code"}
           onClick={() => setRevealed((v) => !v)}
           className={cn(
-            "absolute inset-y-0 right-2 my-auto flex size-7 items-center justify-center rounded-md text-text-muted",
-            "transition-colors duration-fast ease-standard hover:text-text",
+            "absolute inset-y-0 right-1.5 my-auto flex size-6 items-center justify-center rounded-sm text-text-muted",
+            "transition-colors duration-fast ease-standard hover:bg-hover hover:text-text",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-1 focus-visible:ring-offset-bg",
             "disabled:cursor-not-allowed disabled:opacity-50",
           )}
         >
           {revealed ? (
-            <EyeOff aria-hidden className="size-4" />
+            <EyeSlash aria-hidden className="size-control-2xs" />
           ) : (
-            <Eye aria-hidden className="size-4" />
+            <Eye aria-hidden className="size-control-2xs" />
           )}
         </button>
       </div>
@@ -195,7 +195,7 @@ export function CredentialOTP({
   };
 
   return (
-    <div role="group" aria-label={ariaLabel} className={cn("flex gap-2", className)}>
+    <div role="group" aria-label={ariaLabel} className={cn("flex gap-1.5", className)}>
       {chars.map((ch, i) => (
         <input
           key={i}
@@ -215,10 +215,10 @@ export function CredentialOTP({
           onPaste={(e) => handlePaste(i, e)}
           onFocus={(e) => e.target.select()}
           className={cn(
-            "size-12 rounded-lg border border-border bg-surface text-center text-lg font-medium text-text",
+            "size-10 rounded-md border border-subtle bg-surface text-center text-base font-medium text-text",
             "transition-colors duration-fast ease-standard",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-            "disabled:cursor-not-allowed disabled:opacity-50",
+            "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
+            "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",
             "aria-[invalid=true]:border-danger",
           )}
         />

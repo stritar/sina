@@ -43,7 +43,7 @@ const AdornedInput = forwardRef<
     {symbol ? (
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-text-muted"
+        className="pointer-events-none absolute inset-y-0 left-2.5 flex items-center text-ui text-text-muted"
       >
         {symbol}
       </span>
@@ -54,12 +54,12 @@ const AdornedInput = forwardRef<
       inputMode="decimal"
       {...inputProps}
       className={cn(
-        "h-10 w-full rounded-lg border border-border bg-surface text-sm text-text",
+        "h-7 w-full rounded-md border border-subtle bg-surface text-ui text-text",
         "placeholder:text-text-subtle transition-colors duration-fast ease-standard",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-        "disabled:cursor-not-allowed disabled:opacity-50",
+        "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
+        "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",
         "aria-[invalid=true]:border-danger",
-        symbol ? "pl-7 pr-3" : "px-3",
+        symbol ? "pl-7 pr-2.5" : "px-2.5",
         className,
       )}
     />

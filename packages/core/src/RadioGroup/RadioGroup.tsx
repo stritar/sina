@@ -18,7 +18,7 @@ export const RadioGroup = forwardRef<
   ComponentRef<typeof Primitive.Root>,
   ComponentPropsWithoutRef<typeof Primitive.Root>
 >(({ className, ...props }, ref) => (
-  <Primitive.Root ref={ref} className={cn("flex flex-col gap-3", className)} {...props} />
+  <Primitive.Root ref={ref} className={cn("flex flex-col gap-2", className)} {...props} />
 ));
 RadioGroup.displayName = "RadioGroup";
 
@@ -42,16 +42,18 @@ export const RadioGroupItem = forwardRef<
       id={controlId}
       aria-labelledby={label != null ? labelId : props["aria-labelledby"]}
       className={cn(
-        "flex size-5 shrink-0 items-center justify-center rounded-full border border-border bg-surface",
+        // 16px visual; ::before expander keeps a ≥24px hit target (32px coarse).
+        "relative flex size-4 shrink-0 items-center justify-center rounded-full border border-border bg-surface",
+        "before:absolute before:-inset-1 before:content-[''] pointer-coarse:before:-inset-2",
         "transition-colors duration-fast ease-standard",
         "data-[state=checked]:border-primary",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-1 focus-visible:ring-offset-bg",
         "disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
       {...props}
     >
-      <Primitive.Indicator className="size-2.5 rounded-full bg-primary" />
+      <Primitive.Indicator className="block size-1.5 rounded-full bg-primary" />
     </Primitive.Item>
   );
 
@@ -60,7 +62,7 @@ export const RadioGroupItem = forwardRef<
   return (
     <div className="flex items-center gap-2">
       {control}
-      <label id={labelId} htmlFor={controlId} className="text-sm text-text">
+      <label id={labelId} htmlFor={controlId} className="text-ui text-text">
         {label}
       </label>
     </div>

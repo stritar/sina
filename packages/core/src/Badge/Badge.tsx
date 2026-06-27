@@ -8,7 +8,7 @@
  * concern; this primitive only knows neutral intents.
  */
 import { cva, type VariantProps } from "class-variance-authority";
-import type { LucideIcon } from "lucide-react";
+import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { cn } from "../utils/cn.js";
 
@@ -19,15 +19,15 @@ export const badgeVariants = cva(
       appearance: { subtle: "border", solid: "" },
       intent: { danger: "", success: "", warning: "", info: "", neutral: "" },
       size: {
-        sm: "gap-1 px-2 py-0.5 text-xs",
-        md: "gap-1.5 px-2.5 py-1 text-sm",
+        sm: "gap-1 px-1.5 py-0.5 text-xs",
+        md: "gap-1.5 px-2 py-0.5 text-ui",
       },
     },
     compoundVariants: [
-      { appearance: "subtle", intent: "danger", class: "border-danger/30 bg-danger-bg text-danger" },
-      { appearance: "subtle", intent: "success", class: "border-success/30 bg-success-bg text-success" },
-      { appearance: "subtle", intent: "warning", class: "border-warning/30 bg-warning-bg text-warning" },
-      { appearance: "subtle", intent: "info", class: "border-info/30 bg-info-bg text-info" },
+      { appearance: "subtle", intent: "danger", class: "border-danger/40 bg-danger-bg text-danger" },
+      { appearance: "subtle", intent: "success", class: "border-success/40 bg-success-bg text-success" },
+      { appearance: "subtle", intent: "warning", class: "border-warning/40 bg-warning-bg text-warning" },
+      { appearance: "subtle", intent: "info", class: "border-info/40 bg-info-bg text-info" },
       { appearance: "subtle", intent: "neutral", class: "border-border bg-surface text-text-muted" },
       { appearance: "solid", intent: "danger", class: "bg-danger text-danger-fg" },
       { appearance: "solid", intent: "success", class: "bg-success text-success-fg" },
@@ -44,8 +44,8 @@ export interface BadgeProps
     VariantProps<typeof badgeVariants> {
   /** Show a leading status dot (inherits the badge's text color). */
   dot?: boolean;
-  /** Leading icon (lucide glyph). Ignored when `dot` is set. */
-  icon?: LucideIcon;
+  /** Leading icon (Phosphor glyph). Ignored when `dot` is set. */
+  icon?: PhosphorIcon;
   children?: ReactNode;
 }
 
@@ -62,9 +62,9 @@ export function Badge({
   return (
     <span className={cn(badgeVariants({ appearance, intent, size }), className)} {...props}>
       {dot ? (
-        <span aria-hidden className="size-2 shrink-0 rounded-full bg-current" />
+        <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-current" />
       ) : Glyph ? (
-        <Glyph aria-hidden className={cn("shrink-0", size === "sm" ? "size-3" : "size-3.5")} />
+        <Glyph aria-hidden className={cn("shrink-0", size === "sm" ? "size-3" : "size-control-2xs")} />
       ) : null}
       {children}
     </span>

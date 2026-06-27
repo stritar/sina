@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
-import { Lock } from "lucide-react";
+import { Lock } from "@phosphor-icons/react/dist/ssr";
 import { Badge } from "./Badge.js";
 
 describe("Badge", () => {

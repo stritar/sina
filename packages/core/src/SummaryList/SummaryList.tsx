@@ -27,14 +27,14 @@ export function SummaryList({ items, className }: SummaryListProps) {
   return (
     <dl className={cn("divide-y divide-border-subtle", className)}>
       {items.map((item, i) => (
-        <div key={i} className="flex items-center justify-between gap-4 py-3">
-          <dt className={cn("text-sm", item.emphasis ? "font-medium text-text" : "text-text-muted")}>
+        <div key={i} className="flex items-center justify-between gap-3 py-2">
+          <dt className={cn("text-ui", item.emphasis ? "font-medium text-text" : "text-text-muted")}>
             {item.label}
           </dt>
           <dd
             className={cn(
               "text-right text-text",
-              item.emphasis ? "text-base font-semibold" : "text-sm font-medium",
+              item.emphasis ? "text-sm font-semibold" : "text-ui font-medium",
             )}
           >
             {item.value}

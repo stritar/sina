@@ -12,7 +12,7 @@
 
 import { Toast as Primitive } from "radix-ui";
 import { cva, type VariantProps } from "class-variance-authority";
-import { X } from "lucide-react";
+import { X } from "@phosphor-icons/react/dist/ssr";
 import { forwardRef } from "react";
 import type { ComponentPropsWithoutRef, ComponentRef } from "react";
 import { cn } from "../utils/cn.js";
@@ -26,7 +26,7 @@ export const ToastViewport = forwardRef<
   <Primitive.Viewport
     ref={ref}
     className={cn(
-      "fixed bottom-0 right-0 z-toast flex w-full max-w-sm flex-col gap-2 p-4 outline-none",
+      "fixed bottom-0 right-0 z-toast flex w-full max-w-[360px] flex-col gap-2 p-4 outline-none",
       className,
     )}
     {...props}
@@ -36,7 +36,9 @@ ToastViewport.displayName = "ToastViewport";
 
 export const toastVariants = cva(
   cn(
-    "relative flex items-start gap-3 rounded-lg border border-border bg-surface-raised p-4 pr-8 shadow-lg",
+    "relative flex items-start gap-2.5 rounded-md border border-subtle bg-surface-raised p-3 pr-7 shadow-md",
+    "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-bottom-2",
+    "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
     "data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)]",
     "data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-transform",
     "data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)]",
@@ -44,9 +46,9 @@ export const toastVariants = cva(
   {
     variants: {
       variant: {
-        success: "border-l-4 border-l-success",
-        danger: "border-l-4 border-l-danger",
-        info: "border-l-4 border-l-info",
+        success: "border-l-2 border-l-success",
+        danger: "border-l-2 border-l-danger",
+        info: "border-l-2 border-l-info",
       },
     },
     defaultVariants: { variant: "info" },
@@ -68,7 +70,7 @@ export const ToastTitle = forwardRef<
   ComponentRef<typeof Primitive.Title>,
   ComponentPropsWithoutRef<typeof Primitive.Title>
 >(({ className, ...props }, ref) => (
-  <Primitive.Title ref={ref} className={cn("text-sm font-medium text-text", className)} {...props} />
+  <Primitive.Title ref={ref} className={cn("text-ui font-medium text-text", className)} {...props} />
 ));
 ToastTitle.displayName = "ToastTitle";
 
@@ -78,7 +80,7 @@ export const ToastDescription = forwardRef<
 >(({ className, ...props }, ref) => (
   <Primitive.Description
     ref={ref}
-    className={cn("text-sm text-text-muted", className)}
+    className={cn("text-ui text-text-muted", className)}
     {...props}
   />
 ));
@@ -91,9 +93,9 @@ export const ToastAction = forwardRef<
   <Primitive.Action
     ref={ref}
     className={cn(
-      "mt-1 inline-flex text-sm font-medium text-primary",
+      "mt-1 inline-flex text-ui font-medium text-primary",
       "transition-colors duration-fast ease-standard hover:text-primary-hover",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-1 focus-visible:ring-offset-bg",
       className,
     )}
     {...props}
@@ -109,14 +111,14 @@ export const ToastClose = forwardRef<
     ref={ref}
     aria-label={ariaLabel}
     className={cn(
-      "absolute right-2 top-2 flex size-6 items-center justify-center rounded-md text-text-muted",
-      "transition-colors duration-fast ease-standard hover:text-text",
+      "absolute right-1.5 top-1.5 flex size-6 items-center justify-center rounded-sm text-text-muted",
+      "transition-colors duration-fast ease-standard hover:bg-hover hover:text-text",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-1 focus-visible:ring-offset-bg",
       className,
     )}
     {...props}
   >
-    <X aria-hidden className="size-4" />
+    <X aria-hidden className="size-control-2xs" />
   </Primitive.Close>
 ));
 ToastClose.displayName = "ToastClose";

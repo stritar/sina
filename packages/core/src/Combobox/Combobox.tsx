@@ -11,7 +11,7 @@
 "use client";
 
 import { Popover as Primitive } from "radix-ui";
-import { Check, Search } from "lucide-react";
+import { Check, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import { useId, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent, ReactNode } from "react";
 import { cn } from "../utils/cn.js";
@@ -108,9 +108,9 @@ export function Combobox({
     <Primitive.Root open={open} onOpenChange={setOpen}>
       <Primitive.Anchor asChild>
         <div ref={anchorRef} className={cn("relative w-full", className)}>
-          <Search
+          <MagnifyingGlass
             aria-hidden
-            className="pointer-events-none absolute inset-y-0 left-3 my-auto size-4 text-text-muted"
+            className="pointer-events-none absolute inset-y-0 left-2.5 my-auto size-control-2xs text-text-muted"
           />
           <input
             type="text"
@@ -132,10 +132,10 @@ export function Combobox({
             onFocus={() => setOpen(true)}
             onKeyDown={handleKeyDown}
             className={cn(
-              "h-10 w-full rounded-lg border border-border bg-surface pl-9 pr-3 text-sm text-text",
+              "h-7 w-full rounded-md border border-subtle bg-surface pl-7 pr-2.5 text-ui text-text",
               "placeholder:text-text-subtle transition-colors duration-fast ease-standard",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-              "disabled:cursor-not-allowed disabled:opacity-50",
+              "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
+              "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",
             )}
           />
         </div>
@@ -147,11 +147,15 @@ export function Combobox({
           onInteractOutside={(e) => {
             if (anchorRef.current?.contains(e.target as Node)) e.preventDefault();
           }}
-          className="z-dropdown w-[var(--radix-popover-trigger-width)] overflow-hidden rounded-lg border border-border bg-surface-raised p-1 shadow-lg"
+          className={cn(
+            "z-dropdown w-[var(--radix-popover-trigger-width)] overflow-hidden rounded-md border border-subtle bg-surface-raised p-1 shadow-md",
+            "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+            "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
+          )}
         >
           <ul id={listId} role="listbox" aria-label={ariaLabel} className="max-h-60 overflow-auto">
             {filtered.length === 0 ? (
-              <li className="px-3 py-2 text-sm text-text-subtle">No results</li>
+              <li className="px-2 py-1.5 text-ui text-text-subtle">No results</li>
             ) : (
               filtered.map((option, i) => {
                 const isSelected = option.value === value;
@@ -169,8 +173,8 @@ export function Combobox({
                       choose(option);
                     }}
                     className={cn(
-                      "flex cursor-default select-none items-center justify-between gap-2 rounded-md px-3 py-2 text-sm text-text",
-                      isActive && "bg-secondary",
+                      "flex cursor-pointer select-none items-center justify-between gap-1.5 rounded-sm px-2 py-1.5 text-ui text-text",
+                      isActive && "bg-hover",
                     )}
                   >
                     <span className="truncate text-text-muted">
@@ -179,7 +183,9 @@ export function Combobox({
                         <span className="text-text-subtle"> · {option.description}</span>
                       ) : null}
                     </span>
-                    {isSelected ? <Check aria-hidden className="size-4 shrink-0" /> : null}
+                    {isSelected ? (
+                      <Check aria-hidden className="size-control-2xs shrink-0" />
+                    ) : null}
                   </li>
                 );
               })

@@ -12,28 +12,35 @@ import { Slot } from "radix-ui";
 import { cva, type VariantProps } from "class-variance-authority";
 import { forwardRef } from "react";
 import type { ButtonHTMLAttributes } from "react";
-import { Loader2 } from "lucide-react";
+import { CircleNotch } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "../utils/cn.js";
 
 export const buttonVariants = cva(
   cn(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-medium",
-    "transition-colors duration-fast ease-standard",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-    "disabled:pointer-events-none disabled:opacity-50",
+    "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md font-medium",
+    "transition-[background-color,box-shadow,color] duration-fast ease-standard",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-1 focus-visible:ring-offset-bg",
+    // Disabled: muted, not blanket-dimmed (states matrix). Ghost overrides bg.
+    "disabled:pointer-events-none disabled:bg-secondary disabled:text-text-subtle",
   ),
   {
     variants: {
       variant: {
-        primary: "bg-primary text-primary-fg hover:bg-primary-hover",
-        secondary: "bg-secondary text-secondary-fg hover:bg-secondary-hover",
-        danger: "bg-danger text-danger-fg hover:bg-danger/90",
-        ghost: "bg-transparent text-text hover:bg-secondary",
+        // Filled actions darken on press; danger keeps full strength
+        // (governance carve-out — never quieted).
+        primary: "bg-primary text-primary-fg hover:bg-primary-hover active:bg-primary-active",
+        secondary:
+          "bg-secondary text-secondary-fg hover:bg-secondary-hover active:bg-secondary-hover",
+        danger: "bg-danger text-danger-fg hover:bg-danger/90 active:bg-danger/80",
+        // Quiet control: translucent overlay, not a color swap.
+        ghost: "text-text hover:bg-hover active:bg-pressed disabled:bg-transparent",
       },
       size: {
-        sm: "h-8 px-3 text-sm",
-        md: "h-10 px-4 text-sm",
-        lg: "h-12 px-6 text-base",
+        sm: "h-6 gap-1 px-2 text-ui",
+        md: "h-7 px-2.5 text-ui",
+        lg: "h-8 px-3 text-ui",
+        // Comfortable rung — marketing (apps/web) heroes and touch surfaces.
+        xl: "h-10 px-4 text-sm",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },
@@ -69,7 +76,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {showSpinner ? (
           <>
-            <Loader2 aria-hidden className="size-control-xs animate-spin motion-reduce:animate-none" />
+            <CircleNotch
+              aria-hidden
+              className="size-control-xs animate-spin motion-reduce:animate-none"
+            />
             {children}
           </>
         ) : (

@@ -27,6 +27,9 @@
     "test": "vitest run",
     "clean": "rimraf dist"
   },
+  "dependencies": {
+    "tailwindcss-animate": "^1.0.7"
+  },
   "peerDependencies": {
     "tailwindcss": "^3.4.0"
   },

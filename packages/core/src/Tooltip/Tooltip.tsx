@@ -2,7 +2,7 @@
  * @sina-design-system/core — Tooltip
  *
  * Hover/focus explainer on Radix Tooltip — e.g. *why* something is blocked or
- * needs approval. Dark bubble (inverse tokens) with a pointer arrow; appears on
+ * needs approval. Dark bubble (inverse tokens); appears on
  * both hover and keyboard focus. Ships as named exports (TooltipProvider /
  * Tooltip / TooltipTrigger / TooltipContent) so each is its own client reference
  * across the RSC boundary. Domain-agnostic.
@@ -21,19 +21,20 @@ export const TooltipTrigger = Primitive.Trigger;
 export const TooltipContent = forwardRef<
   ComponentRef<typeof Primitive.Content>,
   ComponentPropsWithoutRef<typeof Primitive.Content>
->(({ className, children, sideOffset = 6, ...props }, ref) => (
+>(({ className, children, sideOffset = 4, ...props }, ref) => (
   <Primitive.Portal>
     <Primitive.Content
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "z-dropdown max-w-xs rounded-md bg-text px-3 py-1.5 text-xs text-bg shadow-md",
+        "z-dropdown max-w-xs rounded-sm bg-text px-2 py-1 text-xs text-bg shadow-sm",
+        "data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95",
+        "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
         className,
       )}
       {...props}
     >
       {children}
-      <Primitive.Arrow className="fill-text" />
     </Primitive.Content>
   </Primitive.Portal>
 ));

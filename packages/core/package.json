@@ -26,10 +26,10 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.7",
     "@sina-design-system/theme": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.469.0",
     "radix-ui": "^1.1.2",
     "tailwind-merge": "^2.6.0"
   },

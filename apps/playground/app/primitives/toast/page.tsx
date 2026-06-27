@@ -10,13 +10,13 @@ import {
   ToastTitle,
   ToastViewport,
 } from "@sina-design-system/core";
-import { CircleAlert, CircleCheck, Info } from "lucide-react";
+import { WarningCircle, CheckCircle, Info } from "@phosphor-icons/react/dist/ssr";
 import { useState } from "react";
 import { Demo, StoryShell } from "../_components/StoryShell";
 
 type Variant = "success" | "danger" | "info";
 
-const ICON = { success: CircleCheck, danger: CircleAlert, info: Info } as const;
+const ICON = { success: CheckCircle, danger: WarningCircle, info: Info } as const;
 const ICON_COLOR = {
   success: "text-success",
   danger: "text-danger",
@@ -50,7 +50,13 @@ export default function ToastStory() {
             onOpenChange={(o) => !o && setOpen(null)}
             duration={4000}
           >
-            {Glyph ? <Glyph aria-hidden className={`mt-0.5 size-5 shrink-0 ${ICON_COLOR[open]}`} /> : null}
+            {Glyph ? (
+              <Glyph
+                aria-hidden
+                weight="fill"
+                className={`mt-0.5 size-5 shrink-0 ${ICON_COLOR[open]}`}
+              />
+            ) : null}
             <div className="flex flex-col">
               <ToastTitle>
                 {open === "success"

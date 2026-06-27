@@ -1,5 +1,5 @@
 import { Icon } from "@sina-design-system/core";
-import { Lock, ShieldCheck, TriangleAlert } from "lucide-react";
+import { Lock, ShieldCheck, Warning } from "@phosphor-icons/react/dist/ssr";
 import { Demo, StoryShell } from "../_components/StoryShell";
 
 export default function IconStory() {
@@ -10,7 +10,7 @@ export default function IconStory() {
           <Icon icon={ShieldCheck} label="Secure" size={24} />
         </span>
         <span className="text-danger">
-          <Icon icon={TriangleAlert} label="Warning" size={24} />
+          <Icon icon={Warning} label="Warning" size={24} />
         </span>
       </Demo>
       <Demo label="Decorative (hidden from assistive tech), color via currentColor">

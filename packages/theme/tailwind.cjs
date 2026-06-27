@@ -99,6 +99,7 @@ module.exports = {
       primary: {
         DEFAULT: c("--sina-color-primary"),
         hover: c("--sina-color-primary-hover"),
+        active: c("--sina-color-primary-active"),
         fg: c("--sina-color-primary-fg"),
       },
       secondary: {
@@ -132,7 +133,7 @@ module.exports = {
       xs: "var(--sina-radius--xs)",
       sm: "var(--sina-radius--sm)",
       md: "var(--sina-radius--md)",
-      DEFAULT: "var(--sina-radius--lg)",
+      DEFAULT: "var(--sina-radius--md)",
       lg: "var(--sina-radius--lg)",
       xl: "var(--sina-radius--xl)",
       "2xl": "var(--sina-radius--2xl)",
@@ -146,6 +147,10 @@ module.exports = {
 
     fontSize: {
       xs: "var(--sina-text--xs)",
+      ui: [
+        "var(--sina-text--ui)",
+        { lineHeight: "1.125rem", letterSpacing: "-0.006em" },
+      ],
       sm: "var(--sina-text--sm)",
       base: "var(--sina-text--base)",
       lg: "var(--sina-text--lg)",
@@ -207,9 +212,18 @@ module.exports = {
     },
 
     extend: {
+      // Interaction overlays — the one hover/pressed/selected system. Mapped
+      // raw (the alpha is baked into the color-mix value), so they composite
+      // over any surface; not wrapped in the <alpha-value> helper.
+      backgroundColor: {
+        hover: "var(--sina-overlay--hover)",
+        pressed: "var(--sina-overlay--pressed)",
+        selected: "var(--sina-overlay--selected)",
+      },
       // Component sizing tokens (control heights / icon dims). Extended rather
       // than overridden so Tailwind's width/height keep auto/full/fractions.
       size: {
+        "control-2xs": "var(--sina-size--icon-sm)",
         "control-xs": "var(--sina-size--xs)",
         "control-sm": "var(--sina-size--sm)",
         "control-md": "var(--sina-size--md)",
@@ -217,13 +231,19 @@ module.exports = {
         "control-xl": "var(--sina-size--xl)",
       },
       transitionDuration: {
+        instant: "var(--sina-duration--instant)",
         fast: "var(--sina-duration--fast)",
         base: "var(--sina-duration--base)",
         slow: "var(--sina-duration--slow)",
       },
       transitionTimingFunction: {
         standard: "var(--sina-ease--standard)",
+        out: "var(--sina-ease--out)",
       },
     },
   },
+  // Enter/exit animations for Radix `data-[state]` surfaces (menus, dialogs,
+  // tooltips, toasts) — `animate-in`/`animate-out` + fade/zoom/slide utilities.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports -- CJS preset must require its Tailwind plugin
+  plugins: [require("tailwindcss-animate")],
 };

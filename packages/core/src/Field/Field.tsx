@@ -57,8 +57,8 @@ export function Field({ label, description, error, required, className, children
   });
 
   return (
-    <div className={cn("flex flex-col gap-2", className)}>
-      <Label.Root htmlFor={id} className="text-sm font-medium text-text">
+    <div className={cn("flex flex-col gap-1.5", className)}>
+      <Label.Root htmlFor={id} className="text-ui font-medium text-text">
         {label}
         {required ? (
           <span aria-hidden className="text-danger">
@@ -68,7 +68,7 @@ export function Field({ label, description, error, required, className, children
       </Label.Root>
 
       {description ? (
-        <p id={descriptionId} className="text-sm text-text-muted">
+        <p id={descriptionId} className="text-ui text-text-muted">
           {description}
         </p>
       ) : null}
@@ -76,7 +76,7 @@ export function Field({ label, description, error, required, className, children
       {control}
 
       {invalid ? (
-        <p id={errorId} role="alert" className="text-sm text-danger">
+        <p id={errorId} role="alert" className="text-ui text-danger">
           {error}
         </p>
       ) : null}

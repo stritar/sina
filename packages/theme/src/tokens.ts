@@ -31,6 +31,7 @@ export const colorTokens = {
   borderSubtle: "--sina-color-border-subtle",
   primary: "--sina-color-primary",
   primaryHover: "--sina-color-primary-hover",
+  primaryActive: "--sina-color-primary-active",
   primaryFg: "--sina-color-primary-fg",
   secondary: "--sina-color-secondary",
   secondaryHover: "--sina-color-secondary-hover",
@@ -61,6 +62,7 @@ export const fontFamily = {
 /** Type scale (t-shirt) → pixel size, for layout math. */
 export const fontSize = {
   xs: 12,
+  ui: 13,
   sm: 14,
   base: 16,
   lg: 18,
@@ -117,6 +119,7 @@ export const radius = {
 
 /** Control / icon sizing (t-shirt) → pixels. */
 export const size = {
+  iconSm: 14,
   xs: 16,
   sm: 24,
   md: 32,
@@ -142,6 +145,7 @@ export const zIndex = {
 } as const;
 
 export const duration = {
+  instant: 80,
   fast: 120,
   base: 200,
   slow: 320,

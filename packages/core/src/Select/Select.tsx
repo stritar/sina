@@ -14,7 +14,7 @@
 "use client";
 
 import { Select as Primitive } from "radix-ui";
-import { Check, ChevronDown } from "lucide-react";
+import { Check, CaretDown } from "@phosphor-icons/react/dist/ssr";
 import { forwardRef } from "react";
 import type { ComponentPropsWithoutRef, ComponentRef } from "react";
 import { cn } from "../utils/cn.js";
@@ -30,17 +30,17 @@ export const SelectTrigger = forwardRef<
   <Primitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex h-10 w-full items-center justify-between gap-2 rounded-lg border border-border bg-surface px-3 text-sm text-text",
+      "inline-flex h-7 w-full items-center justify-between gap-1.5 rounded-md border border-subtle bg-surface px-2.5 text-ui text-text",
       "data-[placeholder]:text-text-subtle transition-colors duration-fast ease-standard",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-bg",
-      "disabled:cursor-not-allowed disabled:opacity-50",
+      "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
+      "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",
       className,
     )}
     {...props}
   >
     {children}
     <Primitive.Icon asChild>
-      <ChevronDown aria-hidden className="size-control-xs text-text-muted" />
+      <CaretDown aria-hidden className="size-control-2xs text-text-muted" />
     </Primitive.Icon>
   </Primitive.Trigger>
 ));
@@ -55,7 +55,9 @@ export const SelectContent = forwardRef<
       ref={ref}
       position={position}
       className={cn(
-        "z-dropdown overflow-hidden rounded-lg border border-border bg-surface-raised shadow-lg",
+        "z-dropdown overflow-hidden rounded-md border border-subtle bg-surface-raised shadow-md",
+        "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+        "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
         className,
       )}
       {...props}
@@ -77,16 +79,16 @@ export const SelectItem = forwardRef<
   <Primitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center gap-2 rounded-md py-2 pl-8 pr-3 text-sm text-text outline-none",
-      "data-[highlighted]:bg-secondary data-[state=checked]:font-medium",
+      "relative flex cursor-pointer select-none items-center gap-1.5 rounded-sm py-1.5 pl-7 pr-2 text-ui text-text outline-none",
+      "data-[highlighted]:bg-hover data-[state=checked]:font-medium",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
     {...props}
   >
-    <span className="absolute left-2 inline-flex items-center">
+    <span className="absolute left-1.5 inline-flex items-center">
       <Primitive.ItemIndicator>
-        <Check aria-hidden className="size-control-xs" />
+        <Check aria-hidden className="size-control-2xs" />
       </Primitive.ItemIndicator>
     </span>
     <Primitive.ItemText>{children}</Primitive.ItemText>
@@ -110,6 +112,6 @@ export const SelectSeparator = forwardRef<
   ComponentRef<typeof Primitive.Separator>,
   ComponentPropsWithoutRef<typeof Primitive.Separator>
 >(({ className, ...props }, ref) => (
-  <Primitive.Separator ref={ref} className={cn("-mx-1 my-1 h-px bg-border", className)} {...props} />
+  <Primitive.Separator ref={ref} className={cn("-mx-1 my-1 h-px bg-border-subtle", className)} {...props} />
 ));
 SelectSeparator.displayName = "SelectSeparator";

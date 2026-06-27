@@ -118,6 +118,7 @@
   /* Actions */
   --sina-color-primary: #353b31; /* brand--700                            */
   --sina-color-primary-hover: #444d3b; /* brand--600                      */
+  --sina-color-primary-active: #2b3028; /* brand--800 — pressed            */
   --sina-color-primary-fg: #ffffff;
   --sina-color-secondary: #e5e7e2;
   --sina-color-secondary-hover: #dde0d9;
@@ -145,6 +146,26 @@
   --sina-color-intent-safe: var(--sina-color-success);
   --sina-color-surface-secure: #eef1ec; /* brand--50 tinted surface        */
 
+  /* Interaction overlays — the one hover/pressed/selected system. Composed  */
+  /* with color-mix (like the shadow tokens) so they composite over any      */
+  /* surface and auto-invert in dark mode (they track text / primary).       */
+  /* Named --sina-overlay--* (not --sina-color-*) so they read as overlays.  */
+  --sina-overlay--hover: color-mix(
+    in srgb,
+    var(--sina-color-text) 5%,
+    transparent
+  );
+  --sina-overlay--pressed: color-mix(
+    in srgb,
+    var(--sina-color-text) 9%,
+    transparent
+  );
+  --sina-overlay--selected: color-mix(
+    in srgb,
+    var(--sina-color-primary) 12%,
+    transparent
+  );
+
   /* ===================================================================== */
   /* Typography                                                            */
   /* ===================================================================== */
@@ -157,6 +178,7 @@
 
   /* Font size — t-shirt scale (rem on a 16px base) */
   --sina-text--xs: 0.75rem; /* 12 */
+  --sina-text--ui: 0.8125rem; /* 13 — dense UI: controls, menus, labels */
   --sina-text--sm: 0.875rem; /* 14 */
   --sina-text--base: 1rem; /* 16 */
   --sina-text--lg: 1.125rem; /* 18 */
@@ -208,7 +230,7 @@
   --sina-radius--xs: 2px;
   --sina-radius--sm: 4px;
   --sina-radius--md: 6px;
-  --sina-radius--lg: 8px; /* default control radius (Figma) */
+  --sina-radius--lg: 8px; /* overlays / cards */
   --sina-radius--xl: 12px;
   --sina-radius--2xl: 16px;
   --sina-radius--full: 9999px;
@@ -216,6 +238,7 @@
   /* ===================================================================== */
   /* Size — control heights / icon dims (t-shirt)                         */
   /* ===================================================================== */
+  --sina-size--icon-sm: 0.875rem; /* 14 — inline / badge icon */
   --sina-size--xs: 1rem; /* 16 — icon          */
   --sina-size--sm: 1.5rem; /* 24 — small control */
   --sina-size--md: 2rem; /* 32 — control       */
@@ -257,10 +280,12 @@
   /* ===================================================================== */
   /* Motion                                                                */
   /* ===================================================================== */
+  --sina-duration--instant: 80ms;
   --sina-duration--fast: 120ms;
   --sina-duration--base: 200ms;
   --sina-duration--slow: 320ms;
   --sina-ease--standard: cubic-bezier(0.2, 0, 0, 1);
+  --sina-ease--out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ======================================================================= */
@@ -285,6 +310,7 @@
 
   --sina-color-primary: #b9c4b1; /* brand--200 */
   --sina-color-primary-hover: #94a389; /* brand--300 */
+  --sina-color-primary-active: #6f7e63; /* brand--400 — pressed */
   --sina-color-primary-fg: #21251e;
   --sina-color-secondary: #434841;
   --sina-color-secondary-hover: #52564e;
@@ -302,6 +328,7 @@
 /* Respect reduced-motion at the token layer. */
 @media (prefers-reduced-motion: reduce) {
   :root {
+    --sina-duration--instant: 0ms;
     --sina-duration--fast: 0ms;
     --sina-duration--base: 0ms;
     --sina-duration--slow: 0ms;

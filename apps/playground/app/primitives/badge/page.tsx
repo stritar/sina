@@ -1,10 +1,10 @@
 import { Badge } from "@sina-design-system/core";
-import { CircleCheck, Clock, Info, Lock, X } from "lucide-react";
+import { CheckCircle, Clock, Info, Lock, X } from "@phosphor-icons/react/dist/ssr";
 import { Demo, StoryShell } from "../_components/StoryShell";
 
 const INTENTS = [
   { intent: "danger", label: "Blocked", icon: X },
-  { intent: "success", label: "Compliant", icon: CircleCheck },
+  { intent: "success", label: "Compliant", icon: CheckCircle },
   { intent: "warning", label: "Approval", icon: Lock },
   { intent: "info", label: "Pending", icon: Clock },
   { intent: "neutral", label: "Draft", icon: Info },

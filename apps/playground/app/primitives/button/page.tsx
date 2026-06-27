@@ -10,10 +10,11 @@ export default function ButtonStory() {
         <Button variant="danger">Delete</Button>
         <Button variant="ghost">Dismiss</Button>
       </Demo>
-      <Demo label="Sizes">
+      <Demo label="Sizes · sm 24 / md 28 / lg 32 / xl 40 (comfortable)">
         <Button size="sm">Small</Button>
         <Button size="md">Medium</Button>
         <Button size="lg">Large</Button>
+        <Button size="xl">Comfortable</Button>
       </Demo>
       <Demo label="States">
         <Button loading>Submitting</Button>

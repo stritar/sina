@@ -31,7 +31,7 @@ export const Progress = forwardRef<ComponentRef<typeof Primitive.Root>, Progress
         ref={ref}
         value={indeterminate ? null : clamped}
         aria-label={label}
-        className={cn("relative h-2 w-full overflow-hidden rounded-full bg-secondary", className)}
+        className={cn("relative h-1.5 w-full overflow-hidden rounded-full bg-secondary", className)}
         {...props}
       >
         <Primitive.Indicator
