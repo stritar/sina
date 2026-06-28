@@ -40,7 +40,7 @@ export const SelectTrigger = forwardRef<
   >
     {children}
     <Primitive.Icon asChild>
-      <CaretDown aria-hidden className="size-control-2xs text-text-muted" />
+      <CaretDown aria-hidden weight="fill" className="size-control-2xs text-text-muted" />
     </Primitive.Icon>
   </Primitive.Trigger>
 ));
@@ -88,7 +88,7 @@ export const SelectItem = forwardRef<
   >
     <span className="absolute left-1.5 inline-flex items-center">
       <Primitive.ItemIndicator>
-        <Check aria-hidden className="size-control-2xs" />
+        <Check aria-hidden weight="fill" className="size-control-2xs" />
       </Primitive.ItemIndicator>
     </span>
     <Primitive.ItemText>{children}</Primitive.ItemText>

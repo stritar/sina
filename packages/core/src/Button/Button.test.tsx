@@ -47,6 +47,48 @@ describe("Button", () => {
     expect(onClick).not.toHaveBeenCalled();
   });
 
+  it("renders icon slots without axe violations", async () => {
+    const { container } = render(
+      <div>
+        <Button iconLeft={<svg aria-hidden width="16" height="16" />}>Approve</Button>
+        <Button iconRight={<svg aria-hidden width="16" height="16" />}>Next</Button>
+        <Button
+          iconLeft={<svg aria-hidden width="16" height="16" />}
+          iconRight={<svg aria-hidden width="16" height="16" />}
+        >
+          Both
+        </Button>
+      </div>,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("requires an accessible name for an icon-only button", async () => {
+    const named = render(
+      <Button aria-label="Add item" iconLeft={<svg aria-hidden width="16" height="16" />} />,
+    );
+    expect(screen.getByRole("button", { name: "Add item" })).toBeTruthy();
+    expect(await axe(named.container)).toHaveNoViolations();
+
+    const unnamed = render(<Button iconLeft={<svg aria-hidden width="16" height="16" />} />);
+    const results = await axe(unnamed.container);
+    expect(results.violations.map((v) => v.id)).toContain("button-name");
+  });
+
+  it("scales font weight with size", () => {
+    const cases = [
+      ["sm", "font-normal"],
+      ["md", "font-normal"],
+      ["lg", "font-medium"],
+      ["xl", "font-bold"],
+    ] as const;
+    for (const [size, weight] of cases) {
+      const { unmount } = render(<Button size={size}>X</Button>);
+      expect(screen.getByRole("button").className).toContain(weight);
+      unmount();
+    }
+  });
+
   it("renders as the child element via asChild", () => {
     render(
       <Button asChild>

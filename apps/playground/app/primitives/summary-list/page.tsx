@@ -4,34 +4,52 @@ import { Demo, StoryShell } from "../_components/StoryShell";
 export default function SummaryListStory() {
   return (
     <StoryShell title="SummaryList">
-      <Demo label="default">
+      <Demo label="Key/value rows">
         <SummaryList
           className="w-80"
           items={[
-            { label: "From", value: "Checking · 4029" },
-            { label: "To", value: "Acme Payroll · 8810" },
-            { label: "Amount", value: "$4,250.00" },
-            { label: "Fee", value: "$0.00" },
+            { label: "Name", value: "Project Atlas" },
+            { label: "Owner", value: "Platform team" },
+            { label: "Created", value: "Jun 27 · 09:14" },
+            { label: "Region", value: "North" },
           ]}
         />
       </Demo>
-      <Demo label="emphasized total">
+
+      <Demo label="Emphasis">
         <SummaryList
           className="w-80"
           items={[
-            { label: "Amount", value: "$4,250.00" },
-            { label: "Fee", value: "$0.00" },
-            { label: "Total", value: "$4,250.00", emphasis: true },
+            { label: "Subtotal", value: "120 units" },
+            { label: "Adjustment", value: "4 units" },
+            { label: "Total", value: "124 units", emphasis: true },
           ]}
         />
       </Demo>
-      <Demo label="with badge value">
+
+      <Demo label="Rich values">
         <SummaryList
           className="w-80"
           items={[
-            { label: "Recipient", value: "Acme Payroll" },
-            { label: "Status", value: <Badge intent="success">Compliant</Badge> },
-            { label: "Amount", value: "$4,250.00" },
+            { label: "Owner", value: "Platform team" },
+            { label: "Status", value: <Badge intent="success">Active</Badge> },
+            {
+              label: "Notes",
+              value:
+                "A longer descriptive value that exceeds the available width and wraps onto multiple lines within the row.",
+            },
+          ]}
+        />
+      </Demo>
+
+      <Demo label="Multiple emphasis">
+        <SummaryList
+          className="w-80"
+          items={[
+            { label: "Phase one", value: "Complete", emphasis: true },
+            { label: "Phase two", value: "In progress" },
+            { label: "Phase three", value: "Queued" },
+            { label: "Overall", value: "On track", emphasis: true },
           ]}
         />
       </Demo>

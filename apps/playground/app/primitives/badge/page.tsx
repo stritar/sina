@@ -1,53 +1,75 @@
-import { Badge } from "@sina-design-system/core";
-import { CheckCircle, Clock, Info, Lock, X } from "@phosphor-icons/react/dist/ssr";
-import { Demo, StoryShell } from "../_components/StoryShell";
+"use client";
 
-const INTENTS = [
-  { intent: "danger", label: "Blocked", icon: X },
-  { intent: "success", label: "Compliant", icon: CheckCircle },
-  { intent: "warning", label: "Approval", icon: Lock },
-  { intent: "info", label: "Pending", icon: Clock },
-  { intent: "neutral", label: "Draft", icon: Info },
-] as const;
+import { Badge, type BadgeProps } from "@sina-design-system/core";
+import { CheckCircle, ShieldCheck } from "@phosphor-icons/react/dist/ssr";
+import { Demo, Matrix, StoryShell } from "../_components/StoryShell";
+
+const APPEARANCES = ["subtle", "solid"] as const;
+const INTENTS = ["danger", "success", "warning", "info", "neutral"] as const;
 
 export default function BadgeStory() {
   return (
     <StoryShell title="Badge">
-      <Demo label="subtle">
-        {INTENTS.map((i) => (
-          <Badge key={i.intent} appearance="subtle" intent={i.intent}>
-            {i.label}
+      <Matrix
+        label="appearance × intent · size md"
+        rows={APPEARANCES.map((a) => ({ key: a, label: a }))}
+        cols={INTENTS.map((i) => ({ key: i, label: i }))}
+        render={(appearance, intent) => (
+          <Badge
+            appearance={appearance as BadgeProps["appearance"]}
+            intent={intent as BadgeProps["intent"]}
+            size="md"
+          >
+            {intent}
           </Badge>
-        ))}
-      </Demo>
-      <Demo label="solid">
-        {INTENTS.map((i) => (
-          <Badge key={i.intent} appearance="solid" intent={i.intent}>
-            {i.label}
+        )}
+      />
+
+      <Matrix
+        label="appearance × intent · size sm"
+        rows={APPEARANCES.map((a) => ({ key: a, label: a }))}
+        cols={INTENTS.map((i) => ({ key: i, label: i }))}
+        render={(appearance, intent) => (
+          <Badge
+            appearance={appearance as BadgeProps["appearance"]}
+            intent={intent as BadgeProps["intent"]}
+            size="sm"
+          >
+            {intent}
           </Badge>
-        ))}
-      </Demo>
-      <Demo label="dot">
-        {INTENTS.map((i) => (
-          <Badge key={i.intent} intent={i.intent} dot>
-            {i.label}
-          </Badge>
-        ))}
-      </Demo>
-      <Demo label="icon">
-        {INTENTS.map((i) => (
-          <Badge key={i.intent} intent={i.intent} icon={i.icon}>
-            {i.label}
-          </Badge>
-        ))}
-      </Demo>
-      <Demo label="sizes · sm / md">
-        <Badge size="sm" intent="warning" icon={Lock}>
-          Requires approval
+        )}
+      />
+
+      <Demo label="Modifiers · dot / icon / dot+solid / icon+solid">
+        <Badge intent="success" dot>
+          Dot
         </Badge>
-        <Badge size="md" intent="warning" icon={Lock}>
-          Requires approval
+        <Badge intent="info" icon={ShieldCheck}>
+          Icon
         </Badge>
+        <Badge appearance="solid" intent="success" dot>
+          Dot solid
+        </Badge>
+        <Badge appearance="solid" intent="info" icon={ShieldCheck}>
+          Icon solid
+        </Badge>
+        <Badge size="sm" intent="success" dot>
+          Dot sm
+        </Badge>
+      </Demo>
+
+      <Demo label="Dismissible · trailing X via onClose + closeLabel">
+        {INTENTS.map((intent) => (
+          <Badge
+            key={intent}
+            intent={intent}
+            icon={CheckCircle}
+            onClose={() => {}}
+            closeLabel={`Dismiss ${intent}`}
+          >
+            {intent}
+          </Badge>
+        ))}
       </Demo>
     </StoryShell>
   );

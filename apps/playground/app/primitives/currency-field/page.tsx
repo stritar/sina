@@ -4,18 +4,39 @@ import { Demo, StoryShell } from "../_components/StoryShell";
 export default function CurrencyFieldStory() {
   return (
     <StoryShell title="CurrencyField">
-      <Demo label="Formatted numeric entry (groups on blur — display only)">
-        <div className="w-full max-w-xs">
-          <CurrencyField
-            label="Transfer amount"
-            description="Whole dollars"
-            defaultValue="25000"
-          />
+      <Demo label="Symbols">
+        <div className="w-72">
+          <CurrencyField label="Amount" currencySymbol="$" defaultValue="25000" />
+        </div>
+        <div className="w-72">
+          <CurrencyField label="Amount" currencySymbol="€" defaultValue="25000" />
+        </div>
+        <div className="w-72">
+          <CurrencyField label="Amount" currencySymbol="£" defaultValue="25000" />
+        </div>
+        <div className="w-72">
+          <CurrencyField label="Amount" currencySymbol="¥" defaultValue="25000" />
         </div>
       </Demo>
-      <Demo label="Error state">
-        <div className="w-full max-w-xs">
-          <CurrencyField label="Amount" required error="Enter an amount" />
+
+      <Demo label="States">
+        <div className="w-72">
+          <CurrencyField label="Amount" />
+        </div>
+        <div className="w-72">
+          <CurrencyField label="Amount" defaultValue="25000" />
+        </div>
+        <div className="w-72">
+          <CurrencyField label="Amount" description="Whole units" defaultValue="25000" />
+        </div>
+        <div className="w-72">
+          <CurrencyField label="Amount" error="Enter an amount" />
+        </div>
+        <div className="w-72">
+          <CurrencyField label="Amount" disabled defaultValue="25000" />
+        </div>
+        <div className="w-72">
+          <CurrencyField label="Amount" required />
         </div>
       </Demo>
     </StoryShell>

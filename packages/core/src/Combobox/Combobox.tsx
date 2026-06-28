@@ -110,6 +110,7 @@ export function Combobox({
         <div ref={anchorRef} className={cn("relative w-full", className)}>
           <MagnifyingGlass
             aria-hidden
+            weight="fill"
             className="pointer-events-none absolute inset-y-0 left-2.5 my-auto size-control-2xs text-text-muted"
           />
           <input
@@ -153,7 +154,7 @@ export function Combobox({
             "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
           )}
         >
-          <ul id={listId} role="listbox" aria-label={ariaLabel} className="max-h-60 overflow-auto">
+          <ul id={listId} role="listbox" aria-label={ariaLabel} className="max-h-[15rem] overflow-auto">
             {filtered.length === 0 ? (
               <li className="px-2 py-1.5 text-ui text-text-subtle">No results</li>
             ) : (
@@ -184,7 +185,7 @@ export function Combobox({
                       ) : null}
                     </span>
                     {isSelected ? (
-                      <Check aria-hidden className="size-control-2xs shrink-0" />
+                      <Check aria-hidden weight="fill" className="size-control-2xs shrink-0" />
                     ) : null}
                   </li>
                 );

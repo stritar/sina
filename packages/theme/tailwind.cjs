@@ -114,12 +114,18 @@ module.exports = {
 
     spacing: {
       0: "var(--sina-space--0)",
+      // Dense-UI micro-grid (2px base): half-steps + 28px for Linear-style
+      // control internals. The 4px steps below remain the primary grid.
+      "0.5": "var(--sina-space--0_5)",
       1: "var(--sina-space--1)",
+      "1.5": "var(--sina-space--1_5)",
       2: "var(--sina-space--2)",
+      "2.5": "var(--sina-space--2_5)",
       3: "var(--sina-space--3)",
       4: "var(--sina-space--4)",
       5: "var(--sina-space--5)",
       6: "var(--sina-space--6)",
+      7: "var(--sina-space--7)",
       8: "var(--sina-space--8)",
       10: "var(--sina-space--10)",
       12: "var(--sina-space--12)",

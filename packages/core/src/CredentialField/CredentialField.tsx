@@ -41,6 +41,7 @@ const SecretInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputEl
       <div className="relative">
         <Lock
           aria-hidden
+          weight="fill"
           className="pointer-events-none absolute inset-y-0 left-2.5 my-auto size-control-2xs text-text-muted"
         />
         <input
@@ -72,9 +73,9 @@ const SecretInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputEl
           )}
         >
           {revealed ? (
-            <EyeSlash aria-hidden className="size-control-2xs" />
+            <EyeSlash aria-hidden weight="fill" className="size-control-2xs" />
           ) : (
-            <Eye aria-hidden className="size-control-2xs" />
+            <Eye aria-hidden weight="fill" className="size-control-2xs" />
           )}
         </button>
       </div>

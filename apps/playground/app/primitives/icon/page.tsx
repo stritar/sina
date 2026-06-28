@@ -1,25 +1,50 @@
 import { Icon } from "@sina-design-system/core";
-import { Lock, ShieldCheck, Warning } from "@phosphor-icons/react/dist/ssr";
-import { Demo, StoryShell } from "../_components/StoryShell";
+import type { IconWeight } from "@phosphor-icons/react";
+import { ShieldCheck } from "@phosphor-icons/react/dist/ssr";
+import { Demo, Matrix, StoryShell } from "../_components/StoryShell";
+
+const SIZES = ["16", "20", "24", "32"] as const;
+const WEIGHTS = ["regular", "bold", "fill", "duotone"] as const;
+const COLORS = [
+  { className: "text-text", label: "text" },
+  { className: "text-danger", label: "danger" },
+  { className: "text-success", label: "success" },
+  { className: "text-warning", label: "warning" },
+  { className: "text-info", label: "info" },
+] as const;
 
 export default function IconStory() {
   return (
     <StoryShell title="Icon">
-      <Demo label="Labeled (announced to assistive tech)">
-        <span className="text-text">
-          <Icon icon={ShieldCheck} label="Secure" size={24} />
-        </span>
-        <span className="text-danger">
-          <Icon icon={Warning} label="Warning" size={24} />
-        </span>
+      <Matrix
+        label="size × weight"
+        rows={SIZES.map((s) => ({ key: s, label: `${s}px` }))}
+        cols={WEIGHTS.map((w) => ({ key: w, label: w }))}
+        render={(size, weight) => (
+          <Icon
+            icon={ShieldCheck}
+            size={Number(size)}
+            weight={weight as IconWeight}
+            decorative
+          />
+        )}
+      />
+
+      <Demo label="Labeled vs decorative">
+        <Icon icon={ShieldCheck} label="Secure" size={24} />
+        <Icon icon={ShieldCheck} decorative size={24} />
       </Demo>
-      <Demo label="Decorative (hidden from assistive tech), color via currentColor">
-        <span className="text-text-muted">
-          <Icon icon={Lock} decorative size={24} />
-        </span>
-        <span className="text-success">
-          <Icon icon={Lock} decorative size={24} />
-        </span>
+
+      <Demo label="Color · via text-* tokens (currentColor)">
+        {COLORS.map((c) => (
+          <Icon
+            key={c.label}
+            icon={ShieldCheck}
+            decorative
+            size={24}
+            className={c.className}
+          />
+        ))}
       </Demo>
     </StoryShell>
   );

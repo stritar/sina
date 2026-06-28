@@ -47,12 +47,12 @@ export const Checkbox = forwardRef<ComponentRef<typeof Primitive.Root>, Checkbox
         <Primitive.Indicator>
           <Check
             aria-hidden
-            weight="bold"
+            weight="fill"
             className="hidden size-3 group-data-[state=checked]:block"
           />
           <Minus
             aria-hidden
-            weight="bold"
+            weight="fill"
             className="hidden size-3 group-data-[state=indeterminate]:block"
           />
         </Primitive.Indicator>

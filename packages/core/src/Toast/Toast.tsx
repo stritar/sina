@@ -118,7 +118,7 @@ export const ToastClose = forwardRef<
     )}
     {...props}
   >
-    <X aria-hidden className="size-control-2xs" />
+    <X aria-hidden weight="fill" className="size-control-2xs" />
   </Primitive.Close>
 ));
 ToastClose.displayName = "ToastClose";

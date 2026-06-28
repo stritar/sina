@@ -28,6 +28,7 @@ export function Spinner({ size = "md", label = "Loading", className }: SpinnerPr
     <span role="status" className={cn("inline-flex text-text-muted", className)}>
       <CircleNotch
         aria-hidden
+        weight="fill"
         className={cn(SIZES[size], "animate-spin motion-reduce:animate-none")}
       />
       <VisuallyHidden>{label}</VisuallyHidden>

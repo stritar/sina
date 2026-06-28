@@ -7,24 +7,68 @@ import {
 } from "@sina-design-system/core";
 import { Demo, StoryShell } from "../_components/StoryShell";
 
+const SIDES = ["top", "right", "bottom", "left"] as const;
+
 export default function TooltipStory() {
   return (
     <StoryShell title="Tooltip">
       <TooltipProvider delayDuration={200}>
-        <Demo label="pointer down (top side)">
+        <Demo label="Sides (top · right · bottom · left)">
+          <div className="grid w-full grid-cols-2 gap-12 px-8 py-12">
+            {SIDES.map((side) => (
+              <div key={side} className="flex justify-center">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="secondary">side={side}</Button>
+                  </TooltipTrigger>
+                  <TooltipContent side={side}>Anchored to the {side}</TooltipContent>
+                </Tooltip>
+              </div>
+            ))}
+          </div>
+        </Demo>
+
+        <Demo label="sideOffset (extra gap from the trigger)">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="secondary">Why blocked?</Button>
+              <Button variant="secondary">Default offset</Button>
             </TooltipTrigger>
-            <TooltipContent side="top">Exceeds the single-transfer limit</TooltipContent>
+            <TooltipContent side="bottom">sideOffset default</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="secondary">Offset 12</Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" sideOffset={12}>
+              sideOffset=12
+            </TooltipContent>
           </Tooltip>
         </Demo>
-        <Demo label="pointer up (bottom side)">
+
+        <Demo label="align (start · center · end)">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="secondary">Approval</Button>
+              <Button variant="secondary">align start</Button>
             </TooltipTrigger>
-            <TooltipContent side="bottom">Requires secondary approval</TooltipContent>
+            <TooltipContent side="bottom" align="start">
+              Aligned to the start edge
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="secondary">align center</Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" align="center">
+              Centered on the trigger
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="secondary">align end</Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" align="end">
+              Aligned to the end edge
+            </TooltipContent>
           </Tooltip>
         </Demo>
       </TooltipProvider>

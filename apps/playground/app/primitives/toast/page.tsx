@@ -23,14 +23,65 @@ const ICON_COLOR = {
   info: "text-info",
 } as const;
 
+type ToastKey =
+  | "success"
+  | "danger"
+  | "info"
+  | "with-action"
+  | "no-action"
+  | "title-only";
+
+type ToastSpec = {
+  variant: Variant;
+  title: string;
+  description?: string;
+  action?: string;
+};
+
+const SPECS: Record<ToastKey, ToastSpec> = {
+  success: {
+    variant: "success",
+    title: "Saved",
+    description: "Your changes were stored.",
+    action: "View",
+  },
+  danger: {
+    variant: "danger",
+    title: "Action blocked",
+    description: "The request did not pass validation.",
+    action: "Retry",
+  },
+  info: {
+    variant: "info",
+    title: "Working…",
+    description: "Processing your request.",
+  },
+  "with-action": {
+    variant: "info",
+    title: "Item archived",
+    description: "It was moved out of your inbox.",
+    action: "Undo",
+  },
+  "no-action": {
+    variant: "info",
+    title: "Sync complete",
+    description: "Everything is up to date.",
+  },
+  "title-only": {
+    variant: "success",
+    title: "Copied to clipboard",
+  },
+};
+
 export default function ToastStory() {
-  const [open, setOpen] = useState<Variant | null>(null);
-  const Glyph = open ? ICON[open] : null;
+  const [open, setOpen] = useState<ToastKey | null>(null);
+  const spec = open ? SPECS[open] : null;
+  const Glyph = spec ? ICON[spec.variant] : null;
 
   return (
     <StoryShell title="Toast">
       <ToastProvider>
-        <Demo label="trigger a toast">
+        <Demo label="variant (success · danger · info)">
           <Button variant="secondary" onClick={() => setOpen("success")}>
             Success
           </Button>
@@ -42,10 +93,25 @@ export default function ToastStory() {
           </Button>
         </Demo>
 
-        {open ? (
+        <Demo label="action (with · without)">
+          <Button variant="secondary" onClick={() => setOpen("with-action")}>
+            With action
+          </Button>
+          <Button variant="secondary" onClick={() => setOpen("no-action")}>
+            Without action
+          </Button>
+        </Demo>
+
+        <Demo label="description (title only)">
+          <Button variant="secondary" onClick={() => setOpen("title-only")}>
+            Title only
+          </Button>
+        </Demo>
+
+        {spec ? (
           <Toast
             key={open}
-            variant={open}
+            variant={spec.variant}
             open
             onOpenChange={(o) => !o && setOpen(null)}
             duration={4000}
@@ -54,28 +120,16 @@ export default function ToastStory() {
               <Glyph
                 aria-hidden
                 weight="fill"
-                className={`mt-0.5 size-5 shrink-0 ${ICON_COLOR[open]}`}
+                className={`mt-0.5 size-5 shrink-0 ${ICON_COLOR[spec.variant]}`}
               />
             ) : null}
             <div className="flex flex-col">
-              <ToastTitle>
-                {open === "success"
-                  ? "Transfer authorized"
-                  : open === "danger"
-                    ? "Transfer blocked"
-                    : "Validating intent…"}
-              </ToastTitle>
-              <ToastDescription>
-                {open === "success"
-                  ? "Wire to Acme Payroll · 8810 queued."
-                  : open === "danger"
-                    ? "Exceeds the single-transfer limit."
-                    : "Checking the constitution."}
-              </ToastDescription>
-              {open !== "info" ? (
-                <ToastAction altText="Take action">
-                  {open === "success" ? "View receipt" : "Request approval"}
-                </ToastAction>
+              <ToastTitle>{spec.title}</ToastTitle>
+              {spec.description ? (
+                <ToastDescription>{spec.description}</ToastDescription>
+              ) : null}
+              {spec.action ? (
+                <ToastAction altText={spec.action}>{spec.action}</ToastAction>
               ) : null}
             </div>
             <ToastClose />

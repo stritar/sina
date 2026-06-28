@@ -57,3 +57,4 @@ Invoke with `/<name>`. Each is a best-guess seed, hardened on first real use.
 - `/new-web-section` — add a marketing/docs section to `apps/web` consuming `theme`.
 - `/adversarial-test` — generate a hostile-stream test case against a chosen schema.
 - `/phase-status` — read/update `.claude/PHASE_STATE.md`; the source of truth for phase progress.
+- `/figma-component-coverage` — when adding/updating a component in Figma, enforce that **all** its props are displayed: full variant matrix + a coverage frame demonstrating every boolean/instance-swap/text prop.
