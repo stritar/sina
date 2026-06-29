@@ -65,15 +65,15 @@ export default function ButtonStory() {
       />
 
       <Demo label="Icons · left / right / both / icon-only at each size">
-        <Button iconLeft={<ShieldCheck />}>Leading</Button>
-        <Button variant="secondary" iconRight={<ArrowRight />}>
+        <Button iconLeft={<ShieldCheck weight="fill" />}>Leading</Button>
+        <Button variant="secondary" iconRight={<ArrowRight weight="bold" />}>
           Trailing
         </Button>
-        <Button iconLeft={<ShieldCheck />} iconRight={<ArrowRight />}>
+        <Button iconLeft={<ShieldCheck weight="fill" />} iconRight={<ArrowRight weight="bold" />}>
           Both
         </Button>
         {SIZES.map((size) => (
-          <Button key={size} size={size} aria-label="Add item" iconLeft={<Plus />} />
+          <Button key={size} size={size} aria-label="Add item" iconLeft={<Plus weight="bold" />} />
         ))}
       </Demo>
 

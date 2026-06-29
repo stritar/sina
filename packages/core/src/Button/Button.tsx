@@ -7,6 +7,8 @@
  * / `iconRight` slots flank the label; the button sizes the glyphs per `size`. With
  * no label (icon-only) it renders square — pass `aria-label` for an accessible name.
  * Spacing lives on the label (not a flex gap), so it stays even with or without icons.
+ * Every variant carries a zero-width, per-variant border as an outlined-button hook:
+ * a caller setting `className="border"` gets a correctly-colored outline per variant.
  * Domain-agnostic: labels like "Confirm" / "Approve" are the caller's concern.
  */
 "use client";
@@ -21,6 +23,8 @@ import { cn } from "../utils/cn.js";
 export const buttonVariants = cva(
   cn(
     "inline-flex items-center justify-center whitespace-nowrap rounded-md",
+    // Zero-width border by default — outlined-button hook; color set per variant.
+    "border-0",
     "transition-[background-color,box-shadow,color] duration-fast ease-standard",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-1 focus-visible:ring-offset-bg",
     // Disabled: muted, not blanket-dimmed (states matrix). Ghost overrides bg.
@@ -31,12 +35,13 @@ export const buttonVariants = cva(
       variant: {
         // Filled actions darken on press; danger keeps full strength
         // (governance carve-out — never quieted).
-        primary: "bg-primary text-primary-fg hover:bg-primary-hover active:bg-primary-active",
+        primary:
+          "border-primary bg-primary text-primary-fg hover:bg-primary-hover active:bg-primary-active",
         secondary:
-          "bg-secondary text-secondary-fg hover:bg-secondary-hover active:bg-secondary-hover",
-        danger: "bg-danger text-danger-fg hover:bg-danger/90 active:bg-danger/80",
+          "border-border bg-secondary text-secondary-fg hover:bg-secondary-hover active:bg-secondary-hover",
+        danger: "border-danger bg-danger text-danger-fg hover:bg-danger/90 active:bg-danger/80",
         // Quiet control: translucent overlay, not a color swap.
-        ghost: "text-text hover:bg-hover active:bg-pressed disabled:bg-transparent",
+        ghost: "border-border text-text hover:bg-hover active:bg-pressed disabled:bg-transparent",
       },
       // Outer padding only — the rest of the horizontal breathing room rides on the
       // label (see labelVariants), so icon↔label spacing matches label-only spacing.

@@ -243,6 +243,14 @@
   --sina-radius--full: 9999px;
 
   /* ===================================================================== */
+  /* Border width — outlined-control hook; 0 by default                    */
+  /* ===================================================================== */
+  --sina-border-width--0: 0px;
+  --sina-border-width--1: 1px; /* hairline / default */
+  --sina-border-width--2: 2px;
+  --sina-border-width--4: 4px; /* keep Toast's border-l-4 on-system */
+
+  /* ===================================================================== */
   /* Size — control heights / icon dims (t-shirt)                         */
   /* ===================================================================== */
   --sina-size--icon-sm: 0.875rem; /* 14 — inline / badge icon */
@@ -352,4 +360,8 @@ body {
   background-color: var(--sina-color-bg);
   color: var(--sina-color-text);
   font-family: var(--sina-font--sans);
+  /* Crisp, sharp glyphs: grayscale (not subpixel) AA on macOS/WebKit & Firefox. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }

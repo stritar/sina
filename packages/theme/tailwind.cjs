@@ -146,6 +146,15 @@ module.exports = {
       full: "var(--sina-radius--full)",
     },
 
+    // Strict override (not extend): bare `border` = 1px; 0 is the outlined-control
+    // hook (buttons carry a zero-width border by default), 4 keeps Toast's border-l-4.
+    borderWidth: {
+      0: "var(--sina-border-width--0)",
+      DEFAULT: "var(--sina-border-width--1)",
+      2: "var(--sina-border-width--2)",
+      4: "var(--sina-border-width--4)",
+    },
+
     fontFamily: {
       sans: "var(--sina-font--sans)",
       mono: "var(--sina-font--mono)",

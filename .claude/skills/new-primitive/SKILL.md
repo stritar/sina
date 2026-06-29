@@ -9,7 +9,7 @@ Scaffold a new headless primitive in `@sina-design-system/core`. The boundary is
 
 ## Recipe
 
-1. **Confirm design sign-off** (anatomy + interaction states). If the hand-off isn't signed off, stop and ask — that gate is binding (`CLAUDE.md`). Note: the Figma file (`l9OvywRftq3eaKzgEqzauJ`) currently has only `Cover` / `Foundations` pages — there is **no `Primitives` page** yet, so build to the theme tokens + the written anatomy in `.claude/PHASE_2_PRIMITIVES.md` until design lands.
+1. **Confirm design sign-off** (anatomy + interaction states). If the hand-off isn't signed off, stop and ask — that gate is binding (`CLAUDE.md`). The SINA Figma file is `kRTCdsBg4WpiGxQQGfvoLU` (see [[sina-figma-file]]) — build to the theme tokens + the written anatomy, and mirror the new primitive into Figma via `/primitive-figma-sync`.
 2. **Create the component** `packages/core/src/<Name>/<Name>.tsx`:
    - Import Radix from the unified package as a namespace: `import { Dialog as Primitive } from "radix-ui"` → `Primitive.Root`, `Primitive.Content`, … (members: `Slot.Root`, `VisuallyHidden.Root`, `AccessibleIcon.Root`, `Label.Root`).
    - Relative imports use a **`.js` extension** and `import type` for types (`verbatimModuleSyntax`). The shared class merger is `import { cn } from "../utils/cn.js"`.

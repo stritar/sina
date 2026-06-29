@@ -5,7 +5,7 @@ description: Enforce that every component added to or updated in the SINA Figma 
 
 > **Binding rule:** a component is not done until **every prop it exposes is visibly demonstrated** on the canvas. A prop a reviewer can't see is a prop that silently rots. This applies to new components and to any edit that adds/removes/renames a prop.
 
-The SINA Figma file is `mvicg1WNyYIeeLckLq2BSq` (see [[sina-figma-file]]). Components live one-per-page under the `——— COMPONENTS ———` section. Before any write, load the **`figma-use`** guidance (MANDATORY): read the `skill://figma/figma-use/SKILL.md` MCP resource, and `skill://figma/figma-use/references/component-patterns.md` for variants/properties. Honour the repo's hard rules in `CLAUDE.md` (hex-only colors → bind to existing **variables**, never raw values; strict spacing grid → bind to `space/*` tokens).
+The SINA Figma file is `kRTCdsBg4WpiGxQQGfvoLU` (see [[sina-figma-file]]). Components live one-per-page under the `——— COMPONENTS ———` section. Before any write, load the **`figma-use`** guidance (MANDATORY): read the `skill://figma/figma-use/SKILL.md` MCP resource, and `skill://figma/figma-use/references/component-patterns.md` for variants/properties. Honour the repo's hard rules in `CLAUDE.md` (hex-only colors → bind to existing **variables**, never raw values; strict spacing grid → bind to `space/*` tokens).
 
 ## What "display all props" means
 

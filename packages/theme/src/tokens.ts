@@ -125,6 +125,14 @@ export const radius = {
   full: 9999,
 } as const;
 
+/** Border widths (px) — outlined-control hook; 0 by default. */
+export const borderWidth = {
+  0: 0,
+  1: 1,
+  2: 2,
+  4: 4,
+} as const;
+
 /** Control / icon sizing (t-shirt) → pixels. */
 export const size = {
   iconSm: 14,

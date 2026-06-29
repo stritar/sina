@@ -77,7 +77,7 @@ export default function DialogStory() {
             <DialogDescription>
               The body scrolls inside a fixed height; the focus trap still holds.
             </DialogDescription>
-            <ScrollArea className="mt-3 h-48 rounded-md border border-subtle">
+            <ScrollArea className="mt-3 h-24 rounded-md border border-border-subtle">
               <div className="flex flex-col gap-3 p-3">
                 {Array.from({ length: 20 }, (_, i) => (
                   <p key={i} className="text-sm text-text-muted">

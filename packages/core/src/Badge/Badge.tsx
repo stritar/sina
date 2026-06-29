@@ -106,7 +106,7 @@ export function Badge({
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring",
           )}
         >
-          <X aria-hidden className="size-full" />
+          <X aria-hidden weight="bold" className="size-full" />
         </button>
       )}
     </span>
