@@ -16,7 +16,7 @@ import { cn } from "../utils/cn.js";
 // Attached focus: the border brightens + a faint 1px ring, instead of a
 // detached 2px offset halo — reads as "anchored", not floating.
 const CONTROL = cn(
-  "w-full rounded-md border border-subtle bg-surface text-ui text-text",
+  "w-full rounded-md border border-border-subtle bg-surface text-ui text-text",
   "placeholder:text-text-subtle transition-colors duration-fast ease-standard",
   "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
   "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",

@@ -54,7 +54,7 @@ const AdornedInput = forwardRef<
       inputMode="decimal"
       {...inputProps}
       className={cn(
-        "h-7 w-full rounded-md border border-subtle bg-surface text-ui text-text",
+        "h-7 w-full rounded-md border border-border-subtle bg-surface text-ui text-text",
         "placeholder:text-text-subtle transition-colors duration-fast ease-standard",
         "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
         "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",

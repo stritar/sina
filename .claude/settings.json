@@ -32,6 +32,11 @@
             "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/post-edit-check.mjs\"",
             "timeout": 60
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/primitive-figma-sync-reminder.mjs\"",
+            "timeout": 30
           }
         ]
       }

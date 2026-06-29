@@ -133,7 +133,7 @@ export function Combobox({
             onFocus={() => setOpen(true)}
             onKeyDown={handleKeyDown}
             className={cn(
-              "h-7 w-full rounded-md border border-subtle bg-surface pl-7 pr-2.5 text-ui text-text",
+              "h-7 w-full rounded-md border border-border-subtle bg-surface pl-7 pr-2.5 text-ui text-text",
               "placeholder:text-text-subtle transition-colors duration-fast ease-standard",
               "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
               "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",
@@ -149,7 +149,7 @@ export function Combobox({
             if (anchorRef.current?.contains(e.target as Node)) e.preventDefault();
           }}
           className={cn(
-            "z-dropdown w-[var(--radix-popover-trigger-width)] overflow-hidden rounded-md border border-subtle bg-surface-raised p-1 shadow-md",
+            "z-dropdown w-[var(--radix-popover-trigger-width)] overflow-hidden rounded-md border border-border-subtle bg-surface-raised p-1 shadow-md",
             "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
             "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
           )}

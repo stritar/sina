@@ -25,16 +25,13 @@ describe("Badge", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("applies the solid appearance classes to the root", () => {
-    const { container } = render(
-      <Badge appearance="solid" intent="danger">
-        Blocked
-      </Badge>,
-    );
+  it("applies the subtle intent classes to the root", () => {
+    const { container } = render(<Badge intent="danger">Blocked</Badge>);
     // Colors live on the root pill; the label is an inner padded span.
     const root = container.firstElementChild as HTMLElement;
-    expect(root.className).toContain("bg-danger");
-    expect(root.className).toContain("text-danger-fg");
+    expect(root.className).toContain("bg-danger-bg");
+    expect(root.className).toContain("text-danger");
+    expect(root.className).toContain("border-danger/40");
   });
 
   it("renders a dismiss button with an accessible name and fires onClose", async () => {

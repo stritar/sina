@@ -2,9 +2,9 @@
  * @sina-design-system/core — Badge
  *
  * Status pill. Role-based inline `<span>` — meaning is carried by text (plus an
- * optional dot or icon), never by color alone, so it stays accessible. Two
- * appearances (subtle tint / solid fill) across neutral + status intents, in two
- * sizes. Spacing rides on the label (not a flex gap), mirroring Button: outer
+ * optional dot or icon), never by color alone, so it stays accessible. A subtle
+ * tint across neutral + status intents, in two sizes. Spacing rides on the label
+ * (not a flex gap), mirroring Button: outer
  * padding on the pill + horizontal padding on the label, so a leading dot/icon and
  * a trailing dismiss button sit flush and stay evenly spaced with or without a label.
  * Domain-agnostic: labels like "Blocked" / "Compliant" are the caller's concern.
@@ -16,32 +16,26 @@ import type { ReactNode } from "react";
 import { cn } from "../utils/cn.js";
 
 export const badgeVariants = cva(
-  "inline-flex items-center whitespace-nowrap rounded-full",
+  "inline-flex items-center whitespace-nowrap rounded-full border",
   {
     variants: {
-      appearance: { subtle: "border", solid: "" },
-      intent: { danger: "", success: "", warning: "", info: "", neutral: "" },
+      // Subtle tint: tinted bg + 40% intent border + intent text.
+      intent: {
+        danger: "border-danger/40 bg-danger-bg text-danger",
+        success: "border-success/40 bg-success-bg text-success",
+        warning: "border-warning/40 bg-warning-bg text-warning",
+        info: "border-info/40 bg-info-bg text-info",
+        neutral: "border-border bg-surface text-text-muted",
+      },
       // Outer padding only — the rest of the horizontal breathing room rides on the
       // label (see labelVariants), so dot/icon↔label spacing matches label-only
       // spacing. Weight scales with size: sm reads as body text, md leans in.
       size: {
         sm: "px-1 py-0.5 text-xs font-normal",
-        md: "px-1 py-0.5 text-ui font-medium",
+        md: "px-1 py-1 text-ui font-medium",
       },
     },
-    compoundVariants: [
-      { appearance: "subtle", intent: "danger", class: "border-danger/40 bg-danger-bg text-danger" },
-      { appearance: "subtle", intent: "success", class: "border-success/40 bg-success-bg text-success" },
-      { appearance: "subtle", intent: "warning", class: "border-warning/40 bg-warning-bg text-warning" },
-      { appearance: "subtle", intent: "info", class: "border-info/40 bg-info-bg text-info" },
-      { appearance: "subtle", intent: "neutral", class: "border-border bg-surface text-text-muted" },
-      { appearance: "solid", intent: "danger", class: "bg-danger text-danger-fg" },
-      { appearance: "solid", intent: "success", class: "bg-success text-success-fg" },
-      { appearance: "solid", intent: "warning", class: "bg-warning text-warning-fg" },
-      { appearance: "solid", intent: "info", class: "bg-info text-info-fg" },
-      { appearance: "solid", intent: "neutral", class: "bg-text text-bg" },
-    ],
-    defaultVariants: { appearance: "subtle", intent: "neutral", size: "md" },
+    defaultVariants: { intent: "neutral", size: "md" },
   },
 );
 
@@ -70,7 +64,6 @@ export interface BadgeProps
 }
 
 export function Badge({
-  appearance,
   intent,
   size,
   dot = false,
@@ -86,9 +79,13 @@ export function Badge({
   const glyph = resolvedSize === "sm" ? "size-3" : "size-control-2xs";
 
   return (
-    <span className={cn(badgeVariants({ appearance, intent, size }), className)} {...props}>
+    <span className={cn(badgeVariants({ intent, size }), className)} {...props}>
       {dot ? (
-        <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-current" />
+        // Dot rides in an icon-sized, centered container so it lands in the same
+        // leading slot as a glyph and stays consistently positioned across both.
+        <span aria-hidden className={cn("inline-flex shrink-0 items-center justify-center", glyph)}>
+          <span className="size-1.5 rounded-full bg-current" />
+        </span>
       ) : Glyph ? (
         <Glyph aria-hidden weight="fill" className={cn("shrink-0", glyph)} />
       ) : null}
@@ -102,12 +99,14 @@ export function Badge({
           onClick={onClose}
           className={cn(
             glyph,
-            "inline-flex shrink-0 items-center justify-center rounded-full opacity-70",
-            "transition-opacity hover:opacity-100",
+            // Inherits the pill's text color (currentColor) so it matches the label
+            // exactly; hover adds a faint tint for affordance instead of dimming.
+            "inline-flex shrink-0 items-center justify-center rounded-full",
+            "transition-colors hover:bg-current/10",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring",
           )}
         >
-          <X aria-hidden weight="fill" className="size-full" />
+          <X aria-hidden className="size-full" />
         </button>
       )}
     </span>

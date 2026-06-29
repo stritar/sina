@@ -36,7 +36,7 @@ ToastViewport.displayName = "ToastViewport";
 
 export const toastVariants = cva(
   cn(
-    "relative flex items-start gap-2.5 rounded-md border border-subtle bg-surface-raised p-3 pr-7 shadow-md",
+    "relative flex items-start gap-2.5 rounded-md border border-border-subtle bg-surface-raised p-3 pr-7 shadow-md",
     "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-bottom-2",
     "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
     "data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)]",
@@ -46,9 +46,9 @@ export const toastVariants = cva(
   {
     variants: {
       variant: {
-        success: "border-l-2 border-l-success",
-        danger: "border-l-2 border-l-danger",
-        info: "border-l-2 border-l-info",
+        success: "border-l-4 border-l-success",
+        danger: "border-l-4 border-l-danger",
+        info: "border-l-4 border-l-info",
       },
     },
     defaultVariants: { variant: "info" },
@@ -118,7 +118,7 @@ export const ToastClose = forwardRef<
     )}
     {...props}
   >
-    <X aria-hidden weight="fill" className="size-control-2xs" />
+    <X aria-hidden className="size-control-2xs" />
   </Primitive.Close>
 ));
 ToastClose.displayName = "ToastClose";

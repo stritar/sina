@@ -27,7 +27,7 @@ export const TooltipContent = forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "z-dropdown max-w-xs rounded-sm bg-text px-2 py-1 text-xs text-bg shadow-sm",
+        "z-dropdown max-w-xs rounded-full bg-text px-2 py-0.5 text-xs text-bg shadow-sm",
         "data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95",
         "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
         className,

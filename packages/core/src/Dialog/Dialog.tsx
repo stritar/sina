@@ -33,7 +33,7 @@ export const DialogContent = forwardRef<
       ref={ref}
       className={cn(
         "fixed left-1/2 top-1/2 z-modal w-full max-w-md -translate-x-1/2 -translate-y-1/2",
-        "flex flex-col gap-3 rounded-lg border border-subtle bg-surface-raised p-5 shadow-lg",
+        "flex flex-col gap-3 rounded-lg border border-border-subtle bg-surface-raised p-5 shadow-lg",
         // Fade only — the centered element already owns `transform`, so a zoom
         // keyframe would fight the -translate centering.
         "data-[state=open]:animate-in data-[state=open]:fade-in-0",

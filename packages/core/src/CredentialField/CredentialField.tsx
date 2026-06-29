@@ -50,7 +50,7 @@ const SecretInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputEl
           disabled={disabled}
           {...inputProps}
           className={cn(
-            "h-7 w-full rounded-md border border-subtle bg-surface pl-7 pr-8 text-ui text-text",
+            "h-7 w-full rounded-md border border-border-subtle bg-surface pl-7 pr-8 text-ui text-text",
             "placeholder:text-text-subtle transition-colors duration-fast ease-standard",
             "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
             "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",
@@ -216,7 +216,7 @@ export function CredentialOTP({
           onPaste={(e) => handlePaste(i, e)}
           onFocus={(e) => e.target.select()}
           className={cn(
-            "size-10 rounded-md border border-subtle bg-surface text-center text-base font-medium text-text",
+            "size-10 rounded-md border border-border-subtle bg-surface text-center text-base font-medium text-text",
             "transition-colors duration-fast ease-standard",
             "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
             "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",

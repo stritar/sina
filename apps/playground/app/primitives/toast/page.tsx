@@ -77,6 +77,7 @@ export default function ToastStory() {
   const [open, setOpen] = useState<ToastKey | null>(null);
   const spec = open ? SPECS[open] : null;
   const Glyph = spec ? ICON[spec.variant] : null;
+  const singleLine = spec ? !spec.description && !spec.action : false;
 
   return (
     <StoryShell title="Toast">
@@ -115,12 +116,13 @@ export default function ToastStory() {
             open
             onOpenChange={(o) => !o && setOpen(null)}
             duration={4000}
+            className={singleLine ? "items-center" : undefined}
           >
             {Glyph ? (
               <Glyph
                 aria-hidden
                 weight="fill"
-                className={`mt-0.5 size-5 shrink-0 ${ICON_COLOR[spec.variant]}`}
+                className={`size-5 shrink-0 ${singleLine ? "" : "mt-0.5"} ${ICON_COLOR[spec.variant]}`}
               />
             ) : null}
             <div className="flex flex-col">
@@ -129,7 +131,15 @@ export default function ToastStory() {
                 <ToastDescription>{spec.description}</ToastDescription>
               ) : null}
               {spec.action ? (
-                <ToastAction altText={spec.action}>{spec.action}</ToastAction>
+                <ToastAction
+                  asChild
+                  altText={spec.action}
+                  className="mt-1 self-start font-normal text-text"
+                >
+                  <Button variant="ghost" size="sm" className="-ml-1">
+                    {spec.action}
+                  </Button>
+                </ToastAction>
               ) : null}
             </div>
             <ToastClose />
