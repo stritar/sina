@@ -11,7 +11,7 @@ The SINA Figma file is `mvicg1WNyYIeeLckLq2BSq` (see [[sina-figma-file]]). Compo
 
 A component's prop surface has two kinds of property; both must be shown:
 
-1. **VARIANT properties** (e.g. `Variant`, `Size`, `State`) → exhaustively, as the **component-set matrix itself**. Every combination is one variant row/column. Missing combinations show as blank gaps in Figma's picker — fill them all.
+1. **VARIANT properties** (real component props — e.g. `Variant`, `Size`, `Intent`, `appearance`) → exhaustively, as the **component-set matrix itself**. Every combination is one variant row/column. Missing combinations show as blank gaps in Figma's picker — fill them all. **Interaction states (hover / active / focus-visible / disabled / loading) are NOT a variant axis** (v2 model): a Figma boolean drives visibility, not color, so states are runtime styling shown in a separate **States strip** of override instances. Variant *values* mirror the code (lowercase: `primary`, `sm`, …).
 2. **Non-variant properties** — `BOOLEAN` (toggles), `INSTANCE_SWAP` (e.g. icon glyph), `TEXT` (label), `SLOT` → these don't multiply the matrix, so they must be demonstrated in a separate **coverage frame** of instances, one instance per meaningful prop combination (e.g. icon none / left / right / both).
 
 ## Recipe
@@ -33,6 +33,6 @@ A component's prop surface has two kinds of property; both must be shown:
 
 ## Reuses / reference
 
-- Existing exemplar: the **Button** set (page `7:4`) — full `Variant × Size × State` matrix + `Icon Left` / `Icon Right` boolean toggles (each with an `INSTANCE_SWAP` glyph) + a `Label` text prop, plus an "Icon props — coverage" frame. Mirror its structure.
+- Existing exemplar: the **Button** family (page `7:4`, rebuilt v2 2026-06-28) — a `Variant × Size` (16-cell) set + `Icon Left` / `Icon Right` booleans (each with an `INSTANCE_SWAP` glyph) + a `Label` text prop; a **States strip** (default / hover / active / focus-visible / disabled / loading as override instances); a coverage frame; and a full documentation block. Every family page follows the same rhythm: **Title → Variants → States strip → Coverage → Documentation**. Mirror it. (Component sheets are pinned to the Color collection's Light mode; tagged `setSharedPluginData('dsb','key','component/<name>')`.)
 - `figma-use` skill (API rules) + `component-patterns.md` (variants, `addComponentProperty`, `componentPropertyReferences`, `combineAsVariants`).
 - Memory: [[sina-figma-file]], [[sina-figma-use-gotchas]], [[sina-strict-tailwind-grid]].
