@@ -12,7 +12,8 @@
 
 import { Toast as Primitive } from "radix-ui";
 import { cva, type VariantProps } from "class-variance-authority";
-import { X } from "@phosphor-icons/react/dist/ssr";
+import { X, Info, CheckCircle, WarningCircle } from "@phosphor-icons/react/dist/ssr";
+import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
 import { forwardRef } from "react";
 import type { ComponentPropsWithoutRef, ComponentRef } from "react";
 import { cn } from "../utils/cn.js";
@@ -55,14 +56,33 @@ export const toastVariants = cva(
   },
 );
 
+type ToastVariant = NonNullable<VariantProps<typeof toastVariants>["variant"]>;
+
+/** Leading intent glyph + color per variant (mirrors Alert). */
+const TOAST_ICONS: Record<ToastVariant, { icon: PhosphorIcon; color: string }> = {
+  info: { icon: Info, color: "text-info" },
+  success: { icon: CheckCircle, color: "text-success" },
+  danger: { icon: WarningCircle, color: "text-danger" },
+};
+
 export interface ToastProps
   extends ComponentPropsWithoutRef<typeof Primitive.Root>,
-    VariantProps<typeof toastVariants> {}
+    VariantProps<typeof toastVariants> {
+  /** Override the default intent icon, or pass `false` to omit it. */
+  icon?: PhosphorIcon | false;
+}
 
 export const Toast = forwardRef<ComponentRef<typeof Primitive.Root>, ToastProps>(
-  ({ className, variant, ...props }, ref) => (
-    <Primitive.Root ref={ref} className={cn(toastVariants({ variant }), className)} {...props} />
-  ),
+  ({ className, variant, icon, children, ...props }, ref) => {
+    const { icon: defaultIcon, color } = TOAST_ICONS[variant ?? "info"];
+    const Glyph = icon === false ? null : (icon ?? defaultIcon);
+    return (
+      <Primitive.Root ref={ref} className={cn(toastVariants({ variant }), className)} {...props}>
+        {Glyph ? <Glyph aria-hidden weight="fill" className={cn("size-5 shrink-0", color)} /> : null}
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5">{children}</div>
+      </Primitive.Root>
+    );
+  },
 );
 Toast.displayName = "Toast";
 
@@ -93,8 +113,8 @@ export const ToastAction = forwardRef<
   <Primitive.Action
     ref={ref}
     className={cn(
-      "mt-1 inline-flex text-ui font-medium text-primary",
-      "transition-colors duration-fast ease-standard hover:text-primary-hover",
+      "-ml-1.5 inline-flex w-fit items-center rounded-sm px-1.5 py-0.5 text-ui font-medium text-text",
+      "transition-colors duration-fast ease-standard hover:bg-hover",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-1 focus-visible:ring-offset-bg",
       className,
     )}

@@ -79,16 +79,16 @@ export const SelectItem = forwardRef<
   <Primitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-pointer select-none items-center gap-1.5 rounded-sm py-1.5 pl-7 pr-2 text-ui text-text outline-none",
+      "relative flex cursor-pointer select-none items-center gap-1.5 rounded-sm py-1.5 pl-6 pr-2 text-ui text-text outline-none",
       "data-[highlighted]:bg-hover data-[state=checked]:font-medium",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
     {...props}
   >
-    <span className="absolute left-1.5 inline-flex items-center">
+    <span className="absolute inset-y-0 left-1.5 inline-flex items-center">
       <Primitive.ItemIndicator>
-        <Check aria-hidden weight="fill" className="size-control-2xs" />
+        <Check aria-hidden weight="fill" className="size-control-2xs shrink-0" />
       </Primitive.ItemIndicator>
     </span>
     <Primitive.ItemText>{children}</Primitive.ItemText>

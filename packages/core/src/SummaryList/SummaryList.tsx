@@ -27,7 +27,7 @@ export function SummaryList({ items, className }: SummaryListProps) {
   return (
     <dl className={cn("divide-y divide-border-subtle", className)}>
       {items.map((item, i) => (
-        <div key={i} className="flex items-center justify-between gap-3 py-2">
+        <div key={i} className="flex items-center justify-between py-2">
           <dt className={cn("text-ui", item.emphasis ? "font-medium text-text" : "text-text-muted")}>
             {item.label}
           </dt>

@@ -110,7 +110,7 @@ export function Combobox({
         <div ref={anchorRef} className={cn("relative w-full", className)}>
           <MagnifyingGlass
             aria-hidden
-            weight="fill"
+            weight="regular"
             className="pointer-events-none absolute inset-y-0 left-2.5 my-auto size-control-2xs text-text-muted"
           />
           <input
@@ -174,11 +174,11 @@ export function Combobox({
                       choose(option);
                     }}
                     className={cn(
-                      "flex cursor-pointer select-none items-center justify-between gap-1.5 rounded-sm px-2 py-1.5 text-ui text-text",
+                      "flex cursor-pointer select-none items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-ui text-text",
                       isActive && "bg-hover",
                     )}
                   >
-                    <span className="truncate text-text-muted">
+                    <span className="truncate text-text">
                       {highlight(option.label, query)}
                       {option.description ? (
                         <span className="text-text-subtle"> · {option.description}</span>

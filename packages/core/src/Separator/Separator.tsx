@@ -20,7 +20,7 @@ export const Separator = forwardRef<
     orientation={orientation}
     decorative={decorative}
     className={cn(
-      "shrink-0 bg-border-subtle",
+      "shrink-0 bg-border",
       orientation === "horizontal" ? "h-px w-full" : "h-full w-px self-stretch",
       className,
     )}

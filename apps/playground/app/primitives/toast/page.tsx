@@ -10,18 +10,10 @@ import {
   ToastTitle,
   ToastViewport,
 } from "@sina-design-system/core";
-import { WarningCircle, CheckCircle, Info } from "@phosphor-icons/react/dist/ssr";
 import { useState } from "react";
 import { Demo, StoryShell } from "../_components/StoryShell";
 
 type Variant = "success" | "danger" | "info";
-
-const ICON = { success: CheckCircle, danger: WarningCircle, info: Info } as const;
-const ICON_COLOR = {
-  success: "text-success",
-  danger: "text-danger",
-  info: "text-info",
-} as const;
 
 type ToastKey =
   | "success"
@@ -76,7 +68,6 @@ const SPECS: Record<ToastKey, ToastSpec> = {
 export default function ToastStory() {
   const [open, setOpen] = useState<ToastKey | null>(null);
   const spec = open ? SPECS[open] : null;
-  const Glyph = spec ? ICON[spec.variant] : null;
   const singleLine = spec ? !spec.description && !spec.action : false;
 
   return (
@@ -118,30 +109,17 @@ export default function ToastStory() {
             duration={4000}
             className={singleLine ? "items-center" : undefined}
           >
-            {Glyph ? (
-              <Glyph
-                aria-hidden
-                weight="fill"
-                className={`size-5 shrink-0 ${singleLine ? "" : "mt-0.5"} ${ICON_COLOR[spec.variant]}`}
-              />
+            <ToastTitle>{spec.title}</ToastTitle>
+            {spec.description ? (
+              <ToastDescription>{spec.description}</ToastDescription>
             ) : null}
-            <div className="flex flex-col">
-              <ToastTitle>{spec.title}</ToastTitle>
-              {spec.description ? (
-                <ToastDescription>{spec.description}</ToastDescription>
-              ) : null}
-              {spec.action ? (
-                <ToastAction
-                  asChild
-                  altText={spec.action}
-                  className="mt-1 self-start font-normal text-text"
-                >
-                  <Button variant="ghost" size="sm" className="-ml-1">
-                    {spec.action}
-                  </Button>
-                </ToastAction>
-              ) : null}
-            </div>
+            {spec.action ? (
+              <ToastAction asChild altText={spec.action}>
+                <Button variant="ghost" size="sm" className="-ml-1.5 self-start">
+                  {spec.action}
+                </Button>
+              </ToastAction>
+            ) : null}
             <ToastClose />
           </Toast>
         ) : null}

@@ -21,13 +21,13 @@ export const ScrollArea = forwardRef<
     <Primitive.Viewport className="size-full rounded-[inherit]">{children}</Primitive.Viewport>
     <Primitive.Scrollbar
       orientation="vertical"
-      className="flex w-2 touch-none select-none transition-colors duration-fast ease-standard"
+      className="flex w-1.5 touch-none select-none transition-colors duration-fast ease-standard"
     >
       <Primitive.Thumb className="relative flex-1 rounded-full bg-border" />
     </Primitive.Scrollbar>
     <Primitive.Scrollbar
       orientation="horizontal"
-      className="flex h-2 flex-col touch-none select-none transition-colors duration-fast ease-standard"
+      className="flex h-1.5 flex-col touch-none select-none transition-colors duration-fast ease-standard"
     >
       <Primitive.Thumb className="relative flex-1 rounded-full bg-border" />
     </Primitive.Scrollbar>
