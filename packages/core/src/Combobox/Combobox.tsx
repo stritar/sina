@@ -11,7 +11,7 @@
 "use client";
 
 import { Popover as Primitive } from "radix-ui";
-import { Check, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
+import { CheckFatIcon, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import { useId, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent, ReactNode } from "react";
 import { cn } from "../utils/cn.js";
@@ -110,7 +110,7 @@ export function Combobox({
         <div ref={anchorRef} className={cn("relative w-full", className)}>
           <MagnifyingGlass
             aria-hidden
-            weight="fill"
+            weight="bold"
             className="pointer-events-none absolute inset-y-0 left-2.5 my-auto size-control-2xs text-text-muted"
           />
           <input
@@ -185,7 +185,7 @@ export function Combobox({
                       ) : null}
                     </span>
                     {isSelected ? (
-                      <Check aria-hidden weight="bold" className="size-control-2xs shrink-0" />
+                      <CheckFatIcon aria-hidden weight="fill" className="size-control-2xs shrink-0" />
                     ) : null}
                   </li>
                 );

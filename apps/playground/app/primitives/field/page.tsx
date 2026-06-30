@@ -2,7 +2,7 @@ import { Field } from "@sina-design-system/core";
 import { Demo, StoryShell } from "../_components/StoryShell";
 
 const inputClassName =
-  "h-7 w-full rounded-md border border-subtle bg-surface px-2.5 text-ui text-text placeholder:text-text-subtle focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring aria-[invalid=true]:border-danger";
+  "h-7 w-full rounded-md border border-border-subtle bg-surface px-2.5 text-ui text-text placeholder:text-text-subtle focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring aria-[invalid=true]:border-danger";
 
 export default function FieldStory() {
   return (
@@ -54,7 +54,7 @@ export default function FieldStory() {
           <Field label="Notes" description="Free-form text">
             <textarea
               rows={3}
-              className="w-full rounded-md border border-subtle bg-surface px-2.5 py-1.5 text-ui text-text placeholder:text-text-subtle focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring aria-[invalid=true]:border-danger"
+              className="w-full rounded-md border border-border-subtle bg-surface px-2.5 py-1.5 text-ui text-text placeholder:text-text-subtle focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring aria-[invalid=true]:border-danger"
               placeholder="Add a note"
             />
           </Field>

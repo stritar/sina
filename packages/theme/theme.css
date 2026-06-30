@@ -107,7 +107,7 @@
 
   /* Text */
   --sina-color-text: #353b31; /* neutral--900 — headings & body           */
-  --sina-color-text-muted: #696c66; /* neutral--600 — secondary text      */
+  --sina-color-text-muted: #52564e; /* neutral--700 — secondary text      */
   --sina-color-text-subtle: #a7ada0; /* neutral--400 — placeholders       */
   --sina-color-text-inverse: #ffffff; /* text on dark surfaces            */
 
@@ -316,7 +316,7 @@
   --sina-color-surface-sunken: #21251e;
 
   --sina-color-text: #f5f6f4; /* neutral--50  */
-  --sina-color-text-muted: #a7ada0; /* neutral--400 */
+  --sina-color-text-muted: #cbd0c5; /* neutral--300 */
   --sina-color-text-subtle: #84897e; /* neutral--500 */
   --sina-color-text-inverse: #353b31;
 

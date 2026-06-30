@@ -14,7 +14,7 @@
 "use client";
 
 import { Select as Primitive } from "radix-ui";
-import { Check, CaretDown } from "@phosphor-icons/react/dist/ssr";
+import { CheckFatIcon, CaretDown } from "@phosphor-icons/react/dist/ssr";
 import { forwardRef } from "react";
 import type { ComponentPropsWithoutRef, ComponentRef } from "react";
 import { cn } from "../utils/cn.js";
@@ -88,7 +88,7 @@ export const SelectItem = forwardRef<
   >
     <span className="absolute inset-y-0 left-1.5 inline-flex items-center">
       <Primitive.ItemIndicator>
-        <Check aria-hidden weight="bold" className="size-control-2xs shrink-0" />
+        <CheckFatIcon aria-hidden weight="fill" className="size-control-2xs shrink-0" />
       </Primitive.ItemIndicator>
     </span>
     <Primitive.ItemText>{children}</Primitive.ItemText>

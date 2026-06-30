@@ -6,7 +6,7 @@ export default function SummaryListStory() {
     <StoryShell title="SummaryList">
       <Demo label="Key/value rows">
         <SummaryList
-          className="w-80"
+          className="w-full"
           items={[
             { label: "Name", value: "Project Atlas" },
             { label: "Owner", value: "Platform team" },
@@ -18,7 +18,7 @@ export default function SummaryListStory() {
 
       <Demo label="Emphasis">
         <SummaryList
-          className="w-80"
+          className="w-full"
           items={[
             { label: "Subtotal", value: "120 units" },
             { label: "Adjustment", value: "4 units" },
@@ -29,7 +29,7 @@ export default function SummaryListStory() {
 
       <Demo label="Rich values">
         <SummaryList
-          className="w-80"
+          className="w-full"
           items={[
             { label: "Owner", value: "Platform team" },
             { label: "Status", value: <Badge intent="success">Active</Badge> },
@@ -44,7 +44,7 @@ export default function SummaryListStory() {
 
       <Demo label="Multiple emphasis">
         <SummaryList
-          className="w-80"
+          className="w-full"
           items={[
             { label: "Phase one", value: "Complete", emphasis: true },
             { label: "Phase two", value: "In progress" },

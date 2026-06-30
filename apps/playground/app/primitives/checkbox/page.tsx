@@ -1,5 +1,9 @@
 import { Checkbox } from "@sina-design-system/core";
-import { Demo, Matrix, StoryShell } from "../_components/StoryShell";
+import { Demo, Specimen, StoryShell } from "../_components/StoryShell";
+
+// Static focus ring, mirroring the house focus style (`:focus-visible` only) so
+// the "focus" specimen reads as focused without keyboard interaction.
+const focusRing = "ring-2 ring-focus-ring ring-offset-1 ring-offset-bg";
 
 export default function CheckboxStory() {
   return (
@@ -8,40 +12,29 @@ export default function CheckboxStory() {
         <Checkbox aria-label="unchecked" />
         <Checkbox aria-label="checked" defaultChecked />
         <Checkbox aria-label="indeterminate" checked="indeterminate" />
-        <Checkbox aria-label="disabled" disabled />
-        <Checkbox aria-label="disabled checked" disabled defaultChecked />
+      </Demo>
+
+      <Demo label="Focus / disabled">
+        <div className="flex items-start gap-6">
+          <Specimen caption="focus">
+            <Checkbox aria-label="focus" defaultChecked className={focusRing} />
+          </Specimen>
+          <Specimen caption="disabled">
+            <Checkbox aria-label="disabled" defaultChecked disabled />
+          </Specimen>
+        </div>
       </Demo>
 
       <Demo label="With label">
-        <Checkbox label="I acknowledge this action" />
-        <Checkbox label="I acknowledge this action" defaultChecked />
-        <Checkbox label="I acknowledge this action" disabled />
+        <div className="flex items-start gap-8">
+          <Specimen caption="checked + label">
+            <Checkbox label="Accept terms" defaultChecked />
+          </Specimen>
+          <Specimen caption="unchecked + label">
+            <Checkbox label="Subscribe" />
+          </Specimen>
+        </div>
       </Demo>
-
-      <Matrix
-        label="State × label"
-        rows={[
-          { key: "unchecked", label: "unchecked" },
-          { key: "checked", label: "checked" },
-          { key: "indeterminate", label: "indeterminate" },
-          { key: "disabled", label: "disabled" },
-        ]}
-        cols={[
-          { key: "no-label", label: "no label" },
-          { key: "with-label", label: "with label" },
-        ]}
-        render={(row, col) => {
-          const withLabel = col === "with-label";
-          const labelProps = withLabel
-            ? { label: "Acknowledge" }
-            : { "aria-label": `${row} checkbox` };
-
-          if (row === "checked") return <Checkbox defaultChecked {...labelProps} />;
-          if (row === "indeterminate") return <Checkbox checked="indeterminate" {...labelProps} />;
-          if (row === "disabled") return <Checkbox disabled {...labelProps} />;
-          return <Checkbox {...labelProps} />;
-        }}
-      />
     </StoryShell>
   );
 }

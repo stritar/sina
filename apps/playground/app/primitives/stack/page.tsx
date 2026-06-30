@@ -92,7 +92,7 @@ export default function StackStory() {
                 direction="row"
                 gap={3}
                 justify={j as Justify}
-                className="w-full rounded-md border border-subtle bg-bg p-2"
+                className="w-full rounded-md border border-border-subtle bg-bg p-2"
               >
                 <div className="h-7 w-16 rounded-md bg-surface-raised" />
                 <div className="h-7 w-16 rounded-md bg-surface-raised" />

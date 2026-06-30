@@ -9,7 +9,7 @@
 "use client";
 
 import { Checkbox as Primitive } from "radix-ui";
-import { Check, Minus } from "@phosphor-icons/react/dist/ssr";
+import { CheckFatIcon } from "@phosphor-icons/react/dist/ssr";
 import { forwardRef, useId } from "react";
 import type { ComponentPropsWithoutRef, ComponentRef, ReactNode } from "react";
 import { cn } from "../utils/cn.js";
@@ -45,16 +45,28 @@ export const Checkbox = forwardRef<ComponentRef<typeof Primitive.Root>, Checkbox
         {...props}
       >
         <Primitive.Indicator>
-          <Check
+          {/* The checkmark uses Phosphor's CheckFat (fill weight) for a consistent
+              mark across primitives. The indeterminate dash stays inline — it's a
+              dash, not a check. `currentColor` inherits the box's `text-primary-fg`. */}
+          <CheckFatIcon
             aria-hidden
-            weight="bold"
-            className="hidden size-control-2xs shrink-0 group-data-[state=checked]:block"
+            weight="fill"
+            className="hidden size-3 shrink-0 group-data-[state=checked]:block"
           />
-          <Minus
+          <svg
             aria-hidden
-            weight="bold"
-            className="hidden size-control-2xs shrink-0 group-data-[state=indeterminate]:block"
-          />
+            viewBox="0 0 12 12"
+            fill="none"
+            className="hidden size-3 shrink-0 group-data-[state=indeterminate]:block"
+          >
+            <path
+              d="M2.5 6L9.5 6"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </Primitive.Indicator>
       </Primitive.Root>
     );

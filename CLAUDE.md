@@ -42,6 +42,7 @@ These mirror the per-package ESLint `no-restricted-imports` messages, so the age
 - Single package: `pnpm --filter <name> <script>` (e.g. `pnpm --filter @sina-design-system/core test`).
 - Playground dev on **3001** (`pnpm --filter playground dev`); web on **3000**.
 - Note: the `lint`/`typecheck` Turbo tasks `dependsOn: ["^build"]`, so a filtered dependent needs upstream `dist` to exist.
+- **Apps consume built `dist/`, never `src`.** `apps/*` resolve `@sina-design-system/*` through each package's `exports`/`main` map (→ `dist/`); Next `transpilePackages` only transpiles, it does **not** redirect resolution to source. So an edit to a library's `src` is invisible to a running playground/web until that package's `dist` is rebuilt. For iterative cross-package work run **`pnpm dev` from the repo root** (Turbo runs each library's `tsc --watch` alongside the app); `pnpm --filter playground dev` alone watches *only* the app and will serve stale library output. For a one-off check, `pnpm --filter <pkg> build` the edited library before verifying. Symptom of forgetting: stale UI (old icon/style) that makes a correct edit look broken — see `/preview-change`.
 
 ## Process gate
 
@@ -59,3 +60,4 @@ Invoke with `/<name>`. Each is a best-guess seed, hardened on first real use.
 - `/phase-status` — read/update `.claude/PHASE_STATE.md`; the source of truth for phase progress.
 - `/figma-component-coverage` — when adding/updating a component in Figma, enforce that **all** its props are displayed: full variant matrix + a coverage frame demonstrating every boolean/instance-swap/text prop.
 - `/primitive-figma-sync` — keep a `core` primitive and its SINA Figma component in lockstep both ways: mirror a `packages/core/**` prop/variant/token change into Figma, or a Figma component change back into code. Pairs with `/figma-component-coverage` as the acceptance test.
+- `/preview-change` — before visually verifying a `packages/*` edit in the playground/web, refresh the consumed `dist/` (root `pnpm dev` watch, or `pnpm --filter <pkg> build`) so apps never render stale library output.
