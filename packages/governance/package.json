@@ -1,7 +1,7 @@
 {
-  "name": "@sina-design-system/fintech",
+  "name": "@sina-design-system/governance",
   "version": "0.0.0",
-  "description": "SINA Fintech constitution — pure Zod schemas that validate LLM intents before render.",
+  "description": "SINA governance seam — the shared interception contract, audit emit, and Zod intercept engine every domain constitution implements.",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -26,7 +26,6 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@sina-design-system/governance": "workspace:*",
     "zod": "^3.24.1"
   },
   "devDependencies": {
