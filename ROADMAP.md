@@ -4,7 +4,7 @@
 
 SINA is a strict, schema-driven UI architecture for AI agents. It intercepts an LLM's *intent* before it reaches the browser, evaluates the payload against Zod schemas (the "Constitution"), and either **blocks** the UI stream or **renders** an accessible, governed React primitive. The goal: neutralize hallucinated business logic, broken accessibility, and unauthorized actions at the edge.
 
-This roadmap takes us from empty stubs to a working, adversarially-tested design system. **Phases 0–4 are complete** (foundation wiring, agentic setup, theme tokens, core primitives, the Zod constitution, and the AI-SDK emulator test bed). `.claude/PHASE_STATE.md` is the live source of truth for phase progress; this file is the *why* and the sequencing. **Scope note:** SINA now focuses **solely on the fintech domain** — the defense-logistics second domain (former Phase 6) is descoped (see below).
+This roadmap takes us from empty stubs to a working, adversarially-tested design system. **Phases 0–4 are complete** (foundation wiring, agentic setup, theme tokens, core primitives, the Zod constitution, and the AI-SDK emulator test bed). `.claude/PHASE_STATE.md` is the live source of truth for phase progress; this file is the *why* and the sequencing. **Scope note:** SINA now focuses **solely on the fintech domain** — the defense-logistics second domain (originally slated for a later phase) is descoped (see below).
 
 **Starting inventory (baseline at roadmap authoring — the empty scaffold before any content):**
 - ✅ Turborepo + pnpm workspaces, TypeScript 5.7, ESLint 9, Prettier 3 — all wired via `packages/config`
@@ -136,28 +136,34 @@ Every later phase is judged against this invariant.
 - Validate the full loop in the playground against the Phase 4 harness.
 - **Exit criteria:** the wire-transfer use case is demonstrably un-bypassable from a hostile stream.
 
-### Phase 6 — Defense Logistics *(retired — descoped)*
-Use Case 2 (NSN/CAC procurement — `packages/defense`, `<SecureRequisitionDialog>`) is **out of scope**: SINA now focuses solely on the fintech domain. The Phase 3 `governance` abstraction still makes a second domain addable later, but none is planned. Phase numbers 7–8 are kept stable to match `.claude/PHASE_STATE.md`.
+### Phase 6 — Governed Fintech Experience (Full Surface Area)
+**Design hand-off:** the anatomy + interaction/blocked states for the full family of governed fintech surfaces beyond the wire dialog — money-movement flows, account/onboarding forms, card operations, governed read-only data displays, and mandatory regulatory disclosures. Delivered incrementally, **one signed-off hand-off per surface** (design sign-off still gates implementation, §1 rule 3).
 
-### Phase 7 — Marketing Site & Docs (`apps/web`)
-**Design hand-off:** bespoke landing layouts, narrative, live demo embeds, and a rendered/animated version of the interception-seam diagram (§3 is ASCII today — the real one is a design artifact).
-**Goal:** Public face — a single rich landing page + documentation, reusing `theme` (and read-only demos of `core`).
+**Goal:** Generalize the Phase 5 pattern (one `core` primitive + one `fintech` schema → one governed component) across the **entire fintech experience**, so SINA governs a realistic banking app end-to-end — not a single transfer. The interception seam, validate-then-mount invariant (§1b), and audit trail must hold for *every* fintech action and data surface, all reusing the shared `governance` seam and emitting the same `{ valid, violations, requiredComponent }` contract. Each surface lands as: `core` primitive + `fintech`/`governance` schema + valid/adversarial fixtures + an emulator scenario.
 
-**Tooling decision — Fumadocs.** Docs are built with [Fumadocs](https://fumadocs.dev): App-Router-native, MDX-based (so we embed live read-only React demos inside the docs), with built-in search, sidebar, and TOC. It's themed to SINA tokens rather than its default skin, so the docs match the landing. Landing pages stay fully bespoke. *Constraint:* the repo is on Tailwind 3.4 — pin the Tailwind-3-compatible Fumadocs line and compose its preset with the existing `@sina-design-system/theme` preset (do not pull the Tailwind-4-only major).
+Grouped into workstreams (each a candidate hand-off; sequence by product priority):
 
-**Sequencing — build the shell now, fill later.** The docs engine, deploy pipeline, information architecture, and all architecture/boundary/"add a domain" prose are buildable today against the current empty stubs. The component showcase and the live demo embed are stubbed placeholders that light up as `theme`/`core`/the playground land. Each area below is tagged `[now]` or `[needs Px]`.
+- **A. Money movement (actions) — beyond wire.** Extend the payment surface with per-rail thresholds/rules: ACH / internal transfer, P2P (Zelle-style), and bill pay reuse the `SecureWireDialog` approval mechanics as variants; FX / currency conversion adds rate + ISO-4217 minor-units correctness and spread disclosure; scheduled / recurring payments add standing-order governance (cumulative limits, cancel-ability). → `SecurePaymentDialog` (multi-rail).
+- **B. Account & onboarding (governed forms).** Add/verify payee or beneficiary (fraud-sensitive → step-up auth on a new payee); account opening / KYC with identity + sanctions/OFAC screening gating any funded action; user-set spending limits & controls that themselves become constitution inputs. → `PayeeVerificationDialog`, `KycGateDialog`.
+- **C. Card operations.** Freeze/unfreeze, dispute a charge, issue a virtual card — each an interceptable, authorization-gated action. → `CardActionDialog`.
+- **D. Governed data display (read-only).** Governance is not only about blocking actions — it is safe *presentation* of sensitive data. Account balance + transaction history + statements render through accessible `core` primitives with **PAN/PII masking** (masked account/card numbers, never full digits), so a hallucinated stream can neither exfiltrate nor fabricate financial data. → `GovernedTransactionTable`, `GovernedStatement`.
+- **E. Mandatory disclosures.** Regulatory text (Reg E, Truth-in-Lending, FX-spread disclosure) that the model **cannot alter or omit** — SINA injects the verbatim, audited disclosure as part of the governed render and never trusts the model to produce it. → `DisclosurePanel`.
 
-**Information architecture:**
+- **Constitution expansion:** grow `packages/fintech` from the single wire-transfer schema into a rule-set spanning all of the above — payment-rail limits, new-payee risk, KYC/sanctions state, card-action authorization, the disclosure-required matrix — each cited like the Phase 3 `thresholds.ts`, all still emitting the standard interception contract + audit event.
+- **Skill:** the Phase 5 `/new-governed-component` recipe is exercised repeatedly here and hardened for the family (dialog variants, read-only governed-data primitives, disclosure injection).
+- **Exit criteria:** every surface above is demonstrably **un-bypassable from a hostile stream** in the playground emulator (mock mode, CI) — over-limit/unauthorized actions are blocked and forced into the correct governed component; sensitive data renders masked and cannot be fabricated; mandatory disclosures are always present and verbatim. The emulator scenario set covers the full family, not just the $60k wire.
 
-*Landing* (bespoke, `app/(marketing)/page.tsx`) — one scrollytelling page consuming `theme`:
-1. Hero — the thesis (*the model emits intent; SINA decides what renders*) + CTA → `/docs`. `[now]`
-2. The threat — hallucinated business logic, broken a11y, unauthorized actions. `[now]`
-3. The interception seam — the diagram from §3. `[now]`
-4. Live governance demo — the mock-mode embed (see below). `[needs P4]`
-5. Three-layer architecture — `theme` → `core` → `governance`/`fintech`, boundaries stated as guarantees. `[now]`
-6. Closing CTA — docs + GitHub. `[now]`
+> *(This slot previously held the now-descoped defense-logistics domain — SINA is fintech-only. The Phase 3 `governance` abstraction still keeps a future non-fintech domain addable, but none is planned.)*
 
-*Docs* (`/docs`, MDX in `content/docs/`) — six sections:
+### Phase 7 — Documentation (Fumadocs) (`apps/web/docs`)
+**Design hand-off:** the docs *skin* — Fumadocs chrome themed to SINA tokens (nav, sidebar, TOC, search, code blocks), plus the docs information architecture. Not the bespoke landing (that is Phase 8).
+**Goal:** The reference + conceptual documentation: App-Router-native, MDX-based (so we embed live read-only React demos inside the docs), themed to SINA tokens rather than Fumadocs' default skin. This is the **first `apps/web` content**, so it stands up the shared web infrastructure (Cloudflare deploy pipeline, Tailwind-preset composition, `transpilePackages`) that Phase 8 then reuses.
+
+**Tooling decision — Fumadocs.** Docs are built with [Fumadocs](https://fumadocs.dev): App-Router-native, MDX-based, with built-in search, sidebar, and TOC. *Constraint:* the repo is on Tailwind 3.4 — pin the Tailwind-3-compatible Fumadocs line and compose its preset with the existing `@sina-design-system/theme` preset (do not pull the Tailwind-4-only major).
+
+**Sequencing — build the shell now, fill later.** The docs engine, deploy pipeline, information architecture, and all architecture/boundary/"add a domain" prose are buildable today against the current stubs. The component showcase and the live demo embed are stubbed placeholders that light up as `theme`/`core`/the playground land. Each area below is tagged `[now]` or `[needs Px]`.
+
+**Information architecture** — *Docs* (`/docs`, MDX in `content/docs/`), six sections:
 
 | Section | Pages | Status |
 |---|---|---|
@@ -169,16 +175,35 @@ Use Case 2 (NSN/CAC procurement — `packages/defense`, `<SecureRequisitionDialo
 | **Components** | Read-only live demos: Dialog · CurrencyField · Grid · SecureWireDialog | `[needs P2/P5]` |
 
 **Implementation notes (not a full build plan):**
-- Add Fumadocs deps; use a `(marketing)` route group for the landing and a `docs` segment so the two layout systems don't collide; compose Tailwind presets; map Fumadocs' `--color-fd-*` variables onto SINA semantic tokens so docs chrome inherits the SINA palette.
-- **Live governance demo:** reuse the Phase 4 deterministic `streamUI` harness as a read-only, mock-mode widget (canned hostile/compliant streams, no live LLM). Factor the harness's presentational component + fixtures so `apps/web` can embed them. Run the schema check **server-side** (server action / edge route) to honor §1b — the embed mirrors the real gate, it doesn't fake it. Add `@sina-design-system/fintech` to `transpilePackages` in `apps/web/next.config.mjs`.
+- Add Fumadocs deps; put docs under a `docs` segment (reserve a `(marketing)` route group for the Phase 8 landing so the two layout systems don't collide); compose Tailwind presets; map Fumadocs' `--color-fd-*` variables onto SINA semantic tokens so docs chrome inherits the SINA palette.
+- **Live governance demo (factored here, reused in Phase 8):** reuse the Phase 4 deterministic harness as a read-only, mock-mode widget (canned hostile/compliant streams, no live LLM), embedded in the Components/Concepts pages. **Factor the harness's presentational component + fixtures** so both the docs *and* the Phase 8 landing can embed the same thing. Run the schema check **server-side** (server action / edge route) to honor §1b — the embed mirrors the real gate, it doesn't fake it. Add `@sina-design-system/fintech` to `transpilePackages` in `apps/web/next.config.mjs`.
 - **Auto-generated API Reference:** generate the Reference section from **TSDoc comments** in `packages/*` (TypeDoc → MDX) so reference docs never drift from the typed contracts; hand-write only the narrative around them. This puts a light TSDoc-comment expectation on `theme`/`core`/`fintech` as they fill in.
 - **`llms.txt` + Markdown export:** emit a Fumadocs `llms.txt` index and per-page raw-Markdown so AI agents can consume SINA's own docs — on-brand for a product about governing AI agents.
-- **Cloudflare deploy:** `@cloudflare/next-on-pages` with the mandatory `nodejs_compat` flag (carried forward from the Phase 0 spike — without it the worker errors instead of serving). Prefer Fumadocs **static search** (prebuilt index, client-side) on Pages over an edge search route. `allowBuilds` for `esbuild`+`sharp` is already set in `pnpm-workspace.yaml`.
-- Seed the `/new-web-section` skill (§1a) once the first section exists.
+- **Cloudflare deploy (stood up here):** `@cloudflare/next-on-pages` with the mandatory `nodejs_compat` flag (carried forward from the Phase 0 spike — without it the worker errors instead of serving). Prefer Fumadocs **static search** (prebuilt index, client-side) on Pages over an edge search route. `allowBuilds` for `esbuild`+`sharp` is already set in `pnpm-workspace.yaml`.
+- Seed the `/new-web-section` skill (§1a) once the first docs section exists.
 
-- **Exit criteria:** site builds and deploys to Cloudflare Pages; the site and docs **themselves pass the a11y bar** (axe + keyboard + screen-reader), dogfooding the same gate `core` primitives must meet. Verify locally with `pnpm dlx @cloudflare/next-on-pages@1` then `wrangler pages dev .vercel/output/static --compatibility-flags=nodejs_compat`, mirroring the Phase 0 spike.
+- **Exit criteria:** docs build and deploy to Cloudflare Pages; the docs **themselves pass the a11y bar** (axe + keyboard + screen-reader), dogfooding the same gate `core` primitives must meet. Verify locally with `pnpm dlx @cloudflare/next-on-pages@1` then `wrangler pages dev .vercel/output/static --compatibility-flags=nodejs_compat`, mirroring the Phase 0 spike.
 
-### Phase 8 — Release Hardening
+### Phase 8 — Marketing Site (`apps/web` landing)
+**Design hand-off:** bespoke landing layouts, narrative, live demo embeds, and a rendered/animated version of the interception-seam diagram (§3 is ASCII today — the real one is a design artifact).
+**Goal:** The public face — a single rich, fully bespoke scrollytelling landing page consuming `theme` (and read-only demos of `core`). It reuses the docs engine's shared web infra + the mock-mode demo embed factored in Phase 7, and links into `/docs`.
+
+**Information architecture** — *Landing* (bespoke, `app/(marketing)/page.tsx`), one scrollytelling page consuming `theme`:
+1. Hero — the thesis (*the model emits intent; SINA decides what renders*) + CTA → `/docs`. `[now]`
+2. The threat — hallucinated business logic, broken a11y, unauthorized actions. `[now]`
+3. The interception seam — the diagram from §3. `[now]`
+4. Live governance demo — the mock-mode embed factored in Phase 7. `[needs P7]`
+5. Three-layer architecture — `theme` → `core` → `governance`/`fintech`, boundaries stated as guarantees. `[now]`
+6. Closing CTA — docs + GitHub. `[now]`
+
+**Implementation notes (not a full build plan):**
+- The landing lives in a `(marketing)` route group so its bespoke layout doesn't collide with the `docs` segment from Phase 7; it deploys through the **same Cloudflare pipeline** stood up in Phase 7.
+- **Live governance demo:** embed the read-only mock-mode widget factored in Phase 7 as the landing's section 4 — the schema check still runs **server-side** per §1b; the embed mirrors the real gate.
+- **Interception-seam diagram:** render/animate the §3 seam as a first-class design artifact (the ASCII in §3 is a placeholder for it).
+
+- **Exit criteria:** the landing builds and deploys to Cloudflare Pages through the Phase 7 pipeline; the landing **itself passes the a11y bar** (axe + keyboard + screen-reader), dogfooding the same gate `core` primitives must meet.
+
+### Phase 9 — Release Hardening
 **Goal:** Publishable, versioned, CI-gated.
 - Versioning/release flow (changesets) for `@sina-design-system/*` packages.
 - CI: typecheck + lint + `vitest` schema tests + axe a11y checks + playground adversarial suite (mock mode) on every PR.
@@ -196,8 +221,10 @@ The `apps/playground` Adversarial Sandbox is the **only** place the Vercel AI SD
 | **Phase 2** | Renders `core` primitives in isolation (no AI yet) — visual/a11y sanity. |
 | **Phase 4 ★** | **Primary AI SDK integration.** Wires `streamUI` → interception layer → `fintech` schemas → governed render. Builds the adversarial input panel. |
 | **Phase 5** | Runs the `<SecureWireDialog>` loop end-to-end against hostile $60k streams. |
-| **Phase 7** | The marketing site embeds this harness's **mock mode** as a read-only demo (no live LLM); the schema check still runs server-side per §1b. |
-| **Phase 8** | The adversarial suite becomes a required CI check. |
+| **Phase 6** | Runs the full governed-fintech-component family against hostile streams across every surface — payments/FX, payee/KYC, card ops, masked data displays, mandatory disclosures. |
+| **Phase 7** | The docs (Fumadocs) embed this harness's **mock mode** as read-only demos in the Components/Concepts pages (no live LLM); the schema check still runs server-side per §1b. |
+| **Phase 8** | The marketing landing embeds the same factored **mock-mode** demo as its live-governance section. |
+| **Phase 9** | The adversarial suite becomes a required CI check. |
 
 **The interception seam (the heart of SINA), exercised in Phase 4:**
 ```
@@ -235,7 +262,8 @@ LLM stream (streamUI intent / tool payload)
 - mock-model provider module for deterministic CI runs
 
 **Later:**
-- **Phase 7 (`apps/web`):** new `source.config.ts`, `lib/source.ts`, `app/(marketing)/page.tsx`, `app/docs/[[...slug]]/page.tsx`, `app/docs/layout.tsx`, `content/docs/**/*.mdx`, `wrangler.toml`; edit `next.config.mjs` (add `fintech` to `transpilePackages`), `tailwind.config.ts` (compose Fumadocs preset), `app/globals.css` (map `--color-fd-*` → SINA tokens)
+- **Phase 7 (`apps/web` docs):** new `source.config.ts`, `lib/source.ts`, `app/docs/[[...slug]]/page.tsx`, `app/docs/layout.tsx`, `content/docs/**/*.mdx`, `wrangler.toml`; edit `next.config.mjs` (add `fintech` to `transpilePackages`), `tailwind.config.ts` (compose Fumadocs preset), `app/globals.css` (map `--color-fd-*` → SINA tokens); factor the reusable mock-mode demo embed
+- **Phase 8 (`apps/web` landing):** new `app/(marketing)/page.tsx` + section components (bespoke landing); reuses the Phase 7 demo embed + Cloudflare pipeline
 
 ---
 
@@ -247,7 +275,7 @@ Per phase, "done" means:
 - **Core (P2):** keyboard/focus-trap/screen-reader checks pass **and automated axe checks are green** on primitives in the playground.
 - **Schemas (P3):** `vitest` over valid + adversarial fixtures; `.safeParse` returns typed `{valid, violations, requiredComponent}`; each decision emits an audit event.
 - **Interception (P4–P6) — the real test:** run the playground (`pnpm dev`, port 3001) in **mock mode**, feed a $60,000 transfer stream → assert the raw confirm is **blocked**, the designed blocked state shows, and `<SecureWireDialog>` renders; feed a compliant $5,000 stream → assert the standard primitive renders. Confirm validation is server-side (§1b).
-- **CI (P8):** adversarial suite (mock mode) + axe checks are required checks on every PR.
+- **CI (P9):** adversarial suite (mock mode) + axe checks are required checks on every PR.
 
 ---
 
