@@ -9,13 +9,15 @@
     "start": "next start --port 3001",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "echo \"(playground) no tests\" && exit 0",
+    "test": "vitest run",
     "clean": "rimraf .next"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^1.2.12",
     "@phosphor-icons/react": "^2.1.7",
     "@sina-design-system/core": "workspace:*",
     "@sina-design-system/fintech": "workspace:*",
+    "@sina-design-system/governance": "workspace:*",
     "@sina-design-system/theme": "workspace:*",
     "ai": "^4.0.30",
     "next": "^15.1.4",
