@@ -5,6 +5,7 @@ const nextConfig = {
     "@sina-design-system/core",
     "@sina-design-system/theme",
     "@sina-design-system/fintech",
+    "@sina-design-system/fintech-react",
     "@sina-design-system/governance",
   ],
 };

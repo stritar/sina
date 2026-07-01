@@ -32,3 +32,16 @@ export interface Turn {
   view: ConsoleView;
   streaming?: boolean;
 }
+
+/**
+ * The uniform contract for a component the gate FORCES (`requiredComponent`).
+ * The registry maps a `requiredComponent` name to a component of this shape, so
+ * Phase 6 can add governed components without rewiring BlockedState. A component
+ * that resolves an interactive re-gate (e.g. approval) lifts the new decision up
+ * via `onApproved` so the turn's reply can swap to the governed summary.
+ */
+export interface GovernedComponentProps {
+  trace: GateTrace;
+  turnId?: string;
+  onApproved?: (turnId: string, view: ConsoleView) => void;
+}

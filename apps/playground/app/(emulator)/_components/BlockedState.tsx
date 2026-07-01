@@ -7,7 +7,8 @@
 import { Alert, Badge } from "@sina-design-system/core";
 import type { GateTrace } from "../_lib/gate";
 import type { Violation } from "@sina-design-system/governance";
-import { SecureWireDialogPlaceholder } from "./SecureWireDialogPlaceholder";
+import type { ConsoleView } from "../_lib/types";
+import { resolveGovernedComponent } from "../_lib/registry";
 
 function severityIntent(severity: Violation["severity"]): "danger" | "warning" | "neutral" {
   if (severity === "reject" || severity === "escalate") return "danger";
@@ -15,10 +16,19 @@ function severityIntent(severity: Violation["severity"]): "danger" | "warning" |
   return "neutral";
 }
 
-export function BlockedState({ trace }: { trace: GateTrace }) {
+export function BlockedState({
+  trace,
+  turnId,
+  onApproved,
+}: {
+  trace: GateTrace;
+  turnId?: string;
+  onApproved?: (turnId: string, view: ConsoleView) => void;
+}) {
   const blocking = trace.result.violations.filter(
     (v) => v.severity === "reject" || v.severity === "escalate",
   );
+  const Governed = resolveGovernedComponent(trace.result.requiredComponent);
 
   return (
     <div className="flex flex-col gap-3 rounded-lg border border-danger/40 bg-surface p-3">
@@ -42,13 +52,13 @@ export function BlockedState({ trace }: { trace: GateTrace }) {
         ))}
       </div>
 
-      {trace.result.requiredComponent === "SecureWireDialog" && (
+      {Governed && (
         <div className="flex items-center justify-between gap-3 rounded-md bg-surface-secure p-2.5">
           <span className="text-ui text-text-muted">
             Forced governed component:{" "}
             <span className="font-mono text-text">{trace.result.requiredComponent}</span>
           </span>
-          <SecureWireDialogPlaceholder />
+          <Governed trace={trace} turnId={turnId} onApproved={onApproved} />
         </div>
       )}
     </div>

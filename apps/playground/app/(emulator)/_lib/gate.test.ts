@@ -55,3 +55,23 @@ describe("emulator gate seam — Phase 4 exit criteria", () => {
     expect(trace.latencyMs).toBeGreaterThanOrEqual(0);
   });
 });
+
+describe("emulator gate seam — Phase 5 secondary approval", () => {
+  it("passes the $60k wire once a second manager approves the exact terms", () => {
+    const { result } = runGate(payloadOf("approved-sixty"));
+    expect(result.valid).toBe(true);
+    expect(result.requiredComponent).toBeNull();
+  });
+
+  it("rejects a self-approved wire (four-eyes)", () => {
+    const { result } = runGate(payloadOf("self-approval"));
+    expect(result.valid).toBe(false);
+    expect(result.violations.some((v) => v.code === "SELF_APPROVAL_FORBIDDEN")).toBe(true);
+  });
+
+  it("rejects approve-$5k-execute-$60k (payload-binding mismatch)", () => {
+    const { result } = runGate(payloadOf("approve-five-execute-sixty"));
+    expect(result.valid).toBe(false);
+    expect(result.violations.some((v) => v.code === "APPROVAL_PAYLOAD_MISMATCH")).toBe(true);
+  });
+});

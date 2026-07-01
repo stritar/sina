@@ -17,6 +17,7 @@
     "@phosphor-icons/react": "^2.1.7",
     "@sina-design-system/core": "workspace:*",
     "@sina-design-system/fintech": "workspace:*",
+    "@sina-design-system/fintech-react": "workspace:*",
     "@sina-design-system/governance": "workspace:*",
     "@sina-design-system/theme": "workspace:*",
     "ai": "^4.0.30",

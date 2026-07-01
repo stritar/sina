@@ -56,6 +56,30 @@ export const SCENARIOS: Scenario[] = [
     expectation: "escalate",
   },
   {
+    id: "approved-sixty",
+    label: "$60,000 — approved by a second manager",
+    description:
+      "Above the $50k limit but carries a valid secondary approval, bound to the exact terms → passes.",
+    payload: wireFixtures.validApprovedSixtyThousand,
+    expectation: "pass",
+  },
+  {
+    id: "self-approval",
+    label: "$60,000 — self-approved",
+    description:
+      "The initiator approves its own wire (approver === initiator) → hard reject (four-eyes).",
+    payload: wireFixtures.selfApprovedSixtyThousand,
+    expectation: "reject",
+  },
+  {
+    id: "approve-five-execute-sixty",
+    label: "Approve $5k, execute $60k",
+    description:
+      "An approval bound to $5k terms attached to a $60k wire → payload-binding mismatch, reject.",
+    payload: wireFixtures.approveFiveExecuteSixty,
+    expectation: "reject",
+  },
+  {
     id: "non-usd-large",
     label: "€60,000 — non-USD (bands not applied)",
     description: "Format-valid; the USD regulatory bands don't apply, so it passes.",

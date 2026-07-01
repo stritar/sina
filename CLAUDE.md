@@ -15,6 +15,7 @@ These mirror the per-package ESLint `no-restricted-imports` messages, so the age
 - **`@sina-design-system/theme`** — design tokens + Tailwind preset only. **No React, no react-dom.**
 - **`@sina-design-system/core`** — headless, accessible primitives on Radix, styled via `theme`. **No `zod`, no domain packages (`fintech`/`defense`), and no domain *vocabulary*** (no `$50,000`, NSN, CAC, "limit", "approval"). Strictly domain-agnostic.
 - **`@sina-design-system/fintech`** (and future `defense`) — pure Zod constitution. **No React, no `core`, no `theme`, no UI of any kind.**
+- **`@sina-design-system/fintech-react`** — governed components (the third layer): composes a `core` primitive with a `fintech` schema and renders the decision the gate already made. **The one package allowed to import both `core` and `fintech`** (+ `theme`/`governance`). Still **no `zod`** (it composes schemas, never authors them) and **no `defense`**. The gate stays server-side — these components never validate a payload.
 
 **The one invariant (ROADMAP §1b):** the model emits **intent + props, never a component**. Validation runs **server-side only**; client-side checks are untrusted UX sugar. We **validate, then mount** — RSC tokens already streamed cannot be un-rendered, so the schema gate sits *before* any `core` primitive mounts.
 
@@ -55,6 +56,7 @@ Invoke with `/<name>`. Each is a best-guess seed, hardened on first real use.
 
 - `/new-primitive` — scaffold a headless `core` primitive (Radix + theme tokens + a11y + axe test + playground story).
 - `/new-schema` — scaffold a Zod governance schema in `fintech`/`defense` with the interception contract + valid/adversarial fixtures.
+- `/new-governed-component` — scaffold a governed component in `fintech-react` (a `core` primitive composed with a `fintech` schema, re-gated server-side), wired into the playground harness. The `SecureWireDialog` recipe.
 - `/new-web-section` — add a marketing/docs section to `apps/web` consuming `theme`.
 - `/adversarial-test` — generate a hostile-stream test case against a chosen schema.
 - `/phase-status` — read/update `.claude/PHASE_STATE.md`; the source of truth for phase progress.

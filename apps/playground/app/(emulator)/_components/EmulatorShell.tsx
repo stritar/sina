@@ -81,6 +81,17 @@ export function EmulatorShell({ initialScenarioId }: { initialScenarioId?: strin
     setBusy(false);
   }
 
+  // Approval re-gate resolved on the server: swap the turn's reply to the new
+  // decision (approved → governed summary), reflect it in the console, and append
+  // the fresh audit event — the approval is itself an audited governance decision.
+  function handleApproved(turnId: string, next: ConsoleView) {
+    setTurns((prev) => prev.map((turn) => (turn.id === turnId ? { ...turn, view: next } : turn)));
+    setView(next);
+    if (next.kind === "gate" && next.trace.audit) {
+      setAuditEvents((prev) => [...prev, next.trace.audit as AuditEvent]);
+    }
+  }
+
   function pickScenario(id: string) {
     const scenario = getScenario(id);
     if (!scenario) return;
@@ -162,7 +173,11 @@ export function EmulatorShell({ initialScenarioId }: { initialScenarioId?: strin
         {/* Chat (product world) */}
         <section className="flex flex-col gap-4 p-4 lg:h-[calc(100vh-3.5rem)] lg:overflow-hidden">
           <div className="flex-1 overflow-y-auto">
-            <ChatThread turns={turns} onRetry={() => retryRef.current()} />
+            <ChatThread
+              turns={turns}
+              onRetry={() => retryRef.current()}
+              onApproved={handleApproved}
+            />
           </div>
           <div className="shrink-0">
             <Composer

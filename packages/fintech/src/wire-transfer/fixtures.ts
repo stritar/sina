@@ -8,7 +8,8 @@
  */
 
 import { usd } from "../formats/currency.js";
-import type { WireTransferPayload } from "./wire-transfer.schema.js";
+import { coreTerms, payloadHash } from "../formats/canonical.js";
+import { AGENT_INITIATOR_ID, type WireTransferPayload } from "./wire-transfer.schema.js";
 
 // Known-good identifiers (real test vectors): canonical DE example IBAN + BIC.
 const VALID_IBAN = "DE89370400440532013000";
@@ -46,8 +47,8 @@ export const validNonUsdLarge: WireTransferPayload = {
   creditor: { name: "Beta SARL", account: { scheme: "sepa", iban: VALID_IBAN, bic: VALID_BIC } },
 };
 
-/** $60,000 USD with full info — trips the $50k secondary-approval escalation. */
-export const overLimitTransfer: unknown = {
+/** The $60k core terms — fully compliant except that it needs secondary approval. */
+const sixtyThousandCore: WireTransferPayload = {
   amount: usd(60_000),
   currency: "USD",
   debtor: {
@@ -61,6 +62,12 @@ export const overLimitTransfer: unknown = {
     account: { scheme: "sepa", iban: VALID_IBAN, bic: VALID_BIC },
   },
 };
+
+/** The hash a valid approval must carry — bound to the exact $60k terms. */
+const sixtyThousandHash = payloadHash(coreTerms(sixtyThousandCore));
+
+/** $60,000 USD with full info — trips the $50k secondary-approval escalation. */
+export const overLimitTransfer: unknown = sixtyThousandCore;
 
 /** $4,000 with the creditor address missing — Travel Rule info incomplete. */
 export const travelRuleMissingInfo: unknown = {
@@ -106,4 +113,74 @@ export const smuggledCardData: unknown = {
 export const unsupportedCurrency: unknown = {
   ...(validSmallTransfer as object),
   currency: "XYZ",
+};
+
+// ── Secondary approval (Phase 5) ──────────────────────────────────────────────
+
+/** $60k APPROVED by a different manager, bound to the exact terms → passes the gate. */
+export const validApprovedSixtyThousand: unknown = {
+  ...sixtyThousandCore,
+  approval: {
+    approverId: "mgr:dana",
+    approverName: "Dana Approver",
+    secondFactor: "246810",
+    payloadHash: sixtyThousandHash,
+  },
+};
+
+/** $60k where the agent approves its own wire (approverId === initiator) → SELF_APPROVAL_FORBIDDEN. */
+export const selfApprovedSixtyThousand: unknown = {
+  ...sixtyThousandCore,
+  approval: {
+    approverId: AGENT_INITIATOR_ID,
+    approverName: "Agent Opus",
+    secondFactor: "246810",
+    payloadHash: sixtyThousandHash,
+  },
+};
+
+/** A fabricated approval whose hash binds nothing → APPROVAL_PAYLOAD_MISMATCH. */
+export const fabricatedApprovalFlag: unknown = {
+  ...sixtyThousandCore,
+  approval: {
+    approverId: "mgr:dana",
+    approverName: "Dana Approver",
+    payloadHash: "fp_deadbeef",
+  },
+};
+
+/** Approve $5k terms, execute $60k — the classic bait-and-switch → APPROVAL_PAYLOAD_MISMATCH. */
+export const approveFiveExecuteSixty: unknown = {
+  ...sixtyThousandCore,
+  approval: {
+    approverId: "mgr:dana",
+    approverName: "Dana Approver",
+    payloadHash: payloadHash(coreTerms({ ...sixtyThousandCore, amount: usd(5_000) })),
+  },
+};
+
+/** A key smuggled *inside* the approval envelope → inner `.strict()` reject. */
+export const smuggledInsideApproval: unknown = {
+  ...sixtyThousandCore,
+  approval: {
+    approverId: "mgr:dana",
+    approverName: "Dana Approver",
+    payloadHash: sixtyThousandHash,
+    override: true,
+  },
+};
+
+/**
+ * A well-formed, correctly-bound approval carrying a `challengeId`. Freshness /
+ * replay is NOT enforced in Phase 5 (no server-side challenge store), so this
+ * PASSES today — the documented gap the Phase 8 audit sink closes.
+ */
+export const staleApproval: unknown = {
+  ...sixtyThousandCore,
+  approval: {
+    approverId: "mgr:dana",
+    approverName: "Dana Approver",
+    payloadHash: sixtyThousandHash,
+    challengeId: "chal_expired_0001",
+  },
 };

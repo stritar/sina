@@ -15,7 +15,17 @@ import { ComparisonToggle } from "./ComparisonToggle";
 import { GovernedWireSummary } from "./GovernedWireSummary";
 import { TransportState } from "./TransportState";
 
-function AssistantReply({ view, onRetry }: { view: ConsoleView; onRetry?: () => void }) {
+function AssistantReply({
+  view,
+  onRetry,
+  turnId,
+  onApproved,
+}: {
+  view: ConsoleView;
+  onRetry?: () => void;
+  turnId?: string;
+  onApproved?: (turnId: string, view: ConsoleView) => void;
+}) {
   if (view.kind === "idle") {
     return (
       <div className="flex items-center gap-2 text-text-muted">
@@ -35,7 +45,7 @@ function AssistantReply({ view, onRetry }: { view: ConsoleView; onRetry?: () => 
           view.trace.result.valid ? (
             <GovernedWireSummary payload={view.trace.payload} />
           ) : (
-            <BlockedState trace={view.trace} />
+            <BlockedState trace={view.trace} turnId={turnId} onApproved={onApproved} />
           )
         }
       />
@@ -47,7 +57,15 @@ function AssistantReply({ view, onRetry }: { view: ConsoleView; onRetry?: () => 
   );
 }
 
-export function ChatThread({ turns, onRetry }: { turns: Turn[]; onRetry?: () => void }) {
+export function ChatThread({
+  turns,
+  onRetry,
+  onApproved,
+}: {
+  turns: Turn[];
+  onRetry?: () => void;
+  onApproved?: (turnId: string, view: ConsoleView) => void;
+}) {
   if (turns.length === 0) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-2 p-6 text-center">
@@ -77,6 +95,8 @@ export function ChatThread({ turns, onRetry }: { turns: Turn[]; onRetry?: () => 
             <AssistantReply
               view={turn.streaming ? { kind: "idle" } : turn.view}
               onRetry={onRetry}
+              turnId={turn.id}
+              onApproved={onApproved}
             />
           </div>
         </div>
