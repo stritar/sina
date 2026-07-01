@@ -57,6 +57,7 @@ Invoke with `/<name>`. Each is a best-guess seed, hardened on first real use.
 - `/new-primitive` — scaffold a headless `core` primitive (Radix + theme tokens + a11y + axe test + playground story).
 - `/new-schema` — scaffold a Zod governance schema in `fintech`/`defense` with the interception contract + valid/adversarial fixtures.
 - `/new-governed-component` — scaffold a governed component in `fintech-react` (a `core` primitive composed with a `fintech` schema, re-gated server-side), wired into the playground harness. The `SecureWireDialog` recipe.
+- `/new-display-pattern` — scaffold an **ungoverned** display pattern: a shape-only `fintech` schema (no policy/escalation) + a presentational `fintech-react` component the intent router mounts on a clean pass. The `TransactionList`/`BalanceCard` recipe; the ungoverned twin of `/new-schema` + `/new-governed-component`. Catalog: `packages/fintech/PATTERNS.md`.
 - `/new-web-section` — add a marketing/docs section to `apps/web` consuming `theme`.
 - `/adversarial-test` — generate a hostile-stream test case against a chosen schema.
 - `/phase-status` — read/update `.claude/PHASE_STATE.md`; the source of truth for phase progress.

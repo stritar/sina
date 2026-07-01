@@ -52,6 +52,39 @@ function GateReply({
   );
 }
 
+/** A composed "experience" — several gated reads from one prompt, stacked. */
+function Surface({
+  traces,
+  turnId,
+  onApproved,
+}: {
+  traces: GateTrace[];
+  turnId?: string;
+  onApproved?: (turnId: string, view: ConsoleView) => void;
+}) {
+  return (
+    <div className="flex flex-col gap-3">
+      {traces.map((trace, i) => (
+        <GateReply key={i} trace={trace} turnId={turnId} onApproved={onApproved} />
+      ))}
+    </div>
+  );
+}
+
+/** True when the reply is a clean ungoverned read (validated + a presentational mount). */
+function isReadReply(view: ConsoleView): boolean {
+  if (view.kind === "gate") {
+    return view.trace.result.valid && resolvePresentational(view.trace.mount) !== null;
+  }
+  if (view.kind === "experience") {
+    return (
+      view.traces.length > 0 &&
+      view.traces.every((trace) => trace.result.valid && resolvePresentational(trace.mount) !== null)
+    );
+  }
+  return false;
+}
+
 function AssistantReply({
   view,
   onRetry,
@@ -75,6 +108,8 @@ function AssistantReply({
   const reply =
     view.kind === "transport" ? (
       <TransportState error={view.error} onRetry={onRetry} />
+    ) : view.kind === "experience" ? (
+      <Surface traces={view.traces} turnId={turnId} onApproved={onApproved} />
     ) : (
       <GateReply trace={view.trace} turnId={turnId} onApproved={onApproved} />
     );
@@ -107,28 +142,32 @@ export function ChatThread({
 
   return (
     <div className="flex flex-col gap-5">
-      {turns.map((turn) => (
-        <div key={turn.id} className="flex flex-col gap-2">
-          <div className="flex justify-end">
-            <div className="max-w-[85%] rounded-2xl bg-secondary px-3 py-2 text-ui text-secondary-fg">
-              {turn.prompt}
+      {turns.map((turn) => {
+        // A clean ungoverned read is "validated"; escalations/blocks/wires are "governed".
+        const validated = !turn.streaming && isReadReply(turn.view);
+        return (
+          <div key={turn.id} className="flex flex-col gap-2">
+            <div className="flex justify-end">
+              <div className="max-w-[85%] rounded-2xl bg-secondary px-3 py-2 text-ui text-secondary-fg">
+                {turn.prompt}
+              </div>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center gap-1.5">
+                <Badge intent={validated ? "info" : "success"} size="sm" icon={ShieldCheck}>
+                  {validated ? "validated by SINA" : "governed by SINA"}
+                </Badge>
+              </div>
+              <AssistantReply
+                view={turn.streaming ? { kind: "idle" } : turn.view}
+                onRetry={onRetry}
+                turnId={turn.id}
+                onApproved={onApproved}
+              />
             </div>
           </div>
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-1.5">
-              <Badge intent="success" size="sm" icon={ShieldCheck}>
-                governed by SINA
-              </Badge>
-            </div>
-            <AssistantReply
-              view={turn.streaming ? { kind: "idle" } : turn.view}
-              onRetry={onRetry}
-              turnId={turn.id}
-              onApproved={onApproved}
-            />
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

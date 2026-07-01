@@ -11,7 +11,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 
-import { runGate } from "../_lib/gate";
+import { runGate, runExperience } from "../_lib/gate";
 import { getScenario } from "../_lib/scenarios";
 import { ChatThread } from "./ChatThread";
 import { Composer } from "./Composer";
@@ -37,14 +37,26 @@ if (!("ResizeObserver" in window)) {
 
 afterEach(cleanup);
 
-const blockedTrace = runGate(getScenario("over-limit")!.payload);
-const governedTrace = runGate(getScenario("five-thousand")!.payload);
+const blockedTrace = runGate(getScenario("over-limit")!.envelope);
+const governedTrace = runGate(getScenario("five-thousand")!.envelope);
+const readTrace = runGate(getScenario("list-transactions")!.envelope);
+const experienceTraces = runExperience(getScenario("dashboard")!.envelopes!);
 
 const turns: Turn[] = [
   { id: "1", prompt: "Wire $5,000 to Beta LLC", view: { kind: "gate", trace: governedTrace } },
   { id: "2", prompt: "Wire $60,000 to Beta LLC", view: { kind: "gate", trace: blockedTrace } },
   {
     id: "3",
+    prompt: "Show my last 2 transactions",
+    view: { kind: "gate", trace: readTrace },
+  },
+  {
+    id: "4",
+    prompt: "Give me an overview of my finances",
+    view: { kind: "experience", traces: experienceTraces },
+  },
+  {
+    id: "5",
     prompt: "raw payload",
     view: { kind: "transport", error: { reason: "malformed", message: "not valid JSON" } },
   },

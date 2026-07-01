@@ -9,13 +9,16 @@
 
 import { z } from "zod";
 
-/** `label` + a masked number like `****1234` (≥2 stars, then 2–4 digits). */
+/** A masked number like `****1234` — ≥2 stars, then 2–4 digits. Never a full account/PAN. */
+export const maskedNumber = z
+  .string()
+  .regex(/^\*{2,}\d{2,4}$/, "account number must be masked (e.g. ****1234)");
+
+/** `label` + a masked number. */
 export const maskedAccountRef = z
   .object({
     label: z.string().min(1).max(80),
-    maskedNumber: z
-      .string()
-      .regex(/^\*{2,}\d{2,4}$/, "account number must be masked (e.g. ****1234)"),
+    maskedNumber,
   })
   .strict();
 

@@ -64,6 +64,34 @@ export function ConsoleTimeline({ view }: { view: ConsoleView }) {
     );
   }
 
+  if (view.kind === "experience") {
+    return (
+      <div className="flex flex-col gap-3 p-4">
+        <ServerBoundary />
+        <p className="text-ui text-text-muted">
+          Composed experience — {view.traces.length} intents, each gated independently.
+        </p>
+        <Separator className="my-1" />
+        {view.traces.map((trace, i) => (
+          <div
+            key={i}
+            className="flex items-center justify-between gap-2 rounded-md border border-border-subtle bg-surface p-2.5"
+          >
+            <span className="font-mono text-xs text-text-muted">{trace.intent}</span>
+            <span className="flex items-center gap-2">
+              {trace.mount ? (
+                <span className="font-mono text-xs text-text">{trace.mount}</span>
+              ) : null}
+              <Badge intent={trace.result.valid ? "success" : "danger"} size="sm">
+                {trace.result.valid ? "mounted" : "blocked"}
+              </Badge>
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   const { trace } = view;
   const schemaFailed = trace.schemaViolations.length > 0;
   const policyStatus = schemaFailed
@@ -81,11 +109,7 @@ export function ConsoleTimeline({ view }: { view: ConsoleView }) {
       <Separator className="my-1" />
 
       <ConsoleStage status="info" title="Intent received" defaultOpen>
-        <CodeBlock
-          title="intent · proposeWireTransfer"
-          code={pretty(trace.payload)}
-          maxLines={14}
-        />
+        <CodeBlock title={`intent · ${trace.intent}`} code={pretty(trace.payload)} maxLines={14} />
       </ConsoleStage>
 
       <ConsoleStage

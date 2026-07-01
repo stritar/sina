@@ -138,10 +138,12 @@ Every later phase is judged against this invariant.
 - Validate the full loop in the playground against the Phase 4 harness.
 - **Exit criteria:** the wire-transfer use case is demonstrably un-bypassable from a hostile stream.
 
-### Phase 6 — Governed Fintech Experience (Full Surface Area)
+### Phase 6 — Agentic Fintech Experience (Governed + Ungoverned)
 **Design hand-off:** the anatomy + interaction/blocked states for the full family of governed fintech surfaces beyond the wire dialog — money-movement flows, account/onboarding forms, card operations, governed read-only data displays, and mandatory regulatory disclosures. Delivered incrementally, **one signed-off hand-off per surface** (design sign-off still gates implementation, §1 rule 3).
 
 **Goal:** Generalize the Phase 5 pattern (one `core` primitive + one `fintech` schema → one governed component) across the **entire fintech experience**, so SINA governs a realistic banking app end-to-end — not a single transfer. The interception seam, validate-then-mount invariant (§1b), and audit trail must hold for *every* fintech action and data surface, all reusing the shared `governance` seam and emitting the same `{ valid, violations, requiredComponent }` contract. Each surface lands as: `core` primitive + `fintech`/`governance` schema + valid/adversarial fixtures + an emulator scenario.
+
+**Architecture milestone (landed): the ungoverned render path.** SINA is a *design system first*, so this phase also opens agentic UI that carries **no** governance risk ("show my last 2 transactions"). A domain-agnostic **intent router** (`@sina-design-system/governance` `dispatch`) maps a `{ intent, props }` envelope → the pattern's constitution rule → the component to mount, resolving the mount *outside* the untouched `{ valid, violations, requiredComponent }` contract. An **ungoverned** pattern is a rule with a schema but **no policy/escalation**: it is shape-validated (`.strict()`, bounded, masked — and still audited) then mounts a **presentational** component (`TransactionList`, `BalanceCard`). Governance is now an *optional escalation layer* on a **universal** validate-then-mount. Catalog: `packages/fintech/PATTERNS.md`; ungoverned scaffold: `/new-display-pattern`.
 
 Grouped into workstreams (each a candidate hand-off; sequence by product priority):
 
@@ -150,12 +152,20 @@ Grouped into workstreams (each a candidate hand-off; sequence by product priorit
 - **C. Card operations.** Freeze/unfreeze, dispute a charge, issue a virtual card — each an interceptable, authorization-gated action. → `CardActionDialog`.
 - **D. Governed data display (read-only).** Governance is not only about blocking actions — it is safe *presentation* of sensitive data. Account balance + transaction history + statements render through accessible `core` primitives with **PAN/PII masking** (masked account/card numbers, never full digits), so a hallucinated stream can neither exfiltrate nor fabricate financial data. → `GovernedTransactionTable`, `GovernedStatement`.
 - **E. Mandatory disclosures.** Regulatory text (Reg E, Truth-in-Lending, FX-spread disclosure) that the model **cannot alter or omit** — SINA injects the verbatim, audited disclosure as part of the governed render and never trusts the model to produce it. → `DisclosurePanel`.
+- **F. Ungoverned display patterns (reads).** The non-governed half of a real app: transaction lists, balances, cards, payees, spending, holdings, statements — each a **shape-only** `fintech` schema (`.strict()`, bounded arrays, masked account/PAN) + a presentational `fintech-react` component the router mounts on a clean pass. Read-only: any action re-enters the gate as a **new intent** (never a raw button). → `TransactionList`, `BalanceCard`, … (see `PATTERNS.md`).
 
 - **Constitution expansion:** grow `packages/fintech` from the single wire-transfer schema into a rule-set spanning all of the above — payment-rail limits, new-payee risk, KYC/sanctions state, card-action authorization, the disclosure-required matrix — each cited like the Phase 3 `thresholds.ts`, all still emitting the standard interception contract + audit event.
 - **Skill:** the Phase 5 `/new-governed-component` recipe is exercised repeatedly here and hardened for the family (dialog variants, read-only governed-data primitives, disclosure injection).
 - **Exit criteria:** every surface above is demonstrably **un-bypassable from a hostile stream** in the playground emulator (mock mode, CI) — over-limit/unauthorized actions are blocked and forced into the correct governed component; sensitive data renders masked and cannot be fabricated; mandatory disclosures are always present and verbatim. The emulator scenario set covers the full family, not just the $60k wire.
 
 > *(This slot previously held the now-descoped defense-logistics domain — SINA is fintech-only. The Phase 3 `governance` abstraction still keeps a future non-fintech domain addable, but none is planned.)*
+
+### Phase 6.5 — Full Fintech Pattern Catalog (agent-executed)
+**Goal:** Implement **every** pattern in `packages/fintech/PATTERNS.md` — the ungoverned display family and the governed flow family across all domains (banking, cards, payees/bills/recurring, investing/crypto, B2B/approvals). Because the repeatable skills make each pattern near-mechanical once the Phase 6 architecture exists, this is an **agent-executed sweep measured in hours, not weeks** — the AI agent fans out over the catalog rows rather than hand-building each.
+
+- **Method:** per pattern — `/new-display-pattern` (ungoverned) or `/new-schema` + `/new-governed-component` (governed) → schema + fixtures → component → `registry.ts` entry + `fintechIntentManifest()` row → playground scenario → verify. Optionally orchestrated as a **workflow** fanning out over `PATTERNS.md` rows (schema → component → scenario → verify per pattern).
+- **Prerequisites:** a `core` **chart/sparkline** primitive (`/new-primitive`) for the investing/crypto + trend reads (currently a gap); a `core` **`Table`** primitive if columnar-read a11y needs more than the list form. Multi-pattern **experiences** (dashboards) compose via `dispatchAll` + a thin `Surface`.
+- **Exit criteria:** every catalog row has a registry entry, a green gate test, and a playground scenario (display components also pass jest-axe); `PATTERNS.md` status column is all ✅.
 
 ### Phase 7 — Documentation (Fumadocs) (`apps/web/docs`)
 **Design hand-off:** the docs *skin* — Fumadocs chrome themed to SINA tokens (nav, sidebar, TOC, search, code blocks), plus the docs information architecture. Not the bespoke landing (that is Phase 8).

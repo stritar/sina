@@ -11,8 +11,9 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Moon, ShieldCheck, Sun } from "@phosphor-icons/react/dist/ssr";
 import type { AuditEvent } from "@sina-design-system/governance";
+import type { IntentEnvelope } from "@sina-design-system/fintech";
 
-import { gateIntent, gateLive } from "../_lib/run-emulator";
+import { gateExperience, gateIntent, gateLive } from "../_lib/run-emulator";
 import { getScenario } from "../_lib/scenarios";
 import { pretty } from "../_lib/format";
 import type { ConsoleView, Turn } from "../_lib/types";
@@ -77,6 +78,11 @@ export function EmulatorShell({ initialScenarioId }: { initialScenarioId?: strin
     setView(result);
     if (result.kind === "gate" && result.trace.audit) {
       setAuditEvents((prev) => [...prev, result.trace.audit as AuditEvent]);
+    } else if (result.kind === "experience") {
+      const audits = result.traces
+        .map((trace) => trace.audit)
+        .filter((audit): audit is AuditEvent => audit !== null);
+      if (audits.length > 0) setAuditEvents((prev) => [...prev, ...audits]);
     }
     setBusy(false);
   }
@@ -96,9 +102,12 @@ export function EmulatorShell({ initialScenarioId }: { initialScenarioId?: strin
     const scenario = getScenario(id);
     if (!scenario) return;
     if (mode === "mock") {
-      void run(scenario.label, () => gateIntent(scenario.payload));
+      const { envelopes } = scenario;
+      void run(scenario.label, () =>
+        envelopes ? gateExperience(envelopes) : gateIntent(scenario.envelope),
+      );
     } else if (mode === "direct") {
-      setInput(pretty(scenario.payload));
+      setInput(pretty(scenario.envelope));
     } else {
       setInput(scenario.prompt ?? scenario.label);
     }
@@ -125,19 +134,34 @@ export function EmulatorShell({ initialScenarioId }: { initialScenarioId?: strin
         }));
         return;
       }
-      void run("raw payload", () => gateIntent(parsed));
+      if (!parsed || typeof parsed !== "object") {
+        void run("raw payload", async () => ({
+          kind: "transport",
+          error: {
+            reason: "malformed",
+            message: "Direct input must be a JSON object: { intent, props }.",
+          },
+        }));
+        return;
+      }
+      void run("raw payload", () => gateIntent(parsed as IntentEnvelope));
       return;
     }
     // mock: run the first scenario as a default if none picked yet
     const fallback = getScenario("over-limit");
-    if (fallback) void run(fallback.label, () => gateIntent(fallback.payload));
+    if (fallback) void run(fallback.label, () => gateIntent(fallback.envelope));
   }
 
   // Deep link: ?scenario=<id> runs that scenario on mount (mock).
   useEffect(() => {
     if (!initialScenarioId) return;
     const scenario = getScenario(initialScenarioId);
-    if (scenario) void run(scenario.label, () => gateIntent(scenario.payload));
+    if (scenario) {
+      const { envelopes } = scenario;
+      void run(scenario.label, () =>
+        envelopes ? gateExperience(envelopes) : gateIntent(scenario.envelope),
+      );
+    }
   }, [initialScenarioId]);
 
   return (

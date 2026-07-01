@@ -1,20 +1,28 @@
 "use client";
 
 /**
- * ScenarioPicker — quick-stream chips for the headline scenarios plus a Select for
- * the full catalog. Each scenario is a canned LLM intent from the fintech fixtures.
+ * ScenarioPicker — quick-stream chips for headline scenarios plus a Select for the
+ * full catalog, sectioned into ungoverned reads vs governed flows. Each scenario
+ * is a canned LLM intent from the fintech fixtures.
  */
 
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@sina-design-system/core";
 import { SCENARIOS, getScenario } from "../_lib/scenarios";
 
-const QUICK_IDS = ["small", "five-thousand", "over-limit", "smuggled-card"] as const;
+const QUICK_IDS = ["dashboard", "spending-breakdown", "over-limit", "smuggled-card"] as const;
+
+const GROUPS = [
+  { key: "read", label: "Ungoverned reads" },
+  { key: "governed", label: "Governed flows" },
+] as const;
 
 const EXPECTATION_INTENT: Record<string, string> = {
   pass: "border-success/40 text-success",
@@ -55,10 +63,15 @@ export function ScenarioPicker({
           <SelectValue placeholder="All scenarios…" />
         </SelectTrigger>
         <SelectContent>
-          {SCENARIOS.map((scenario) => (
-            <SelectItem key={scenario.id} value={scenario.id}>
-              {scenario.label}
-            </SelectItem>
+          {GROUPS.map((group) => (
+            <SelectGroup key={group.key}>
+              <SelectLabel>{group.label}</SelectLabel>
+              {SCENARIOS.filter((scenario) => scenario.group === group.key).map((scenario) => (
+                <SelectItem key={scenario.id} value={scenario.id}>
+                  {scenario.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
           ))}
         </SelectContent>
       </Select>

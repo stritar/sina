@@ -6,6 +6,14 @@ import { evaluateWireTransfer } from "./wire-transfer/wire-transfer.schema.js";
 import * as txnFx from "./transaction-list/fixtures.js";
 import * as balFx from "./account-balance/fixtures.js";
 import * as wireFx from "./wire-transfer/fixtures.js";
+import * as spendingFx from "./spending-breakdown/fixtures.js";
+import * as budgetFx from "./budget-progress/fixtures.js";
+import * as cardFx from "./card-list/fixtures.js";
+import * as rewardsFx from "./rewards-summary/fixtures.js";
+import * as payeeFx from "./payee-list/fixtures.js";
+import * as upcomingFx from "./upcoming-payments/fixtures.js";
+import * as portfolioFx from "./portfolio-holdings/fixtures.js";
+import * as watchlistFx from "./watchlist/fixtures.js";
 
 afterEach(() => {
   resetAuditSink();
@@ -111,6 +119,27 @@ describe("evaluateFintechIntent — unknown intent", () => {
     const decision = evaluateFintechIntent({ intent: "delete_everything", props: {} });
     expect(decision.result.valid).toBe(false);
     expect(decision.mount).toBeNull();
+  });
+});
+
+describe("evaluateFintechIntent — the expanded read catalog", () => {
+  it.each([
+    [INTENTS.SPENDING_BREAKDOWN, "SpendingBreakdown", spendingFx.validBreakdown, spendingFx.fabricatedCategoryKey],
+    [INTENTS.BUDGET_PROGRESS, "BudgetProgress", budgetFx.validBudgets, budgetFx.zeroLimit],
+    [INTENTS.LIST_CARDS, "CardList", cardFx.validCards, cardFx.unmaskedPan],
+    [INTENTS.REWARDS_SUMMARY, "RewardsSummary", rewardsFx.validRewards, rewardsFx.fractionalPoints],
+    [INTENTS.LIST_PAYEES, "PayeeList", payeeFx.validPayees, payeeFx.unmaskedPayee],
+    [INTENTS.UPCOMING_PAYMENTS, "UpcomingPayments", upcomingFx.validUpcoming, upcomingFx.badStatus],
+    [INTENTS.PORTFOLIO_HOLDINGS, "PortfolioHoldings", portfolioFx.validHoldings, portfolioFx.nonIntegerValue],
+    [INTENTS.WATCHLIST, "Watchlist", watchlistFx.validWatchlist, watchlistFx.floodItems],
+  ])("%s validates + mounts %s, and rejects its adversarial payload", (intent, component, valid, adversarial) => {
+    const pass = evaluateFintechIntent({ intent, props: valid });
+    expect(pass.result.valid).toBe(true);
+    expect(pass.mount).toBe(component);
+
+    const fail = evaluateFintechIntent({ intent, props: adversarial });
+    expect(fail.result.valid).toBe(false);
+    expect(fail.mount).toBeNull();
   });
 });
 

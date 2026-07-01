@@ -39,12 +39,11 @@ export function TransactionList({ payload }: TransactionListProps) {
 
   return (
     <Stack
-      as="section"
       gap={3}
       aria-label={`Transactions for ${account.label}`}
       className="rounded-lg border border-border-subtle bg-surface p-3"
     >
-      <Stack as="header" direction="row" justify="between" align="center" gap={2}>
+      <Stack direction="row" justify="between" align="center" gap={2}>
         <span className="text-ui font-medium text-text">{account.label}</span>
         {account.maskedNumber ? (
           <span className="font-mono text-xs text-text-subtle">{account.maskedNumber}</span>

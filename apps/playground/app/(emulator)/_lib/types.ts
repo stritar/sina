@@ -15,6 +15,7 @@ export interface TransportError {
 export type ConsoleView =
   | { kind: "idle" }
   | { kind: "gate"; trace: GateTrace }
+  | { kind: "experience"; traces: GateTrace[] }
   | { kind: "transport"; error: TransportError };
 
 export type OutcomeKind = "governed" | "blocked" | "transport";
@@ -22,6 +23,8 @@ export type OutcomeKind = "governed" | "blocked" | "transport";
 export function outcomeKind(view: ConsoleView): OutcomeKind | null {
   if (view.kind === "transport") return "transport";
   if (view.kind === "gate") return view.trace.result.valid ? "governed" : "blocked";
+  if (view.kind === "experience")
+    return view.traces.every((trace) => trace.result.valid) ? "governed" : "blocked";
   return null;
 }
 

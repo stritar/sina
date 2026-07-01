@@ -135,3 +135,196 @@ export function readBalance(payload: unknown): BalanceView {
     currency: str(data.currency, "USD"),
   };
 }
+
+function bool(value: unknown): boolean {
+  return value === true;
+}
+
+function rows(value: unknown): Record<string, unknown>[] {
+  return Array.isArray(value) ? value.map((row) => (row ?? {}) as Record<string, unknown>) : [];
+}
+
+/** Format a signed percent for display, e.g. `+2.4%` / `−1.1%` (sign carries meaning, not color). */
+export function formatPct(pct: number): string {
+  const sign = pct > 0 ? "+" : pct < 0 ? "−" : "";
+  return `${sign}${Math.abs(pct).toFixed(1)}%`;
+}
+
+// ── Spending breakdown ────────────────────────────────────────────────────────
+export interface SpendingCategoryView {
+  label: string;
+  amount: number;
+}
+export interface SpendingBreakdownView {
+  period: string;
+  currency: string;
+  total: number;
+  categories: SpendingCategoryView[];
+}
+export function readSpendingBreakdown(payload: unknown): SpendingBreakdownView {
+  const d = (payload ?? {}) as Record<string, unknown>;
+  return {
+    period: str(d.period, "—"),
+    currency: str(d.currency, "USD"),
+    total: num(d.total),
+    categories: rows(d.categories).map((c) => ({ label: str(c.label, "—"), amount: num(c.amount) })),
+  };
+}
+
+// ── Budget progress ───────────────────────────────────────────────────────────
+export interface BudgetView {
+  label: string;
+  spent: number;
+  limit: number;
+}
+export interface BudgetProgressView {
+  currency: string;
+  budgets: BudgetView[];
+}
+export function readBudgetProgress(payload: unknown): BudgetProgressView {
+  const d = (payload ?? {}) as Record<string, unknown>;
+  return {
+    currency: str(d.currency, "USD"),
+    budgets: rows(d.budgets).map((b) => ({
+      label: str(b.label, "—"),
+      spent: num(b.spent),
+      limit: num(b.limit),
+    })),
+  };
+}
+
+// ── Card list ─────────────────────────────────────────────────────────────────
+export interface CardView {
+  id: string;
+  label: string;
+  network: string;
+  maskedNumber: string;
+  status: string;
+  expiry: string;
+}
+export function readCardList(payload: unknown): CardView[] {
+  const d = (payload ?? {}) as Record<string, unknown>;
+  return rows(d.cards).map((c, i) => ({
+    id: str(c.id, `card_${i}`),
+    label: str(c.label, "—"),
+    network: str(c.network),
+    maskedNumber: str(c.maskedNumber),
+    status: str(c.status, "active"),
+    expiry: str(c.expiry),
+  }));
+}
+
+// ── Rewards summary ───────────────────────────────────────────────────────────
+export interface RewardsView {
+  program: string;
+  currency: string;
+  points: number;
+  tier: string;
+  nextTier?: string;
+  pointsToNextTier?: number;
+  cashback?: number;
+}
+export function readRewards(payload: unknown): RewardsView {
+  const d = (payload ?? {}) as Record<string, unknown>;
+  return {
+    program: str(d.program, "Rewards"),
+    currency: str(d.currency, "USD"),
+    points: num(d.points),
+    tier: str(d.tier, "—"),
+    nextTier: typeof d.nextTier === "string" ? d.nextTier : undefined,
+    pointsToNextTier: typeof d.pointsToNextTier === "number" ? d.pointsToNextTier : undefined,
+    cashback: typeof d.cashback === "number" ? d.cashback : undefined,
+  };
+}
+
+// ── Payee list ────────────────────────────────────────────────────────────────
+export interface PayeeView {
+  id: string;
+  name: string;
+  maskedNumber: string;
+  verified: boolean;
+  lastPaidAt?: string;
+}
+export function readPayeeList(payload: unknown): PayeeView[] {
+  const d = (payload ?? {}) as Record<string, unknown>;
+  return rows(d.payees).map((p, i) => ({
+    id: str(p.id, `payee_${i}`),
+    name: str(p.name, "—"),
+    maskedNumber: str(p.maskedNumber),
+    verified: bool(p.verified),
+    lastPaidAt: typeof p.lastPaidAt === "string" ? p.lastPaidAt : undefined,
+  }));
+}
+
+// ── Upcoming payments ─────────────────────────────────────────────────────────
+export interface UpcomingPaymentView {
+  id: string;
+  payee: string;
+  amount: number;
+  dueAt: string;
+  status: string;
+}
+export interface UpcomingPaymentsView {
+  currency: string;
+  payments: UpcomingPaymentView[];
+}
+export function readUpcomingPayments(payload: unknown): UpcomingPaymentsView {
+  const d = (payload ?? {}) as Record<string, unknown>;
+  return {
+    currency: str(d.currency, "USD"),
+    payments: rows(d.payments).map((p, i) => ({
+      id: str(p.id, `pay_${i}`),
+      payee: str(p.payee, "—"),
+      amount: num(p.amount),
+      dueAt: str(p.dueAt),
+      status: str(p.status, "scheduled"),
+    })),
+  };
+}
+
+// ── Portfolio holdings ────────────────────────────────────────────────────────
+export interface HoldingView {
+  symbol: string;
+  name: string;
+  quantity: number;
+  value: number;
+  changePct: number;
+}
+export interface PortfolioHoldingsView {
+  currency: string;
+  totalValue: number;
+  holdings: HoldingView[];
+}
+export function readPortfolioHoldings(payload: unknown): PortfolioHoldingsView {
+  const d = (payload ?? {}) as Record<string, unknown>;
+  return {
+    currency: str(d.currency, "USD"),
+    totalValue: num(d.totalValue),
+    holdings: rows(d.holdings).map((h, i) => ({
+      symbol: str(h.symbol, `H${i}`),
+      name: str(h.name, "—"),
+      quantity: num(h.quantity),
+      value: num(h.value),
+      changePct: num(h.changePct),
+    })),
+  };
+}
+
+// ── Watchlist ─────────────────────────────────────────────────────────────────
+export interface WatchItemView {
+  symbol: string;
+  name: string;
+  price: number;
+  currency: string;
+  changePct: number;
+}
+export function readWatchlist(payload: unknown): WatchItemView[] {
+  const d = (payload ?? {}) as Record<string, unknown>;
+  return rows(d.items).map((w, i) => ({
+    symbol: str(w.symbol, `W${i}`),
+    name: str(w.name, "—"),
+    price: num(w.price),
+    currency: str(w.currency, "USD"),
+    changePct: num(w.changePct),
+  }));
+}

@@ -81,3 +81,12 @@ export function runGate(envelope: IntentEnvelope): GateTrace {
     policyViolations,
   };
 }
+
+/**
+ * Route a composed "experience" — several intents from one prompt (a dashboard).
+ * Each envelope is gated independently (its own audit), so one blocked item never
+ * sinks the rest. Uses the router's per-intent `Decision`; no contract change.
+ */
+export function runExperience(envelopes: IntentEnvelope[]): GateTrace[] {
+  return envelopes.map((envelope) => runGate(envelope));
+}

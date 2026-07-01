@@ -11,7 +11,7 @@
  * executing $60k produces a mismatch and is rejected.
  */
 
-import { coreTerms, payloadHash } from "@sina-design-system/fintech";
+import { coreTerms, payloadHash, INTENTS } from "@sina-design-system/fintech";
 
 import { runGate } from "./gate";
 import type { ConsoleView } from "./types";
@@ -36,5 +36,5 @@ export async function regateWithApproval(
       payloadHash: payloadHash(coreTerms(intent)),
     },
   };
-  return { kind: "gate", trace: runGate(approved) };
+  return { kind: "gate", trace: runGate({ intent: INTENTS.WIRE_TRANSFER, props: approved }) };
 }

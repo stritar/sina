@@ -26,6 +26,14 @@ export * from "./wire-transfer/wire-transfer.schema.js";
 // Ungoverned display constitutions (shape-only; mount a presentational component).
 export * from "./transaction-list/transaction-list.schema.js";
 export * from "./account-balance/account-balance.schema.js";
+export * from "./spending-breakdown/spending-breakdown.schema.js";
+export * from "./budget-progress/budget-progress.schema.js";
+export * from "./card-list/card-list.schema.js";
+export * from "./rewards-summary/rewards-summary.schema.js";
+export * from "./payee-list/payee-list.schema.js";
+export * from "./upcoming-payments/upcoming-payments.schema.js";
+export * from "./portfolio-holdings/portfolio-holdings.schema.js";
+export * from "./watchlist/watchlist.schema.js";
 
 // The intent router registry: verb → rule + mount, and the single gate entry point.
 export * from "./registry.js";
@@ -34,3 +42,11 @@ export * from "./registry.js";
 export * as wireFixtures from "./wire-transfer/fixtures.js";
 export * as transactionFixtures from "./transaction-list/fixtures.js";
 export * as balanceFixtures from "./account-balance/fixtures.js";
+export * as spendingFixtures from "./spending-breakdown/fixtures.js";
+export * as budgetFixtures from "./budget-progress/fixtures.js";
+export * as cardFixtures from "./card-list/fixtures.js";
+export * as rewardsFixtures from "./rewards-summary/fixtures.js";
+export * as payeeFixtures from "./payee-list/fixtures.js";
+export * as upcomingFixtures from "./upcoming-payments/fixtures.js";
+export * as portfolioFixtures from "./portfolio-holdings/fixtures.js";
+export * as watchlistFixtures from "./watchlist/fixtures.js";

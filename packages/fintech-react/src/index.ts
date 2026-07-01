@@ -23,3 +23,11 @@ export {
 
 export { TransactionList, type TransactionListProps } from "./TransactionList/TransactionList.js";
 export { BalanceCard, type BalanceCardProps } from "./BalanceCard/BalanceCard.js";
+export { SpendingBreakdown, type SpendingBreakdownProps } from "./SpendingBreakdown/SpendingBreakdown.js";
+export { BudgetProgress, type BudgetProgressProps } from "./BudgetProgress/BudgetProgress.js";
+export { CardList, type CardListProps } from "./CardList/CardList.js";
+export { RewardsSummary, type RewardsSummaryProps } from "./RewardsSummary/RewardsSummary.js";
+export { PayeeList, type PayeeListProps } from "./PayeeList/PayeeList.js";
+export { UpcomingPayments, type UpcomingPaymentsProps } from "./UpcomingPayments/UpcomingPayments.js";
+export { PortfolioHoldings, type PortfolioHoldingsProps } from "./PortfolioHoldings/PortfolioHoldings.js";
+export { Watchlist, type WatchlistProps } from "./Watchlist/Watchlist.js";

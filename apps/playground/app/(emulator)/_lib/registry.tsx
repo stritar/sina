@@ -11,7 +11,18 @@
  */
 
 import type { ComponentType } from "react";
-import { BalanceCard, TransactionList } from "@sina-design-system/fintech-react";
+import {
+  BalanceCard,
+  BudgetProgress,
+  CardList,
+  PayeeList,
+  PortfolioHoldings,
+  RewardsSummary,
+  SpendingBreakdown,
+  TransactionList,
+  UpcomingPayments,
+  Watchlist,
+} from "@sina-design-system/fintech-react";
 
 import type { GovernedComponentProps } from "./types";
 import { SecureWireDialogHost } from "../_components/SecureWireDialogHost";
@@ -26,6 +37,14 @@ const GOVERNED: Record<string, ComponentType<GovernedComponentProps>> = {
 const PRESENTATIONAL: Record<string, ComponentType<PresentationalProps>> = {
   TransactionList,
   BalanceCard,
+  SpendingBreakdown,
+  BudgetProgress,
+  CardList,
+  RewardsSummary,
+  PayeeList,
+  UpcomingPayments,
+  PortfolioHoldings,
+  Watchlist,
 };
 
 /** Resolve the governed component the gate forces, or null if none is registered. */
