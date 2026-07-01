@@ -1,6 +1,6 @@
 # SINA — Working Rules for Claude
 
-SINA is a governed design system for AI agents: an LLM emits *intent*, SINA validates it against Zod schemas (the "Constitution") **server-side**, and either blocks the stream or mounts an accessible, governed React primitive. The principle is **validate-then-mount** — never mount, then check.
+SINA is a governed design system for AI agents: an LLM emits *intent*, SINA validates it against Zod schemas (the "Constitution") **server-side**, and either blocks the stream or mounts an accessible, governed React primitive. The principle is **validate-then-mount** — never mount, then check. It's free and made for startups and individuals who want a design system with governance built in, so they can adopt agentic UI generation without building the governance layer themselves.
 
 This file is **binding**. `ROADMAP.md` explains the *why* and the phase sequencing; this file is the *rules*.
 

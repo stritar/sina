@@ -4,6 +4,8 @@
 
 SINA is a strict, schema-driven UI architecture for AI agents. It intercepts an LLM's *intent* before it reaches the browser, evaluates the payload against Zod schemas (the "Constitution"), and either **blocks** the UI stream or **renders** an accessible, governed React primitive. The goal: neutralize hallucinated business logic, broken accessibility, and unauthorized actions at the edge.
 
+It's free and aimed at startups and individuals who want to *pick up* a governed design system rather than build one — adopting agentic UI generation on primitives that aren't merely static, without owning the governance layer themselves.
+
 This roadmap takes us from empty stubs to a working, adversarially-tested design system. **Phases 0–4 are complete** (foundation wiring, agentic setup, theme tokens, core primitives, the Zod constitution, and the AI-SDK emulator test bed). `.claude/PHASE_STATE.md` is the live source of truth for phase progress; this file is the *why* and the sequencing. **Scope note:** SINA now focuses **solely on the fintech domain** — the defense-logistics second domain (originally slated for a later phase) is descoped (see below).
 
 **Starting inventory (baseline at roadmap authoring — the empty scaffold before any content):**
@@ -170,7 +172,7 @@ Grouped into workstreams (each a candidate hand-off; sequence by product priorit
 | **Getting Started** | Introduction · The One Invariant (§1b) · Quickstart | `[now]` |
 | **Concepts** | Threat model · Interception contract (`{ valid, violations, requiredComponent }`) · Audit trail · Mock vs. live mode | `[now]` |
 | **Architecture** | The three layers · Package boundaries (the three rules + how ESLint enforces them) · streamUI integration (the §3 seam) | `[now]` |
-| **Guides** | ★ **Add a governed domain** (the extensibility path the `governance` abstraction enables) · Add a primitive · Add a schema · Write an adversarial test | `[now]` |
+| **Guides** | ★ **Add a governed domain** (the extensibility path the `governance` abstraction enables) · **Theme the primitives** (brand-open vs governance-locked tokens · `createTheme` · `[data-theme]` scopes) `[needs P9]` · Add a primitive · Add a schema · Write an adversarial test | `[now]` |
 | **Reference** | `theme` · `core` · `fintech` · `governance` — **auto-generated from TSDoc** | `[needs P1–P3]` |
 | **Components** | Read-only live demos: Dialog · CurrencyField · Grid · SecureWireDialog | `[needs P2/P5]` |
 
@@ -189,7 +191,7 @@ Grouped into workstreams (each a candidate hand-off; sequence by product priorit
 **Goal:** The public face — a single rich, fully bespoke scrollytelling landing page consuming `theme` (and read-only demos of `core`). It reuses the docs engine's shared web infra + the mock-mode demo embed factored in Phase 7, and links into `/docs`.
 
 **Information architecture** — *Landing* (bespoke, `app/(marketing)/page.tsx`), one scrollytelling page consuming `theme`:
-1. Hero — the thesis (*the model emits intent; SINA decides what renders*) + CTA → `/docs`. `[now]`
+1. Hero — the thesis (*the model emits intent; SINA decides what renders*) + CTA → `/docs`. **Lead with the positioning: free, for startups & individuals, no governance tax — pick up a governed design system instead of building one.** `[now]`
 2. The threat — hallucinated business logic, broken a11y, unauthorized actions. `[now]`
 3. The interception seam — the diagram from §3. `[now]`
 4. Live governance demo — the mock-mode embed factored in Phase 7. `[needs P7]`
@@ -208,7 +210,12 @@ Grouped into workstreams (each a candidate hand-off; sequence by product priorit
 - Versioning/release flow (changesets) for `@sina-design-system/*` packages.
 - CI: typecheck + lint + `vitest` schema tests + axe a11y checks + playground adversarial suite (mock mode) on every PR.
 - Wire the **audit trail** to a real sink (replacing the Phase 3 stub).
-- **Exit criteria:** packages publishable; adversarial suite + axe checks are required checks; audit events land in a real sink.
+- **Theming contract & primitive packaging** (so published `core` is both consumable *and* rebrandable — see §6):
+  - **Ship prebuilt CSS + keep the preset (both modes).** Add a Tailwind CSS build to `core` emitting `styles.css` (utilities only), exported as `@sina-design-system/core/styles.css`, so a non-Tailwind app works from one import; keep `@sina-design-system/theme/tailwind` for Tailwind shops. The compiled CSS references `--sina-*` via `color-mix` — **never inlined hex** — so var-override rebranding flows through both modes.
+  - **Publish the typed theming API** in `theme`: `createTheme()` / `themeVars()` over the **brand-open** token set, with **governance-locked** roles (`danger*`, `surface-secure`, `focus-ring`, `intent-*`) excluded from the type so a sanctioned theme cannot neuter a security/a11y affordance. *(Seeded now — `packages/theme/src/create-theme.ts` + partition test.)*
+  - **Contrast guard:** generalize the `theme` WCAG-AA test into `assertThemeContrast(overrides)` so a brand override that breaks a required fg/bg pairing fails loudly.
+  - **Build guard:** assert `core/styles.css` contains `var(--sina-` and no raw hex in themeable properties (proves rebranding survives the compile).
+- **Exit criteria:** packages publishable; adversarial suite + axe checks are required checks; audit events land in a real sink; `core` renders styled from `styles.css` alone (no Tailwind) *and* via the preset, and a `createTheme` brand theme rebrands both without touching primitives or governance-locked tokens.
 
 ---
 
@@ -264,6 +271,7 @@ LLM stream (streamUI intent / tool payload)
 **Later:**
 - **Phase 7 (`apps/web` docs):** new `source.config.ts`, `lib/source.ts`, `app/docs/[[...slug]]/page.tsx`, `app/docs/layout.tsx`, `content/docs/**/*.mdx`, `wrangler.toml`; edit `next.config.mjs` (add `fintech` to `transpilePackages`), `tailwind.config.ts` (compose Fumadocs preset), `app/globals.css` (map `--color-fd-*` → SINA tokens); factor the reusable mock-mode demo embed
 - **Phase 8 (`apps/web` landing):** new `app/(marketing)/page.tsx` + section components (bespoke landing); reuses the Phase 7 demo embed + Cloudflare pipeline
+- **Phase 9 (packaging/theming):** `packages/theme/src/create-theme.ts` (typed brand-open/governance-locked contract — **seeded**) + `assertThemeContrast`; `packages/core` CSS build → `packages/core/styles.css` + `exports["./styles.css"]`
 
 ---
 
@@ -276,6 +284,23 @@ Per phase, "done" means:
 - **Schemas (P3):** `vitest` over valid + adversarial fixtures; `.safeParse` returns typed `{valid, violations, requiredComponent}`; each decision emits an audit event.
 - **Interception (P4–P6) — the real test:** run the playground (`pnpm dev`, port 3001) in **mock mode**, feed a $60,000 transfer stream → assert the raw confirm is **blocked**, the designed blocked state shows, and `<SecureWireDialog>` renders; feed a compliant $5,000 stream → assert the standard primitive renders. Confirm validation is server-side (§1b).
 - **CI (P9):** adversarial suite (mock mode) + axe checks are required checks on every PR.
+
+---
+
+## 6. Theming Contract — Consumer Rebranding
+
+SINA ships primitives *and* a supported way to make them match a consumer's brand. The rule mirrors the internal architecture: **rebrand at the token layer, never edit the primitives.** Dark mode in `theme.css` (a `[data-theme="dark"]` block that only reassigns `--sina-*` vars) is the proof this works — a brand is just another such block.
+
+**Three tiers (brand theming lives in Tier 1):**
+1. **CSS-variable override (recommended).** Reassign the semantic `--sina-color-*` (and `radius`/`space`/`text`/`font`) vars in a `:root` or `[data-theme="acme"]` scope. Runtime, no rebuild, dark-mode-composable. `createTheme()` / `themeVars()` (in `@sina-design-system/theme`) are the typed emitters.
+2. **Preset composition (Tailwind consumers).** Compose `@sina-design-system/theme/tailwind` with the consumer's own preset for brand tokens as first-class utilities.
+3. **Per-instance `className`.** `core`'s `cn()` guarantees a caller's `className` wins — for one-off layout tweaks, not systemic brand color.
+
+**Brand-open vs governance-locked.** The token contract is split: **brand-open** roles (`bg`/`surface*`/`text*`/`border*`/`primary*`/`secondary*`/`success|warning|info*`, plus `radius`/`space`/`text`/`font`) are the rebranding surface; **governance-locked** roles (`danger*`, `surface-secure`, `focus-ring`, `intent-*`) are reserved so a theme can't quiet a security or a11y affordance. The lock is enforced on the *sanctioned path* — `BrandTheme` excludes locked roles, so `createTheme()` rejects them at compile time (raw CSS can still force them by specificity; the API won't). A partition test keeps the two sets from drifting out of `colorTokens`.
+
+**Distribution (both modes, so var-override works either way).** `core` ships a prebuilt `styles.css` (compiled utilities that still reference `--sina-*` via `color-mix` — never inlined hex) *and* keeps the Tailwind preset. A non-Tailwind app imports the CSS; a Tailwind shop uses the preset. Because neither inlines color, Tier-1 rebranding flows through both.
+
+**Where it lands:** the typed contract is seeded now (`packages/theme/src/create-theme.ts`); the prebuilt-CSS build, `assertThemeContrast` guard, and the "Theme the primitives" docs guide complete in **Phase 9 / Phase 7** respectively.
 
 ---
 

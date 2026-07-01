@@ -7,3 +7,4 @@
  */
 
 export * from "./tokens.js";
+export * from "./create-theme.js";
