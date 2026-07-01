@@ -15,6 +15,7 @@ export * from "./formats/bic.js";
 export * from "./formats/routing.js";
 export * from "./formats/card.js";
 export * from "./formats/canonical.js";
+export * from "./formats/masked-account.js";
 
 // The cited numeric limits (the legible constitution).
 export * from "./thresholds.js";
@@ -22,5 +23,14 @@ export * from "./thresholds.js";
 // The flagship governed schema.
 export * from "./wire-transfer/wire-transfer.schema.js";
 
-// Canned compliant/adversarial payloads (consumed by the Phase 4 playground).
+// Ungoverned display constitutions (shape-only; mount a presentational component).
+export * from "./transaction-list/transaction-list.schema.js";
+export * from "./account-balance/account-balance.schema.js";
+
+// The intent router registry: verb → rule + mount, and the single gate entry point.
+export * from "./registry.js";
+
+// Canned compliant/adversarial payloads (consumed by the playground + tests).
 export * as wireFixtures from "./wire-transfer/fixtures.js";
+export * as transactionFixtures from "./transaction-list/fixtures.js";
+export * as balanceFixtures from "./account-balance/fixtures.js";

@@ -19,11 +19,12 @@ import { generateText, tool } from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
 import { z } from "zod";
 
+import { INTENTS, type IntentEnvelope } from "@sina-design-system/fintech";
 import { runGate } from "./gate";
 import type { ConsoleView, TransportError } from "./types";
 
-export async function gateIntent(payload: unknown): Promise<ConsoleView> {
-  return { kind: "gate", trace: runGate(payload) };
+export async function gateIntent(envelope: IntentEnvelope): Promise<ConsoleView> {
+  return { kind: "gate", trace: runGate(envelope) };
 }
 
 /** Loose structural mirror so the model knows the tool shape. NOT the gate. */
@@ -71,7 +72,10 @@ export async function gateLive(prompt: string): Promise<ConsoleView> {
       };
     }
 
-    return { kind: "gate", trace: runGate(call.args) };
+    return {
+      kind: "gate",
+      trace: runGate({ intent: INTENTS.WIRE_TRANSFER, props: call.args }),
+    };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     const reason: TransportError["reason"] = /rate.?limit|429/i.test(message)

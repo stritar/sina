@@ -9,11 +9,48 @@
 
 import { Badge, Spinner } from "@sina-design-system/core";
 import { ShieldCheck } from "@phosphor-icons/react/dist/ssr";
+import { INTENTS } from "@sina-design-system/fintech";
+import type { GateTrace } from "../_lib/gate";
+import { resolvePresentational } from "../_lib/registry";
 import type { ConsoleView, Turn } from "../_lib/types";
 import { BlockedState } from "./BlockedState";
 import { ComparisonToggle } from "./ComparisonToggle";
 import { GovernedWireSummary } from "./GovernedWireSummary";
 import { TransportState } from "./TransportState";
+
+/**
+ * The gate's mounted reply. A clean ungoverned pass mounts the validated
+ * presentational component directly (TransactionList, BalanceCard). Money-movement
+ * (wire) keeps the ComparisonToggle "money shot" — SINA's governed render vs the
+ * raw confirm an ungoverned app would have streamed — on both pass and block;
+ * reads don't, since there's no dangerous action to contrast.
+ */
+function GateReply({
+  trace,
+  turnId,
+  onApproved,
+}: {
+  trace: GateTrace;
+  turnId?: string;
+  onApproved?: (turnId: string, view: ConsoleView) => void;
+}) {
+  if (trace.result.valid) {
+    const Mounted = resolvePresentational(trace.mount);
+    if (Mounted) return <Mounted payload={trace.payload} />;
+  }
+
+  const inner = trace.result.valid ? (
+    <GovernedWireSummary payload={trace.payload} />
+  ) : (
+    <BlockedState trace={trace} turnId={turnId} onApproved={onApproved} />
+  );
+
+  return trace.intent === INTENTS.WIRE_TRANSFER ? (
+    <ComparisonToggle payload={trace.payload} governed={inner} />
+  ) : (
+    inner
+  );
+}
 
 function AssistantReply({
   view,
@@ -39,16 +76,7 @@ function AssistantReply({
     view.kind === "transport" ? (
       <TransportState error={view.error} onRetry={onRetry} />
     ) : (
-      <ComparisonToggle
-        payload={view.trace.payload}
-        governed={
-          view.trace.result.valid ? (
-            <GovernedWireSummary payload={view.trace.payload} />
-          ) : (
-            <BlockedState trace={view.trace} turnId={turnId} onApproved={onApproved} />
-          )
-        }
-      />
+      <GateReply trace={view.trace} turnId={turnId} onApproved={onApproved} />
     );
   return (
     <div className="motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-1">

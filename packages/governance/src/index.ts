@@ -19,3 +19,14 @@ export {
   type RedactionConfig,
 } from "./audit.js";
 export { intercept, type ConstitutionRule } from "./intercept.js";
+export {
+  dispatch,
+  dispatchAll,
+  createRouter,
+  pattern,
+  UNKNOWN_INTENT,
+  type IntentEnvelope,
+  type PatternEntry,
+  type PatternRegistry,
+  type Decision,
+} from "./router.js";

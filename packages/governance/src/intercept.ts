@@ -23,6 +23,13 @@ export interface ConstitutionRule<T> {
   redaction?: RedactionConfig;
   /** Constitution version stamped onto the audit event. */
   version?: string;
+  /**
+   * The default presentational component to mount when the rule passes with no
+   * escalation. `intercept` does not force it (that stays `requiredComponent`);
+   * it only records it as the decided component in the audit trail. The router
+   * ({@link ./router}) resolves it into the actual mount for an ungoverned pass.
+   */
+  component?: string;
 }
 
 let decisionCounter = 0;
@@ -76,7 +83,7 @@ export function intercept<T>(rule: ConstitutionRule<T>, payload: unknown): Inter
     payload: redact(payload, rule.redaction),
     result,
     violations,
-    decidedComponent: requiredComponent,
+    decidedComponent: requiredComponent ?? rule.component ?? null,
   });
 
   return result;
