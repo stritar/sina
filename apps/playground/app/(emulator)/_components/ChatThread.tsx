@@ -23,21 +23,27 @@ function AssistantReply({ view, onRetry }: { view: ConsoleView; onRetry?: () => 
       </div>
     );
   }
-  if (view.kind === "transport") {
-    return <TransportState error={view.error} onRetry={onRetry} />;
-  }
-  const governed = view.trace.result.valid;
+  // Resolved reply eases in as the gate "snaps shut" after the streaming skeleton
+  // (motion-safe only — the theme zeroes durations under prefers-reduced-motion).
+  const reply =
+    view.kind === "transport" ? (
+      <TransportState error={view.error} onRetry={onRetry} />
+    ) : (
+      <ComparisonToggle
+        payload={view.trace.payload}
+        governed={
+          view.trace.result.valid ? (
+            <GovernedWireSummary payload={view.trace.payload} />
+          ) : (
+            <BlockedState trace={view.trace} />
+          )
+        }
+      />
+    );
   return (
-    <ComparisonToggle
-      payload={view.trace.payload}
-      governed={
-        governed ? (
-          <GovernedWireSummary payload={view.trace.payload} />
-        ) : (
-          <BlockedState trace={view.trace} />
-        )
-      }
-    />
+    <div className="motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-1">
+      {reply}
+    </div>
   );
 }
 

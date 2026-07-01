@@ -30,7 +30,7 @@ export function Composer({
         multiline
         rows={3}
         value={value}
-        placeholder="Ask the agent to wire funds… (⌘/Ctrl+Enter to send)"
+        placeholder="Ask the agent to wire funds…"
         onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => onChange(event.target.value)}
         onKeyDown={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
           if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
@@ -39,7 +39,8 @@ export function Composer({
           }
         }}
       />
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between gap-3">
+        <span className="font-mono text-xs text-text-subtle">⌘/Ctrl+Enter to send</span>
         <Button
           onClick={onSend}
           disabled={disabled || value.trim().length === 0}
