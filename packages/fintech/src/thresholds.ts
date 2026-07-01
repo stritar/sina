@@ -17,8 +17,8 @@ export const SAR_MINOR = usd(5_000); // 31 CFR Chapter X
 /** FinCEN CTR — currency transactions *exceeding* this are reportable (classification flag). */
 export const CTR_MINOR = usd(10_000); // 31 CFR 1010.311
 
-/** SINA design hand-off — wires *above* this require secondary managerial approval. */
-export const WIRE_SECONDARY_APPROVAL_MINOR = usd(50_000); // ROADMAP §Phase 3 (SINA policy)
+/** SINA policy — wires *above* this require secondary managerial approval. */
+export const WIRE_SECONDARY_APPROVAL_MINOR = usd(50_000); // SINA dual-control policy
 
 /** Stripe-style sanity floor on a single charge (≈ $0.50). */
 export const STRIPE_MIN_MINOR = usd(0.5); // docs.stripe.com/currencies

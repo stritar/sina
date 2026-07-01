@@ -205,7 +205,7 @@ function approvalViolations(data: ApprovedWireTransferPayload, ctx: ApprovalCont
       {
         code: "AMOUNT_REQUIRES_APPROVAL",
         message: "wire above $50,000 requires secondary managerial approval",
-        standard: "SINA design hand-off (ROADMAP §Phase 3)",
+        standard: "SINA dual-control — secondary approval",
         severity: "escalate",
       },
     ];
