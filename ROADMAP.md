@@ -4,9 +4,9 @@
 
 SINA is a strict, schema-driven UI architecture for AI agents. It intercepts an LLM's *intent* before it reaches the browser, evaluates the payload against Zod schemas (the "Constitution"), and either **blocks** the UI stream or **renders** an accessible, governed React primitive. The goal: neutralize hallucinated business logic, broken accessibility, and unauthorized actions at the edge.
 
-The monorepo is **fully scaffolded but content-empty**. Infrastructure is complete and working; no components, schemas, tokens, or landing pages exist yet. This roadmap takes us from empty stubs to a working, adversarially-tested design system.
+This roadmap takes us from empty stubs to a working, adversarially-tested design system. **Phases 0–4 are complete** (foundation wiring, agentic setup, theme tokens, core primitives, the Zod constitution, and the AI-SDK emulator test bed). `.claude/PHASE_STATE.md` is the live source of truth for phase progress; this file is the *why* and the sequencing. **Scope note:** SINA now focuses **solely on the fintech domain** — the defense-logistics second domain (former Phase 6) is descoped (see below).
 
-**Current inventory (verified):**
+**Starting inventory (baseline at roadmap authoring — the empty scaffold before any content):**
 - ✅ Turborepo + pnpm workspaces, TypeScript 5.7, ESLint 9, Prettier 3 — all wired via `packages/config`
 - ✅ `apps/playground` (Next.js 15, React 19, port 3001) — has `ai@4.0.30`, `zod@3.24.1`; page is a placeholder shell
 - ✅ `apps/web` (Next.js 15, React 19, port 3000) — marketing shell, placeholder only
@@ -15,7 +15,7 @@ The monorepo is **fully scaffolded but content-empty**. Infrastructure is comple
 - ✅ `packages/fintech` — empty stub; deps `zod@3.24.1`
 - ⚠️ `packages/theme` Tailwind preset hook is declared in `apps/playground/tailwind.config.ts` but **not yet connected**
 
-> Note: the original brief listed `packages/{theme,core,fintech}`. The actual repo also contains `packages/config` (shared TS/ESLint/Prettier presets). The roadmap accounts for both. A `packages/defense` for Use Case 2 (NSN/CAC) does **not** exist yet and is scoped as a later phase.
+> Note: the original brief listed `packages/{theme,core,fintech}`. The actual repo also contains `packages/config` (shared TS/ESLint/Prettier presets) and `packages/governance` (the shared interception contract + audit emit, added in Phase 3). The roadmap accounts for all of them. A `packages/defense` for Use Case 2 (NSN/CAC) was originally scoped as a later phase but is now **descoped** — we focus solely on fintech. The `governance` abstraction still keeps a future second domain addable, but none is planned.
 
 ---
 
@@ -42,7 +42,7 @@ The monorepo is **fully scaffolded but content-empty**. Infrastructure is comple
 The first time I create a primitive or a schema, we decide *how* it's done. We capture that decision **once** as a reusable asset so every subsequent request is fast, consistent, and boundary-safe — you ask "add a new schema" and I follow the established recipe instead of improvising. Set up in **Phase 0.5**, then refined as we discover patterns.
 
 **A. `CLAUDE.md` (project rules — always in my context):**
-- The three architectural boundaries as hard rules (`theme` = no React, `core` = no domain logic, `fintech`/`defense` = no UI).
+- The three architectural boundaries as hard rules (`theme` = no React, `core` = no domain logic, `fintech` = no UI).
 - Conventions: package naming (`@sina-design-system/*`), file layout, export style, the a11y bar (focus-trap + ARIA + keyboard) every primitive must meet.
 - The interception contract shape (`{ valid, violations, requiredComponent }`) so every schema returns the same surface.
 - Commands: how to build/test/run the playground; design-sign-off gate reminder.
@@ -51,7 +51,7 @@ The first time I create a primitive or a schema, we decide *how* it's done. We c
 | Skill | What it does | Lands |
 |---|---|---|
 | `/new-primitive` | Scaffolds a headless `core` primitive (Radix base, theme tokens, a11y states, playground story) from a design hand-off | Phase 0.5, hardened in Phase 2 |
-| `/new-schema` | Scaffolds a Zod governance schema in `fintech`/`defense` + interception contract + valid/adversarial fixtures | Phase 0.5, hardened in Phase 3 |
+| `/new-schema` | Scaffolds a Zod governance schema in `fintech` + interception contract + valid/adversarial fixtures | Phase 0.5, hardened in Phase 3 |
 | `/new-governed-component` | Composes a `core` primitive + schema into a governed component (e.g. `SecureWireDialog`) wired to the harness | Phase 5 |
 | `/new-web-section` | Adds a marketing/docs section to `apps/web` consuming `theme`, with layout conventions | Phase 7 |
 | `/adversarial-test` | Generates a hostile-stream test case for the playground harness against a chosen schema | Phase 4 |
@@ -112,7 +112,7 @@ Every later phase is judged against this invariant.
 ### Phase 3 — The Zod Constitution (shared `governance` + `packages/fintech`)
 **Design hand-off:** the governance *rules* — limits, allowed actions, classification logic (e.g. standard transfer `amount <= 50000`, required secondary approval thresholds).
 **Goal:** Pure Zod schemas that intercept and validate LLM payloads. **No React, no UI.**
-- Extract a **shared `governance` abstraction** (the interception contract + audit emit point) so `fintech` and the later `defense` package implement the same surface and never drift.
+- Extract a **shared `governance` abstraction** (the interception contract + audit emit point) so `fintech` — and any future governance domain — implements the same surface and never drifts.
 - Encode rules as Zod schemas (the "constitution").
 - Define the **interception contract**: payload-in → `{ valid, violations, requiredComponent }` out. This is the seam the playground exercises.
 - **Audit trail:** every interception emits a structured, auditable event (`{ timestamp, payload, result, violations, decidedComponent }`). Defined as a contract here; the real sink is wired later. This is core to the compliance positioning.
@@ -136,13 +136,8 @@ Every later phase is judged against this invariant.
 - Validate the full loop in the playground against the Phase 4 harness.
 - **Exit criteria:** the wire-transfer use case is demonstrably un-bypassable from a hostile stream.
 
-### Phase 6 — Defense Logistics (Use Case 2 — Procurement) *(new `packages/defense`)*
-**Design hand-off:** NSN classification rules, CAC cryptographic-signature gate, `<SecureRequisitionDialog>` anatomy.
-**Goal:** Second governance domain, proving the architecture generalizes beyond fintech.
-- New `packages/defense` (pure Zod, **built on the shared `governance` abstraction** like `fintech`): cross-reference NSN → restricted classification.
-- Build `<SecureRequisitionDialog>` — physically cannot execute until CAC signature is provided.
-- Re-run the adversarial harness with restricted-item streams in the playground.
-- **Exit criteria:** restricted-item order stream is dropped; governed requisition dialog enforced.
+### Phase 6 — Defense Logistics *(retired — descoped)*
+Use Case 2 (NSN/CAC procurement — `packages/defense`, `<SecureRequisitionDialog>`) is **out of scope**: SINA now focuses solely on the fintech domain. The Phase 3 `governance` abstraction still makes a second domain addable later, but none is planned. Phase numbers 7–8 are kept stable to match `.claude/PHASE_STATE.md`.
 
 ### Phase 7 — Marketing Site & Docs (`apps/web`)
 **Design hand-off:** bespoke landing layouts, narrative, live demo embeds, and a rendered/animated version of the interception-seam diagram (§3 is ASCII today — the real one is a design artifact).
@@ -169,7 +164,7 @@ Every later phase is judged against this invariant.
 | **Getting Started** | Introduction · The One Invariant (§1b) · Quickstart | `[now]` |
 | **Concepts** | Threat model · Interception contract (`{ valid, violations, requiredComponent }`) · Audit trail · Mock vs. live mode | `[now]` |
 | **Architecture** | The three layers · Package boundaries (the three rules + how ESLint enforces them) · streamUI integration (the §3 seam) | `[now]` |
-| **Guides** | ★ **Add a governed domain** (worked via `defense`) · Add a primitive · Add a schema · Write an adversarial test | `[now]` |
+| **Guides** | ★ **Add a governed domain** (the extensibility path the `governance` abstraction enables) · Add a primitive · Add a schema · Write an adversarial test | `[now]` |
 | **Reference** | `theme` · `core` · `fintech` · `governance` — **auto-generated from TSDoc** | `[needs P1–P3]` |
 | **Components** | Read-only live demos: Dialog · CurrencyField · Grid · SecureWireDialog | `[needs P2/P5]` |
 
@@ -201,7 +196,6 @@ The `apps/playground` Adversarial Sandbox is the **only** place the Vercel AI SD
 | **Phase 2** | Renders `core` primitives in isolation (no AI yet) — visual/a11y sanity. |
 | **Phase 4 ★** | **Primary AI SDK integration.** Wires `streamUI` → interception layer → `fintech` schemas → governed render. Builds the adversarial input panel. |
 | **Phase 5** | Runs the `<SecureWireDialog>` loop end-to-end against hostile $60k streams. |
-| **Phase 6** | Re-runs the harness with `defense` schemas and restricted-NSN streams. |
 | **Phase 7** | The marketing site embeds this harness's **mock mode** as a read-only demo (no live LLM); the schema check still runs server-side per §1b. |
 | **Phase 8** | The adversarial suite becomes a required CI check. |
 
@@ -210,13 +204,13 @@ The `apps/playground` Adversarial Sandbox is the **only** place the Vercel AI SD
 LLM stream (streamUI intent / tool payload)
         │
         ▼
-[ fintech/defense Zod schema .safeParse ]   ← the Constitution
+[ fintech Zod schema .safeParse ]   ← the Constitution
         │
    ┌────┴────┐
  PASS       FAIL
    │           │
  render      BLOCK stream → force governed primitive
- core         (SecureWireDialog / SecureRequisitionDialog)
+ core         (SecureWireDialog)
  primitive
 ```
 
@@ -241,7 +235,6 @@ LLM stream (streamUI intent / tool payload)
 - mock-model provider module for deterministic CI runs
 
 **Later:**
-- `packages/defense/*` (new)
 - **Phase 7 (`apps/web`):** new `source.config.ts`, `lib/source.ts`, `app/(marketing)/page.tsx`, `app/docs/[[...slug]]/page.tsx`, `app/docs/layout.tsx`, `content/docs/**/*.mdx`, `wrangler.toml`; edit `next.config.mjs` (add `fintech` to `transpilePackages`), `tailwind.config.ts` (compose Fumadocs preset), `app/globals.css` (map `--color-fd-*` → SINA tokens)
 
 ---
@@ -253,11 +246,11 @@ Per phase, "done" means:
 - **Theme (P1):** change a token → value propagates to both apps.
 - **Core (P2):** keyboard/focus-trap/screen-reader checks pass **and automated axe checks are green** on primitives in the playground.
 - **Schemas (P3):** `vitest` over valid + adversarial fixtures; `.safeParse` returns typed `{valid, violations, requiredComponent}`; each decision emits an audit event.
-- **Interception (P4–P6) — the real test:** run the playground (`pnpm dev`, port 3001) in **mock mode**, feed a $60,000 transfer stream → assert the raw confirm is **blocked**, the designed blocked state shows, and `<SecureWireDialog>` renders; feed a compliant $5,000 stream → assert the standard primitive renders. Repeat for restricted-NSN streams → `<SecureRequisitionDialog>`. Confirm validation is server-side (§1b).
+- **Interception (P4–P6) — the real test:** run the playground (`pnpm dev`, port 3001) in **mock mode**, feed a $60,000 transfer stream → assert the raw confirm is **blocked**, the designed blocked state shows, and `<SecureWireDialog>` renders; feed a compliant $5,000 stream → assert the standard primitive renders. Confirm validation is server-side (§1b).
 - **CI (P8):** adversarial suite (mock mode) + axe checks are required checks on every PR.
 
 ---
 
 ## Next Step
 
-Begin **Phase 0 — Foundation Audit & Wiring** followed immediately by **Phase 0.5 — Agentic Workflow Setup** (`CLAUDE.md`, skills, hooks). Both are design-independent and unblock everything else. Phase 1 (Theme) then starts the design-hand-off loop and needs the first sign-off: the token set.
+Phases 0–4 are complete (see `.claude/PHASE_STATE.md` for verified status). **Next: Phase 5 — Governed Fintech Components** — compose the Phase 2 `core` primitives with the Phase 3 `fintech` constitution into `<SecureWireDialog>`, validated end-to-end against the Phase 4 emulator harness. Its design hand-off is the `<SecureWireDialog>` anatomy (secondary managerial approval flow + states).
