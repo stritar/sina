@@ -4,6 +4,7 @@
  * these never feed the gate.
  */
 
+import type { SummaryItem } from "@sina-design-system/core";
 import { MINOR_UNIT_EXPONENT, type CurrencyCode } from "@sina-design-system/fintech";
 
 export function formatAmount(minor: number, currency: string): string {
@@ -50,6 +51,45 @@ export function readWire(intent: unknown): WireView {
     debtor: readParty(wire.debtor),
     creditor: readParty(wire.creditor),
   };
+}
+
+/** camelCase / snake_case → "Title Case" for a human-facing field label. */
+function humanizeKey(key: string): string {
+  const spaced = key.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/[_-]+/g, " ");
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+}
+
+/** Fields that are envelopes/plumbing, never shown as action terms. */
+const TERMS_HIDDEN_KEYS = new Set(["stepUp", "approval", "payloadHash"]);
+
+/**
+ * Derive a read-only terms summary from ANY governed action payload, so one
+ * `GovernedActionDialog` can render every flow's terms without a per-flow adapter.
+ * Shows a formatted `amount` (with sibling `currency`) first, then the remaining
+ * primitive fields; a nested object contributes its `name`/`label`. Presentation
+ * only — never feeds the gate.
+ */
+export function deriveActionTerms(payload: unknown): SummaryItem[] {
+  const data = (payload ?? {}) as Record<string, unknown>;
+  const currency = typeof data.currency === "string" ? data.currency : "USD";
+  const items: SummaryItem[] = [];
+
+  if (typeof data.amount === "number") {
+    items.push({ label: "Amount", value: formatAmount(data.amount, currency), emphasis: true });
+  }
+
+  for (const [key, value] of Object.entries(data)) {
+    if (key === "amount" || TERMS_HIDDEN_KEYS.has(key)) continue;
+    if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+      items.push({ label: humanizeKey(key), value: String(value) });
+    } else if (value && typeof value === "object" && !Array.isArray(value)) {
+      const nested = value as Record<string, unknown>;
+      const name = nested.name ?? nested.label;
+      if (typeof name === "string") items.push({ label: humanizeKey(key), value: name });
+    }
+  }
+
+  return items.slice(0, 8);
 }
 
 /** Format an ISO-8601 timestamp for display (UTC, so output is deterministic). */

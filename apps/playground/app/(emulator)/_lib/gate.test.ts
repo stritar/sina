@@ -145,6 +145,120 @@ describe("emulator gate seam — the expanded read catalog", () => {
   });
 });
 
+describe("emulator gate seam — full read catalog (Phase 6.5)", () => {
+  it.each([
+    ["transaction-detail", "TransactionDetail"],
+    ["account-list", "AccountList"],
+    ["statement-list", "StatementList"],
+    ["cashflow-summary", "CashflowSummary"],
+    ["balance-trend", "BalanceTrend"],
+    ["activity-feed", "ActivityFeed"],
+    ["insight-card", "InsightCard"],
+    ["recurring-list", "RecurringList"],
+    ["invoice-list", "InvoiceList"],
+    ["asset-detail", "AssetDetail"],
+    ["order-history", "OrderHistory"],
+    ["fx-quote", "FxQuote"],
+    ["crypto-holdings", "CryptoHoldings"],
+    ["savings-goal", "SavingsGoal"],
+    ["net-worth", "NetWorth"],
+    ["alerts-feed", "AlertsFeed"],
+    ["search-results", "SearchResults"],
+  ])("%s validates, mounts %s, and audits it", (scenarioId, component) => {
+    const { result, mount, audit } = runGate(envelopeOf(scenarioId));
+    expect(result.valid).toBe(true);
+    expect(mount).toBe(component);
+    expect(audit?.decidedComponent).toBe(component);
+  });
+
+  it.each([
+    "transaction-detail-reject",
+    "account-list-reject",
+    "statement-list-reject",
+    "cashflow-summary-reject",
+    "balance-trend-reject",
+    "activity-feed-reject",
+    "insight-card-reject",
+    "recurring-list-reject",
+    "invoice-list-reject",
+    "asset-detail-reject",
+    "order-history-reject",
+    "fx-quote-reject",
+    "crypto-holdings-reject",
+    "savings-goal-reject",
+    "net-worth-reject",
+    "alerts-feed-reject",
+    "search-results-reject",
+  ])("rejects the adversarial read %s and mounts nothing", (scenarioId) => {
+    const { result, mount } = runGate(envelopeOf(scenarioId));
+    expect(result.valid).toBe(false);
+    expect(mount).toBeNull();
+  });
+});
+
+describe("emulator gate seam — full governed family (Phase 6.5)", () => {
+  it.each([
+    ["p2p-payment", "GovernedActionDialog"],
+    ["bill-pay", "GovernedActionDialog"],
+    ["recurring-setup", "GovernedActionDialog"],
+    ["fx-convert", "GovernedActionDialog"],
+    ["crypto-withdraw", "GovernedActionDialog"],
+    ["withdraw", "GovernedActionDialog"],
+    ["issue-card", "GovernedActionDialog"],
+    ["card-control", "GovernedActionDialog"],
+    ["change-limit", "GovernedActionDialog"],
+    ["security-change", "GovernedActionDialog"],
+    ["add-user", "GovernedActionDialog"],
+    ["kyc", "GovernedActionDialog"],
+    ["add-payee", "GovernedActionDialog"],
+    ["link-account", "GovernedActionDialog"],
+    ["dispute", "GovernedActionDialog"],
+    ["close-account", "GovernedActionDialog"],
+    ["place-trade", "GovernedActionDialog"],
+    ["enable-margin", "MandatoryDisclosure"],
+    ["credit-request", "MandatoryDisclosure"],
+    ["ach-over-limit", "GovernedActionDialog"],
+    ["disclosure-required", "MandatoryDisclosure"],
+  ])("%s escalates and forces %s (un-bypassable)", (scenarioId, component) => {
+    const { result, mount } = runGate(envelopeOf(scenarioId));
+    expect(result.valid).toBe(false);
+    expect(result.requiredComponent).toBe(component);
+    expect(mount).toBe(component);
+  });
+
+  it.each([
+    "p2p-payment-reject",
+    "bill-pay-reject",
+    "recurring-setup-reject",
+    "fx-convert-reject",
+    "crypto-withdraw-reject",
+    "withdraw-reject",
+    "issue-card-reject",
+    "card-control-reject",
+    "change-limit-reject",
+    "security-change-reject",
+    "add-user-reject",
+    "kyc-reject",
+    "add-payee-reject",
+    "link-account-reject",
+    "dispute-reject",
+    "close-account-reject",
+    "place-trade-reject",
+    "enable-margin-reject",
+    "credit-request-reject",
+  ])("rejects the adversarial governed intent %s and mounts nothing", (scenarioId) => {
+    const { result, mount } = runGate(envelopeOf(scenarioId));
+    expect(result.valid).toBe(false);
+    expect(mount).toBeNull();
+  });
+
+  it("passes an authorized ACH transfer bound to the exact terms", () => {
+    const { result } = runGate(envelopeOf("ach-authorized"));
+    expect(result.valid).toBe(true);
+    expect(result.requiredComponent).toBeNull();
+  });
+});
+
 describe("emulator gate seam — composed experience", () => {
   it("gates each intent of the dashboard independently and mounts all three", () => {
     const scenario = getScenario("dashboard");

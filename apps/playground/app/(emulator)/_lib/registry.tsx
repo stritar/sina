@@ -22,16 +22,40 @@ import {
   TransactionList,
   UpcomingPayments,
   Watchlist,
+  TransactionDetail,
+  AccountList,
+  StatementList,
+  CashflowSummary,
+  BalanceTrend,
+  ActivityFeed,
+  InsightCard,
+  RecurringList,
+  InvoiceList,
+  AssetDetail,
+  OrderHistory,
+  FxQuote,
+  CryptoHoldings,
+  SavingsGoal,
+  NetWorth,
+  AlertsFeed,
+  SearchResults,
 } from "@sina-design-system/fintech-react";
 
 import type { GovernedComponentProps } from "./types";
 import { SecureWireDialogHost } from "../_components/SecureWireDialogHost";
+import { GovernedActionDialogHost } from "../_components/GovernedActionDialogHost";
+import { MandatoryDisclosureHost } from "../_components/MandatoryDisclosureHost";
 
 /** Presentational components take the validated payload and render it read-only. */
 type PresentationalProps = { payload: unknown };
 
 const GOVERNED: Record<string, ComponentType<GovernedComponentProps>> = {
   SecureWireDialog: SecureWireDialogHost,
+  // The generalized governed dialog every non-wire escalation mounts (money
+  // movement, card ops, security changes, trades, B2B approvals).
+  GovernedActionDialog: GovernedActionDialogHost,
+  // Consent / regulatory disclosures (acknowledge-before-proceed).
+  MandatoryDisclosure: MandatoryDisclosureHost,
 };
 
 const PRESENTATIONAL: Record<string, ComponentType<PresentationalProps>> = {
@@ -45,6 +69,23 @@ const PRESENTATIONAL: Record<string, ComponentType<PresentationalProps>> = {
   UpcomingPayments,
   PortfolioHoldings,
   Watchlist,
+  TransactionDetail,
+  AccountList,
+  StatementList,
+  CashflowSummary,
+  BalanceTrend,
+  ActivityFeed,
+  InsightCard,
+  RecurringList,
+  InvoiceList,
+  AssetDetail,
+  OrderHistory,
+  FxQuote,
+  CryptoHoldings,
+  SavingsGoal,
+  NetWorth,
+  AlertsFeed,
+  SearchResults,
 };
 
 /** Resolve the governed component the gate forces, or null if none is registered. */

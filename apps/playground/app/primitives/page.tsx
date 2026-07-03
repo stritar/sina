@@ -15,6 +15,7 @@ const PRIMITIVES = [
   { slug: "badge", name: "Badge", tier: "Tier 2" },
   { slug: "spinner", name: "Spinner", tier: "Tier 2" },
   { slug: "progress", name: "Progress", tier: "Tier 2" },
+  { slug: "chart", name: "Chart", tier: "Tier 2" },
   { slug: "stack", name: "Stack", tier: "Tier 2" },
   { slug: "grid", name: "Grid", tier: "Tier 2" },
   { slug: "summary-list", name: "SummaryList", tier: "Tier 2" },

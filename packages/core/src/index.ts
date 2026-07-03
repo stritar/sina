@@ -51,6 +51,8 @@ export { Spinner } from "./Spinner/Spinner.js";
 export type { SpinnerProps } from "./Spinner/Spinner.js";
 export { Progress } from "./Progress/Progress.js";
 export type { ProgressProps } from "./Progress/Progress.js";
+export { Chart } from "./Chart/Chart.js";
+export type { ChartProps, ChartVariant } from "./Chart/Chart.js";
 export { SummaryList } from "./SummaryList/SummaryList.js";
 export type { SummaryListProps, SummaryItem } from "./SummaryList/SummaryList.js";
 export { TextField } from "./TextField/TextField.js";

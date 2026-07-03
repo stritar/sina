@@ -13,8 +13,8 @@ See `ROADMAP.md` for the full definition of each phase and its exit criteria.
 | 3 — Zod Constitution (governance + fintech) | done | 2026-06-30 | `CI=true pnpm build && pnpm typecheck && pnpm lint` all green (12/12 tasks); `pnpm --filter @sina-design-system/governance test` (9 passed) + `@sina-design-system/fintech test` (29 passed); aggregate `pnpm test` 12/12 (governance 9 / fintech 29 / core 60 / theme 11) — run sandbox-off (vitest `/tmp` mkdir EPERM under sandbox). New `packages/governance` = the shared seam: interception contract `{valid,violations,requiredComponent}` + `intercept` engine (reject/escalate/flag) + redacting audit emit. `packages/fintech` = wire-transfer constitution: cited `thresholds.ts` (FinCEN CTR/Travel Rule/SAR + $50k approval), reusable cited format primitives (ISO 4217 minor-units, IBAN mod-97, BIC, ABA, Luhn), `.strict()` payload + `wirePolicy` + valid/adversarial fixtures; every decision emits an audit event. `/new-schema` skill hardened. NB pnpm needs `CI=true` (no-TTY purge). |
 | 4 — Playground Test Bed (AI SDK) | done | 2026-07-01 | `CI=true pnpm build` (7/7) + `pnpm typecheck` (12/12) + `pnpm lint` (12/12) all green; `pnpm --filter playground test` 9/9 (5 gate + 4 jest-axe, zero violations); `next build` 28 routes. Design review resolved + Figma component-ization complete: Emulator page `65:2` rebuilt entirely from real bound instances — heroes Light `65:3` / Dark `96:1301` + governed-pass `97:595` + Coverage `99:795`; 6 emulator component sets (ServerBoundary/DecisionSummary/ConsoleStage/ModeToggle/Composer/ChatTurn) + 5 glyphs; composer full-width + real "governed by SINA" Badge + corrected 3 violations. Code composer-clip + block-the-stream motion synced. See [[sina-figma-file]]. Run tests `CI=true` + sandbox-off. |
 | 5 — Governed Fintech Components | done | 2026-07-01 | `CI=true pnpm build` (8/8) + `typecheck` (14/14) + `lint` (14/14, `fintech-react` boundary enforced) all green; tests: fintech 37 (+8 secondary-approval), fintech-react 3 (jest-axe zero violations across dialog states), playground 12 (8 gate incl. approved/self-approval/mismatch + 4 a11y), core 60 / governance 9 / theme 18. New `@sina-design-system/fintech-react` (the governed-UI third layer) houses `SecureWireDialog`; `fintech` gained the server-side approval extension (`formats/canonical.ts` binding hash, `ApprovalContext` initiator **server-supplied**, `makeWirePolicy` payload-binding + four-eyes, v1.0.0→1.1.0). Runtime smoke vs built dist: over-limit→forces `SecureWireDialog`, cross-manager approve→valid, self-approval→`SELF_APPROVAL_FORBIDDEN`, approve-$5k-exec-$60k→`APPROVAL_PAYLOAD_MISMATCH`. `/new-governed-component` skill + CLAUDE.md boundary landed. Gaps: replay/staleness (`challengeId` reserved, P8), identity/session. Run tests `CI=true` + sandbox-off. |
-| 6 — Agentic Fintech Experience (Governed + Ungoverned) | in-progress | — | Architecture (intent router + ungoverned render path) + proving slice landed 2026-07-01 (see below); full surface (workstreams A–F) pending |
-| 6.5 — Full Fintech Pattern Catalog (agent-executed) | not-started | — | — |
+| 6 — Agentic Fintech Experience (Governed + Ungoverned) | done | 2026-07-03 | `CI=true pnpm build` (8/8) + `typecheck` (14/14) + `lint` (14/14) green; tests 14/14 (sandbox-off) — core 65 / governance 18 / theme 18 / fintech 132 / fintech-react 85 / playground 109. Full workstream A–F surface landed (see below). |
+| 6.5 — Full Fintech Pattern Catalog (agent-executed) | done | 2026-07-03 | Whole `PATTERNS.md` catalog ✅: 17 new ungoverned reads + 20 new governed flows, each with schema + fixtures + registry entry + green gate test + playground scenario (reads also jest-axe). Fanned out via a Workflow (36 agents), assembled + verified centrally. Same green commands as Phase 6. |
 | 7 — Documentation (Fumadocs) | not-started | — | — |
 | 8 — Marketing Site | not-started | — | — |
 | 9 — Release Hardening | not-started | — | — |
@@ -23,7 +23,50 @@ See `ROADMAP.md` for the full definition of each phase and its exit criteria.
 
 ---
 
-## Phase 6 — IN PROGRESS: ungoverned render path + proving slice landed (2026-07-01)
+## Phase 6 + 6.5 — DONE: full fintech catalog (2026-07-03)
+
+Full workstream A–F surface + the entire `PATTERNS.md` catalog landed. Method: build the shared
+foundations inline + verify, then fan out the mechanical per-pattern work as a **Workflow** (36
+agents, isolated files only), then assemble the shared barrels deterministically and verify centrally.
+
+**DONE & verified GREEN (do not redo):**
+- **`core` `Chart` primitive** — accessible SVG sparkline (line/area/bar; `role="img"` + label;
+  `currentColor`-driven; degrades to a flat baseline). Story + jest-axe test. The documented chart gap
+  is closed; `BalanceTrend` + `AssetDetail` compose it.
+- **Shared governed mechanism** — `fintech/src/formats/step-up.ts` generalizes the wire
+  secondary-approval loop: one `stepUpApproval` envelope + `stepUpViolations(data, ctx, {mode, code, …})`
+  across `approval` (four-eyes + payload binding), `second-factor`, and `acknowledge` modes; server-side
+  `actionHash` binding (client never sends the hash). `wire-transfer` left byte-stable.
+- **Two real governed components** (`fintech-react`) every non-wire flow mounts: **`GovernedActionDialog`**
+  (review → collect authorizer → OTP → verdict; generic terms via `deriveActionTerms`) and
+  **`MandatoryDisclosure`** (verbatim text → acknowledge → verdict). jest-axe clean; never validate
+  client-side. Playground: generalized `regate-action.ts` (`"use server"`) + `GovernedActionDialogHost`
+  / `MandatoryDisclosureHost` + `registry.tsx` mounts; `BlockedState` already resolves them generically.
+- **20 governed flows** (each: cited schema reusing step-up + escalation → `GovernedActionDialog` /
+  `MandatoryDisclosure` + fixtures `escalate`/`authorized`/`reject` + node test): ach, p2p, bill-pay,
+  recurring-setup, fx-convert, crypto-withdraw, withdraw, issue-card, card-control, change-limit,
+  security-change, add-user, kyc, add-payee, link-account, dispute, close-account, place-trade,
+  enable-margin, credit-request, disclosure. Each threshold cited (`thresholds.ts`).
+- **17 ungoverned reads** (each: shape-only `.strict()`/bounded/masked schema + fixtures
+  `valid`/`validEmpty`/`adversarial` + presentational `fintech-react` component + jest-axe test):
+  transaction-detail, account-list, statement-list, cashflow-summary, balance-trend, activity-feed,
+  insight-card, recurring-list, invoice-list, asset-detail, order-history, fx-quote, crypto-holdings,
+  savings-goal, net-worth, alerts-feed, search-results.
+- **Wiring + proof:** registry (INTENTS + entries + `fintechIntentManifest`), both index barrels,
+  playground `registry.tsx` + `scenarios.ts` (+78 scenarios; the old `close_account` unknown-intent demo
+  repointed to `teleport_funds`), and `gate.test.ts` data-driven mount assertions — **105 gate tests**
+  prove every read validates-then-mounts and every governed intent escalates to the correct
+  un-bypassable component (or rejects on `.strict()`). `PATTERNS.md` all ✅.
+- **Consolidation (honest):** `PATTERNS.md` "Escalates to" names are the *logical* targets; they're
+  realized by `SecureWireDialog` / `GovernedActionDialog` / `MandatoryDisclosure` (noted in the catalog).
+- **Follow-up (not blocking):** Figma sync for `Chart` + the two governed dialogs (design sign-off was
+  waived by reusing the signed-off `SecureWireDialog` anatomy, ROADMAP §A) via `/primitive-figma-sync`.
+- **Run tests `CI=true` + sandbox-off** (vitest `/tmp` EPERM under the command sandbox; per-package runs
+  are green in-sandbox, the concurrent aggregate needs sandbox-off — see [[playground-dev-sandbox-port]]).
+
+---
+
+## Phase 6 — superseded detail: ungoverned render path + proving slice (2026-07-01)
 
 Full plan: `since-this-is-a-ticklish-sutton.md`. Phase 6 reframed to **Agentic Fintech Experience (Governed + Ungoverned)** — SINA is a design system first, so it now renders agentic UI that carries **no** governance risk ("show my last 2 transactions") alongside the governed flows. **The enabling architecture + a proving slice are done; the full surface (workstreams A–F) and the whole catalog (Phase 6.5) remain.**
 
@@ -37,7 +80,8 @@ Full plan: `since-this-is-a-ticklish-sutton.md`. Phase 6 reframed to **Agentic F
 
 **Expanded read catalog + demo (2026-07-02):** 8 more ungoverned reads — `SpendingBreakdown`, `BudgetProgress`, `CardList`, `RewardsSummary`, `PayeeList`, `UpcomingPayments`, `PortfolioHoldings`, `Watchlist` (each: shape-only schema + fixtures + presentational component + registry entry + manifest row + scenario + jest-axe). Playground add-ons: **live-mode intent routing** (`showData` tool built from `fintechIntentManifest()` — the model picks the read verb, the playground supplies fixture props so it never fabricates financial data), **composition** (`dispatchAll`/`runExperience` + a `Surface`; a "Financial dashboard" experience scenario = balance + transactions + spending, each gated independently), a **grouped scenario picker** (reads vs governed) with per-read adversarial scenarios, and a **validated-vs-governed** turn-header label. `PATTERNS.md` reads now 10/27 ✅. **a11y note:** display cards are plain containers (no `<section>`/`<header>` landmarks) so multiple reads on one page don't trip `landmark-unique`. Verified GREEN: fintech 59, fintech-react 28, playground (gate + a11y), 32/32 workspace.
 
-**Remaining for Phase 6 done:** workstreams A–F across the full surface (governed money-movement/onboarding/card/disclosure + the ungoverned display family); then **Phase 6.5** sweeps the entire `PATTERNS.md` catalog. Prerequisite for investing/crypto + trend reads: a `core` chart/sparkline primitive (`/new-primitive`).
+**Superseded:** the "remaining workstreams A–F + Phase 6.5 sweep + chart primitive" noted here all
+landed 2026-07-03 — see the **Phase 6 + 6.5 — DONE** section above.
 
 ---
 

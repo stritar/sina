@@ -21,6 +21,18 @@ export {
   type SecureWireRegateResult,
 } from "./SecureWireDialog/SecureWireDialog.js";
 
+export {
+  GovernedActionDialog,
+  type GovernedActionDialogProps,
+  type GovernedActionEvidence,
+  type GovernedActionRegateResult,
+} from "./GovernedActionDialog/GovernedActionDialog.js";
+export {
+  MandatoryDisclosure,
+  type MandatoryDisclosureProps,
+  type DisclosureAcknowledgement,
+} from "./MandatoryDisclosure/MandatoryDisclosure.js";
+
 export { TransactionList, type TransactionListProps } from "./TransactionList/TransactionList.js";
 export { BalanceCard, type BalanceCardProps } from "./BalanceCard/BalanceCard.js";
 export { SpendingBreakdown, type SpendingBreakdownProps } from "./SpendingBreakdown/SpendingBreakdown.js";
@@ -31,3 +43,20 @@ export { PayeeList, type PayeeListProps } from "./PayeeList/PayeeList.js";
 export { UpcomingPayments, type UpcomingPaymentsProps } from "./UpcomingPayments/UpcomingPayments.js";
 export { PortfolioHoldings, type PortfolioHoldingsProps } from "./PortfolioHoldings/PortfolioHoldings.js";
 export { Watchlist, type WatchlistProps } from "./Watchlist/Watchlist.js";
+export { TransactionDetail, type TransactionDetailProps } from "./TransactionDetail/TransactionDetail.js";
+export { AccountList, type AccountListProps } from "./AccountList/AccountList.js";
+export { StatementList, type StatementListProps } from "./StatementList/StatementList.js";
+export { CashflowSummary, type CashflowSummaryProps } from "./CashflowSummary/CashflowSummary.js";
+export { BalanceTrend, type BalanceTrendProps } from "./BalanceTrend/BalanceTrend.js";
+export { ActivityFeed, type ActivityFeedProps } from "./ActivityFeed/ActivityFeed.js";
+export { InsightCard, type InsightCardProps } from "./InsightCard/InsightCard.js";
+export { RecurringList, type RecurringListProps } from "./RecurringList/RecurringList.js";
+export { InvoiceList, type InvoiceListProps } from "./InvoiceList/InvoiceList.js";
+export { AssetDetail, type AssetDetailProps } from "./AssetDetail/AssetDetail.js";
+export { OrderHistory, type OrderHistoryProps } from "./OrderHistory/OrderHistory.js";
+export { FxQuote, type FxQuoteProps } from "./FxQuote/FxQuote.js";
+export { CryptoHoldings, type CryptoHoldingsProps } from "./CryptoHoldings/CryptoHoldings.js";
+export { SavingsGoal, type SavingsGoalProps } from "./SavingsGoal/SavingsGoal.js";
+export { NetWorth, type NetWorthProps } from "./NetWorth/NetWorth.js";
+export { AlertsFeed, type AlertsFeedProps } from "./AlertsFeed/AlertsFeed.js";
+export { SearchResults, type SearchResultsProps } from "./SearchResults/SearchResults.js";
