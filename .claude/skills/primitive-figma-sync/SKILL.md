@@ -15,22 +15,25 @@ Figma is **downstream of design sign-off but in lockstep with code** for primiti
 
 ## The mapping (code dir ↔ Figma page ↔ master key)
 
-The Figma file is one component-family per page under `——— COMPONENTS ———`. Probe pages by ID (the bare page list under-reports — see [[sina-figma-file]]). Master keys are on each set via `getSharedPluginData('dsb','key')`.
+The Figma file is one component-family per page under `——— COMPONENTS ———`. Probe pages by ID (`get_metadata`'s bare page list under-reports — do a read-only `use_figma` `figma.root.children` scan instead; see [[sina-figma-file]]). Master keys are on each set via `getSharedPluginData('dsb','key')`. **IDs below are the post-2026-06-29-rebuild IDs (verified 2026-07-03).**
 
 | `packages/core/src/` | Figma page (id) | set key(s) |
 |---|---|---|
-| Button | Button `7:4` | `button` |
-| Badge | Badge `7:5` | `badge` |
-| Alert | Alert `7:6` | `alert` |
-| TextField · CurrencyField · CredentialField · Field | Field & Inputs `7:7` | `textfield`, `textarea`, `currencyfield`, `credentialfield`, `otp` |
-| Select · Combobox | Select & Combobox `7:8` | `select-trigger`, `combobox` |
-| Checkbox · RadioGroup | Checkbox & Radio `7:9` | `checkbox`, `radio` |
-| Dialog · Toast | Dialog & Toast `7:10` | `toast` (Dialog is a composed *scene*, not a set) |
-| Tooltip | Tooltip `7:11` | `tooltip` |
-| Progress · Spinner | Progress & Spinner `7:12` | `progress`, `spinner` |
-| SummaryList | SummaryList `7:13` | `summarylist` |
-| Stack · Grid | Layout (Stack & Grid) `7:14` | — (layout primitives, doc-only) |
-| Icon · ScrollArea · Separator · VisuallyHidden | Utilities `7:15` | — (utilities, glyphs at `27:26` etc.) |
+| Button | Button `7:61` | `button` |
+| Badge | Badge `7:62` | `badge` |
+| Alert | Alert `7:63` | `alert` |
+| TextField · CurrencyField · CredentialField · Field | Field & Inputs `7:64` | `textfield`, `currencyfield`, `credentialfield`, `otp` |
+| Select · Combobox | Select & Combobox `7:65` | `select-trigger`, `combobox` |
+| Checkbox · RadioGroup | Checkbox & Radio `7:66` | `checkbox`, `radio` |
+| Dialog · Toast | Dialog & Toast `7:67` | `toast` (Dialog is a composed *scene* `36:2`, not a set) |
+| Tooltip | Tooltip `7:68` | `tooltip` |
+| Progress · Spinner | Progress & Spinner `7:69` | `progress`, `spinner` |
+| SummaryList | SummaryList `7:70` | `summarylist` |
+| **Chart** | **Chart `123:2`** | **`chart`** (variant set `123:21`; `Variant`=line/area/bar; States strip + Coverage) |
+| Stack · Grid | Layout & Utilities `7:71` | — (layout primitives, doc-only) |
+| Icon · ScrollArea · Separator · VisuallyHidden | Layout & Utilities `7:71` | — (utilities; glyphs incl. FileText `130:2`) |
+
+> **Governed fintech scenes** (the `fintech-react` third layer — synced via `/new-governed-component`, *not* this skill) live one-per-page as composed *scenes*, not variant sets: SecureWireDialog `110:2`, **GovernedActionDialog `127:2`** (6-phase strip; scene `127:3`), **MandatoryDisclosure `132:2`** (4-phase strip; scene `132:3`). Ungoverned reads → **Fintech Displays `139:2`**; the composed experience hero → **Financial Dashboard `147:2`** (Light `147:3` + Dark `148:44`).
 
 ## Before any Figma write (mandatory)
 

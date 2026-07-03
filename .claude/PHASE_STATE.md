@@ -59,8 +59,13 @@ agents, isolated files only), then assemble the shared barrels deterministically
   un-bypassable component (or rejects on `.strict()`). `PATTERNS.md` all ✅.
 - **Consolidation (honest):** `PATTERNS.md` "Escalates to" names are the *logical* targets; they're
   realized by `SecureWireDialog` / `GovernedActionDialog` / `MandatoryDisclosure` (noted in the catalog).
-- **Follow-up (not blocking):** Figma sync for `Chart` + the two governed dialogs (design sign-off was
-  waived by reusing the signed-off `SecureWireDialog` anatomy, ROADMAP §A) via `/primitive-figma-sync`.
+- **Follow-up — DONE (2026-07-03, Figma sync):** the deferred Figma work landed in file `kRTCdsBg4WpiGxQQGfvoLU`
+  (run `sina-phase6-figma-sync-2026-07-03`, see [[sina-figma-file]]): **Chart** primitive page `123:2`
+  (line/area/bar set `123:21` + States + Coverage); **GovernedActionDialog** scene `127:2` + **MandatoryDisclosure**
+  scene `132:2` (both cloned off the signed-off `SecureWireDialog` anatomy, design sign-off waived per ROADMAP §A;
+  new **FileText** glyph `130:2`); **Fintech Displays** `139:2` (the 17 new reads + 3 hero reads as composition
+  cards); and a **Financial Dashboard** experience hero `147:2` (Light `147:3` + Dark `148:44`). Remaining pre-P6
+  reads + Code Connect + Team-Library **publish** (manual UI step) are the only open, optional items.
 - **Run tests `CI=true` + sandbox-off** (vitest `/tmp` EPERM under the command sandbox; per-package runs
   are green in-sandbox, the concurrent aggregate needs sandbox-off — see [[playground-dev-sandbox-port]]).
 
