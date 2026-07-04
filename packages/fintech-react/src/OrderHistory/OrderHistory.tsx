@@ -10,6 +10,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack, type BadgeProps } from "@sina-design-system/core";
 
 import { formatAmount, formatDate } from "../format.js";
+import styles from "./OrderHistory.module.css";
 
 export interface OrderHistoryProps {
   /** The server-validated `order_history` payload. */
@@ -75,12 +76,12 @@ export function OrderHistory({ payload }: OrderHistoryProps) {
     <Stack
       gap={3}
       aria-label="Order history"
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.root}
     >
       {orders.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">No orders to show.</p>
+        <p className={styles.empty}>No orders to show.</p>
       ) : (
-        <Stack as="ul" gap={0} aria-label="Orders" className="divide-y divide-border-subtle">
+        <Stack as="ul" gap={0} aria-label="Orders" className={styles.list}>
           {orders.map((o) => {
             const statusIntent = STATUS_INTENT[o.status] ?? "neutral";
             return (
@@ -91,21 +92,21 @@ export function OrderHistory({ payload }: OrderHistoryProps) {
                 justify="between"
                 align="center"
                 gap={3}
-                className="py-2"
+                className={styles.row}
               >
-                <span className="flex min-w-0 flex-col">
-                  <span className="flex items-center gap-2">
-                    <span className="truncate text-ui font-medium text-text">{o.symbol}</span>
+                <span className={styles.symbolCol}>
+                  <span className={styles.symbolRow}>
+                    <span className={styles.symbol}>{o.symbol}</span>
                     <Badge intent={o.side === "buy" ? "info" : "neutral"} size="sm">
                       {o.side}
                     </Badge>
                   </span>
-                  <span className="truncate text-xs text-text-muted">
+                  <span className={styles.meta}>
                     {o.quantity} · {formatDate(o.filledAt)}
                   </span>
                 </span>
-                <span className="flex shrink-0 flex-col items-end gap-0.5">
-                  <span className="text-ui font-semibold text-text">
+                <span className={styles.priceCol}>
+                  <span className={styles.price}>
                     {formatAmount(o.price, o.currency)}
                   </span>
                   <Badge intent={statusIntent} size="sm">

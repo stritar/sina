@@ -9,12 +9,13 @@
 import { CircleNotch } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "../utils/cn.js";
 import { VisuallyHidden } from "../VisuallyHidden/VisuallyHidden.js";
+import styles from "./Spinner.module.css";
 
-const SIZES = {
-  sm: "size-control-2xs",
-  md: "size-control-xs",
-  lg: "size-control-sm",
-} as const;
+const SIZES: Record<"sm" | "md" | "lg", string | undefined> = {
+  sm: styles.sm,
+  md: styles.md,
+  lg: styles.lg,
+};
 
 export interface SpinnerProps {
   size?: keyof typeof SIZES;
@@ -25,12 +26,8 @@ export interface SpinnerProps {
 
 export function Spinner({ size = "md", label = "Loading", className }: SpinnerProps) {
   return (
-    <span role="status" className={cn("inline-flex text-text-muted", className)}>
-      <CircleNotch
-        aria-hidden
-        weight="bold"
-        className={cn(SIZES[size], "animate-spin motion-reduce:animate-none")}
-      />
+    <span role="status" className={cn(styles.root, className)}>
+      <CircleNotch aria-hidden weight="bold" className={cn(SIZES[size], styles.spin)} />
       <VisuallyHidden>{label}</VisuallyHidden>
     </span>
   );

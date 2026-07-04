@@ -1,9 +1,10 @@
 /**
  * @sina-design-system/theme
  *
- * Design tokens for SINA: Tailwind preset (`@sina-design-system/theme/tailwind`),
- * foundational CSS variables (`@sina-design-system/theme/css`), and the typed
- * token surface re-exported below. No React — tokens only.
+ * Design tokens for SINA: the runtime CSS custom properties
+ * (`@sina-design-system/theme/css`), the CSS reset
+ * (`@sina-design-system/theme/reset.css`), and the typed token surface
+ * re-exported below. No React — tokens only.
  */
 
 export * from "./tokens.js";

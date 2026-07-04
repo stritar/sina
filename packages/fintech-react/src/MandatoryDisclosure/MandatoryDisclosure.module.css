@@ -1,0 +1,51 @@
+/* @sina-design-system/fintech-react — MandatoryDisclosure */
+
+:root {
+  --sina-mandatory-disclosure-scroll-bg: var(--sina-color-surface-sunken, #f5f6f4);
+  --sina-mandatory-disclosure-scroll-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-mandatory-disclosure-paragraph: var(--sina-color-text-muted, #52564e);
+  --sina-mandatory-disclosure-version: var(--sina-color-text-subtle, #a7ada0);
+}
+
+/* Trigger glyph — inline badge-sized icon. */
+.icon {
+  width: var(--sina-size--icon-sm, 0.875rem);
+  height: var(--sina-size--icon-sm, 0.875rem);
+}
+
+/* Body stack under the description. */
+.body {
+  margin-top: var(--sina-space--3, 0.75rem);
+}
+
+/* Scrollable well holding the verbatim disclosure text. */
+.scroll {
+  max-height: 14rem;
+  border-radius: var(--sina-radius--lg, 8px);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-mandatory-disclosure-scroll-border, #edefeb);
+  background: var(--sina-mandatory-disclosure-scroll-bg, #f5f6f4);
+  padding: var(--sina-space--3, 0.75rem);
+}
+
+/* Each disclosure paragraph (rendered as text, never HTML). */
+.paragraph {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-mandatory-disclosure-paragraph, #52564e);
+}
+
+/* Version stamp at the foot of the well. */
+.version {
+  font-size: var(--sina-text--xs, 0.75rem);
+  color: var(--sina-mandatory-disclosure-version, #a7ada0);
+}
+
+/* Right-aligned action row. */
+.footer {
+  margin-top: var(--sina-space--1, 0.25rem);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sina-space--2, 0.5rem);
+}

@@ -32,6 +32,7 @@ import {
 import type { Violation } from "@sina-design-system/governance";
 
 import type { GovernedActionRegateResult } from "../GovernedActionDialog/GovernedActionDialog.js";
+import styles from "./MandatoryDisclosure.module.css";
 
 /** What the actor attests. The gate re-verifies server-side. */
 export interface DisclosureAcknowledgement {
@@ -125,7 +126,7 @@ export function MandatoryDisclosure({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="sm" iconLeft={<FileText className="size-control-2xs" />}>
+        <Button variant="secondary" size="sm" iconLeft={<FileText className={styles.icon} />}>
           {triggerLabel}
         </Button>
       </DialogTrigger>
@@ -137,21 +138,21 @@ export function MandatoryDisclosure({
           acknowledge it before the action proceeds.
         </DialogDescription>
 
-        <Stack direction="col" gap={3} className="mt-3">
+        <Stack direction="col" gap={3} className={styles.body}>
           {phase === "review" && (
             <>
-              <ScrollArea className="max-h-56 rounded-lg border border-border-subtle bg-surface-sunken p-3">
+              <ScrollArea className={styles.scroll}>
                 <Stack direction="col" gap={2}>
                   {disclosure.body.length > 0 ? (
                     disclosure.body.map((paragraph, i) => (
-                      <p key={i} className="text-ui text-text-muted">
+                      <p key={i} className={styles.paragraph}>
                         {paragraph}
                       </p>
                     ))
                   ) : (
-                    <p className="text-ui text-text-muted">No disclosure text was provided.</p>
+                    <p className={styles.paragraph}>No disclosure text was provided.</p>
                   )}
-                  <p className="text-xs text-text-subtle">Version {disclosure.version}</p>
+                  <p className={styles.version}>Version {disclosure.version}</p>
                 </Stack>
               </ScrollArea>
 
@@ -230,5 +231,5 @@ export function MandatoryDisclosure({
 }
 
 function Footer({ children }: { children: ReactNode }) {
-  return <div className="mt-1 flex items-center justify-end gap-2">{children}</div>;
+  return <div className={styles.footer}>{children}</div>;
 }

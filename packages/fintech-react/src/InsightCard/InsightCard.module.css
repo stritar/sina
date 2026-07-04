@@ -1,0 +1,21 @@
+/* @sina-design-system/fintech-react — InsightCard */
+
+:root {
+  --sina-insight-card-muted: var(--sina-color-text-muted, #52564e);
+}
+
+/* Empty state — no insight to show. */
+.empty {
+  padding-block: var(--sina-space--6, 1.5rem);
+  text-align: center;
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-insight-card-muted, #52564e);
+}
+
+/* Label preceding the metric Badge. */
+.metricLabel {
+  font-size: var(--sina-text--xs, 0.75rem);
+  color: var(--sina-insight-card-muted, #52564e);
+}

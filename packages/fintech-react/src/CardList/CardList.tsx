@@ -11,6 +11,7 @@ import { Badge, Grid, Stack } from "@sina-design-system/core";
 import type { BadgeProps } from "@sina-design-system/core";
 
 import { readCardList } from "../format.js";
+import styles from "./CardList.module.css";
 
 export interface CardListProps {
   payload: unknown;
@@ -30,9 +31,9 @@ export function CardList({ payload }: CardListProps) {
     return (
       <div
         aria-label="Cards"
-        className="rounded-lg border border-border-subtle bg-surface p-3"
+        className={styles.card}
       >
-        <p className="py-6 text-center text-ui text-text-muted">No cards to show.</p>
+        <p className={styles.empty}>No cards to show.</p>
       </div>
     );
   }
@@ -43,18 +44,18 @@ export function CardList({ payload }: CardListProps) {
         <Stack
           key={c.id}
           gap={2}
-          className="rounded-lg border border-border-subtle bg-surface p-3"
+          className={styles.card}
         >
           <Stack direction="row" justify="between" align="center" gap={2}>
-            <span className="text-ui font-medium text-text">{c.label}</span>
+            <span className={styles.cardLabel}>{c.label}</span>
             <Badge intent={STATUS_INTENT[c.status] ?? "neutral"} size="sm">
               {c.status}
             </Badge>
           </Stack>
-          <span className="font-mono text-sm text-text">{c.maskedNumber}</span>
+          <span className={styles.maskedNumber}>{c.maskedNumber}</span>
           <Stack direction="row" justify="between" align="center" gap={2}>
-            <span className="text-xs uppercase text-text-subtle">{c.network}</span>
-            <span className="text-xs text-text-subtle">exp {c.expiry}</span>
+            <span className={styles.network}>{c.network}</span>
+            <span className={styles.expiry}>exp {c.expiry}</span>
           </Stack>
         </Stack>
       ))}

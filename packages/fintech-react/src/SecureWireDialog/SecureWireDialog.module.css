@@ -1,0 +1,54 @@
+/* @sina-design-system/fintech-react — SecureWireDialog */
+
+:root {
+  --sina-secure-wire-dialog-label: var(--sina-color-text, #353b31);
+  --sina-secure-wire-dialog-hint: var(--sina-color-text-subtle, #a7ada0);
+}
+
+/* Trigger glyph — inline badge-sized icon. */
+.icon {
+  width: var(--sina-size--icon-sm, 0.875rem);
+  height: var(--sina-size--icon-sm, 0.875rem);
+}
+
+/* Body stack under the description. */
+.body {
+  margin-top: var(--sina-space--3, 0.75rem);
+}
+
+/* One blocking-violation row inside the "why this is blocked" alert. */
+.violationRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--1_5, 0.375rem);
+}
+
+/* Severity token rendered monospace inside its danger Badge. */
+.severity {
+  font-family: var(--sina-font--mono, "IBM Plex Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace);
+}
+
+/* Label above the OTP field. */
+.fieldLabel {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium, 500);
+  color: var(--sina-secure-wire-dialog-label, #353b31);
+}
+
+/* Fine-print hint under the OTP field. */
+.hint {
+  font-size: var(--sina-text--xs, 0.75rem);
+  color: var(--sina-secure-wire-dialog-hint, #a7ada0);
+}
+
+/* Right-aligned action row. */
+.footer {
+  margin-top: var(--sina-space--1, 0.25rem);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sina-space--2, 0.5rem);
+}

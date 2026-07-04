@@ -5,7 +5,7 @@ description: Preview a library (`packages/*`) change in the running playground/w
 
 > **Hardened on the CheckFat icon swap (Phase 2+).** The Select dropdown kept showing the old thin `Check` after `packages/core/src` was edited and unit-tested — because the playground serves the package's built `dist/`, which had not been rebuilt. This skill exists so a correct edit never *looks* broken again.
 
-Apps consume the **built `dist/`** of every `@sina-design-system/*` package, not its `src`. So a source edit is invisible to a running app until `dist` is rebuilt. This skill makes sure what you verify is what you wrote.
+Apps consume the **built `dist/`** of every `@sina-design-system/*` package, not its `src`. So a source edit is invisible to a running app until `dist` is rebuilt. Since the Tailwind→CSS-Modules migration the build ships a `dist/styles.css` alongside `dist/*.js` (imported in each app's `app/layout.tsx`), so a **`*.module.css` edit is just as invisible until rebuilt** as a `.tsx` one. This skill makes sure what you verify is what you wrote.
 
 ## Why (the trap)
 
@@ -17,13 +17,13 @@ Apps consume the **built `dist/`** of every `@sina-design-system/*` package, not
 
 1. **Identify the edited package(s)** — e.g. `@sina-design-system/core` (and any of `theme` / `fintech` you touched).
 2. **Refresh `dist` — pick one:**
-   - **Iterative / multiple edits → root watch.** Run `pnpm dev` from the **repo root**. Turbo runs each library's `dev` (`tsc --watch`) alongside the app, so every save re-emits `dist` and the app hot-reloads. ⚠️ `pnpm --filter playground dev` *alone* watches only the app and will serve stale library output.
-   - **One-off check → manual build.** `pnpm --filter <pkg> build` (e.g. `pnpm --filter @sina-design-system/core build`) before opening the app. Rebuild **every** edited library; upstream deps build first automatically where tasks `dependsOn: ["^build"]`.
-3. **Confirm `dist` actually changed** before trusting the UI — e.g. `grep -ric "<new symbol>" packages/<pkg>/dist/**` (for the icon swap: `grep -ric CheckFat packages/core/dist/Select/Select.js`).
+   - **Iterative / multiple edits → root watch.** Run `pnpm dev` from the **repo root**. Turbo runs each library's `dev` (`vite build --watch`) alongside the app, so every save re-emits `dist/*.js` + `dist/styles.css` and the app hot-reloads. ⚠️ `pnpm --filter playground dev` *alone* watches only the app and will serve stale library output.
+   - **One-off check → manual build.** `pnpm --filter <pkg> build` (e.g. `pnpm --filter @sina-design-system/core build` — Vite library mode + `tsc --emitDeclarationOnly`) before opening the app. Rebuild **every** edited library; upstream deps build first automatically where tasks `dependsOn: ["^build"]`.
+3. **Confirm `dist` actually changed** before trusting the UI — for a `.tsx` change `grep -ric "<new symbol>" packages/<pkg>/dist/**` (e.g. `grep -ric CheckFat packages/core/dist/Select/Select.js`); for a `*.module.css` / token change `grep -c "<class-or-hex>" packages/<pkg>/dist/styles.css`.
 4. **Verify in the app:** playground on **3001**, web on **3000**. Dev servers can't bind a port under the command sandbox (EPERM) — run them manually outside the sandbox. See [[playground-dev-sandbox-port]].
 
 ## Reuses
 
-- Root `pnpm dev` → `turbo run dev` (persistent; per-package `tsc --watch`).
-- Each library's `dev` / `build` scripts (`tsc -p tsconfig.json [--watch]`).
+- Root `pnpm dev` → `turbo run dev` (persistent; per-package `vite build --watch`).
+- Each library's `dev` / `build` scripts (`vite build --watch` for `dev`; `vite build && tsc --emitDeclarationOnly` for `build`, emitting `dist/*.js` + `dist/styles.css`).
 - Binding rule in `CLAUDE.md` → **Commands** ("Apps consume built `dist/`, never `src`").

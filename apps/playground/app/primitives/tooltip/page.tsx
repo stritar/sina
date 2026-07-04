@@ -6,6 +6,7 @@ import {
   TooltipTrigger,
 } from "@sina-design-system/core";
 import { Demo, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
 
 const SIDES = ["top", "right", "bottom", "left"] as const;
 
@@ -14,9 +15,9 @@ export default function TooltipStory() {
     <StoryShell title="Tooltip">
       <TooltipProvider delayDuration={200}>
         <Demo label="Sides (top · right · bottom · left)">
-          <div className="grid w-full grid-cols-2 gap-12 px-8 py-12">
+          <div className={styles.sidesGrid}>
             {SIDES.map((side) => (
-              <div key={side} className="flex justify-center">
+              <div key={side} className={styles.cell}>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button variant="secondary">side={side}</Button>

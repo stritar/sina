@@ -23,6 +23,7 @@ import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 import type { ChartData, ChartOptions } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { cn } from "../utils/cn.js";
+import styles from "./PieChart.module.css";
 import { buildElementClickHandler } from "../charts/click.js";
 import type { ChartElementClickDetail } from "../charts/click.js";
 import { colorizePieData } from "../charts/data.js";
@@ -111,7 +112,7 @@ function BasePieChart({
       ref={setRefs}
       role="img"
       aria-label={label}
-      className={cn("relative h-full w-full", className)}
+      className={cn(styles.root, className)}
       style={style}
     >
       {el ? (
@@ -126,15 +127,12 @@ function BasePieChart({
         />
       ) : null}
       {centerLabel !== undefined || centerSubLabel !== undefined ? (
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
-        >
+        <span aria-hidden="true" className={styles.center}>
           {centerLabel !== undefined ? (
-            <span className="text-2xl font-medium leading-tight text-text">{centerLabel}</span>
+            <span className={styles.centerLabel}>{centerLabel}</span>
           ) : null}
           {centerSubLabel !== undefined ? (
-            <span className="text-ui text-text-muted">{centerSubLabel}</span>
+            <span className={styles.centerSubLabel}>{centerSubLabel}</span>
           ) : null}
         </span>
       ) : null}

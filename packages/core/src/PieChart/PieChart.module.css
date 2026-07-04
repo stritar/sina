@@ -1,0 +1,39 @@
+/* @sina-design-system/core — PieChart / DonutChart */
+
+:root {
+  --sina-pie-chart-center-label: var(--sina-color-text, #353b31);
+  --sina-pie-chart-center-sub-label: var(--sina-color-text-muted, #52564e);
+}
+
+/* Wrapper around the Chart.js canvas. Canvas colors are read from --sina-* at
+   render time by the shared chart helpers — this rule only sizes the box. */
+.root {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+/* Donut center overlay — real token-styled DOM text, not canvas paint. */
+.center {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.centerLabel {
+  font-size: var(--sina-text--2xl, 1.5rem);
+  font-weight: var(--sina-font-weight--medium, 500);
+  line-height: var(--sina-leading--tight, 1.1);
+  color: var(--sina-pie-chart-center-label, #353b31);
+}
+
+.centerSubLabel {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-pie-chart-center-sub-label, #52564e);
+}

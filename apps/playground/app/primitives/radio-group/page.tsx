@@ -1,15 +1,12 @@
 import { RadioGroup, RadioGroupItem } from "@sina-design-system/core";
 import { Demo, Specimen, StoryShell } from "../_components/StoryShell";
-
-// Static focus ring, mirroring the house focus style (`:focus-visible` only) so
-// the "focus" specimen reads as focused without keyboard interaction.
-const focusRing = "ring-2 ring-focus-ring ring-offset-1 ring-offset-bg";
+import styles from "./page.module.css";
 
 export default function RadioGroupStory() {
   return (
     <StoryShell title="RadioGroup">
       <Demo label="States">
-        <div className="flex items-center gap-6">
+        <div className={styles.rowCenter}>
           <RadioGroup aria-label="unchecked">
             <RadioGroupItem value="off" aria-label="unchecked" />
           </RadioGroup>
@@ -20,10 +17,10 @@ export default function RadioGroupStory() {
       </Demo>
 
       <Demo label="Focus / disabled">
-        <div className="flex items-start gap-6">
+        <div className={styles.rowStart}>
           <Specimen caption="focus">
             <RadioGroup defaultValue="on" aria-label="focus">
-              <RadioGroupItem value="on" aria-label="focus" className={focusRing} />
+              <RadioGroupItem value="on" aria-label="focus" className={styles.focusRing} />
             </RadioGroup>
           </Specimen>
           <Specimen caption="disabled">

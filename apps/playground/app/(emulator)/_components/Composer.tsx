@@ -8,6 +8,7 @@
 import { Button, TextField } from "@sina-design-system/core";
 import { PaperPlaneTilt } from "@phosphor-icons/react/dist/ssr";
 import { ScenarioPicker } from "./ScenarioPicker";
+import styles from "./Composer.module.css";
 
 export function Composer({
   value,
@@ -23,7 +24,7 @@ export function Composer({
   disabled?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-surface-raised p-3 shadow-sm">
+    <div className={styles.root}>
       <ScenarioPicker onPick={onPickScenario} disabled={disabled} />
       <TextField
         label="Agent prompt"
@@ -39,12 +40,12 @@ export function Composer({
           }
         }}
       />
-      <div className="flex items-center justify-between gap-3">
-        <span className="font-mono text-xs text-text-subtle">⌘/Ctrl+Enter to send</span>
+      <div className={styles.footer}>
+        <span className={styles.hint}>⌘/Ctrl+Enter to send</span>
         <Button
           onClick={onSend}
           disabled={disabled || value.trim().length === 0}
-          iconRight={<PaperPlaneTilt className="size-control-xs" />}
+          iconRight={<PaperPlaneTilt className={styles.sendIcon} />}
         >
           Send
         </Button>

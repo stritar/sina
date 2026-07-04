@@ -1,5 +1,6 @@
 import { Progress } from "@sina-design-system/core";
 import { Demo, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
 
 const VALUES = [0, 25, 50, 75, 100] as const;
 
@@ -7,11 +8,11 @@ export default function ProgressStory() {
   return (
     <StoryShell title="Progress">
       <Demo label="Determinate · 0 → 100">
-        <div className="flex w-full flex-col gap-4">
+        <div className={styles.stack}>
           {VALUES.map((value) => (
-            <div key={value} className="flex items-center gap-3">
-              <span className="w-10 font-mono text-xs text-text-subtle">{value}</span>
-              <div className="w-64">
+            <div key={value} className={styles.row}>
+              <span className={styles.valueLabel}>{value}</span>
+              <div className={styles.track}>
                 <Progress value={value} label={`Progress ${value} percent`} />
               </div>
             </div>
@@ -20,7 +21,7 @@ export default function ProgressStory() {
       </Demo>
 
       <Demo label="Indeterminate · no value">
-        <div className="w-64">
+        <div className={styles.track}>
           <Progress label="Loading" />
         </div>
       </Demo>

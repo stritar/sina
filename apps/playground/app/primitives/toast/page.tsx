@@ -12,6 +12,7 @@ import {
 } from "@sina-design-system/core";
 import { useState } from "react";
 import { Demo, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
 
 type Variant = "success" | "danger" | "info";
 
@@ -107,7 +108,7 @@ export default function ToastStory() {
             open
             onOpenChange={(o) => !o && setOpen(null)}
             duration={4000}
-            className={singleLine ? "items-center" : undefined}
+            className={singleLine ? styles.itemsCenter : undefined}
           >
             <ToastTitle>{spec.title}</ToastTitle>
             {spec.description ? (
@@ -115,7 +116,7 @@ export default function ToastStory() {
             ) : null}
             {spec.action ? (
               <ToastAction asChild altText={spec.action}>
-                <Button variant="ghost" size="sm" className="-ml-1.5 self-start">
+                <Button variant="ghost" size="sm" className={styles.action}>
                   {spec.action}
                 </Button>
               </ToastAction>

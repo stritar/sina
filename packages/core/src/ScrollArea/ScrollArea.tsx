@@ -12,24 +12,25 @@ import { ScrollArea as Primitive } from "radix-ui";
 import { forwardRef } from "react";
 import type { ComponentPropsWithoutRef, ComponentRef } from "react";
 import { cn } from "../utils/cn.js";
+import styles from "./ScrollArea.module.css";
 
 export const ScrollArea = forwardRef<
   ComponentRef<typeof Primitive.Root>,
   ComponentPropsWithoutRef<typeof Primitive.Root>
 >(({ className, children, ...props }, ref) => (
-  <Primitive.Root ref={ref} className={cn("relative overflow-hidden", className)} {...props}>
-    <Primitive.Viewport className="size-full rounded-[inherit]">{children}</Primitive.Viewport>
+  <Primitive.Root ref={ref} className={cn(styles.root, className)} {...props}>
+    <Primitive.Viewport className={styles.viewport}>{children}</Primitive.Viewport>
     <Primitive.Scrollbar
       orientation="vertical"
-      className="flex w-1.5 touch-none select-none transition-colors duration-fast ease-standard"
+      className={cn(styles.scrollbar, styles.scrollbarVertical)}
     >
-      <Primitive.Thumb className="relative flex-1 rounded-full bg-border" />
+      <Primitive.Thumb className={styles.thumb} />
     </Primitive.Scrollbar>
     <Primitive.Scrollbar
       orientation="horizontal"
-      className="flex h-1.5 flex-col touch-none select-none transition-colors duration-fast ease-standard"
+      className={cn(styles.scrollbar, styles.scrollbarHorizontal)}
     >
-      <Primitive.Thumb className="relative flex-1 rounded-full bg-border" />
+      <Primitive.Thumb className={styles.thumb} />
     </Primitive.Scrollbar>
     <Primitive.Corner />
   </Primitive.Root>

@@ -13,6 +13,7 @@ import { Tooltip as Primitive } from "radix-ui";
 import { forwardRef } from "react";
 import type { ComponentPropsWithoutRef, ComponentRef } from "react";
 import { cn } from "../utils/cn.js";
+import styles from "./Tooltip.module.css";
 
 export const TooltipProvider = Primitive.Provider;
 export const Tooltip = Primitive.Root;
@@ -26,12 +27,7 @@ export const TooltipContent = forwardRef<
     <Primitive.Content
       ref={ref}
       sideOffset={sideOffset}
-      className={cn(
-        "z-dropdown max-w-xs rounded-full bg-text px-2 py-0.5 text-xs text-bg shadow-sm",
-        "data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95",
-        "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
-        className,
-      )}
+      className={cn(styles.content, className)}
       {...props}
     >
       {children}

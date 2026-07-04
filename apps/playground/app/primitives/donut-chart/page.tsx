@@ -2,6 +2,7 @@
 
 import { DonutChart } from "@sina-design-system/core";
 import { Demo, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
 
 const SEGMENTS = {
   labels: ["Equities", "Bonds", "Cash", "Real assets"],
@@ -17,7 +18,7 @@ export default function DonutChartStory() {
           centerLabel="86"
           centerSubLabel="score"
           label="Four segments around a center score of 86"
-          className="h-[300px]"
+          className={styles.chart300}
         />
       </Demo>
 
@@ -26,19 +27,19 @@ export default function DonutChartStory() {
           data={SEGMENTS}
           cutout="80%"
           label="Four segments as a thin ring"
-          className="h-[260px]"
+          className={styles.chart260}
         />
       </Demo>
 
       <Demo label="Dark · scoped wrapper re-themes tokens locally">
-        <div className="dark w-full rounded-lg bg-bg p-4">
-          <div className="rounded-lg bg-surface p-4">
+        <div className={`dark ${styles.darkFrame}`}>
+          <div className={styles.panel}>
             <DonutChart
               data={SEGMENTS}
               centerLabel="86"
               centerSubLabel="score"
               label="Four segments around a center score, dark theme"
-              className="h-[260px]"
+              className={styles.chart260}
             />
           </div>
         </div>

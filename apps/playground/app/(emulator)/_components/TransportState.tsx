@@ -9,6 +9,7 @@
 import { Alert, Button } from "@sina-design-system/core";
 import { ArrowsClockwise } from "@phosphor-icons/react/dist/ssr";
 import type { TransportError } from "../_lib/types";
+import styles from "./TransportState.module.css";
 
 const TITLE: Record<TransportError["reason"], string> = {
   malformed: "Model output was malformed",
@@ -25,19 +26,19 @@ export function TransportState({
   onRetry?: () => void;
 }) {
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-border-subtle bg-surface p-3">
+    <div className={styles.root}>
       <Alert variant="warning" title={TITLE[error.reason]}>
         {error.message}
       </Alert>
-      <div className="flex items-center justify-between gap-3">
-        <span className="font-mono text-xs text-text-subtle">
+      <div className={styles.footer}>
+        <span className={styles.meta}>
           transport · {error.reason} — the gate did not run
         </span>
         {onRetry && (
           <Button
             variant="secondary"
             size="sm"
-            iconLeft={<ArrowsClockwise className="size-control-2xs" />}
+            iconLeft={<ArrowsClockwise className={styles.icon} />}
             onClick={onRetry}
           >
             Retry

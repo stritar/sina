@@ -9,6 +9,7 @@ import { Badge, Stack } from "@sina-design-system/core";
 import type { BadgeProps } from "@sina-design-system/core";
 
 import { formatAmount, formatDate, readUpcomingPayments } from "../format.js";
+import styles from "./UpcomingPayments.module.css";
 
 export interface UpcomingPaymentsProps {
   payload: unknown;
@@ -25,15 +26,11 @@ export function UpcomingPayments({ payload }: UpcomingPaymentsProps) {
   const { currency, payments } = readUpcomingPayments(payload);
 
   return (
-    <Stack
-      gap={3}
-      aria-label="Upcoming payments"
-      className="rounded-lg border border-border-subtle bg-surface p-3"
-    >
+    <Stack gap={3} aria-label="Upcoming payments" className={styles.card}>
       {payments.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">No upcoming payments.</p>
+        <p className={styles.empty}>No upcoming payments.</p>
       ) : (
-        <Stack as="ul" gap={0} className="divide-y divide-border-subtle">
+        <Stack as="ul" gap={0} className={styles.list}>
           {payments.map((p) => (
             <Stack
               as="li"
@@ -42,16 +39,14 @@ export function UpcomingPayments({ payload }: UpcomingPaymentsProps) {
               justify="between"
               align="center"
               gap={3}
-              className="py-2"
+              className={styles.row}
             >
-              <span className="flex min-w-0 flex-col">
-                <span className="truncate text-ui font-medium text-text">{p.payee}</span>
-                <span className="text-xs text-text-subtle">due {formatDate(p.dueAt)}</span>
+              <span className={styles.info}>
+                <span className={styles.payee}>{p.payee}</span>
+                <span className={styles.due}>due {formatDate(p.dueAt)}</span>
               </span>
-              <span className="flex shrink-0 items-center gap-2">
-                <span className="text-ui font-semibold text-text">
-                  {formatAmount(p.amount, currency)}
-                </span>
+              <span className={styles.meta}>
+                <span className={styles.amount}>{formatAmount(p.amount, currency)}</span>
                 <Badge intent={STATUS_INTENT[p.status] ?? "neutral"} size="sm">
                   {p.status}
                 </Badge>

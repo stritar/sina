@@ -15,6 +15,7 @@ import { CheckFatIcon, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import { useId, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent, ReactNode } from "react";
 import { cn } from "../utils/cn.js";
+import styles from "./Combobox.module.css";
 
 export interface ComboboxOption {
   value: string;
@@ -43,7 +44,7 @@ function highlight(label: string, query: string): ReactNode {
   return (
     <>
       {label.slice(0, idx)}
-      <span className="font-semibold text-text">{label.slice(idx, idx + q.length)}</span>
+      <span className={styles.highlightMatch}>{label.slice(idx, idx + q.length)}</span>
       {label.slice(idx + q.length)}
     </>
   );
@@ -107,12 +108,8 @@ export function Combobox({
   return (
     <Primitive.Root open={open} onOpenChange={setOpen}>
       <Primitive.Anchor asChild>
-        <div ref={anchorRef} className={cn("relative w-full", className)}>
-          <MagnifyingGlass
-            aria-hidden
-            weight="bold"
-            className="pointer-events-none absolute inset-y-0 left-2.5 my-auto size-control-2xs text-text-muted"
-          />
+        <div ref={anchorRef} className={cn(styles.anchor, className)}>
+          <MagnifyingGlass aria-hidden weight="bold" className={styles.searchIcon} />
           <input
             type="text"
             role="combobox"
@@ -132,12 +129,7 @@ export function Combobox({
             }}
             onFocus={() => setOpen(true)}
             onKeyDown={handleKeyDown}
-            className={cn(
-              "h-7 w-full rounded-md border border-border-subtle bg-surface pl-7 pr-2.5 text-ui text-text",
-              "placeholder:text-text-subtle transition-colors duration-fast ease-standard",
-              "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
-              "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",
-            )}
+            className={styles.input}
           />
         </div>
       </Primitive.Anchor>
@@ -148,15 +140,11 @@ export function Combobox({
           onInteractOutside={(e) => {
             if (anchorRef.current?.contains(e.target as Node)) e.preventDefault();
           }}
-          className={cn(
-            "z-dropdown w-[var(--radix-popover-trigger-width)] overflow-hidden rounded-md border border-border-subtle bg-surface-raised p-1 shadow-md",
-            "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
-            "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
-          )}
+          className={styles.content}
         >
-          <ul id={listId} role="listbox" aria-label={ariaLabel} className="max-h-[15rem] overflow-auto">
+          <ul id={listId} role="listbox" aria-label={ariaLabel} className={styles.list}>
             {filtered.length === 0 ? (
-              <li className="px-2 py-1.5 text-ui text-text-subtle">No results</li>
+              <li className={styles.empty}>No results</li>
             ) : (
               filtered.map((option, i) => {
                 const isSelected = option.value === value;
@@ -173,19 +161,16 @@ export function Combobox({
                       e.preventDefault();
                       choose(option);
                     }}
-                    className={cn(
-                      "flex cursor-pointer select-none items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-ui text-text",
-                      isActive && "bg-hover",
-                    )}
+                    className={cn(styles.option, isActive && styles.optionActive)}
                   >
-                    <span className="truncate text-text">
+                    <span className={styles.optionLabel}>
                       {highlight(option.label, query)}
                       {option.description ? (
-                        <span className="text-text-subtle"> · {option.description}</span>
+                        <span className={styles.optionDescription}> · {option.description}</span>
                       ) : null}
                     </span>
                     {isSelected ? (
-                      <CheckFatIcon aria-hidden weight="fill" className="size-control-2xs shrink-0" />
+                      <CheckFatIcon aria-hidden weight="fill" className={styles.optionCheck} />
                     ) : null}
                   </li>
                 );

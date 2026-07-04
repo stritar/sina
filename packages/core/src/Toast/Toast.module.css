@@ -1,0 +1,216 @@
+/* @sina-design-system/core — Toast */
+
+:root {
+  --sina-toast-bg: var(--sina-color-surface-raised, #ffffff);
+  --sina-toast-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-toast-title: var(--sina-color-text, #353b31);
+  --sina-toast-description: var(--sina-color-text-muted, #52564e);
+
+  --sina-toast-success: var(--sina-color-success, #2f7a45);
+  --sina-toast-danger: var(--sina-color-danger, #c64c35);
+  --sina-toast-info: var(--sina-color-info, #36648f);
+
+  --sina-toast-action-fg: var(--sina-color-text, #353b31);
+  --sina-toast-action-hover: var(--sina-overlay--hover, color-mix(
+    in srgb,
+    #353b31 5%,
+    transparent
+  ));
+
+  --sina-toast-close-fg: var(--sina-color-text-muted, #52564e);
+  --sina-toast-close-hover-bg: var(--sina-overlay--hover, color-mix(
+    in srgb,
+    #353b31 5%,
+    transparent
+  ));
+  --sina-toast-close-hover-fg: var(--sina-color-text, #353b31);
+}
+
+/* Viewport */
+.viewport {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: var(--sina-z--toast, 1600);
+  display: flex;
+  width: 100%;
+  max-width: 360px;
+  flex-direction: column;
+  gap: var(--sina-space--2, 0.5rem);
+  padding: var(--sina-space--4, 1rem);
+  outline: none;
+}
+
+/* Toast shell */
+.toast {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sina-space--2_5, 0.625rem);
+  border-radius: var(--sina-radius--md, 6px);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-toast-border, #edefeb);
+  background: var(--sina-toast-bg, #ffffff);
+  padding: var(--sina-space--3, 0.75rem);
+  padding-right: var(--sina-space--7, 1.75rem);
+  box-shadow: var(--sina-shadow--md, 0 4px 8px color-mix(in srgb, #383e33 8%, transparent),
+    0 2px 4px color-mix(in srgb, #383e33 6%, transparent));
+}
+.toast[data-state="open"] {
+  animation: sinaToastIn var(--sina-duration--base, 200ms) var(--sina-ease--out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.toast[data-state="closed"] {
+  animation: sinaToastOut var(--sina-duration--base, 200ms) var(--sina-ease--out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.toast[data-swipe="move"] {
+  transform: translateX(var(--radix-toast-swipe-move-x));
+}
+.toast[data-swipe="cancel"] {
+  transform: translateX(0);
+  transition-property: transform;
+  transition-duration: var(--sina-duration--fast, 120ms);
+  transition-timing-function: var(--sina-ease--standard, cubic-bezier(0.2, 0, 0, 1));
+}
+.toast[data-swipe="end"] {
+  transform: translateX(var(--radix-toast-swipe-end-x));
+}
+
+/* Intent variants — a colored left rule (base border stays on the other sides) */
+.success {
+  border-left-width: var(--sina-border-width--4, 4px);
+  border-left-color: var(--sina-toast-success, #2f7a45);
+}
+.danger {
+  border-left-width: var(--sina-border-width--4, 4px);
+  border-left-color: var(--sina-toast-danger, #c64c35);
+}
+.info {
+  border-left-width: var(--sina-border-width--4, 4px);
+  border-left-color: var(--sina-toast-info, #36648f);
+}
+
+/* Leading intent glyph */
+.icon {
+  width: var(--sina-space--5, 1.25rem);
+  height: var(--sina-space--5, 1.25rem);
+  flex-shrink: 0;
+}
+.iconInfo {
+  color: var(--sina-toast-info, #36648f);
+}
+.iconSuccess {
+  color: var(--sina-toast-success, #2f7a45);
+}
+.iconDanger {
+  color: var(--sina-toast-danger, #c64c35);
+}
+
+.body {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: var(--sina-space--0_5, 0.125rem);
+}
+
+.title {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium, 500);
+  color: var(--sina-toast-title, #353b31);
+}
+
+.description {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-toast-description, #52564e);
+}
+
+/* Action */
+.action {
+  margin-left: calc(var(--sina-space--1_5, 0.375rem) * -1);
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  border-radius: var(--sina-radius--sm, 4px);
+  padding-inline: var(--sina-space--1_5, 0.375rem);
+  padding-block: var(--sina-space--0_5, 0.125rem);
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium, 500);
+  color: var(--sina-toast-action-fg, #353b31);
+  transition-property: color, background-color, border-color;
+  transition-duration: var(--sina-duration--fast, 120ms);
+  transition-timing-function: var(--sina-ease--standard, cubic-bezier(0.2, 0, 0, 1));
+}
+.action:hover {
+  background: var(--sina-toast-action-hover, color-mix(
+    in srgb,
+    #353b31 5%,
+    transparent
+  ));
+}
+.action:focus-visible {
+  outline: none;
+  box-shadow: var(--sina-shadow--focus-ring, 0 0 0 1px #f5f6f4,
+    0 0 0 3px #545f49);
+}
+
+/* Close */
+.close {
+  position: absolute;
+  right: var(--sina-space--1_5, 0.375rem);
+  top: var(--sina-space--1_5, 0.375rem);
+  display: flex;
+  width: var(--sina-space--6, 1.5rem);
+  height: var(--sina-space--6, 1.5rem);
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sina-radius--sm, 4px);
+  color: var(--sina-toast-close-fg, #52564e);
+  transition-property: color, background-color, border-color;
+  transition-duration: var(--sina-duration--fast, 120ms);
+  transition-timing-function: var(--sina-ease--standard, cubic-bezier(0.2, 0, 0, 1));
+}
+.close:hover {
+  background: var(--sina-toast-close-hover-bg, color-mix(
+    in srgb,
+    #353b31 5%,
+    transparent
+  ));
+  color: var(--sina-toast-close-hover-fg, #353b31);
+}
+.close:focus-visible {
+  outline: none;
+  box-shadow: var(--sina-shadow--focus-ring, 0 0 0 1px #f5f6f4,
+    0 0 0 3px #545f49);
+}
+.closeIcon {
+  width: var(--sina-size--icon-sm, 0.875rem);
+  height: var(--sina-size--icon-sm, 0.875rem);
+}
+
+/* Radix Presence waits for animationend, so both open + closed need a real
+   animation or exit won't be delayed. Open fades + slides up from below;
+   closed fades only (matches the original animate-out fade-out). Reduced-motion
+   is handled at the token layer (--sina-duration--* → 0ms). */
+@keyframes sinaToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes sinaToastOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

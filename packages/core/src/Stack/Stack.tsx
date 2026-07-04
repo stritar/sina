@@ -9,42 +9,44 @@
 import { forwardRef } from "react";
 import type { ElementType, HTMLAttributes } from "react";
 import { cn } from "../utils/cn.js";
+import styles from "./Stack.module.css";
 
 /** On-system spacing steps (mirror the theme `space` scale). */
 export type GapStep = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8 | 10 | 12 | 16 | 20 | 24;
 
-// Literal class strings so Tailwind's JIT can see them (no dynamic `gap-${n}`).
-const GAP: Record<GapStep, string> = {
-  0: "gap-0",
-  1: "gap-1",
-  2: "gap-2",
-  3: "gap-3",
-  4: "gap-4",
-  5: "gap-5",
-  6: "gap-6",
-  8: "gap-8",
-  10: "gap-10",
-  12: "gap-12",
-  16: "gap-16",
-  20: "gap-20",
-  24: "gap-24",
+// Each on-system step maps to its own module class (CSS Module class access is
+// `string | undefined` under noUncheckedIndexedAccess).
+const GAP: Record<GapStep, string | undefined> = {
+  0: styles.gap0,
+  1: styles.gap1,
+  2: styles.gap2,
+  3: styles.gap3,
+  4: styles.gap4,
+  5: styles.gap5,
+  6: styles.gap6,
+  8: styles.gap8,
+  10: styles.gap10,
+  12: styles.gap12,
+  16: styles.gap16,
+  20: styles.gap20,
+  24: styles.gap24,
 };
 
-const ALIGN = {
-  start: "items-start",
-  center: "items-center",
-  end: "items-end",
-  stretch: "items-stretch",
-  baseline: "items-baseline",
-} as const;
+const ALIGN: Record<"start" | "center" | "end" | "stretch" | "baseline", string | undefined> = {
+  start: styles.alignStart,
+  center: styles.alignCenter,
+  end: styles.alignEnd,
+  stretch: styles.alignStretch,
+  baseline: styles.alignBaseline,
+};
 
-const JUSTIFY = {
-  start: "justify-start",
-  center: "justify-center",
-  end: "justify-end",
-  between: "justify-between",
-  around: "justify-around",
-} as const;
+const JUSTIFY: Record<"start" | "center" | "end" | "between" | "around", string | undefined> = {
+  start: styles.justifyStart,
+  center: styles.justifyCenter,
+  end: styles.justifyEnd,
+  between: styles.justifyBetween,
+  around: styles.justifyAround,
+};
 
 export interface StackProps extends HTMLAttributes<HTMLElement> {
   /** Render as a different element (default `div`). */
@@ -68,12 +70,12 @@ export const Stack = forwardRef<HTMLElement, StackProps>(
       <Comp
         ref={ref}
         className={cn(
-          "flex",
-          direction === "col" ? "flex-col" : "flex-row",
+          styles.root,
+          direction === "col" ? styles.col : styles.row,
           GAP[gap],
           align && ALIGN[align],
           justify && JUSTIFY[justify],
-          wrap && "flex-wrap",
+          wrap && styles.wrap,
           className,
         )}
         {...props}

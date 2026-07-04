@@ -22,8 +22,8 @@ describe("Grid", () => {
       </Grid>,
     );
     const el = container.firstElementChild as HTMLElement;
-    expect(el.className).toContain("grid");
-    expect(el.className).toContain("grid-cols-3");
-    expect(el.className).toContain("gap-4");
+    expect(el.className).toContain("root");
+    expect(el.className).toContain("cols3");
+    expect(el.className).toContain("gap4");
   });
 });

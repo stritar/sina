@@ -1,0 +1,78 @@
+/* @sina-design-system/fintech-react — InvoiceList */
+
+:root {
+  --sina-invoice-list-radius: var(--sina-radius--lg, 8px);
+  --sina-invoice-list-surface: var(--sina-color-surface, #ffffff);
+  --sina-invoice-list-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-invoice-list-text: var(--sina-color-text, #353b31);
+  --sina-invoice-list-text-muted: var(--sina-color-text-muted, #52564e);
+  --sina-invoice-list-text-subtle: var(--sina-color-text-subtle, #a7ada0);
+}
+
+.card {
+  border-radius: var(--sina-invoice-list-radius, 8px);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-invoice-list-border, #edefeb);
+  background: var(--sina-invoice-list-surface, #ffffff);
+  padding: var(--sina-space--3, 0.75rem);
+}
+
+.empty {
+  padding-block: var(--sina-space--6, 1.5rem);
+  text-align: center;
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-invoice-list-text-muted, #52564e);
+}
+
+.labelCol {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.number {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium, 500);
+  color: var(--sina-invoice-list-text, #353b31);
+}
+
+.counterparty {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--sina-text--xs, 0.75rem);
+  color: var(--sina-invoice-list-text-muted, #52564e);
+}
+
+.valueGroup {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--sina-space--2, 0.5rem);
+}
+
+.amountCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--sina-space--0_5, 0.125rem);
+}
+
+.amount {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--semibold, 600);
+  color: var(--sina-invoice-list-text, #353b31);
+}
+
+.due {
+  font-size: var(--sina-text--xs, 0.75rem);
+  color: var(--sina-invoice-list-text-subtle, #a7ada0);
+}

@@ -52,6 +52,10 @@ audited (`decidedComponent` records what mounted).
      `format.ts` `formatAmount` and add a tolerant reader (`read<Pattern>`) next to `readWire`.
    - Props `{ payload: unknown; onIntent?: (envelope: IntentEnvelope) => void }`. Read defensively
      (never throw on a hostile shape); render an **empty state**; free text as **text**.
+   - **Style via a co-located `<Component>.module.css`** (Tailwind is gone) — `import styles` and compose
+     via `clsx(styles.x, className)`, not Tailwind class strings; per-component `--sina-<name>-*` token
+     layer, **no raw colors**; run `node scripts/codemod-tokens.mjs` + `node scripts/verify-tokens.mjs`
+     (see `packages/core/CSS_TOKENS.md`). `fintech-react`'s `dist/styles.css` ships the CSS.
    - No `"use client"` unless it holds state; **no `zod`**, **no server actions**.
 5. **A11y test** — `<Component>.test.tsx` (jsdom + jest-axe): zero violations on the valid fixture,
    correct item count, empty-state render, and **markup renders as text** (assert
@@ -79,9 +83,10 @@ audited (`decidedComponent` records what mounted).
   See [[pnpm-verify-deps-purge]], [[pnpm-install-sandbox-corruption]], [[playground-dev-sandbox-port]].
 - **`IntentEnvelope`/`Decision`** are re-exported from `@sina-design-system/fintech` — import them
   from there, not `governance`, in app code.
-- **Strict Tailwind grid** — off-grid utilities are silently dropped; use on-scale tokens (see
-  [[sina-strict-tailwind-grid]]). Semantic border colors need the full token
-  (`border-border-subtle`, see [[border-color-double-prefix]]).
+- **No raw colors in `*.module.css`** — author colors as `var(--sina-color-*)` (e.g. borders as
+  `var(--sina-color-border-subtle)`) and let `node scripts/codemod-tokens.mjs` inject the `#hex` fallback;
+  `node scripts/verify-tokens.mjs` fails on a raw color or a missing fallback. Keep spacing on the
+  `var(--sina-space--*)` scale (or `core`'s `gap`/`size`).
 - **Do not add a `policy`/`escalations`** to a display rule — that makes it governed. If the read
   turns out to need a limit or a confirm, it's a governed flow: use `/new-schema` +
   `/new-governed-component` instead.

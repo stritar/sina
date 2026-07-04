@@ -18,10 +18,13 @@
  * "secure" visual language is reserved for escalations.
  */
 
+import clsx from "clsx";
+
 import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Stack } from "@sina-design-system/core";
 
 import { formatAmount, formatDate, readTransactionList } from "../format.js";
+import styles from "./TransactionList.module.css";
 
 export interface TransactionListProps {
   /** The server-validated `list_transactions` payload. */
@@ -41,19 +44,19 @@ export function TransactionList({ payload }: TransactionListProps) {
     <Stack
       gap={3}
       aria-label={`Transactions for ${account.label}`}
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.card}
     >
       <Stack direction="row" justify="between" align="center" gap={2}>
-        <span className="text-ui font-medium text-text">{account.label}</span>
+        <span className={styles.accountLabel}>{account.label}</span>
         {account.maskedNumber ? (
-          <span className="font-mono text-xs text-text-subtle">{account.maskedNumber}</span>
+          <span className={styles.accountNumber}>{account.maskedNumber}</span>
         ) : null}
       </Stack>
 
       {transactions.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">No transactions to show.</p>
+        <p className={styles.empty}>No transactions to show.</p>
       ) : (
-        <Stack as="ul" gap={0} className="divide-y divide-border-subtle">
+        <Stack as="ul" gap={0} className={styles.list}>
           {transactions.map((tx) => {
             const credit = tx.direction === "credit";
             const amount = formatAmount(tx.amount, tx.currency);
@@ -65,25 +68,24 @@ export function TransactionList({ payload }: TransactionListProps) {
                 justify="between"
                 align="center"
                 gap={3}
-                className="py-2"
+                className={styles.row}
               >
-                <span className="flex min-w-0 flex-col">
-                  <span className="truncate text-ui font-medium text-text">{tx.counterparty}</span>
-                  <span className="truncate text-xs text-text-muted">{tx.description}</span>
+                <span className={styles.rowMain}>
+                  <span className={styles.counterparty}>{tx.counterparty}</span>
+                  <span className={styles.description}>{tx.description}</span>
                 </span>
-                <span className="flex shrink-0 flex-col items-end gap-0.5">
+                <span className={styles.rowAside}>
                   <span
                     aria-label={`${credit ? "credit" : "debit"} ${amount}`}
-                    className={
-                      credit
-                        ? "text-ui font-semibold text-success"
-                        : "text-ui font-semibold text-text"
-                    }
+                    className={clsx(
+                      styles.amount,
+                      credit ? styles.amountCredit : styles.amountDebit,
+                    )}
                   >
                     {credit ? "+" : "−"}
                     {amount}
                   </span>
-                  <span className="text-xs text-text-subtle">{formatDate(tx.postedAt)}</span>
+                  <span className={styles.date}>{formatDate(tx.postedAt)}</span>
                 </span>
               </Stack>
             );

@@ -2,6 +2,7 @@
 
 import { BarChart } from "@sina-design-system/core";
 import { Demo, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
 
 const QUARTERS = ["Q1", "Q2", "Q3", "Q4"];
 
@@ -26,7 +27,7 @@ export default function BarChartStory() {
           data={TWO_SERIES}
           showLegend
           label="Two regions grouped by quarter"
-          className="h-[280px]"
+          className={styles.chart280}
         />
       </Demo>
 
@@ -36,7 +37,7 @@ export default function BarChartStory() {
           stacked
           showLegend
           label="Two regions stacked by quarter"
-          className="h-[280px]"
+          className={styles.chart280}
         />
       </Demo>
 
@@ -46,7 +47,7 @@ export default function BarChartStory() {
           horizontal
           showLegend
           label="Two regions grouped, horizontal orientation"
-          className="h-[280px]"
+          className={styles.chart280}
         />
       </Demo>
 
@@ -58,7 +59,7 @@ export default function BarChartStory() {
           showLegend
           valueFormatter={(v) => `$${v.toLocaleString("en-US")}`}
           label="Two regions stacked horizontally with formatted dollar values"
-          className="h-[280px]"
+          className={styles.chart280}
         />
       </Demo>
 
@@ -66,18 +67,18 @@ export default function BarChartStory() {
         <BarChart
           data={MIXED_SIGNS}
           label="Net result by quarter crossing zero"
-          className="h-[240px]"
+          className={styles.chart240}
         />
       </Demo>
 
       <Demo label="Dark · scoped wrapper re-themes tokens locally">
-        <div className="dark w-full rounded-lg bg-bg p-4">
-          <div className="rounded-lg bg-surface p-4">
+        <div className={`dark ${styles.darkFrame}`}>
+          <div className={styles.darkCard}>
             <BarChart
               data={TWO_SERIES}
               showLegend
               label="Two regions grouped by quarter, dark theme"
-              className="h-[240px]"
+              className={styles.chart240}
             />
           </div>
         </div>

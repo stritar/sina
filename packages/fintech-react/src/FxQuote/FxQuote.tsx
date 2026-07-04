@@ -9,6 +9,7 @@ import { Badge, Stack, SummaryList } from "@sina-design-system/core";
 import type { SummaryItem } from "@sina-design-system/core";
 
 import { formatDate } from "../format.js";
+import styles from "./FxQuote.module.css";
 
 export interface FxQuoteProps {
   payload: unknown;
@@ -66,13 +67,13 @@ export function FxQuote({ payload }: FxQuoteProps) {
     <Stack
       gap={3}
       aria-label={hasQuote ? `FX quote ${pair}` : "FX quote"}
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.root}
     >
       {!hasQuote ? (
-        <p className="py-6 text-center text-ui text-text-muted">No quote available.</p>
+        <p className={styles.empty}>No quote available.</p>
       ) : (
         <>
-          <span className="text-ui font-medium text-text">{pair}</span>
+          <span className={styles.pair}>{pair}</span>
           <SummaryList items={items} />
         </>
       )}

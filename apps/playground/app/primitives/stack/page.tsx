@@ -1,6 +1,7 @@
 import { Stack } from "@sina-design-system/core";
 import type { ComponentProps } from "react";
 import { Demo, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
 
 type GapStep = NonNullable<ComponentProps<typeof Stack>["gap"]>;
 type Align = NonNullable<ComponentProps<typeof Stack>["align"]>;
@@ -11,23 +12,23 @@ const ALIGNS = ["start", "center", "end", "stretch", "baseline"] as const;
 const JUSTIFIES = ["start", "center", "end", "between", "around"] as const;
 
 function Box({ className }: { className?: string }) {
-  return <div className={`h-7 w-40 rounded-md bg-surface-raised ${className ?? ""}`} />;
+  return <div className={[styles.box, className].filter(Boolean).join(" ")} />;
 }
 
 export default function StackStory() {
   return (
     <StoryShell title="Stack">
       <Demo label="Gap steps">
-        <div className="flex w-full flex-col gap-4">
+        <div className={styles.column}>
           {GAPS.map((g) => (
-            <div key={g} className="flex flex-col gap-2">
-              <span className="font-mono text-[11px] uppercase tracking-wide text-text-subtle">
+            <div key={g} className={styles.group}>
+              <span className={styles.label}>
                 gap {g}
               </span>
               <Stack direction="row" gap={g as GapStep}>
-                <Box className="w-24" />
-                <Box className="w-24" />
-                <Box className="w-24" />
+                <Box className={styles.boxNarrow} />
+                <Box className={styles.boxNarrow} />
+                <Box className={styles.boxNarrow} />
               </Stack>
             </div>
           ))}
@@ -35,19 +36,19 @@ export default function StackStory() {
       </Demo>
 
       <Demo label="Direction">
-        <div className="flex w-full flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <span className="font-mono text-[11px] uppercase tracking-wide text-text-subtle">
+        <div className={styles.column}>
+          <div className={styles.group}>
+            <span className={styles.label}>
               row
             </span>
             <Stack direction="row" gap={3}>
-              <Box className="w-24" />
-              <Box className="w-24" />
-              <Box className="w-24" />
+              <Box className={styles.boxNarrow} />
+              <Box className={styles.boxNarrow} />
+              <Box className={styles.boxNarrow} />
             </Stack>
           </div>
-          <div className="flex flex-col gap-2">
-            <span className="font-mono text-[11px] uppercase tracking-wide text-text-subtle">
+          <div className={styles.group}>
+            <span className={styles.label}>
               col
             </span>
             <Stack direction="col" gap={3}>
@@ -60,21 +61,21 @@ export default function StackStory() {
       </Demo>
 
       <Demo label="Align">
-        <div className="flex w-full flex-col gap-4">
+        <div className={styles.column}>
           {ALIGNS.map((a) => (
-            <div key={a} className="flex flex-col gap-2">
-              <span className="font-mono text-[11px] uppercase tracking-wide text-text-subtle">
+            <div key={a} className={styles.group}>
+              <span className={styles.label}>
                 align {a}
               </span>
               <Stack
                 direction="row"
                 gap={3}
                 align={a as Align}
-                className="h-16 rounded-md bg-bg p-2"
+                className={styles.alignFrame}
               >
-                <div className="h-7 w-16 rounded-md bg-surface-raised" />
-                <div className="h-12 w-16 rounded-md bg-surface-raised" />
-                <div className="h-9 w-16 rounded-md bg-surface-raised" />
+                <div className={[styles.chip, styles.chipShort, styles.wide16].join(" ")} />
+                <div className={[styles.chip, styles.chipTall, styles.wide16].join(" ")} />
+                <div className={[styles.chip, styles.chipMid, styles.wide16].join(" ")} />
               </Stack>
             </div>
           ))}
@@ -82,21 +83,21 @@ export default function StackStory() {
       </Demo>
 
       <Demo label="Justify">
-        <div className="flex w-full flex-col gap-4">
+        <div className={styles.column}>
           {JUSTIFIES.map((j) => (
-            <div key={j} className="flex flex-col gap-2">
-              <span className="font-mono text-[11px] uppercase tracking-wide text-text-subtle">
+            <div key={j} className={styles.group}>
+              <span className={styles.label}>
                 justify {j}
               </span>
               <Stack
                 direction="row"
                 gap={3}
                 justify={j as Justify}
-                className="w-full rounded-md border border-border-subtle bg-bg p-2"
+                className={styles.justifyFrame}
               >
-                <div className="h-7 w-16 rounded-md bg-surface-raised" />
-                <div className="h-7 w-16 rounded-md bg-surface-raised" />
-                <div className="h-7 w-16 rounded-md bg-surface-raised" />
+                <div className={[styles.chip, styles.chipShort, styles.wide16].join(" ")} />
+                <div className={[styles.chip, styles.chipShort, styles.wide16].join(" ")} />
+                <div className={[styles.chip, styles.chipShort, styles.wide16].join(" ")} />
               </Stack>
             </div>
           ))}
@@ -104,24 +105,24 @@ export default function StackStory() {
       </Demo>
 
       <Demo label="Wrap">
-        <div className="flex w-full flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <span className="font-mono text-[11px] uppercase tracking-wide text-text-subtle">
+        <div className={styles.column}>
+          <div className={styles.group}>
+            <span className={styles.label}>
               wrap
             </span>
-            <Stack direction="row" gap={2} wrap className="w-80 rounded-md bg-bg p-2">
+            <Stack direction="row" gap={2} wrap className={styles.wrapFrame}>
               {Array.from({ length: 9 }, (_, i) => (
-                <div key={i} className="h-7 w-24 rounded-md bg-surface-raised" />
+                <div key={i} className={[styles.chip, styles.chipShort, styles.wide24].join(" ")} />
               ))}
             </Stack>
           </div>
-          <div className="flex flex-col gap-2">
-            <span className="font-mono text-[11px] uppercase tracking-wide text-text-subtle">
+          <div className={styles.group}>
+            <span className={styles.label}>
               no wrap
             </span>
-            <Stack direction="row" gap={2} className="w-80 overflow-hidden rounded-md bg-bg p-2">
+            <Stack direction="row" gap={2} className={styles.noWrapFrame}>
               {Array.from({ length: 9 }, (_, i) => (
-                <div key={i} className="h-7 w-24 shrink-0 rounded-md bg-surface-raised" />
+                <div key={i} className={[styles.chip, styles.chipShort, styles.wide24, styles.fixed].join(" ")} />
               ))}
             </Stack>
           </div>

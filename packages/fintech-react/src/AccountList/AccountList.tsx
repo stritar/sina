@@ -11,6 +11,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack, SummaryList } from "@sina-design-system/core";
 
 import { formatAmount } from "../format.js";
+import styles from "./AccountList.module.css";
 
 export interface AccountListProps {
   /** The server-validated `list_accounts` payload. */
@@ -76,21 +77,12 @@ export function AccountList({ payload }: AccountListProps) {
   const total = uniformCurrency ? accounts.reduce((sum, a) => sum + a.balance, 0) : null;
 
   return (
-    <Stack
-      gap={3}
-      aria-label="Accounts"
-      className="rounded-lg border border-border-subtle bg-surface p-3"
-    >
+    <Stack gap={3} aria-label="Accounts" className={styles.card}>
       {accounts.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">You have no accounts.</p>
+        <p className={styles.empty}>You have no accounts.</p>
       ) : (
         <>
-          <Stack
-            as="ul"
-            gap={0}
-            aria-label="Account list"
-            className="divide-y divide-border-subtle"
-          >
+          <Stack as="ul" gap={0} aria-label="Account list" className={styles.list}>
             {accounts.map((account) => {
               const meta = TYPE_META[account.type] ?? { label: account.type, intent: "neutral" as const };
               return (
@@ -101,22 +93,20 @@ export function AccountList({ payload }: AccountListProps) {
                   justify="between"
                   align="center"
                   gap={3}
-                  className="py-2"
+                  className={styles.row}
                 >
-                  <span className="flex min-w-0 flex-col">
-                    <span className="flex items-center gap-2">
-                      <span className="truncate text-ui font-medium text-text">{account.name}</span>
+                  <span className={styles.info}>
+                    <span className={styles.nameRow}>
+                      <span className={styles.name}>{account.name}</span>
                       <Badge intent={meta.intent} size="sm">
                         {meta.label}
                       </Badge>
                     </span>
                     {account.maskedNumber ? (
-                      <span className="truncate font-mono text-xs text-text-subtle">
-                        {account.maskedNumber}
-                      </span>
+                      <span className={styles.masked}>{account.maskedNumber}</span>
                     ) : null}
                   </span>
-                  <span className="shrink-0 text-ui font-semibold text-text">
+                  <span className={styles.balance}>
                     {formatAmount(account.balance, account.currency)}
                   </span>
                 </Stack>

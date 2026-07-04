@@ -31,6 +31,7 @@ import {
 import type { ChartData, ChartOptions } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { cn } from "../utils/cn.js";
+import styles from "./BarChart.module.css";
 import { buildElementClickHandler } from "../charts/click.js";
 import type { ChartElementClickDetail } from "../charts/click.js";
 import { colorizeBarData } from "../charts/data.js";
@@ -148,7 +149,7 @@ export const BarChart = forwardRef<HTMLDivElement, BarChartProps>(function BarCh
       ref={setRefs}
       role="img"
       aria-label={label}
-      className={cn("relative h-full w-full", className)}
+      className={cn(styles.root, className)}
       style={style}
     >
       {el ? (

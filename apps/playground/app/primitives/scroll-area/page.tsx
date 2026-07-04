@@ -1,16 +1,17 @@
 import { ScrollArea } from "@sina-design-system/core";
 import { Demo, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
 
 export default function ScrollAreaStory() {
   return (
     <StoryShell title="ScrollArea">
       <Demo label="Vertical">
-        <ScrollArea className="h-44 w-80 rounded-lg border border-border bg-surface p-4">
-          <div className="flex flex-col gap-2">
+        <ScrollArea className={[styles.viewport, styles.tall].join(" ")}>
+          <div className={styles.colStack}>
             {Array.from({ length: 20 }, (_, i) => (
               <div
                 key={i}
-                className="flex h-7 items-center rounded-md bg-surface-raised px-3 font-mono text-xs text-text-muted"
+                className={styles.rowItem}
               >
                 Row {i + 1}
               </div>
@@ -20,12 +21,12 @@ export default function ScrollAreaStory() {
       </Demo>
 
       <Demo label="Horizontal">
-        <ScrollArea className="h-20 w-80 rounded-lg border border-border bg-surface p-4">
-          <div className="flex w-max gap-2">
+        <ScrollArea className={[styles.viewport, styles.short].join(" ")}>
+          <div className={styles.rowMax}>
             {Array.from({ length: 16 }, (_, i) => (
               <div
                 key={i}
-                className="flex h-7 w-24 shrink-0 items-center justify-center rounded-md bg-surface-raised font-mono text-xs text-text-muted"
+                className={styles.chip}
               >
                 Chip {i + 1}
               </div>
@@ -35,14 +36,14 @@ export default function ScrollAreaStory() {
       </Demo>
 
       <Demo label="Both axes (corner)">
-        <ScrollArea className="h-44 w-80 rounded-lg border border-border bg-surface p-4">
-          <div className="flex w-max flex-col gap-2">
+        <ScrollArea className={[styles.viewport, styles.tall].join(" ")}>
+          <div className={styles.colMax}>
             {Array.from({ length: 20 }, (_, r) => (
-              <div key={r} className="flex w-max gap-2">
+              <div key={r} className={styles.rowMax}>
                 {Array.from({ length: 12 }, (_, c) => (
                   <div
                     key={c}
-                    className="flex h-7 w-20 shrink-0 items-center justify-center rounded-md bg-surface-raised font-mono text-xs text-text-muted"
+                    className={styles.cell}
                   >
                     {r + 1}·{c + 1}
                   </div>

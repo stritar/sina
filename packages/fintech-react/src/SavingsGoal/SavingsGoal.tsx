@@ -10,6 +10,7 @@ import { Badge, Progress, Stack, SummaryList } from "@sina-design-system/core";
 import type { SummaryItem } from "@sina-design-system/core";
 
 import { formatAmount, formatDate } from "../format.js";
+import styles from "./SavingsGoal.module.css";
 
 export interface SavingsGoalProps {
   payload: unknown;
@@ -64,12 +65,12 @@ export function SavingsGoal({ payload }: SavingsGoalProps) {
     <Stack
       gap={3}
       aria-label="Savings goals"
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.root}
     >
       {goals.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">No savings goals yet.</p>
+        <p className={styles.empty}>No savings goals yet.</p>
       ) : (
-        <Stack as="ul" gap={4} aria-label="Savings goals" className="list-none">
+        <Stack as="ul" gap={4} aria-label="Savings goals" className={styles.list}>
           {goals.map((goal) => {
             const pct = goal.target > 0 ? Math.round((goal.saved / goal.target) * 100) : 0;
             const reached = goal.saved >= goal.target && goal.target > 0;
@@ -83,7 +84,7 @@ export function SavingsGoal({ payload }: SavingsGoalProps) {
             return (
               <Stack as="li" key={goal.id} gap={2}>
                 <Stack direction="row" justify="between" align="center" gap={2}>
-                  <span className="truncate text-ui font-medium text-text">{goal.name}</span>
+                  <span className={styles.goalName}>{goal.name}</span>
                   <Badge intent={reached ? "success" : "neutral"} size="sm">
                     {`${pct}%`}
                   </Badge>

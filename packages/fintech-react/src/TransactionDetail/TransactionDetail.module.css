@@ -1,0 +1,68 @@
+/* @sina-design-system/fintech-react — TransactionDetail */
+
+:root {
+  --sina-transaction-detail-radius: var(--sina-radius--lg, 8px);
+  --sina-transaction-detail-surface: var(--sina-color-surface, #ffffff);
+  --sina-transaction-detail-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-transaction-detail-text: var(--sina-color-text, #353b31);
+  --sina-transaction-detail-text-muted: var(--sina-color-text-muted, #52564e);
+  --sina-transaction-detail-text-subtle: var(--sina-color-text-subtle, #a7ada0);
+}
+
+.card {
+  border-width: var(--sina-border-width--1, 1px);
+  border-style: solid;
+  border-color: var(--sina-transaction-detail-border, #edefeb);
+  border-radius: var(--sina-transaction-detail-radius, 8px);
+  background: var(--sina-transaction-detail-surface, #ffffff);
+  padding: var(--sina-space--3, 0.75rem);
+}
+
+.empty {
+  padding-block: var(--sina-space--6, 1.5rem);
+  text-align: center;
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-transaction-detail-text-muted, #52564e);
+}
+
+.description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium, 500);
+  color: var(--sina-transaction-detail-text, #353b31);
+}
+
+.counterparty {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--sina-text--xs, 0.75rem);
+  color: var(--sina-transaction-detail-text-muted, #52564e);
+}
+
+.accountLabel {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-transaction-detail-text-muted, #52564e);
+}
+
+.masked {
+  font-family: var(--sina-font--mono, "IBM Plex Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace);
+  font-size: var(--sina-text--xs, 0.75rem);
+  color: var(--sina-transaction-detail-text-subtle, #a7ada0);
+}
+
+.memo {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-transaction-detail-text-muted, #52564e);
+}

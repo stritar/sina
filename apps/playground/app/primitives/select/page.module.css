@@ -1,0 +1,6 @@
+/* Select story — co-located styles (no Tailwind). */
+
+.field {
+  width: 100%;
+  max-width: 20rem;
+}

@@ -1,0 +1,88 @@
+/* ConsoleStage — one span row on the interception timeline */
+
+.node {
+  width: var(--sina-size--sm);
+  height: var(--sina-size--sm);
+}
+
+.nodePass {
+  color: var(--sina-color-success);
+}
+
+.nodeFail {
+  color: var(--sina-color-danger);
+}
+
+.nodeFlag {
+  color: var(--sina-color-warning);
+}
+
+.nodeInfo {
+  color: var(--sina-color-text-muted);
+}
+
+.root {
+  position: relative;
+  padding-left: var(--sina-space--7);
+}
+
+.rail {
+  position: absolute;
+  left: 9px;
+  top: var(--sina-space--6);
+  bottom: 0;
+  width: 1px;
+  background: var(--sina-color-border);
+}
+
+.nodeSlot {
+  position: absolute;
+  left: 0;
+  top: var(--sina-space--0_5);
+}
+
+.body {
+  padding-bottom: var(--sina-space--4);
+}
+
+.toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: var(--sina-space--1_5);
+  border-radius: var(--sina-radius--sm);
+  text-align: left;
+}
+
+.toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--sina-color-focus-ring);
+}
+
+.caret {
+  width: var(--sina-size--icon-sm);
+  height: var(--sina-size--icon-sm);
+  color: var(--sina-color-text-muted);
+}
+
+.title {
+  font-size: var(--sina-text--ui);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium);
+  color: var(--sina-color-text);
+}
+
+.mono {
+  font-family: var(--sina-font--mono);
+}
+
+.staticTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--1_5);
+}
+
+.detail {
+  margin-top: var(--sina-space--2);
+}

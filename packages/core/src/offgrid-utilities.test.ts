@@ -1,72 +1,87 @@
 /**
- * Off-grid utility guard.
+ * Module-CSS token guard (was the off-grid Tailwind-utility guard).
  *
- * The SINA Tailwind preset (`@sina-design-system/theme/tailwind`) STRICTLY
- * overrides the spacing scale — utilities for values outside the scale are
- * silently dropped (the class renders but produces no CSS), so a primitive can
- * visually collapse with no build error. This test makes that loud: it scans
- * every `core` source file for spacing-family utilities (padding, margin, gap,
- * width/height/size, inset) and fails if any value isn't a key in the preset
- * scale. Add the value to the preset's `spacing` (and `theme.css`) — don't reach
- * off-grid.
+ * Tailwind is gone; primitives are styled by co-located `*.module.css` that
+ * consume `--sina-*` tokens. This guard keeps that honest — the same intent as
+ * the old off-grid check, now at the CSS layer, and mirroring the repo-wide
+ * `scripts/verify-tokens.mjs`:
+ *   1. No raw color literal (`#hex` / `rgb()`) except as a `var(--sina-*, …)`
+ *      fallback — colors live in `packages/theme/theme.css` only.
+ *   2. Every `var(--sina-*)` carries a fallback (so a primitive renders even if
+ *      the token stylesheet is absent). Run `node scripts/codemod-tokens.mjs` to
+ *      inject fallbacks; this test fails if any are missing.
  */
-import { createRequire } from "node:module";
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-const require = createRequire(import.meta.url);
-// The preset is CJS; its `theme.spacing` keys are the allowed scale values.
-const preset = require("@sina-design-system/theme/tailwind");
-const allowedValues = new Set(Object.keys(preset.theme.spacing).map(String));
-
 const SRC_DIR = dirname(fileURLToPath(import.meta.url));
 
-/** Spacing-family utility prefixes — all draw from the Tailwind `spacing` scale. */
-const PREFIXES = [
-  "gap-x", "gap-y", "gap",
-  "px", "py", "pt", "pb", "pl", "pr", "p",
-  "mx", "my", "mt", "mb", "ml", "mr", "m",
-  "space-x", "space-y",
-  "min-w", "min-h", "max-w", "max-h",
-  "inset-x", "inset-y", "inset",
-  "size", "w", "h", "top", "right", "bottom", "left",
-];
-// Optional leading negative (`-mt-2`) + optional variant prefixes (`sm:`,
-// `hover:`, `group-data-[...]:`) then `<prefix>-<value>`.
-const UTILITY_RE = new RegExp(
-  `(?:^|[\\s"'\`])-?(?:${PREFIXES.join("|")})-(\\[[^\\]]+\\]|[a-z0-9./]+)`,
-  "g",
-);
-// Only numeric values (`7`, `1.5`) resolve through the `spacing` scale and are
-// silently dropped when off-scale — that's the bug we guard against. Keyword
-// values (`md`, `full`, `control-xs`), fractions, and arbitrary `[…]` values
-// draw from other scales (size/maxWidth/…) and are never the silent-drop case.
-const isNumeric = (v: string) => /^\d+(\.\d+)?$/.test(v);
-
-function tsxFiles(dir: string): string[] {
+function moduleCssFiles(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
     const full = join(dir, e.name);
-    if (e.isDirectory()) return tsxFiles(full);
-    if (e.name.endsWith(".tsx") && !e.name.endsWith(".test.tsx")) return [full];
-    return [];
+    if (e.isDirectory()) return moduleCssFiles(full);
+    return e.name.endsWith(".module.css") ? [full] : [];
   });
 }
 
-describe("no off-grid spacing utilities in core", () => {
-  it("every spacing-family utility resolves to a preset scale value", () => {
-    const violations: string[] = [];
-    for (const file of tsxFiles(SRC_DIR)) {
-      const src = readFileSync(file, "utf8");
-      const rel = file.slice(SRC_DIR.length + 1);
-      for (const [, value] of src.matchAll(UTILITY_RE)) {
-        if (!isNumeric(value)) continue;
-        if (!allowedValues.has(value)) {
-          violations.push(`${rel}: off-grid value "-${value}" (not in preset spacing scale)`);
-        }
+/** Blank out each `var(--sina-*, FB)` fallback so raw-color scanning skips it. */
+function scrubVarFallbacks(css: string): string {
+  let out = css;
+  let i = 0;
+  while ((i = out.indexOf("var(", i)) !== -1) {
+    let depth = 0;
+    let j = i + 3;
+    for (; j < out.length; j++) {
+      if (out[j] === "(") depth++;
+      else if (out[j] === ")") {
+        depth--;
+        if (depth === 0) break;
       }
     }
-    expect(violations, `\n${violations.join("\n")}\n`).toEqual([]);
+    let d = 0;
+    let comma = -1;
+    for (let k = i + 4; k < j; k++) {
+      if (out[k] === "(") d++;
+      else if (out[k] === ")") d--;
+      else if (out[k] === "," && d === 0) {
+        comma = k;
+        break;
+      }
+    }
+    if (comma !== -1) out = out.slice(0, comma + 1) + " ".repeat(j - comma - 1) + out.slice(j);
+    i = j + 1;
+  }
+  return out;
+}
+
+describe("module CSS consumes --sina-* tokens, never raw colors", () => {
+  const files = moduleCssFiles(SRC_DIR);
+
+  it("finds the module.css files", () => {
+    expect(files.length).toBeGreaterThan(20);
+  });
+
+  it("has no raw color literal outside a var() fallback", () => {
+    const offenders: string[] = [];
+    for (const file of files) {
+      const scrubbed = scrubVarFallbacks(readFileSync(file, "utf8"));
+      for (const [hit] of scrubbed.matchAll(/#[0-9a-fA-F]{3,8}\b|rgba?\(/g)) {
+        offenders.push(`${file.slice(SRC_DIR.length + 1)}: ${hit}`);
+      }
+    }
+    expect(offenders, `\n${offenders.join("\n")}\n`).toEqual([]);
+  });
+
+  it("every var(--sina-*) carries a fallback", () => {
+    const offenders: string[] = [];
+    for (const file of files) {
+      const css = readFileSync(file, "utf8");
+      for (const [hit] of css.matchAll(/var\(\s*--sina-[\w-]+\s*\)/g)) {
+        offenders.push(`${file.slice(SRC_DIR.length + 1)}: ${hit}`);
+      }
+    }
+    expect(offenders, `\n${offenders.join("\n")}\n`).toEqual([]);
   });
 });

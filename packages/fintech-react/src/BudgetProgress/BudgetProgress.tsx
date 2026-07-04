@@ -8,6 +8,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Progress, Stack } from "@sina-design-system/core";
 
 import { formatAmount, readBudgetProgress } from "../format.js";
+import styles from "./BudgetProgress.module.css";
 
 export interface BudgetProgressProps {
   payload: unknown;
@@ -21,10 +22,10 @@ export function BudgetProgress({ payload }: BudgetProgressProps) {
     <Stack
       gap={3}
       aria-label="Budgets"
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.card}
     >
       {budgets.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">No budgets to show.</p>
+        <p className={styles.empty}>No budgets to show.</p>
       ) : (
         <Stack gap={3}>
           {budgets.map((b, i) => {
@@ -33,9 +34,9 @@ export function BudgetProgress({ payload }: BudgetProgressProps) {
             return (
               <Stack key={i} gap={1}>
                 <Stack direction="row" justify="between" align="center" gap={2}>
-                  <span className="text-ui text-text">{b.label}</span>
-                  <span className="flex items-center gap-1.5">
-                    <span className="text-ui font-medium text-text">
+                  <span className={styles.budgetLabel}>{b.label}</span>
+                  <span className={styles.budgetMeta}>
+                    <span className={styles.budgetAmount}>
                       {formatAmount(b.spent, currency)} / {formatAmount(b.limit, currency)}
                     </span>
                     {over ? (

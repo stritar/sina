@@ -1,0 +1,39 @@
+/* VisuallyHidden story — co-located styles (no Tailwind). */
+
+.iconButton {
+  display: inline-flex;
+  width: var(--sina-size--lg);
+  height: var(--sina-size--lg);
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sina-radius--lg);
+  border: var(--sina-border-width--1) solid var(--sina-color-border);
+  background: var(--sina-color-surface);
+  color: var(--sina-color-text);
+}
+
+.glyph {
+  width: var(--sina-size--icon-sm);
+  height: var(--sina-size--icon-sm);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--2);
+}
+
+.textSm {
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text);
+}
+
+.note {
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}
+
+.caption {
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-subtle);
+}

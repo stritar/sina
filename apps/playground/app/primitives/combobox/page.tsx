@@ -3,6 +3,7 @@
 import { Combobox, type ComboboxOption } from "@sina-design-system/core";
 import { useState } from "react";
 import { Demo, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
 
 const OPTIONS: ComboboxOption[] = [
   { value: "alpha", label: "Alpha" },
@@ -32,7 +33,7 @@ export default function ComboboxStory() {
   return (
     <StoryShell title="Combobox">
       <Demo label="Default (controlled value + onValueChange)">
-        <div className="w-72">
+        <div className={styles.field}>
           <Combobox
             options={OPTIONS}
             value={value}
@@ -40,14 +41,14 @@ export default function ComboboxStory() {
             aria-label="Option"
             placeholder="Search options…"
           />
-          <p className="mt-3 font-mono text-xs text-text-subtle">
+          <p className={styles.hint}>
             selected: {value || "—"}
           </p>
         </div>
       </Demo>
 
       <Demo label="With descriptions (option.description)">
-        <div className="w-72">
+        <div className={styles.field}>
           <Combobox
             options={DESCRIBED}
             value={described}
@@ -59,7 +60,7 @@ export default function ComboboxStory() {
       </Demo>
 
       <Demo label="Pre-selected (initial value)">
-        <div className="w-72">
+        <div className={styles.field}>
           <Combobox
             options={OPTIONS}
             value={preselected}
@@ -67,14 +68,14 @@ export default function ComboboxStory() {
             aria-label="Pre-selected option"
             placeholder="Search options…"
           />
-          <p className="mt-3 font-mono text-xs text-text-subtle">
+          <p className={styles.hint}>
             selected: {preselected || "—"}
           </p>
         </div>
       </Demo>
 
       <Demo label="Disabled">
-        <div className="w-72">
+        <div className={styles.field}>
           <Combobox
             options={OPTIONS}
             disabled
@@ -85,7 +86,7 @@ export default function ComboboxStory() {
       </Demo>
 
       <Demo label="No results (type a non-matching query, e.g. “zzz”)">
-        <div className="w-72">
+        <div className={styles.field}>
           <Combobox
             options={SMALL}
             aria-label="No-results option"

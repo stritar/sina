@@ -22,6 +22,7 @@ import { Composer } from "./Composer";
 import { ConsoleTimeline } from "./ConsoleTimeline";
 import { AuditLedger } from "./AuditLedger";
 import { ModeToggle, type Mode } from "./ModeToggle";
+import styles from "./EmulatorShell.module.css";
 
 const IDLE: ConsoleView = { kind: "idle" };
 
@@ -165,45 +166,42 @@ export function EmulatorShell({ initialScenarioId }: { initialScenarioId?: strin
   }, [initialScenarioId]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-bg text-text">
-      <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-border-subtle px-4">
-        <div className="flex items-center gap-2">
-          <ShieldCheck className="size-5 text-success" aria-hidden />
-          <span className="text-base font-semibold tracking-tight">SINA Emulator</span>
-          <span className="hidden font-mono text-xs text-text-subtle sm:inline">
+    <div className={styles.root}>
+      <header className={styles.header}>
+        <div className={styles.brand}>
+          <ShieldCheck className={styles.brandIcon} aria-hidden />
+          <span className={styles.brandTitle}>SINA Emulator</span>
+          <span className={styles.sandbox}>
             governed-agent sandbox
           </span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className={styles.controls}>
           <ModeToggle mode={mode} onChange={setMode} />
           <button
             type="button"
             onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
             aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
-            className="flex size-7 items-center justify-center rounded-md border border-border-subtle text-text-muted hover:bg-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-focus-ring"
+            className={styles.themeButton}
           >
-            {theme === "dark" ? <Sun className="size-control-xs" /> : <Moon className="size-control-xs" />}
+            {theme === "dark" ? <Sun className={styles.themeIcon} /> : <Moon className={styles.themeIcon} />}
           </button>
-          <Link
-            href="/primitives"
-            className="font-mono text-xs text-text-muted hover:text-text"
-          >
+          <Link href="/primitives" className={styles.link}>
             Primitives →
           </Link>
         </div>
       </header>
 
-      <main className="grid flex-1 grid-cols-1 lg:grid-cols-2">
+      <main className={styles.main}>
         {/* Chat (product world) */}
-        <section className="flex flex-col gap-4 p-4 lg:h-[calc(100vh-3.5rem)] lg:overflow-hidden">
-          <div className="flex-1 overflow-y-auto">
+        <section className={styles.chat}>
+          <div className={styles.chatScroll}>
             <ChatThread
               turns={turns}
               onRetry={() => retryRef.current()}
               onApproved={handleApproved}
             />
           </div>
-          <div className="shrink-0">
+          <div className={styles.spacer}>
             <Composer
               value={input}
               onChange={setInput}
@@ -215,11 +213,11 @@ export function EmulatorShell({ initialScenarioId }: { initialScenarioId?: strin
         </section>
 
         {/* Console (inspector world) */}
-        <section className="flex flex-col gap-3 border-t border-border p-4 lg:h-[calc(100vh-3.5rem)] lg:overflow-hidden lg:border-l lg:border-t-0">
-          <div className="flex-1 overflow-y-auto rounded-lg border border-border-subtle bg-surface">
+        <section className={styles.console}>
+          <div className={styles.consoleScroll}>
             <ConsoleTimeline view={view} />
           </div>
-          <div className="shrink-0">
+          <div className={styles.spacer}>
             <AuditLedger events={auditEvents} />
           </div>
         </section>

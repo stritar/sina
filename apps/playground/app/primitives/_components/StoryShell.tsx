@@ -1,18 +1,16 @@
 import Link from "next/link";
 import { Fragment, type ReactNode } from "react";
+import styles from "./StoryShell.module.css";
 
 /** Consistent isolation frame for a primitive story. */
 export function StoryShell({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <main className="mx-auto min-h-screen max-w-2xl bg-bg p-8 text-text">
-      <Link
-        href="/primitives"
-        className="font-mono text-xs text-text-muted hover:text-text"
-      >
+    <main className={styles.shell}>
+      <Link href="/primitives" className={styles.backLink}>
         ← Primitives
       </Link>
-      <h1 className="mt-3 text-xl font-semibold tracking-tight">{title}</h1>
-      <div className="mt-6 flex flex-col gap-6">{children}</div>
+      <h1 className={styles.title}>{title}</h1>
+      <div className={styles.body}>{children}</div>
     </main>
   );
 }
@@ -20,11 +18,9 @@ export function StoryShell({ title, children }: { title: string; children: React
 /** A labeled demo cell on a surface card. */
 export function Demo({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <section className="flex flex-col gap-3">
-      <h2 className="font-mono text-xs uppercase tracking-wide text-text-subtle">{label}</h2>
-      <div className="flex flex-wrap items-start gap-3 rounded-lg border border-border-subtle bg-surface p-4">
-        {children}
-      </div>
+    <section className={styles.section}>
+      <h2 className={styles.demoLabel}>{label}</h2>
+      <div className={styles.demoStage}>{children}</div>
     </section>
   );
 }
@@ -35,9 +31,9 @@ export function Demo({ label, children }: { label: string; children: ReactNode }
  */
 export function Specimen({ caption, children }: { caption: string; children: ReactNode }) {
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className={styles.specimen}>
       {children}
-      <span className="text-[11px] text-text-subtle">{caption}</span>
+      <span className={styles.caption}>{caption}</span>
     </div>
   );
 }
@@ -61,29 +57,24 @@ export function Matrix<R extends string, C extends string>({
   render: (row: R, col: C) => ReactNode;
 }) {
   return (
-    <section className="flex flex-col gap-3">
-      <h2 className="font-mono text-xs uppercase tracking-wide text-text-muted">{label}</h2>
-      <div className="overflow-x-auto rounded-lg border border-border-subtle bg-surface p-4">
+    <section className={styles.section}>
+      <h2 className={styles.matrixLabel}>{label}</h2>
+      <div className={styles.matrixScroll}>
         <div
-          className="grid items-center gap-x-4 gap-y-3"
+          className={styles.matrixGrid}
           style={{ gridTemplateColumns: `auto repeat(${cols.length}, minmax(0, 1fr))` }}
         >
           <div />
           {cols.map((col) => (
-            <div
-              key={col.key}
-              className="font-mono text-[11px] uppercase tracking-wide text-text-muted"
-            >
+            <div key={col.key} className={styles.colHead}>
               {col.label}
             </div>
           ))}
           {rows.map((row) => (
             <Fragment key={row.key}>
-              <div className="pr-2 font-mono text-[11px] uppercase tracking-wide text-text-muted">
-                {row.label}
-              </div>
+              <div className={styles.rowHead}>{row.label}</div>
               {cols.map((col) => (
-                <div key={col.key} className="flex items-center">
+                <div key={col.key} className={styles.cell}>
                   {render(row.key, col.key)}
                 </div>
               ))}

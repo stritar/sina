@@ -12,6 +12,7 @@ import { Progress as Primitive } from "radix-ui";
 import { forwardRef } from "react";
 import type { ComponentPropsWithoutRef, ComponentRef } from "react";
 import { cn } from "../utils/cn.js";
+import styles from "./Progress.module.css";
 
 export interface ProgressProps
   extends Omit<ComponentPropsWithoutRef<typeof Primitive.Root>, "value"> {
@@ -31,15 +32,11 @@ export const Progress = forwardRef<ComponentRef<typeof Primitive.Root>, Progress
         ref={ref}
         value={indeterminate ? null : clamped}
         aria-label={label}
-        className={cn("relative h-1.5 w-full overflow-hidden rounded-full bg-secondary", className)}
+        className={cn(styles.root, className)}
         {...props}
       >
         <Primitive.Indicator
-          className={cn(
-            "h-full rounded-full bg-primary transition-transform duration-base ease-standard",
-            indeterminate &&
-              "w-1/3 animate-pulse motion-reduce:animate-none motion-reduce:w-full",
-          )}
+          className={cn(styles.indicator, indeterminate && styles.indeterminate)}
           style={indeterminate ? undefined : { width: `${clamped}%` }}
         />
       </Primitive.Root>

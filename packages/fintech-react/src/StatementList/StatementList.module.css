@@ -1,0 +1,48 @@
+/* @sina-design-system/fintech-react — StatementList */
+
+:root {
+  --sina-statement-list-radius: var(--sina-radius--lg, 8px);
+  --sina-statement-list-surface: var(--sina-color-surface, #ffffff);
+  --sina-statement-list-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-statement-list-text: var(--sina-color-text, #353b31);
+  --sina-statement-list-text-muted: var(--sina-color-text-muted, #52564e);
+  --sina-statement-list-text-subtle: var(--sina-color-text-subtle, #a7ada0);
+  --sina-statement-list-accent: var(--sina-color-primary, #353b31);
+}
+
+.card {
+  border-radius: var(--sina-statement-list-radius, 8px);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-statement-list-border, #edefeb);
+  background: var(--sina-statement-list-surface, #ffffff);
+  padding: var(--sina-space--3, 0.75rem);
+}
+
+.accountLabel {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium, 500);
+  color: var(--sina-statement-list-text, #353b31);
+}
+
+.maskedNumber {
+  font-family: var(--sina-font--mono, "IBM Plex Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace);
+  font-size: var(--sina-text--xs, 0.75rem);
+  color: var(--sina-statement-list-text-subtle, #a7ada0);
+}
+
+.empty {
+  padding-block: var(--sina-space--6, 1.5rem);
+  text-align: center;
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-statement-list-text-muted, #52564e);
+}
+
+.chart {
+  height: var(--sina-space--12, 3rem);
+  width: 100%;
+  color: var(--sina-statement-list-accent, #353b31);
+}

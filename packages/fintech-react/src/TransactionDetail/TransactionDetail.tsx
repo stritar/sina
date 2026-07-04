@@ -24,6 +24,7 @@ import { Badge, Separator, Stack, SummaryList } from "@sina-design-system/core";
 import type { SummaryItem } from "@sina-design-system/core";
 
 import { formatAmount, formatDate } from "../format.js";
+import styles from "./TransactionDetail.module.css";
 
 export interface TransactionDetailProps {
   /** The server-validated `transaction_detail` payload. */
@@ -115,15 +116,15 @@ export function TransactionDetail({ payload }: TransactionDetailProps) {
     <Stack
       gap={3}
       aria-label={`Transaction detail${detail.description ? `: ${detail.description}` : ""}`}
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.card}
     >
       {isEmpty ? (
-        <p className="py-6 text-center text-ui text-text-muted">No transaction to show.</p>
+        <p className={styles.empty}>No transaction to show.</p>
       ) : (
         <>
           <Stack gap={1}>
-            <span className="truncate text-ui font-medium text-text">{detail.description}</span>
-            <span className="truncate text-xs text-text-muted">{detail.counterparty}</span>
+            <span className={styles.description}>{detail.description}</span>
+            <span className={styles.counterparty}>{detail.counterparty}</span>
           </Stack>
 
           <SummaryList items={items} />
@@ -131,13 +132,13 @@ export function TransactionDetail({ payload }: TransactionDetailProps) {
           <Separator />
 
           <Stack direction="row" justify="between" align="center" gap={2}>
-            <span className="text-ui text-text-muted">{detail.accountLabel}</span>
+            <span className={styles.accountLabel}>{detail.accountLabel}</span>
             {detail.maskedNumber ? (
-              <span className="font-mono text-xs text-text-subtle">{detail.maskedNumber}</span>
+              <span className={styles.masked}>{detail.maskedNumber}</span>
             ) : null}
           </Stack>
 
-          {detail.memo ? <p className="text-ui text-text-muted">{detail.memo}</p> : null}
+          {detail.memo ? <p className={styles.memo}>{detail.memo}</p> : null}
         </>
       )}
     </Stack>

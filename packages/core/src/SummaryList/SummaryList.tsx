@@ -8,6 +8,7 @@
  */
 import type { ReactNode } from "react";
 import { cn } from "../utils/cn.js";
+import styles from "./SummaryList.module.css";
 
 export interface SummaryItem {
   /** Row key (term). */
@@ -25,18 +26,13 @@ export interface SummaryListProps {
 
 export function SummaryList({ items, className }: SummaryListProps) {
   return (
-    <dl className={cn("divide-y divide-border-subtle", className)}>
+    <dl className={cn(styles.list, className)}>
       {items.map((item, i) => (
-        <div key={i} className="flex items-center justify-between py-2">
-          <dt className={cn("text-ui", item.emphasis ? "font-medium text-text" : "text-text-muted")}>
+        <div key={i} className={styles.row}>
+          <dt className={cn(styles.label, item.emphasis ? styles.labelEmphasis : styles.labelMuted)}>
             {item.label}
           </dt>
-          <dd
-            className={cn(
-              "text-right text-text",
-              item.emphasis ? "text-sm font-semibold" : "text-ui font-medium",
-            )}
-          >
+          <dd className={cn(styles.value, item.emphasis ? styles.valueEmphasis : styles.valueDefault)}>
             {item.value}
           </dd>
         </div>

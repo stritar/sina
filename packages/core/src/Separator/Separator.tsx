@@ -10,6 +10,7 @@ import { Separator as Primitive } from "radix-ui";
 import { forwardRef } from "react";
 import type { ComponentPropsWithoutRef, ComponentRef } from "react";
 import { cn } from "../utils/cn.js";
+import styles from "./Separator.module.css";
 
 export const Separator = forwardRef<
   ComponentRef<typeof Primitive.Root>,
@@ -20,8 +21,8 @@ export const Separator = forwardRef<
     orientation={orientation}
     decorative={decorative}
     className={cn(
-      "shrink-0 bg-border",
-      orientation === "horizontal" ? "h-px w-full" : "h-full w-px self-stretch",
+      styles.root,
+      orientation === "horizontal" ? styles.horizontal : styles.vertical,
       className,
     )}
     {...props}

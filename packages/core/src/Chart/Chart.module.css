@@ -1,0 +1,18 @@
+/* @sina-design-system/core — Chart */
+
+:root {
+  /* Default trend color; drives the SVG stroke/fill via currentColor. A consumer
+     re-colors it with any text-* token via `className`. */
+  --sina-chart-color: var(--sina-color-primary, #353b31);
+}
+
+.root {
+  display: inline-block;
+  color: var(--sina-chart-color, #353b31);
+}
+
+.svg {
+  height: 100%;
+  width: 100%;
+  overflow: visible;
+}

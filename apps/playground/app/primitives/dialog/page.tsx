@@ -12,11 +12,12 @@ import {
 } from "@sina-design-system/core";
 import { useState } from "react";
 import { Demo, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
 
 const SIZES = [
-  { width: "max-w-sm", label: "Small" },
-  { width: "max-w-md", label: "Medium" },
-  { width: "max-w-lg", label: "Large" },
+  { cls: styles.sm, name: "max-w-sm", label: "Small" },
+  { cls: styles.md, name: "max-w-md", label: "Medium" },
+  { cls: styles.lg, name: "max-w-lg", label: "Large" },
 ] as const;
 
 export default function DialogStory() {
@@ -34,7 +35,7 @@ export default function DialogStory() {
             <DialogDescription>
               Review the details before continuing. This is a domain-agnostic shell.
             </DialogDescription>
-            <div className="mt-2 flex justify-end gap-3">
+            <div className={styles.actionsGap}>
               <DialogClose asChild>
                 <Button variant="secondary">Cancel</Button>
               </DialogClose>
@@ -48,16 +49,16 @@ export default function DialogStory() {
 
       <Demo label="Sizes (max-w-sm · max-w-md · max-w-lg)">
         {SIZES.map((size) => (
-          <Dialog key={size.width}>
+          <Dialog key={size.name}>
             <DialogTrigger asChild>
               <Button variant="secondary">{size.label}</Button>
             </DialogTrigger>
-            <DialogContent className={size.width}>
+            <DialogContent className={size.cls}>
               <DialogTitle>{size.label} dialog</DialogTitle>
               <DialogDescription>
-                This content overrides its width with className=&quot;{size.width}&quot;.
+                This content overrides its width with className=&quot;{size.name}&quot;.
               </DialogDescription>
-              <div className="mt-2 flex justify-end">
+              <div className={styles.actions}>
                 <DialogClose asChild>
                   <Button variant="secondary">Close</Button>
                 </DialogClose>
@@ -77,10 +78,10 @@ export default function DialogStory() {
             <DialogDescription>
               The body scrolls inside a fixed height; the focus trap still holds.
             </DialogDescription>
-            <ScrollArea className="mt-3 h-24 rounded-md border border-border-subtle">
-              <div className="flex flex-col gap-3 p-3">
+            <ScrollArea className={styles.scroll}>
+              <div className={styles.scrollBody}>
                 {Array.from({ length: 20 }, (_, i) => (
-                  <p key={i} className="text-sm text-text-muted">
+                  <p key={i} className={styles.para}>
                     Paragraph {i + 1}. Tab cycles only through focusable elements
                     inside the dialog, proving the trap is intact even with
                     overflowing content.
@@ -88,7 +89,7 @@ export default function DialogStory() {
                 ))}
               </div>
             </ScrollArea>
-            <div className="mt-3 flex justify-end">
+            <div className={styles.actionsMt3}>
               <DialogClose asChild>
                 <Button>Done</Button>
               </DialogClose>
@@ -101,7 +102,7 @@ export default function DialogStory() {
         <Button variant="secondary" onClick={() => setOpen(true)}>
           Open from external button
         </Button>
-        <p className="font-mono text-xs text-text-subtle">
+        <p className={styles.state}>
           open: {String(open)}
         </p>
         <Dialog open={open} onOpenChange={setOpen}>
@@ -110,7 +111,7 @@ export default function DialogStory() {
             <DialogDescription>
               This dialog is driven by useState, not a DialogTrigger.
             </DialogDescription>
-            <div className="mt-2 flex justify-end">
+            <div className={styles.actions}>
               <Button onClick={() => setOpen(false)}>Close</Button>
             </div>
           </DialogContent>

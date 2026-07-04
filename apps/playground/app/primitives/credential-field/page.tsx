@@ -1,27 +1,28 @@
 import { CredentialField, CredentialOTP } from "@sina-design-system/core";
 import { Demo, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
 
 export default function CredentialFieldStory() {
   return (
     <StoryShell title="CredentialField">
       <Demo label="CredentialField · masked + reveal toggle">
-        <div className="w-72">
+        <div className={styles.field}>
           <CredentialField label="Approval code" placeholder="Enter code" />
         </div>
-        <div className="w-72">
+        <div className={styles.field}>
           <CredentialField label="Approval code" defaultValue="8F2K9Q" />
         </div>
-        <div className="w-72">
+        <div className={styles.field}>
           <CredentialField
             label="Approval code"
             error="That code is incorrect."
             defaultValue="000000"
           />
         </div>
-        <div className="w-72">
+        <div className={styles.field}>
           <CredentialField label="Approval code" disabled defaultValue="8F2K9Q" />
         </div>
-        <div className="w-72">
+        <div className={styles.field}>
           <CredentialField label="Approval code" required placeholder="Enter code" />
         </div>
       </Demo>

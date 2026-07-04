@@ -9,6 +9,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Progress, Stack } from "@sina-design-system/core";
 
 import { formatAmount, readSpendingBreakdown } from "../format.js";
+import styles from "./SpendingBreakdown.module.css";
 
 export interface SpendingBreakdownProps {
   payload: unknown;
@@ -22,15 +23,15 @@ export function SpendingBreakdown({ payload }: SpendingBreakdownProps) {
     <Stack
       gap={3}
       aria-label={`Spending for ${period}`}
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.card}
     >
       <Stack direction="row" justify="between" align="center" gap={2}>
-        <span className="text-ui font-medium text-text">{period}</span>
-        <span className="text-ui font-semibold text-text">{formatAmount(total, currency)}</span>
+        <span className={styles.period}>{period}</span>
+        <span className={styles.total}>{formatAmount(total, currency)}</span>
       </Stack>
 
       {categories.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">No spending to show.</p>
+        <p className={styles.empty}>No spending to show.</p>
       ) : (
         <Stack gap={2}>
           {categories.map((c, i) => {
@@ -38,8 +39,8 @@ export function SpendingBreakdown({ payload }: SpendingBreakdownProps) {
             return (
               <Stack key={i} gap={1}>
                 <Stack direction="row" justify="between" align="center" gap={2}>
-                  <span className="text-ui text-text">{c.label}</span>
-                  <span className="text-ui font-medium text-text">{formatAmount(c.amount, currency)}</span>
+                  <span className={styles.categoryLabel}>{c.label}</span>
+                  <span className={styles.categoryAmount}>{formatAmount(c.amount, currency)}</span>
                 </Stack>
                 <Progress value={pct} label={`${c.label}: ${Math.round(pct)}% of spending`} />
               </Stack>

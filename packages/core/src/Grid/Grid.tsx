@@ -10,34 +10,36 @@ import { forwardRef } from "react";
 import type { ElementType, HTMLAttributes } from "react";
 import { cn } from "../utils/cn.js";
 import type { GapStep } from "../Stack/Stack.js";
+import styles from "./Grid.module.css";
 
 export type GridCols = 1 | 2 | 3 | 4 | 5 | 6 | 12;
 
-// Literal class strings so Tailwind's JIT can see them.
-const COLS: Record<GridCols, string> = {
-  1: "grid-cols-1",
-  2: "grid-cols-2",
-  3: "grid-cols-3",
-  4: "grid-cols-4",
-  5: "grid-cols-5",
-  6: "grid-cols-6",
-  12: "grid-cols-12",
+// Each on-system count/step maps to its own module class (CSS Module class access
+// is `string | undefined` under noUncheckedIndexedAccess).
+const COLS: Record<GridCols, string | undefined> = {
+  1: styles.cols1,
+  2: styles.cols2,
+  3: styles.cols3,
+  4: styles.cols4,
+  5: styles.cols5,
+  6: styles.cols6,
+  12: styles.cols12,
 };
 
-const GAP: Record<GapStep, string> = {
-  0: "gap-0",
-  1: "gap-1",
-  2: "gap-2",
-  3: "gap-3",
-  4: "gap-4",
-  5: "gap-5",
-  6: "gap-6",
-  8: "gap-8",
-  10: "gap-10",
-  12: "gap-12",
-  16: "gap-16",
-  20: "gap-20",
-  24: "gap-24",
+const GAP: Record<GapStep, string | undefined> = {
+  0: styles.gap0,
+  1: styles.gap1,
+  2: styles.gap2,
+  3: styles.gap3,
+  4: styles.gap4,
+  5: styles.gap5,
+  6: styles.gap6,
+  8: styles.gap8,
+  10: styles.gap10,
+  12: styles.gap12,
+  16: styles.gap16,
+  20: styles.gap20,
+  24: styles.gap24,
 };
 
 export interface GridProps extends HTMLAttributes<HTMLElement> {
@@ -55,7 +57,7 @@ export const Grid = forwardRef<HTMLElement, GridProps>(
     return (
       <Comp
         ref={ref}
-        className={cn("grid", COLS[cols], GAP[gap], className)}
+        className={cn(styles.root, COLS[cols], GAP[gap], className)}
         {...props}
       />
     );

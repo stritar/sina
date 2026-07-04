@@ -17,14 +17,15 @@ import {
   Warning,
   WarningCircle,
 } from "@phosphor-icons/react/dist/ssr";
+import styles from "./ConsoleStage.module.css";
 
 export type StageStatus = "pass" | "fail" | "flag" | "info";
 
-const NODE: Record<StageStatus, { Icon: typeof CheckCircle; className: string }> = {
-  pass: { Icon: CheckCircle, className: "text-success" },
-  fail: { Icon: WarningCircle, className: "text-danger" },
-  flag: { Icon: Warning, className: "text-warning" },
-  info: { Icon: Info, className: "text-text-muted" },
+const NODE: Record<StageStatus, { Icon: typeof CheckCircle; className: string | undefined }> = {
+  pass: { Icon: CheckCircle, className: styles.nodePass },
+  fail: { Icon: WarningCircle, className: styles.nodeFail },
+  flag: { Icon: Warning, className: styles.nodeFlag },
+  info: { Icon: Info, className: styles.nodeInfo },
 };
 
 export function ConsoleStage({
@@ -48,48 +49,46 @@ export function ConsoleStage({
   const hasDetail = Boolean(children);
 
   return (
-    <div className="relative pl-7">
+    <div className={styles.root}>
       {/* rail */}
-      {!last && (
-        <span aria-hidden className="absolute left-[9px] top-6 bottom-0 w-px bg-border" />
-      )}
+      {!last && <span aria-hidden className={styles.rail} />}
       {/* status node */}
-      <span className="absolute left-0 top-0.5">
-        <Icon className={`size-control-sm ${className}`} aria-hidden />
+      <span className={styles.nodeSlot}>
+        <Icon className={[styles.node, className].filter(Boolean).join(" ")} aria-hidden />
       </span>
 
-      <div className="pb-4">
+      <div className={styles.body}>
         {hasDetail ? (
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
-            className="flex w-full items-center gap-1.5 rounded-sm text-left focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-focus-ring"
+            className={styles.toggle}
           >
             {open ? (
-              <CaretDown className="size-control-2xs text-text-muted" aria-hidden />
+              <CaretDown className={styles.caret} aria-hidden />
             ) : (
-              <CaretRight className="size-control-2xs text-text-muted" aria-hidden />
+              <CaretRight className={styles.caret} aria-hidden />
             )}
-            <span className="text-ui font-medium text-text">{title}</span>
+            <span className={styles.title}>{title}</span>
             {latencyMs != null && (
               <Badge intent="neutral" size="sm">
-                <span className="font-mono">{latencyMs.toFixed(1)} ms</span>
+                <span className={styles.mono}>{latencyMs.toFixed(1)} ms</span>
               </Badge>
             )}
           </button>
         ) : (
-          <div className="flex items-center gap-1.5">
-            <span className="text-ui font-medium text-text">{title}</span>
+          <div className={styles.staticTitle}>
+            <span className={styles.title}>{title}</span>
             {latencyMs != null && (
               <Badge intent="neutral" size="sm">
-                <span className="font-mono">{latencyMs.toFixed(1)} ms</span>
+                <span className={styles.mono}>{latencyMs.toFixed(1)} ms</span>
               </Badge>
             )}
           </div>
         )}
 
-        {hasDetail && open && <div className="mt-2">{children}</div>}
+        {hasDetail && open && <div className={styles.detail}>{children}</div>}
       </div>
     </div>
   );

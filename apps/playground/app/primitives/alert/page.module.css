@@ -1,0 +1,8 @@
+/* Playground — Alert story */
+
+.stack {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: var(--sina-space--3);
+}

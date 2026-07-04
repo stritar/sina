@@ -24,6 +24,7 @@ import {
 } from "react";
 import { Field } from "../Field/Field.js";
 import { cn } from "../utils/cn.js";
+import styles from "./CredentialField.module.css";
 
 /* -------------------------------------------------------------------------- */
 /*  CredentialField — masked input + reveal toggle                            */
@@ -38,25 +39,14 @@ const SecretInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputEl
   ({ className, disabled, ...inputProps }, ref) => {
     const [revealed, setRevealed] = useState(false);
     return (
-      <div className="relative">
-        <Lock
-          aria-hidden
-          weight="fill"
-          className="pointer-events-none absolute inset-y-0 left-2.5 my-auto size-control-2xs text-text-muted"
-        />
+      <div className={styles.wrapper}>
+        <Lock aria-hidden weight="fill" className={styles.lock} />
         <input
           ref={ref}
           type={revealed ? "text" : "password"}
           disabled={disabled}
           {...inputProps}
-          className={cn(
-            "h-7 w-full rounded-md border border-border-subtle bg-surface pl-7 pr-8 text-ui text-text",
-            "placeholder:text-text-subtle transition-colors duration-fast ease-standard",
-            "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
-            "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",
-            "aria-[invalid=true]:border-danger",
-            className,
-          )}
+          className={cn(styles.input, className)}
         />
         <button
           type="button"
@@ -65,17 +55,12 @@ const SecretInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputEl
           aria-pressed={revealed}
           aria-label={revealed ? "Hide code" : "Show code"}
           onClick={() => setRevealed((v) => !v)}
-          className={cn(
-            "absolute inset-y-0 right-1.5 my-auto flex size-6 items-center justify-center rounded-sm text-text-muted",
-            "transition-colors duration-fast ease-standard hover:bg-hover hover:text-text",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-1 focus-visible:ring-offset-bg",
-            "disabled:cursor-not-allowed disabled:opacity-50",
-          )}
+          className={styles.toggle}
         >
           {revealed ? (
-            <EyeSlash aria-hidden weight="fill" className="size-control-2xs" />
+            <EyeSlash aria-hidden weight="fill" className={styles.toggleIcon} />
           ) : (
-            <Eye aria-hidden weight="fill" className="size-control-2xs" />
+            <Eye aria-hidden weight="fill" className={styles.toggleIcon} />
           )}
         </button>
       </div>
@@ -196,7 +181,7 @@ export function CredentialOTP({
   };
 
   return (
-    <div role="group" aria-label={ariaLabel} className={cn("flex gap-1.5", className)}>
+    <div role="group" aria-label={ariaLabel} className={cn(styles.otpGroup, className)}>
       {chars.map((ch, i) => (
         <input
           key={i}
@@ -215,13 +200,7 @@ export function CredentialOTP({
           onKeyDown={(e) => handleKeyDown(i, e)}
           onPaste={(e) => handlePaste(i, e)}
           onFocus={(e) => e.target.select()}
-          className={cn(
-            "size-10 rounded-md border border-border-subtle bg-surface text-center text-base font-medium text-text",
-            "transition-colors duration-fast ease-standard",
-            "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
-            "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",
-            "aria-[invalid=true]:border-danger",
-          )}
+          className={styles.otpBox}
         />
       ))}
     </div>

@@ -4,14 +4,13 @@
  */
 
 import { ShieldCheck } from "@phosphor-icons/react/dist/ssr";
+import styles from "./ServerBoundary.module.css";
 
 export function ServerBoundary({ className }: { className?: string }) {
   return (
-    <div
-      className={`flex items-center gap-1.5 rounded-md bg-surface-secure px-2.5 py-1 ${className ?? ""}`}
-    >
-      <ShieldCheck className="size-control-2xs text-success" aria-hidden />
-      <span className="font-mono text-xs text-text-muted">
+    <div className={[styles.root, className].filter(Boolean).join(" ")}>
+      <ShieldCheck className={styles.icon} aria-hidden />
+      <span className={styles.caption}>
         server-side · validated before mount
       </span>
     </div>

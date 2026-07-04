@@ -14,6 +14,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Chart, Stack, SummaryList, type SummaryItem } from "@sina-design-system/core";
 
 import { formatAmount, formatPct } from "../format.js";
+import styles from "./AssetDetail.module.css";
 
 export interface AssetDetailProps {
   /** The server-validated `asset_detail` payload. */
@@ -70,16 +71,16 @@ export function AssetDetail({ payload }: AssetDetailProps) {
     <Stack
       gap={3}
       aria-label={`Asset detail for ${symbol}`}
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.root}
     >
       <SummaryList items={items} />
 
       {points.length > 0 ? (
-        <div className="h-12 w-full text-primary">
+        <div className={styles.chart}>
           <Chart data={points} label={`${symbol} price trend, ${points.length} points`} />
         </div>
       ) : (
-        <p className="text-ui text-text-muted">No chart data</p>
+        <p className={styles.empty}>No chart data</p>
       )}
     </Stack>
   );

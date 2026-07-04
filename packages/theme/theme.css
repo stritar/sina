@@ -298,6 +298,10 @@
       color-mix(in srgb, var(--sina-shadow-color) 12%, transparent); /* Figma card */
   --sina-shadow--focus: 0 0 0 3px
     color-mix(in srgb, var(--sina-color-focus-ring) 45%, transparent);
+  /* Focus-visible ring for controls: 1px surface offset + 2px ring (was Tailwind
+     ring-2 ring-offset-1 ring-offset-bg). Tracks bg + focus-ring across themes. */
+  --sina-shadow--focus-ring: 0 0 0 1px var(--sina-color-bg),
+    0 0 0 3px var(--sina-color-focus-ring);
 
   /* ===================================================================== */
   /* Z-index                                                               */
@@ -378,10 +382,9 @@
 }
 
 /*
- * Base styles: apps inherit the SINA look without re-declaring it. Kept as a
- * plain element selector (not @layer) so this file stays valid standalone when
- * @import'd above the host app's @tailwind directives; utility classes still
- * override it on specificity.
+ * Base styles: apps inherit the SINA look without re-declaring it. An unlayered
+ * plain element selector — it sits above the reset (which is in @layer reset) and
+ * below component/app CSS Modules, which override it on source order/specificity.
  */
 body {
   background-color: var(--sina-color-bg);

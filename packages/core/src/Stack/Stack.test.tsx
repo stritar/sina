@@ -21,9 +21,9 @@ describe("Stack", () => {
       </Stack>,
     );
     const el = container.firstElementChild as HTMLElement;
-    expect(el.className).toContain("flex");
-    expect(el.className).toContain("flex-row");
-    expect(el.className).toContain("gap-6");
+    expect(el.className).toContain("root");
+    expect(el.className).toContain("row");
+    expect(el.className).toContain("gap6");
   });
 
   it("renders as the requested element", () => {

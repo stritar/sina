@@ -1,4 +1,5 @@
 import Link from "next/link";
+import styles from "./page.module.css";
 
 const PRIMITIVES = [
   { slug: "visually-hidden", name: "VisuallyHidden", tier: "Utility" },
@@ -35,20 +36,17 @@ const PRIMITIVES = [
 
 export default function PrimitivesIndex() {
   return (
-    <main className="mx-auto min-h-screen max-w-2xl bg-bg p-12 text-text">
-      <h1 className="text-3xl font-semibold tracking-tight">Core Primitives</h1>
-      <p className="mt-2 text-sm text-text-muted">
+    <main className={styles.page}>
+      <h1 className={styles.heading}>Core Primitives</h1>
+      <p className={styles.lede}>
         Phase 2 — headless, accessible primitives rendered in isolation.
       </p>
-      <ul className="mt-8 flex flex-col gap-2">
+      <ul className={styles.list}>
         {PRIMITIVES.map((p) => (
           <li key={p.slug}>
-            <Link
-              href={`/primitives/${p.slug}`}
-              className="flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-3 transition-colors duration-fast ease-standard hover:bg-surface-raised"
-            >
-              <span className="font-medium">{p.name}</span>
-              <span className="font-mono text-xs text-text-subtle">{p.tier}</span>
+            <Link href={`/primitives/${p.slug}`} className={styles.row}>
+              <span className={styles.rowName}>{p.name}</span>
+              <span className={styles.rowTier}>{p.tier}</span>
             </Link>
           </li>
         ))}

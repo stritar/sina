@@ -1,0 +1,10 @@
+/* Toast story — co-located styles (no Tailwind). */
+
+.itemsCenter {
+  align-items: center;
+}
+
+.action {
+  margin-left: calc(var(--sina-space--1_5) * -1);
+  align-self: flex-start;
+}

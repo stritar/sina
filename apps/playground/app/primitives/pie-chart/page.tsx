@@ -2,6 +2,7 @@
 
 import { PieChart } from "@sina-design-system/core";
 import { Demo, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
 
 const SEGMENTS = {
   labels: ["Equities", "Bonds", "Cash", "Real assets", "Alternatives"],
@@ -15,7 +16,7 @@ export default function PieChartStory() {
         <PieChart
           data={SEGMENTS}
           label="Five segments as share of a whole"
-          className="h-[300px]"
+          className={styles.chart300}
         />
       </Demo>
 
@@ -25,17 +26,17 @@ export default function PieChartStory() {
           showLegend={false}
           valueFormatter={(v) => `${v}%`}
           label="Five segments with percentage tooltips and no legend"
-          className="h-[260px]"
+          className={styles.chart260}
         />
       </Demo>
 
       <Demo label="Dark · scoped wrapper re-themes tokens locally">
-        <div className="dark w-full rounded-lg bg-bg p-4">
-          <div className="rounded-lg bg-surface p-4">
+        <div className={`dark ${styles.darkFrame}`}>
+          <div className={styles.panel}>
             <PieChart
               data={SEGMENTS}
               label="Five segments, dark theme"
-              className="h-[260px]"
+              className={styles.chart260}
             />
           </div>
         </div>

@@ -1,0 +1,198 @@
+/* @sina-design-system/core — Button */
+
+:root {
+  --sina-button-radius: var(--sina-radius--md, 6px);
+
+  --sina-button-primary-bg: var(--sina-color-primary, #353b31);
+  --sina-button-primary-fg: var(--sina-color-primary-fg, #ffffff);
+  --sina-button-primary-border: var(--sina-color-primary, #353b31);
+  --sina-button-primary-bg-hover: var(--sina-color-primary-hover, #444d3b);
+  --sina-button-primary-bg-active: var(--sina-color-primary-active, #2b3028);
+
+  --sina-button-secondary-bg: var(--sina-color-secondary, #e5e7e2);
+  --sina-button-secondary-fg: var(--sina-color-secondary-fg, #353b31);
+  --sina-button-secondary-border: var(--sina-color-border, #dde0d9);
+  --sina-button-secondary-bg-hover: var(--sina-color-secondary-hover, #dde0d9);
+
+  --sina-button-danger-bg: var(--sina-color-danger, #c64c35);
+  --sina-button-danger-fg: var(--sina-color-danger-fg, #ffffff);
+  --sina-button-danger-border: var(--sina-color-danger, #c64c35);
+
+  --sina-button-ghost-fg: var(--sina-color-text, #353b31);
+  --sina-button-ghost-border: var(--sina-color-border, #dde0d9);
+
+  --sina-button-disabled-bg: var(--sina-color-secondary, #e5e7e2);
+  --sina-button-disabled-fg: var(--sina-color-text-subtle, #a7ada0);
+}
+
+.root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-radius: var(--sina-button-radius, 6px);
+  /* Zero-width border by default — outlined-button hook; color set per variant. */
+  border: var(--sina-border-width--0, 0px) solid transparent;
+  transition-property: background-color, box-shadow, color;
+  transition-duration: var(--sina-duration--fast, 120ms);
+  transition-timing-function: var(--sina-ease--standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+.root:focus-visible {
+  outline: none;
+  box-shadow: var(--sina-shadow--focus-ring, 0 0 0 1px #f5f6f4,
+    0 0 0 3px #545f49);
+}
+
+/* Disabled: muted, not blanket-dimmed. Ghost overrides bg below. */
+.root:disabled {
+  pointer-events: none;
+  background: var(--sina-button-disabled-bg, #e5e7e2);
+  color: var(--sina-button-disabled-fg, #a7ada0);
+}
+
+/* Variants */
+.primary {
+  border-color: var(--sina-button-primary-border, #353b31);
+  background: var(--sina-button-primary-bg, #353b31);
+  color: var(--sina-button-primary-fg, #ffffff);
+}
+.primary:hover:not(:disabled) {
+  background: var(--sina-button-primary-bg-hover, #444d3b);
+}
+.primary:active:not(:disabled) {
+  background: var(--sina-button-primary-bg-active, #2b3028);
+}
+
+.secondary {
+  border-color: var(--sina-button-secondary-border, #dde0d9);
+  background: var(--sina-button-secondary-bg, #e5e7e2);
+  color: var(--sina-button-secondary-fg, #353b31);
+}
+.secondary:hover:not(:disabled) {
+  background: var(--sina-button-secondary-bg-hover, #dde0d9);
+}
+.secondary:active:not(:disabled) {
+  background: var(--sina-button-secondary-bg-hover, #dde0d9);
+}
+
+/* Danger keeps full strength (governance carve-out — never quieted). */
+.danger {
+  border-color: var(--sina-button-danger-border, #c64c35);
+  background: var(--sina-button-danger-bg, #c64c35);
+  color: var(--sina-button-danger-fg, #ffffff);
+}
+.danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--sina-color-danger, #c64c35) 90%, transparent);
+}
+.danger:active:not(:disabled) {
+  background: color-mix(in srgb, var(--sina-color-danger, #c64c35) 80%, transparent);
+}
+
+/* Quiet control: translucent overlay, not a color swap. */
+.ghost {
+  border-color: var(--sina-button-ghost-border, #dde0d9);
+  color: var(--sina-button-ghost-fg, #353b31);
+}
+.ghost:hover:not(:disabled) {
+  background: var(--sina-overlay--hover, color-mix(
+    in srgb,
+    #353b31 5%,
+    transparent
+  ));
+}
+.ghost:active:not(:disabled) {
+  background: var(--sina-overlay--pressed, color-mix(
+    in srgb,
+    #353b31 9%,
+    transparent
+  ));
+}
+.ghost:disabled {
+  background: transparent;
+}
+
+/* Sizes — outer padding only; label carries the rest (see .label*). Weight
+   scales with size: sm/md read as body text, lg leans in, xl is a hero CTA. */
+.sm {
+  height: var(--sina-space--6, 1.5rem);
+  padding-inline: var(--sina-space--1, 0.25rem);
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--regular, 400);
+}
+.md {
+  height: var(--sina-space--7, 1.75rem);
+  padding-inline: var(--sina-space--1, 0.25rem);
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--regular, 400);
+}
+.lg {
+  height: var(--sina-space--8, 2rem);
+  padding-inline: var(--sina-space--1_5, 0.375rem);
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium, 500);
+}
+.xl {
+  height: var(--sina-space--10, 2.5rem);
+  padding-inline: var(--sina-space--2_5, 0.625rem);
+  font-size: var(--sina-text--sm, 0.875rem);
+  font-weight: var(--sina-font-weight--bold, 700);
+}
+
+/* Label padding replaces the old flex gap: outer (button) + label = the original
+   edge padding, so a label-only button keeps its width and icon↔label gap holds. */
+.label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.labelPadSm {
+  padding-inline: var(--sina-space--1, 0.25rem);
+}
+.labelPad {
+  padding-inline: var(--sina-space--1_5, 0.375rem);
+}
+
+/* Glyphs scale with the control so icons stay balanced from sm → xl. */
+.glyph {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+.glyph svg {
+  width: 100%;
+  height: 100%;
+}
+.glyphSm {
+  width: var(--sina-size--icon-sm, 0.875rem);
+  height: var(--sina-size--icon-sm, 0.875rem);
+}
+.glyphMd {
+  width: var(--sina-size--xs, 1rem);
+  height: var(--sina-size--xs, 1rem);
+}
+.glyphXl {
+  width: var(--sina-space--5, 1.25rem);
+  height: var(--sina-space--5, 1.25rem);
+}
+
+.spinner {
+  animation: sinaSpin 1s linear infinite;
+}
+@keyframes sinaSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}

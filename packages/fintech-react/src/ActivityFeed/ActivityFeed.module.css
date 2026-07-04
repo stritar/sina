@@ -1,0 +1,63 @@
+/* @sina-design-system/fintech-react — ActivityFeed */
+
+:root {
+  --sina-activity-feed-radius: var(--sina-radius--lg, 8px);
+  --sina-activity-feed-surface: var(--sina-color-surface, #ffffff);
+  --sina-activity-feed-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-activity-feed-text: var(--sina-color-text, #353b31);
+  --sina-activity-feed-text-muted: var(--sina-color-text-muted, #52564e);
+  --sina-activity-feed-text-subtle: var(--sina-color-text-subtle, #a7ada0);
+}
+
+.card {
+  border-radius: var(--sina-activity-feed-radius, 8px);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-activity-feed-border, #edefeb);
+  background: var(--sina-activity-feed-surface, #ffffff);
+  padding: var(--sina-space--3, 0.75rem);
+}
+
+.empty {
+  padding-block: var(--sina-space--6, 1.5rem);
+  text-align: center;
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-activity-feed-text-muted, #52564e);
+}
+
+.list > * + * {
+  border-top: var(--sina-border-width--1, 1px) solid var(--sina-activity-feed-border, #edefeb);
+}
+
+.row {
+  padding-block: var(--sina-space--2, 0.5rem);
+}
+
+.titleCol {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium, 500);
+  color: var(--sina-activity-feed-text, #353b31);
+}
+
+.detail {
+  font-size: var(--sina-text--xs, 0.75rem);
+  color: var(--sina-activity-feed-text-muted, #52564e);
+}
+
+.date {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: var(--sina-text--xs, 0.75rem);
+  color: var(--sina-activity-feed-text-subtle, #a7ada0);
+}

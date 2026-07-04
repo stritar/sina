@@ -9,6 +9,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack } from "@sina-design-system/core";
 
 import { formatAmount, formatPct, readPortfolioHoldings } from "../format.js";
+import styles from "./PortfolioHoldings.module.css";
 
 export interface PortfolioHoldingsProps {
   payload: unknown;
@@ -19,20 +20,16 @@ export function PortfolioHoldings({ payload }: PortfolioHoldingsProps) {
   const { currency, totalValue, holdings } = readPortfolioHoldings(payload);
 
   return (
-    <Stack
-      gap={3}
-      aria-label="Portfolio holdings"
-      className="rounded-lg border border-border-subtle bg-surface p-3"
-    >
+    <Stack gap={3} aria-label="Portfolio holdings" className={styles.card}>
       <Stack direction="row" justify="between" align="center" gap={2}>
-        <span className="text-ui font-medium text-text">Portfolio</span>
-        <span className="text-ui font-semibold text-text">{formatAmount(totalValue, currency)}</span>
+        <span className={styles.title}>Portfolio</span>
+        <span className={styles.amount}>{formatAmount(totalValue, currency)}</span>
       </Stack>
 
       {holdings.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">No holdings to show.</p>
+        <p className={styles.empty}>No holdings to show.</p>
       ) : (
-        <Stack as="ul" gap={0} className="divide-y divide-border-subtle">
+        <Stack as="ul" gap={0} className={styles.list}>
           {holdings.map((h) => {
             const up = h.changePct >= 0;
             return (
@@ -43,18 +40,16 @@ export function PortfolioHoldings({ payload }: PortfolioHoldingsProps) {
                 justify="between"
                 align="center"
                 gap={3}
-                className="py-2"
+                className={styles.row}
               >
-                <span className="flex min-w-0 flex-col">
-                  <span className="truncate text-ui font-medium text-text">{h.symbol}</span>
-                  <span className="truncate text-xs text-text-muted">
+                <span className={styles.info}>
+                  <span className={styles.symbol}>{h.symbol}</span>
+                  <span className={styles.sub}>
                     {h.name} · {h.quantity}
                   </span>
                 </span>
-                <span className="flex shrink-0 items-center gap-2">
-                  <span className="text-ui font-semibold text-text">
-                    {formatAmount(h.value, currency)}
-                  </span>
+                <span className={styles.meta}>
+                  <span className={styles.amount}>{formatAmount(h.value, currency)}</span>
                   <Badge intent={up ? "success" : "danger"} size="sm">
                     {formatPct(h.changePct)}
                   </Badge>

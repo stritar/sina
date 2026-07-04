@@ -1,0 +1,33 @@
+/* @sina-design-system/fintech-react — CashflowSummary */
+
+:root {
+  --sina-cashflow-summary-radius: var(--sina-radius--lg, 8px);
+  --sina-cashflow-summary-surface: var(--sina-color-surface, #ffffff);
+  --sina-cashflow-summary-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-cashflow-summary-text: var(--sina-color-text, #353b31);
+  --sina-cashflow-summary-text-muted: var(--sina-color-text-muted, #52564e);
+}
+
+.card {
+  border-radius: var(--sina-cashflow-summary-radius, 8px);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-cashflow-summary-border, #edefeb);
+  background: var(--sina-cashflow-summary-surface, #ffffff);
+  padding: var(--sina-space--3, 0.75rem);
+}
+
+.period {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium, 500);
+  color: var(--sina-cashflow-summary-text, #353b31);
+}
+
+.empty {
+  padding-block: var(--sina-space--6, 1.5rem);
+  text-align: center;
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-cashflow-summary-text-muted, #52564e);
+}

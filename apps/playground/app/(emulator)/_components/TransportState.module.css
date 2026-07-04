@@ -1,0 +1,29 @@
+/* TransportState — model/transport failure card (warning register) */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--3);
+  border-radius: var(--sina-radius--lg);
+  border: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+  background: var(--sina-color-surface);
+  padding: var(--sina-space--3);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sina-space--3);
+}
+
+.meta {
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-subtle);
+}
+
+.icon {
+  width: var(--sina-size--icon-sm);
+  height: var(--sina-size--icon-sm);
+}

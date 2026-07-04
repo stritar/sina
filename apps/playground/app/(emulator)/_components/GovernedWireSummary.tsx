@@ -5,6 +5,7 @@
 
 import { Alert, SummaryList } from "@sina-design-system/core";
 import { formatAmount } from "../_lib/format";
+import styles from "./GovernedWireSummary.module.css";
 
 interface WireParty {
   name?: string;
@@ -33,7 +34,7 @@ export function GovernedWireSummary({ payload }: { payload: unknown }) {
   const creditor = readParty(wire.creditor);
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-border-subtle bg-surface-secure p-3">
+    <div className={styles.root}>
       <Alert variant="success" title="Governed & mounted">
         The payload cleared the constitution — SINA mounted the accessible primitive.
       </Alert>

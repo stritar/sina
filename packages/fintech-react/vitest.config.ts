@@ -7,5 +7,7 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
     include: ["src/**/*.test.{ts,tsx}"],
+    // CSS Modules resolve to the literal flat class name in jsdom.
+    css: { modules: { classNameStrategy: "non-scoped" } },
   },
 });

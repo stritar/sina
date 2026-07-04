@@ -1,9 +1,10 @@
 import { Checkbox } from "@sina-design-system/core";
 import { Demo, Specimen, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
 
 // Static focus ring, mirroring the house focus style (`:focus-visible` only) so
 // the "focus" specimen reads as focused without keyboard interaction.
-const focusRing = "ring-2 ring-focus-ring ring-offset-1 ring-offset-bg";
+const focusRing = styles.focusRing;
 
 export default function CheckboxStory() {
   return (
@@ -15,7 +16,7 @@ export default function CheckboxStory() {
       </Demo>
 
       <Demo label="Focus / disabled">
-        <div className="flex items-start gap-6">
+        <div className={styles.row}>
           <Specimen caption="focus">
             <Checkbox aria-label="focus" defaultChecked className={focusRing} />
           </Specimen>
@@ -26,7 +27,7 @@ export default function CheckboxStory() {
       </Demo>
 
       <Demo label="With label">
-        <div className="flex items-start gap-8">
+        <div className={styles.rowWide}>
           <Specimen caption="checked + label">
             <Checkbox label="Accept terms" defaultChecked />
           </Specimen>

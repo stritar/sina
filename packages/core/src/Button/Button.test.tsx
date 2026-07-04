@@ -75,16 +75,13 @@ describe("Button", () => {
     expect(results.violations.map((v) => v.id)).toContain("button-name");
   });
 
-  it("scales font weight with size", () => {
-    const cases = [
-      ["sm", "font-normal"],
-      ["md", "font-normal"],
-      ["lg", "font-medium"],
-      ["xl", "font-bold"],
-    ] as const;
-    for (const [size, weight] of cases) {
+  it("applies the size class per size", () => {
+    // Font weight now scales via the size class's CSS (see Button.module.css);
+    // assert the correct size class is applied (non-scoped module names in jsdom).
+    const sizes = ["sm", "md", "lg", "xl"] as const;
+    for (const size of sizes) {
       const { unmount } = render(<Button size={size}>X</Button>);
-      expect(screen.getByRole("button").className).toContain(weight);
+      expect(screen.getByRole("button").className.split(/\s+/)).toContain(size);
       unmount();
     }
   });

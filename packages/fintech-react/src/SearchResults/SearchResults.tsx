@@ -14,6 +14,7 @@ import type { SummaryItem } from "@sina-design-system/core";
 import { Badge, Stack, SummaryList } from "@sina-design-system/core";
 
 import { formatAmount } from "../format.js";
+import styles from "./SearchResults.module.css";
 
 export interface SearchResultsProps {
   /** The server-validated `search_results` payload. */
@@ -82,21 +83,21 @@ export function SearchResults({ payload }: SearchResultsProps) {
     const kindLabel = r.kind.charAt(0).toUpperCase() + r.kind.slice(1);
     return {
       label: (
-        <span className="flex min-w-0 items-center gap-2">
+        <span className={styles.resultLabel}>
           <Badge intent={intent} size="sm">
             {kindLabel}
           </Badge>
-          <span className="flex min-w-0 flex-col">
-            <span className="truncate text-ui font-medium text-text">{r.label}</span>
+          <span className={styles.resultText}>
+            <span className={styles.label}>{r.label}</span>
             {r.sublabel ? (
-              <span className="truncate text-xs text-text-muted">{r.sublabel}</span>
+              <span className={styles.sublabel}>{r.sublabel}</span>
             ) : null}
           </span>
         </span>
       ),
       value:
         r.amount != null ? (
-          <span className="text-ui font-semibold text-text">
+          <span className={styles.amount}>
             {formatAmount(r.amount, r.currency ?? "USD")}
           </span>
         ) : null,
@@ -107,12 +108,12 @@ export function SearchResults({ payload }: SearchResultsProps) {
     <Stack
       gap={3}
       aria-label={query ? `Search results for ${query}` : "Search results"}
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.results}
     >
-      <span className="text-ui text-text-muted">
+      <span className={styles.queryLine}>
         {query ? (
           <>
-            Results for <span className="font-medium text-text">{query}</span>
+            Results for <span className={styles.queryTerm}>{query}</span>
           </>
         ) : (
           "Search results"
@@ -120,7 +121,7 @@ export function SearchResults({ payload }: SearchResultsProps) {
       </span>
 
       {results.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">
+        <p className={styles.empty}>
           {query ? `No results for "${query}".` : "No results."}
         </p>
       ) : (

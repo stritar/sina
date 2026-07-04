@@ -10,6 +10,7 @@ import { Progress, Stack, SummaryList } from "@sina-design-system/core";
 import type { SummaryItem } from "@sina-design-system/core";
 
 import { formatAmount } from "../format.js";
+import styles from "./CashflowSummary.module.css";
 
 export interface CashflowSummaryProps {
   payload: unknown;
@@ -54,12 +55,12 @@ export function CashflowSummary({ payload }: CashflowSummaryProps) {
     <Stack
       gap={3}
       aria-label={`Cashflow for ${period}`}
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.card}
     >
-      <span className="text-ui font-medium text-text">{period}</span>
+      <span className={styles.period}>{period}</span>
 
       {isEmpty ? (
-        <p className="py-6 text-center text-ui text-text-muted">No cashflow this period.</p>
+        <p className={styles.empty}>No cashflow this period.</p>
       ) : (
         <Stack gap={2}>
           <SummaryList items={items} />

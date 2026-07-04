@@ -2,15 +2,16 @@ import { Icon } from "@sina-design-system/core";
 import type { IconWeight } from "@phosphor-icons/react";
 import { ShieldCheck } from "@phosphor-icons/react/dist/ssr";
 import { Demo, Matrix, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
 
 const SIZES = ["16", "20", "24", "32"] as const;
 const WEIGHTS = ["regular", "bold", "fill", "duotone"] as const;
 const COLORS = [
-  { className: "text-text", label: "text" },
-  { className: "text-danger", label: "danger" },
-  { className: "text-success", label: "success" },
-  { className: "text-warning", label: "warning" },
-  { className: "text-info", label: "info" },
+  { className: styles.textDefault, label: "text" },
+  { className: styles.textDanger, label: "danger" },
+  { className: styles.textSuccess, label: "success" },
+  { className: styles.textWarning, label: "warning" },
+  { className: styles.textInfo, label: "info" },
 ] as const;
 
 export default function IconStory() {

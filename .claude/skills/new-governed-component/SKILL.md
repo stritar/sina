@@ -41,7 +41,14 @@ re-gate must keep the block in place (the un-bypassable moment), never flip to s
    - Compose `core` primitives into the signed-off states (a small phase machine in one `DialogContent`).
    - Props: the escalated `intent`, the `violations` (for citations), and an `onSubmit…` callback that
      returns the server re-gate's decision. Never take a raw payload and validate it here.
-   - Read the intent defensively (tolerate a hostile shape). Use `core`'s on-system `Stack gap`/`Grid`.
+   - Read the intent defensively (tolerate a hostile shape). Prefer `core`'s on-system `Stack gap`/`Grid`
+     for layout so spacing stays on the token scale.
+   - **Style via a co-located `<Name>.module.css`** (Tailwind is gone) — `import styles from "./<Name>.module.css"`
+     and pass merged classes into `core` primitives via `clsx(styles.x, className)`, not Tailwind class strings.
+     Declare a per-component `--sina-<name>-*` token layer aliasing the semantic `--sina-*` tokens; **no raw
+     colors**; run `node scripts/codemod-tokens.mjs` (inject fallbacks) + `node scripts/verify-tokens.mjs`.
+     See `packages/core/CSS_TOKENS.md`. `fintech-react`'s build emits its own `dist/styles.css` (imported in
+     the app layout), so component CSS ships automatically.
 4. **a11y test** `<Name>.test.tsx` (jsdom + jest-axe; copy the `matchMedia`/`ResizeObserver` shims):
    `expect(await axe(document.body)).toHaveNoViolations()` on the open component, plus behavior tests
    for the approve → governed and deny → still-blocked paths. Assert the component never sends a hash.
@@ -68,8 +75,9 @@ re-gate must keep the block in place (the un-bypassable moment), never flip to s
 - **Apps consume `dist/`, not `src`** — rebuild `fintech`/`fintech-react` (`pnpm --filter <pkg> build`,
   or root `pnpm dev`) before verifying in the playground, else it serves stale output (see `/preview-change`).
 - **Keep the re-gate action free of the AI SDK** (its own file) so the a11y test doesn't pull `ai` into jsdom.
-- **Off-grid Tailwind utilities are silently dropped** (see [[sina-strict-tailwind-grid]]); use `core`'s
-  `gap`/`size` scales.
+- **No raw colors in `*.module.css`** — author colors as `var(--sina-color-*)` and let
+  `node scripts/codemod-tokens.mjs` inject the `#hex` fallback; `node scripts/verify-tokens.mjs` fails on a
+  raw color or a missing fallback. Keep spacing on the `var(--sina-space--*)` scale via `core`'s `gap`/`size`.
 
 ## Scaffolds
 

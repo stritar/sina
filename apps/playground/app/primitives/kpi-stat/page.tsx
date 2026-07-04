@@ -1,5 +1,6 @@
 import { KpiStat } from "@sina-design-system/core";
 import { Demo, Specimen, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
 
 export default function KpiStatStory() {
   return (
@@ -64,8 +65,8 @@ export default function KpiStatStory() {
       </Demo>
 
       <Demo label="Dark · scoped wrapper re-themes tokens locally">
-        <div className="dark w-full rounded-lg bg-bg p-4">
-          <div className="flex gap-8 rounded-lg bg-surface p-4">
+        <div className={`dark ${styles.darkFrame}`}>
+          <div className={styles.panel}>
             <KpiStat value={12500} comparisonValue={11800} comparisonLabel="vs last month" />
             <KpiStat value={9400} comparisonValue={11800} comparisonLabel="vs last month" />
           </div>

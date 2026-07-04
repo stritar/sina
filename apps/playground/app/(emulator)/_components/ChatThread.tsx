@@ -17,6 +17,7 @@ import { BlockedState } from "./BlockedState";
 import { ComparisonToggle } from "./ComparisonToggle";
 import { GovernedWireSummary } from "./GovernedWireSummary";
 import { TransportState } from "./TransportState";
+import styles from "./ChatThread.module.css";
 
 /**
  * The gate's mounted reply. A clean ungoverned pass mounts the validated
@@ -63,7 +64,7 @@ function Surface({
   onApproved?: (turnId: string, view: ConsoleView) => void;
 }) {
   return (
-    <div className="flex flex-col gap-3">
+    <div className={styles.surface}>
       {traces.map((trace, i) => (
         <GateReply key={i} trace={trace} turnId={turnId} onApproved={onApproved} />
       ))}
@@ -98,8 +99,8 @@ function AssistantReply({
 }) {
   if (view.kind === "idle") {
     return (
-      <div className="flex items-center gap-2 text-text-muted">
-        <Spinner size="sm" /> <span className="text-ui">Streaming intent…</span>
+      <div className={styles.idle}>
+        <Spinner size="sm" /> <span className={styles.idleLabel}>Streaming intent…</span>
       </div>
     );
   }
@@ -113,11 +114,7 @@ function AssistantReply({
     ) : (
       <GateReply trace={view.trace} turnId={turnId} onApproved={onApproved} />
     );
-  return (
-    <div className="motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-1">
-      {reply}
-    </div>
-  );
+  return <div className={styles.reply}>{reply}</div>;
 }
 
 export function ChatThread({
@@ -131,9 +128,9 @@ export function ChatThread({
 }) {
   if (turns.length === 0) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-2 p-6 text-center">
-        <ShieldCheck className="size-8 text-text-subtle" aria-hidden />
-        <p className="text-ui text-text-muted">
+      <div className={styles.empty}>
+        <ShieldCheck className={styles.emptyIcon} aria-hidden />
+        <p className={styles.emptyText}>
           Send a prompt or pick a scenario — every reply is governed before it mounts.
         </p>
       </div>
@@ -141,19 +138,19 @@ export function ChatThread({
   }
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className={styles.thread}>
       {turns.map((turn) => {
         // A clean ungoverned read is "validated"; escalations/blocks/wires are "governed".
         const validated = !turn.streaming && isReadReply(turn.view);
         return (
-          <div key={turn.id} className="flex flex-col gap-2">
-            <div className="flex justify-end">
-              <div className="max-w-[85%] rounded-2xl bg-secondary px-3 py-2 text-ui text-secondary-fg">
+          <div key={turn.id} className={styles.turn}>
+            <div className={styles.userRow}>
+              <div className={styles.bubble}>
                 {turn.prompt}
               </div>
             </div>
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center gap-1.5">
+            <div className={styles.assistant}>
+              <div className={styles.badgeRow}>
                 <Badge intent={validated ? "info" : "success"} size="sm" icon={ShieldCheck}>
                   {validated ? "validated by SINA" : "governed by SINA"}
                 </Badge>

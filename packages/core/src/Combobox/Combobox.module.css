@@ -1,0 +1,165 @@
+/* @sina-design-system/core — Combobox */
+
+:root {
+  --sina-combobox-bg: var(--sina-color-surface, #ffffff);
+  --sina-combobox-fg: var(--sina-color-text, #353b31);
+  --sina-combobox-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-combobox-placeholder: var(--sina-color-text-subtle, #a7ada0);
+  --sina-combobox-focus-ring: var(--sina-color-focus-ring, #545f49);
+  --sina-combobox-icon: var(--sina-color-text-muted, #52564e);
+  --sina-combobox-disabled-bg: var(--sina-color-surface-sunken, #f5f6f4);
+  --sina-combobox-disabled-fg: var(--sina-color-text-subtle, #a7ada0);
+
+  --sina-combobox-surface: var(--sina-color-surface-raised, #ffffff);
+  --sina-combobox-highlight: var(--sina-overlay--hover, color-mix(
+    in srgb,
+    #353b31 5%,
+    transparent
+  ));
+  --sina-combobox-empty: var(--sina-color-text-subtle, #a7ada0);
+  --sina-combobox-match: var(--sina-color-text, #353b31);
+  --sina-combobox-description: var(--sina-color-text-subtle, #a7ada0);
+}
+
+/* Emphasized match substring in an option label */
+.highlightMatch {
+  font-weight: var(--sina-font-weight--semibold, 600);
+  color: var(--sina-combobox-match, #353b31);
+}
+
+/* Anchor wrapper */
+.anchor {
+  position: relative;
+  width: 100%;
+}
+
+.searchIcon {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--sina-space--2_5, 0.625rem);
+  margin-block: auto;
+  width: var(--sina-size--icon-sm, 0.875rem);
+  height: var(--sina-size--icon-sm, 0.875rem);
+  color: var(--sina-combobox-icon, #52564e);
+}
+
+/* Input */
+.input {
+  height: var(--sina-space--7, 1.75rem);
+  width: 100%;
+  border-radius: var(--sina-radius--md, 6px);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-combobox-border, #edefeb);
+  background: var(--sina-combobox-bg, #ffffff);
+  padding-left: var(--sina-space--7, 1.75rem);
+  padding-right: var(--sina-space--2_5, 0.625rem);
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-combobox-fg, #353b31);
+  transition-property: color, background-color, border-color;
+  transition-duration: var(--sina-duration--fast, 120ms);
+  transition-timing-function: var(--sina-ease--standard, cubic-bezier(0.2, 0, 0, 1));
+}
+.input::placeholder {
+  color: var(--sina-combobox-placeholder, #a7ada0);
+}
+.input:focus-visible {
+  outline: none;
+  border-color: var(--sina-combobox-focus-ring, #545f49);
+  box-shadow: 0 0 0 1px var(--sina-combobox-focus-ring, #545f49);
+}
+.input:disabled {
+  cursor: not-allowed;
+  background: var(--sina-combobox-disabled-bg, #f5f6f4);
+  color: var(--sina-combobox-disabled-fg, #a7ada0);
+}
+
+/* Content */
+.content {
+  z-index: var(--sina-z--dropdown, 1000);
+  width: var(--radix-popover-trigger-width);
+  overflow: hidden;
+  border-radius: var(--sina-radius--md, 6px);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-combobox-border, #edefeb);
+  background: var(--sina-combobox-surface, #ffffff);
+  padding: var(--sina-space--1, 0.25rem);
+  box-shadow: var(--sina-shadow--md, 0 4px 8px color-mix(in srgb, #383e33 8%, transparent),
+    0 2px 4px color-mix(in srgb, #383e33 6%, transparent));
+}
+.content[data-state="open"] {
+  animation: sinaComboboxContentIn var(--sina-duration--base, 200ms) var(--sina-ease--out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.content[data-state="closed"] {
+  animation: sinaComboboxContentIn var(--sina-duration--base, 200ms) var(--sina-ease--out, cubic-bezier(0.16, 1, 0.3, 1)) reverse;
+}
+
+.list {
+  max-height: 15rem;
+  overflow: auto;
+}
+
+.empty {
+  padding-inline: var(--sina-space--2, 0.5rem);
+  padding-block: var(--sina-space--1_5, 0.375rem);
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-combobox-empty, #a7ada0);
+}
+
+/* Option */
+.option {
+  display: flex;
+  cursor: pointer;
+  user-select: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sina-space--2, 0.5rem);
+  border-radius: var(--sina-radius--sm, 4px);
+  padding-inline: var(--sina-space--2, 0.5rem);
+  padding-block: var(--sina-space--1_5, 0.375rem);
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-combobox-fg, #353b31);
+}
+.optionActive {
+  background: var(--sina-combobox-highlight, color-mix(
+    in srgb,
+    #353b31 5%,
+    transparent
+  ));
+}
+
+.optionLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--sina-combobox-fg, #353b31);
+}
+
+.optionDescription {
+  color: var(--sina-combobox-description, #a7ada0);
+}
+
+.optionCheck {
+  width: var(--sina-size--icon-sm, 0.875rem);
+  height: var(--sina-size--icon-sm, 0.875rem);
+  flex-shrink: 0;
+}
+
+/* Radix Presence waits for animationend, so both open + closed need a real
+   animation or exit won't be delayed. Reduced-motion is handled at the token
+   layer (--sina-duration--* → 0ms). */
+@keyframes sinaComboboxContentIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

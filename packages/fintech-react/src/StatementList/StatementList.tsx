@@ -11,6 +11,7 @@ import { Badge, Chart, Stack, SummaryList } from "@sina-design-system/core";
 import type { SummaryItem } from "@sina-design-system/core";
 
 import { formatAmount, formatDate } from "../format.js";
+import styles from "./StatementList.module.css";
 
 export interface StatementListProps {
   /** The server-validated `list_statements` payload. */
@@ -96,21 +97,21 @@ export function StatementList({ payload }: StatementListProps) {
     <Stack
       gap={3}
       aria-label={`Statements for ${account.label}`}
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.card}
     >
       <Stack direction="row" justify="between" align="center" gap={2}>
-        <span className="text-ui font-medium text-text">{account.label}</span>
+        <span className={styles.accountLabel}>{account.label}</span>
         {account.maskedNumber ? (
-          <span className="font-mono text-xs text-text-subtle">{account.maskedNumber}</span>
+          <span className={styles.maskedNumber}>{account.maskedNumber}</span>
         ) : null}
       </Stack>
 
       {statements.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">No statements to show.</p>
+        <p className={styles.empty}>No statements to show.</p>
       ) : (
         <>
           {statements.length > 1 ? (
-            <div className="h-12 w-full text-primary">
+            <div className={styles.chart}>
               <Chart
                 data={trend}
                 variant="area"

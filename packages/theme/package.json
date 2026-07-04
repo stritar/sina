@@ -1,10 +1,10 @@
 {
   "name": "@sina-design-system/theme",
   "version": "0.0.0",
-  "description": "SINA design tokens — Tailwind presets and foundational CSS variables. No React.",
+  "description": "SINA design tokens — foundational CSS custom properties + reset. No React, no Tailwind.",
   "license": "MIT",
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": ["*.css"],
   "publishConfig": {
     "access": "public"
   },
@@ -13,12 +13,12 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./tailwind": "./tailwind.cjs",
-    "./css": "./theme.css"
+    "./css": "./theme.css",
+    "./reset.css": "./reset.css"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist", "tailwind.cjs", "theme.css"],
+  "files": ["dist", "theme.css", "reset.css"],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",
@@ -27,17 +27,10 @@
     "test": "vitest run",
     "clean": "rimraf dist"
   },
-  "dependencies": {
-    "tailwindcss-animate": "^1.0.7"
-  },
-  "peerDependencies": {
-    "tailwindcss": "^3.4.0"
-  },
   "devDependencies": {
     "@sina-design-system/config": "workspace:*",
     "eslint": "^9.18.0",
     "rimraf": "^6.0.1",
-    "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3"
   }
 }

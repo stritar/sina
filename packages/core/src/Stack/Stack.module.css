@@ -1,0 +1,90 @@
+/* @sina-design-system/core — Stack */
+
+.root {
+  display: flex;
+}
+
+.col {
+  flex-direction: column;
+}
+.row {
+  flex-direction: row;
+}
+.wrap {
+  flex-wrap: wrap;
+}
+
+/* Gap — on-system 8-pt steps. */
+.gap0 {
+  gap: var(--sina-space--0, 0rem);
+}
+.gap1 {
+  gap: var(--sina-space--1, 0.25rem);
+}
+.gap2 {
+  gap: var(--sina-space--2, 0.5rem);
+}
+.gap3 {
+  gap: var(--sina-space--3, 0.75rem);
+}
+.gap4 {
+  gap: var(--sina-space--4, 1rem);
+}
+.gap5 {
+  gap: var(--sina-space--5, 1.25rem);
+}
+.gap6 {
+  gap: var(--sina-space--6, 1.5rem);
+}
+.gap8 {
+  gap: var(--sina-space--8, 2rem);
+}
+.gap10 {
+  gap: var(--sina-space--10, 2.5rem);
+}
+.gap12 {
+  gap: var(--sina-space--12, 3rem);
+}
+.gap16 {
+  gap: var(--sina-space--16, 4rem);
+}
+.gap20 {
+  gap: var(--sina-space--20, 5rem);
+}
+.gap24 {
+  gap: var(--sina-space--24, 6rem);
+}
+
+/* Cross-axis alignment. */
+.alignStart {
+  align-items: flex-start;
+}
+.alignCenter {
+  align-items: center;
+}
+.alignEnd {
+  align-items: flex-end;
+}
+.alignStretch {
+  align-items: stretch;
+}
+.alignBaseline {
+  align-items: baseline;
+}
+
+/* Main-axis distribution. */
+.justifyStart {
+  justify-content: flex-start;
+}
+.justifyCenter {
+  justify-content: center;
+}
+.justifyEnd {
+  justify-content: flex-end;
+}
+.justifyBetween {
+  justify-content: space-between;
+}
+.justifyAround {
+  justify-content: space-around;
+}

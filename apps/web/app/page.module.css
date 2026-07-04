@@ -1,0 +1,22 @@
+/* apps/web — marketing landing page */
+
+.main {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sina-space--4);
+  padding: var(--sina-space--12);
+}
+
+.title {
+  font-size: var(--sina-text--3xl);
+  font-weight: var(--sina-font-weight--semibold);
+  letter-spacing: var(--sina-tracking--tight);
+}
+
+.tagline {
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}

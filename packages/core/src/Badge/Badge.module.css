@@ -1,0 +1,144 @@
+/* @sina-design-system/core — Badge */
+
+:root {
+  --sina-badge-danger-bg: var(--sina-color-danger-bg, #fbeeeb);
+  --sina-badge-danger-border: var(--sina-color-danger, #c64c35);
+  --sina-badge-danger-fg: var(--sina-color-danger, #c64c35);
+
+  --sina-badge-success-bg: var(--sina-color-success-bg, #ecf5ef);
+  --sina-badge-success-border: var(--sina-color-success, #2f7a45);
+  --sina-badge-success-fg: var(--sina-color-success, #2f7a45);
+
+  --sina-badge-warning-bg: var(--sina-color-warning-bg, #faf3e6);
+  --sina-badge-warning-border: var(--sina-color-warning, #b8791f);
+  --sina-badge-warning-fg: var(--sina-color-warning, #b8791f);
+
+  --sina-badge-info-bg: var(--sina-color-info-bg, #ebf1f8);
+  --sina-badge-info-border: var(--sina-color-info, #36648f);
+  --sina-badge-info-fg: var(--sina-color-info, #36648f);
+
+  --sina-badge-neutral-bg: var(--sina-color-surface, #ffffff);
+  --sina-badge-neutral-border: var(--sina-color-border, #dde0d9);
+  --sina-badge-neutral-fg: var(--sina-color-text-muted, #52564e);
+
+  --sina-badge-focus-ring: var(--sina-color-focus-ring, #545f49);
+}
+
+.root {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  border-radius: var(--sina-radius--full, 9999px);
+  border-width: var(--sina-border-width--1, 1px);
+  border-style: solid;
+  border-color: transparent;
+}
+
+/* Subtle tint: tinted bg + 40% intent border + intent text. */
+.danger {
+  border-color: color-mix(in srgb, var(--sina-badge-danger-border, #c64c35) 40%, transparent);
+  background: var(--sina-badge-danger-bg, #fbeeeb);
+  color: var(--sina-badge-danger-fg, #c64c35);
+}
+.success {
+  border-color: color-mix(in srgb, var(--sina-badge-success-border, #2f7a45) 40%, transparent);
+  background: var(--sina-badge-success-bg, #ecf5ef);
+  color: var(--sina-badge-success-fg, #2f7a45);
+}
+.warning {
+  border-color: color-mix(in srgb, var(--sina-badge-warning-border, #b8791f) 40%, transparent);
+  background: var(--sina-badge-warning-bg, #faf3e6);
+  color: var(--sina-badge-warning-fg, #b8791f);
+}
+.info {
+  border-color: color-mix(in srgb, var(--sina-badge-info-border, #36648f) 40%, transparent);
+  background: var(--sina-badge-info-bg, #ebf1f8);
+  color: var(--sina-badge-info-fg, #36648f);
+}
+.neutral {
+  border-color: var(--sina-badge-neutral-border, #dde0d9);
+  background: var(--sina-badge-neutral-bg, #ffffff);
+  color: var(--sina-badge-neutral-fg, #52564e);
+}
+
+/* Sizes — outer padding only; the rest rides on the label. Weight scales with
+   size: sm reads as body text, md leans in. */
+.sm {
+  padding-inline: var(--sina-space--1, 0.25rem);
+  padding-block: var(--sina-space--0_5, 0.125rem);
+  font-size: var(--sina-text--xs, 0.75rem);
+  font-weight: var(--sina-font-weight--regular, 400);
+}
+.md {
+  padding-inline: var(--sina-space--1, 0.25rem);
+  padding-block: var(--sina-space--1, 0.25rem);
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium, 500);
+}
+
+/* Label padding replaces the old flex gap (see Badge.tsx). */
+.label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.labelSm {
+  padding-inline: var(--sina-space--1, 0.25rem);
+}
+.labelMd {
+  padding-inline: var(--sina-space--1_5, 0.375rem);
+}
+
+/* Leading glyph / dot slot — sized square, centered. */
+.slot {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+.icon {
+  flex-shrink: 0;
+}
+
+.dot {
+  width: var(--sina-space--1_5, 0.375rem);
+  height: var(--sina-space--1_5, 0.375rem);
+  border-radius: var(--sina-radius--full, 9999px);
+  background: currentColor;
+}
+
+/* Glyphs (leading icon + close) scale with the pill. */
+.glyphSm {
+  width: var(--sina-space--3, 0.75rem);
+  height: var(--sina-space--3, 0.75rem);
+}
+.glyphMd {
+  width: var(--sina-size--icon-sm, 0.875rem);
+  height: var(--sina-size--icon-sm, 0.875rem);
+}
+
+/* Trailing dismiss button — inherits the pill's text color; hover adds a faint
+   tint for affordance instead of dimming. */
+.close {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sina-radius--full, 9999px);
+  transition-property: background-color, color;
+  transition-duration: var(--sina-duration--fast, 120ms);
+  transition-timing-function: var(--sina-ease--standard, cubic-bezier(0.2, 0, 0, 1));
+}
+.close:hover:not(:disabled) {
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+.close:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sina-badge-focus-ring, #545f49);
+}
+.closeIcon {
+  width: 100%;
+  height: 100%;
+}

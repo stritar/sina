@@ -2,6 +2,7 @@
 
 import { LineChart } from "@sina-design-system/core";
 import { Demo, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
 
@@ -35,7 +36,7 @@ export default function LineChartStory() {
           data={TWO_SERIES}
           showLegend
           label="Inflow and outflow over six months, both trending up"
-          className="h-[280px]"
+          className={styles.chart280}
         />
       </Demo>
 
@@ -48,7 +49,7 @@ export default function LineChartStory() {
           yAxisLabel="Amount"
           valueFormatter={(v) => `$${v.toLocaleString("en-US")}`}
           label="Inflow and outflow as filled areas with formatted dollar values"
-          className="h-[280px]"
+          className={styles.chart280}
         />
       </Demo>
 
@@ -57,7 +58,7 @@ export default function LineChartStory() {
           data={NINE_SERIES}
           showLegend
           label="Nine series demonstrating the categorical palette order"
-          className="h-[320px]"
+          className={styles.chart320}
         />
       </Demo>
 
@@ -66,18 +67,18 @@ export default function LineChartStory() {
           data={WIDE_RANGE}
           showLogarithmicScale
           label="Volume spanning four orders of magnitude on a log scale"
-          className="h-[240px]"
+          className={styles.chart240}
         />
       </Demo>
 
       <Demo label="Dark · scoped wrapper re-themes tokens locally">
-        <div className="dark w-full rounded-lg bg-bg p-4">
-          <div className="rounded-lg bg-surface p-4">
+        <div className={`dark ${styles.darkFrame}`}>
+          <div className={styles.panel}>
             <LineChart
               data={TWO_SERIES}
               showLegend
               label="Inflow and outflow, dark theme"
-              className="h-[240px]"
+              className={styles.chart240}
             />
           </div>
         </div>
@@ -87,7 +88,7 @@ export default function LineChartStory() {
         <LineChart
           data={{ labels: [], datasets: [] }}
           label="No data available"
-          className="h-[160px]"
+          className={styles.chart160}
         />
       </Demo>
     </StoryShell>

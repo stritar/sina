@@ -14,6 +14,7 @@
 
 import type { CSSProperties } from "react";
 import { cn } from "../utils/cn.js";
+import styles from "./Chart.module.css";
 
 export type ChartVariant = "line" | "area" | "bar";
 
@@ -69,7 +70,7 @@ export function Chart({
     <span
       role="img"
       aria-label={label}
-      className={cn("inline-block text-primary", className)}
+      className={cn(styles.root, className)}
       style={style}
     >
       <svg
@@ -77,7 +78,7 @@ export function Chart({
         preserveAspectRatio="none"
         aria-hidden="true"
         focusable="false"
-        className="h-full w-full overflow-visible"
+        className={styles.svg}
       >
         {coords.length === 0 ? (
           <line

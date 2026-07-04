@@ -1,0 +1,96 @@
+/* Stack story — co-located styles (no Tailwind). */
+
+.column {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: var(--sina-space--4);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--2);
+}
+
+.label {
+  font-family: var(--sina-font--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: var(--sina-tracking--wide);
+  color: var(--sina-color-text-subtle);
+}
+
+/* Box (base demo block). Passed-in override classes are appended after, so
+   .boxNarrow below must follow .box to win the width on equal specificity. */
+.box {
+  height: var(--sina-space--7);
+  width: 10rem;
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-surface-raised);
+}
+
+.boxNarrow {
+  width: var(--sina-space--24);
+}
+
+/* Frames wrapping the align / justify / wrap demos. */
+.alignFrame {
+  height: var(--sina-space--16);
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-bg);
+  padding: var(--sina-space--2);
+}
+
+.justifyFrame {
+  width: 100%;
+  border-radius: var(--sina-radius--md);
+  border: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+  background: var(--sina-color-bg);
+  padding: var(--sina-space--2);
+}
+
+.wrapFrame {
+  width: 20rem;
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-bg);
+  padding: var(--sina-space--2);
+}
+
+.noWrapFrame {
+  width: 20rem;
+  overflow: hidden;
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-bg);
+  padding: var(--sina-space--2);
+}
+
+/* Demo chips — composed with modifier classes. */
+.chip {
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-surface-raised);
+}
+
+.chipShort {
+  height: var(--sina-space--7);
+}
+
+.chipTall {
+  height: var(--sina-space--12);
+}
+
+.chipMid {
+  height: 2.25rem;
+}
+
+.wide16 {
+  width: var(--sina-space--16);
+}
+
+.wide24 {
+  width: var(--sina-space--24);
+}
+
+.fixed {
+  flex-shrink: 0;
+}

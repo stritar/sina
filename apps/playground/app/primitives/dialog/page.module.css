@@ -1,0 +1,48 @@
+/* Playground — Dialog story */
+
+.sm {
+  max-width: 24rem;
+}
+.md {
+  max-width: 28rem;
+}
+.lg {
+  max-width: 32rem;
+}
+.actionsGap {
+  margin-top: var(--sina-space--2);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--sina-space--3);
+}
+.actions {
+  margin-top: var(--sina-space--2);
+  display: flex;
+  justify-content: flex-end;
+}
+.actionsMt3 {
+  margin-top: var(--sina-space--3);
+  display: flex;
+  justify-content: flex-end;
+}
+.scroll {
+  margin-top: var(--sina-space--3);
+  height: var(--sina-space--24);
+  border-radius: var(--sina-radius--md);
+  border: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+}
+.scrollBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--3);
+  padding: var(--sina-space--3);
+}
+.para {
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}
+.state {
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-subtle);
+}

@@ -13,6 +13,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Chart, Stack } from "@sina-design-system/core";
 
 import { formatAmount } from "../format.js";
+import styles from "./BalanceTrend.module.css";
 
 export interface BalanceTrendProps {
   /** The server-validated `balance_trend` payload. */
@@ -67,24 +68,24 @@ export function BalanceTrend({ payload }: BalanceTrendProps) {
     <Stack
       gap={3}
       aria-label={`Balance trend for ${account.label}`}
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.card}
     >
       <Stack direction="row" justify="between" align="center" gap={2}>
-        <span className="text-ui font-medium text-text">{account.label}</span>
+        <span className={styles.accountLabel}>{account.label}</span>
         {account.maskedNumber ? (
-          <span className="font-mono text-xs text-text-subtle">{account.maskedNumber}</span>
+          <span className={styles.maskedNumber}>{account.maskedNumber}</span>
         ) : null}
       </Stack>
 
       {latest ? (
-        <span className="text-2xl font-semibold text-text">
+        <span className={styles.balance}>
           {formatAmount(latest.balance, currency)}
         </span>
       ) : (
-        <p className="text-ui text-text-muted">No trend data</p>
+        <p className={styles.empty}>No trend data</p>
       )}
 
-      <div className="h-16 w-full text-primary">
+      <div className={styles.chart}>
         <Chart data={points.map((point) => point.balance)} label={`Balance trend, ${points.length} points`} />
       </div>
     </Stack>

@@ -9,6 +9,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack } from "@sina-design-system/core";
 
 import { formatDate, readPayeeList } from "../format.js";
+import styles from "./PayeeList.module.css";
 
 export interface PayeeListProps {
   payload: unknown;
@@ -19,15 +20,11 @@ export function PayeeList({ payload }: PayeeListProps) {
   const payees = readPayeeList(payload);
 
   return (
-    <Stack
-      gap={3}
-      aria-label="Payees"
-      className="rounded-lg border border-border-subtle bg-surface p-3"
-    >
+    <Stack gap={3} aria-label="Payees" className={styles.card}>
       {payees.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">No payees to show.</p>
+        <p className={styles.empty}>No payees to show.</p>
       ) : (
-        <Stack as="ul" gap={0} className="divide-y divide-border-subtle">
+        <Stack as="ul" gap={0} className={styles.list}>
           {payees.map((p) => (
             <Stack
               as="li"
@@ -36,18 +33,18 @@ export function PayeeList({ payload }: PayeeListProps) {
               justify="between"
               align="center"
               gap={3}
-              className="py-2"
+              className={styles.row}
             >
-              <span className="flex min-w-0 flex-col">
-                <span className="truncate text-ui font-medium text-text">{p.name}</span>
-                <span className="font-mono text-xs text-text-subtle">{p.maskedNumber}</span>
+              <span className={styles.info}>
+                <span className={styles.name}>{p.name}</span>
+                <span className={styles.masked}>{p.maskedNumber}</span>
               </span>
-              <span className="flex shrink-0 flex-col items-end gap-0.5">
+              <span className={styles.meta}>
                 <Badge intent={p.verified ? "success" : "neutral"} size="sm">
                   {p.verified ? "verified" : "unverified"}
                 </Badge>
                 {p.lastPaidAt ? (
-                  <span className="text-xs text-text-subtle">last {formatDate(p.lastPaidAt)}</span>
+                  <span className={styles.lastPaid}>last {formatDate(p.lastPaidAt)}</span>
                 ) : null}
               </span>
             </Stack>

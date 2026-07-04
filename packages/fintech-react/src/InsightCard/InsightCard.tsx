@@ -11,6 +11,8 @@
 import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Alert, Badge, Stack } from "@sina-design-system/core";
 
+import styles from "./InsightCard.module.css";
+
 type Tone = "info" | "positive" | "caution";
 
 /** Tone → core intent token (shared by the Alert variant and the metric Badge). */
@@ -68,7 +70,7 @@ export function InsightCard({ payload }: InsightCardProps) {
   return (
     <Stack aria-label="Insight">
       {!hasContent ? (
-        <p className="py-6 text-center text-ui text-text-muted">No insight to show.</p>
+        <p className={styles.empty}>No insight to show.</p>
       ) : (
         <Alert variant={intent} title={insight.title || undefined}>
           <Stack gap={2}>
@@ -76,7 +78,7 @@ export function InsightCard({ payload }: InsightCardProps) {
             {insight.metricValue ? (
               <Stack direction="row" align="center" gap={2}>
                 {insight.metricLabel ? (
-                  <span className="text-xs text-text-muted">{insight.metricLabel}</span>
+                  <span className={styles.metricLabel}>{insight.metricLabel}</span>
                 ) : null}
                 <Badge intent={intent} size="sm">
                   {insight.metricValue}

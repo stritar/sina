@@ -9,6 +9,7 @@ import type { GateTrace } from "../_lib/gate";
 import type { Violation } from "@sina-design-system/governance";
 import type { ConsoleView } from "../_lib/types";
 import { resolveGovernedComponent } from "../_lib/registry";
+import styles from "./BlockedState.module.css";
 
 function severityIntent(severity: Violation["severity"]): "danger" | "warning" | "neutral" {
   if (severity === "reject" || severity === "escalate") return "danger";
@@ -31,32 +32,32 @@ export function BlockedState({
   const Governed = resolveGovernedComponent(trace.result.requiredComponent);
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-danger/40 bg-surface p-3">
+    <div className={styles.root}>
       <Alert variant="danger" title="Stream intercepted">
         SINA blocked the raw render — the payload violated the constitution.
       </Alert>
 
-      <div className="flex flex-col gap-2">
+      <div className={styles.violations}>
         {blocking.map((violation, i) => (
-          <div key={i} className="flex flex-col gap-1">
-            <div className="flex items-center gap-1.5">
+          <div key={i} className={styles.violation}>
+            <div className={styles.violationHead}>
               <Badge intent={severityIntent(violation.severity)} size="sm">
-                <span className="font-mono">{violation.severity}</span>
+                <span className={styles.mono}>{violation.severity}</span>
               </Badge>
-              <span className="text-ui text-text">{violation.message}</span>
+              <span className={styles.message}>{violation.message}</span>
             </div>
             {violation.standard && (
-              <span className="pl-1 font-mono text-xs text-text-subtle">{violation.standard}</span>
+              <span className={styles.standard}>{violation.standard}</span>
             )}
           </div>
         ))}
       </div>
 
       {Governed && (
-        <div className="flex items-center justify-between gap-3 rounded-md bg-surface-secure p-2.5">
-          <span className="text-ui text-text-muted">
+        <div className={styles.governedRow}>
+          <span className={styles.governedLabel}>
             Forced governed component:{" "}
-            <span className="font-mono text-text">{trace.result.requiredComponent}</span>
+            <span className={styles.governedName}>{trace.result.requiredComponent}</span>
           </span>
           <Governed trace={trace} turnId={turnId} onApproved={onApproved} />
         </div>

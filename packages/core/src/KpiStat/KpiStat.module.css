@@ -1,0 +1,82 @@
+/* @sina-design-system/core — KpiStat */
+
+:root {
+  --sina-kpi-stat-value: var(--sina-color-text, #353b31);
+  --sina-kpi-stat-good-bg: var(--sina-color-success-bg, #ecf5ef);
+  --sina-kpi-stat-good-fg: var(--sina-color-success, #2f7a45);
+  --sina-kpi-stat-bad-bg: var(--sina-color-danger-bg, #fbeeeb);
+  --sina-kpi-stat-bad-fg: var(--sina-color-danger, #c64c35);
+  --sina-kpi-stat-neutral-bg: var(--sina-color-secondary, #e5e7e2);
+  --sina-kpi-stat-neutral-fg: var(--sina-color-text-muted, #52564e);
+  --sina-kpi-stat-comparison-fg: var(--sina-color-text-muted, #52564e);
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--1, 0.25rem);
+}
+
+/* The headline number. Size chosen per `size` prop below. */
+.value {
+  font-weight: var(--sina-font-weight--medium, 500);
+  line-height: var(--sina-leading--tight, 1.1);
+  letter-spacing: var(--sina-tracking--tight, -0.01em);
+  color: var(--sina-kpi-stat-value, #353b31);
+}
+
+.sizeSm {
+  font-size: var(--sina-text--2xl, 1.5rem);
+}
+.sizeMd {
+  font-size: var(--sina-text--3xl, 1.875rem);
+}
+.sizeLg {
+  font-size: var(--sina-text--5xl, 2.5rem);
+}
+
+.pillRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--2, 0.5rem);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sina-space--1, 0.25rem);
+  border-radius: var(--sina-radius--full, 9999px);
+  padding-inline: var(--sina-space--2, 0.5rem);
+  padding-block: var(--sina-space--0_5, 0.125rem);
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium, 500);
+}
+
+/* Rising is "good" by default; direction flips with invertChangeColors in JS. */
+.pillGood {
+  background: var(--sina-kpi-stat-good-bg, #ecf5ef);
+  color: var(--sina-kpi-stat-good-fg, #2f7a45);
+}
+.pillBad {
+  background: var(--sina-kpi-stat-bad-bg, #fbeeeb);
+  color: var(--sina-kpi-stat-bad-fg, #c64c35);
+}
+.pillNeutral {
+  background: var(--sina-kpi-stat-neutral-bg, #e5e7e2);
+  color: var(--sina-kpi-stat-neutral-fg, #52564e);
+}
+
+.trendIcon {
+  width: var(--sina-space--3, 0.75rem);
+  height: var(--sina-space--3, 0.75rem);
+  flex-shrink: 0;
+}
+
+.comparisonLabel {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-kpi-stat-comparison-fg, #52564e);
+}

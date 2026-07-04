@@ -11,6 +11,7 @@ import { useState, type ReactNode } from "react";
 import { Button } from "@sina-design-system/core";
 import { Warning } from "@phosphor-icons/react/dist/ssr";
 import { formatAmount } from "../_lib/format";
+import styles from "./ComparisonToggle.module.css";
 
 function UngovernedConfirm({ payload }: { payload: unknown }) {
   const wire = (payload ?? {}) as Record<string, unknown>;
@@ -22,16 +23,16 @@ function UngovernedConfirm({ payload }: { payload: unknown }) {
       : undefined;
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-danger/40 bg-danger-bg p-3">
-      <div className="flex items-center gap-1.5">
-        <Warning className="size-control-2xs text-danger" aria-hidden />
-        <span className="font-mono text-xs text-danger">ungoverned · no gate ran</span>
+    <div className={styles.confirmRoot}>
+      <div className={styles.confirmHeader}>
+        <Warning className={styles.confirmIcon} aria-hidden />
+        <span className={styles.confirmTag}>ungoverned · no gate ran</span>
       </div>
-      <p className="text-ui text-text">
-        Wire <span className="font-medium">{formatAmount(amount, currency)}</span>
+      <p className={styles.confirmText}>
+        Wire <span className={styles.emphasis}>{formatAmount(amount, currency)}</span>
         {creditor ? ` to ${creditor}` : ""}?
       </p>
-      <div className="flex justify-end">
+      <div className={styles.confirmActions}>
         {/* The raw, hallucination-trusting button a normal app would have mounted. */}
         <Button variant="danger" size="sm">
           Confirm transfer
@@ -40,9 +41,6 @@ function UngovernedConfirm({ payload }: { payload: unknown }) {
     </div>
   );
 }
-
-const TRACK = "inline-flex rounded-md bg-surface-sunken p-0.5";
-const TAB = "rounded-sm px-2 py-0.5 font-mono text-xs transition-colors duration-fast ease-standard";
 
 export function ComparisonToggle({
   payload,
@@ -54,13 +52,15 @@ export function ComparisonToggle({
   const [view, setView] = useState<"sina" | "ungoverned">("sina");
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className={TRACK} role="group" aria-label="Compare governed vs ungoverned">
+    <div className={styles.root}>
+      <div className={styles.track} role="group" aria-label="Compare governed vs ungoverned">
         <button
           type="button"
           onClick={() => setView("sina")}
           aria-pressed={view === "sina"}
-          className={`${TAB} ${view === "sina" ? "bg-surface text-text shadow-xs" : "text-text-muted"}`}
+          className={[styles.tab, view === "sina" ? styles.tabActiveSina : styles.tabInactive]
+            .filter(Boolean)
+            .join(" ")}
         >
           SINA (governed)
         </button>
@@ -68,9 +68,12 @@ export function ComparisonToggle({
           type="button"
           onClick={() => setView("ungoverned")}
           aria-pressed={view === "ungoverned"}
-          className={`${TAB} ${
-            view === "ungoverned" ? "bg-surface text-danger shadow-xs" : "text-text-muted"
-          }`}
+          className={[
+            styles.tab,
+            view === "ungoverned" ? styles.tabActiveUngoverned : styles.tabInactive,
+          ]
+            .filter(Boolean)
+            .join(" ")}
         >
           Ungoverned
         </button>

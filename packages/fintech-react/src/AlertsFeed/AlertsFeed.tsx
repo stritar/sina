@@ -9,6 +9,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack } from "@sina-design-system/core";
 
 import { formatDate } from "../format.js";
+import styles from "./AlertsFeed.module.css";
 
 export interface AlertsFeedProps {
   payload: unknown;
@@ -65,12 +66,12 @@ export function AlertsFeed({ payload }: AlertsFeedProps) {
     <Stack
       gap={3}
       aria-label="Alerts"
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.feed}
     >
       {alerts.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">No alerts.</p>
+        <p className={styles.empty}>No alerts.</p>
       ) : (
-        <Stack as="ul" gap={0} aria-label="Alerts" className="divide-y divide-border-subtle">
+        <Stack as="ul" gap={0} aria-label="Alerts" className={styles.list}>
           {alerts.map((a) => {
             const intent = BADGE_INTENT[a.severity];
             return (
@@ -81,20 +82,20 @@ export function AlertsFeed({ payload }: AlertsFeedProps) {
                 justify="between"
                 align="start"
                 gap={3}
-                className="py-2"
+                className={styles.row}
               >
-                <span className="flex min-w-0 flex-col gap-1">
-                  <span className="flex min-w-0 items-center gap-2">
+                <span className={styles.rowMain}>
+                  <span className={styles.rowHead}>
                     <Badge intent={intent} size="sm">
                       {a.severity}
                     </Badge>
-                    <span className="truncate text-ui font-medium text-text">{a.title}</span>
+                    <span className={styles.title}>{a.title}</span>
                   </span>
                   {a.body ? (
-                    <span className="truncate text-xs text-text-muted">{a.body}</span>
+                    <span className={styles.body}>{a.body}</span>
                   ) : null}
                 </span>
-                <span className="shrink-0 text-xs text-text-muted">{formatDate(a.at)}</span>
+                <span className={styles.date}>{formatDate(a.at)}</span>
               </Stack>
             );
           })}

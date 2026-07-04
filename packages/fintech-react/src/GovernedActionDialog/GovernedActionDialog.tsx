@@ -37,6 +37,7 @@ import {
 import type { Violation } from "@sina-design-system/governance";
 
 import { deriveActionTerms } from "../format.js";
+import styles from "./GovernedActionDialog.module.css";
 
 /** What the authorizer contributes. The initiator identity is server-known, never here. */
 export interface GovernedActionEvidence {
@@ -133,7 +134,7 @@ export function GovernedActionDialog({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="sm" iconLeft={<Lock className="size-control-2xs" />}>
+        <Button variant="secondary" size="sm" iconLeft={<Lock className={styles.icon} />}>
           {triggerLabel}
         </Button>
       </DialogTrigger>
@@ -142,7 +143,7 @@ export function GovernedActionDialog({
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>{description}</DialogDescription>
 
-        <Stack direction="col" gap={3} className="mt-3">
+        <Stack direction="col" gap={3} className={styles.body}>
           <SummaryList items={terms} />
 
           {phase === "review" && (
@@ -151,9 +152,9 @@ export function GovernedActionDialog({
                 {blocking.length > 0 ? (
                   <Stack direction="col" gap={2} as="ul">
                     {blocking.map((v, i) => (
-                      <li key={i} className="flex items-center gap-1.5">
+                      <li key={i} className={styles.violationRow}>
                         <Badge intent="danger" size="sm">
-                          <span className="font-mono">{v.severity}</span>
+                          <span className={styles.severity}>{v.severity}</span>
                         </Badge>
                         <span>{v.message}</span>
                       </li>
@@ -202,14 +203,14 @@ export function GovernedActionDialog({
           {phase === "pending" && (
             <>
               <Stack direction="col" gap={2}>
-                <span className="text-ui font-medium text-text">Authorizer second factor</span>
+                <span className={styles.fieldLabel}>Authorizer second factor</span>
                 <CredentialOTP
                   length={OTP_LENGTH}
                   value={secondFactor}
                   onChange={setSecondFactor}
                   aria-label="Authorizer one-time code"
                 />
-                <span className="text-xs text-text-subtle">
+                <span className={styles.hint}>
                   Authorizing binds to the exact terms above; SINA re-verifies server-side.
                 </span>
               </Stack>
@@ -277,5 +278,5 @@ export function GovernedActionDialog({
 }
 
 function Footer({ children }: { children: ReactNode }) {
-  return <div className="mt-1 flex items-center justify-end gap-2">{children}</div>;
+  return <div className={styles.footer}>{children}</div>;
 }

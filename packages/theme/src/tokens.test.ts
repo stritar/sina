@@ -6,33 +6,15 @@ const read = (rel: string) =>
   readFileSync(fileURLToPath(new URL(`../${rel}`, import.meta.url)), "utf8");
 
 const themeCss = read("theme.css");
-const tailwindPreset = read("tailwind.cjs");
 
 /** Every `--sina-*` custom property declared in theme.css (`--sina-x: value;`). */
 const declaredVars = new Set(
   [...themeCss.matchAll(/(--sina-[\w-]+)\s*:/g)].map((m) => m[1]),
 );
 
-/** Every `--sina-*` variable referenced by the Tailwind preset. */
-const referencedVars = [
-  ...tailwindPreset.matchAll(/var\((--sina-[\w-]+)/g),
-].map((m) => m[1]);
-
-describe("token drift — css ↔ tailwind preset", () => {
+describe("token set", () => {
   it("declares at least the full token set", () => {
     expect(declaredVars.size).toBeGreaterThan(80);
-  });
-
-  it("every var the Tailwind preset references is declared in theme.css", () => {
-    const missing = [...new Set(referencedVars)].filter(
-      (name) => !declaredVars.has(name),
-    );
-    expect(missing).toEqual([]);
-  });
-
-  it("the preset overrides Tailwind defaults (strict, not extend-only)", () => {
-    // colors/spacing/etc. live at theme root, not under theme.extend.
-    expect(tailwindPreset).toMatch(/theme:\s*{[\s\S]*colors:/);
   });
 });
 

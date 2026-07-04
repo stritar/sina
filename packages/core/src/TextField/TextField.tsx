@@ -12,16 +12,11 @@ import { forwardRef } from "react";
 import type { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from "react";
 import { Field } from "../Field/Field.js";
 import { cn } from "../utils/cn.js";
+import styles from "./TextField.module.css";
 
 // Attached focus: the border brightens + a faint 1px ring, instead of a
 // detached 2px offset halo — reads as "anchored", not floating.
-const CONTROL = cn(
-  "w-full rounded-md border border-border-subtle bg-surface text-ui text-text",
-  "placeholder:text-text-subtle transition-colors duration-fast ease-standard",
-  "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
-  "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",
-  "aria-[invalid=true]:border-danger",
-);
+const CONTROL = styles.control;
 
 /**
  * The bare control. A separate forwardRef component so `Field` can `cloneElement`
@@ -40,7 +35,7 @@ const TextControl = forwardRef<HTMLInputElement | HTMLTextAreaElement, ControlPr
         <textarea
           ref={ref as React.Ref<HTMLTextAreaElement>}
           rows={rows}
-          className={cn(CONTROL, "min-h-16 resize-y px-2.5 py-1.5", className)}
+          className={cn(CONTROL, styles.textarea, className)}
           {...rest}
         />
       );
@@ -50,7 +45,7 @@ const TextControl = forwardRef<HTMLInputElement | HTMLTextAreaElement, ControlPr
       <input
         ref={ref as React.Ref<HTMLInputElement>}
         type="text"
-        className={cn(CONTROL, "h-7 px-2.5", className)}
+        className={cn(CONTROL, styles.input, className)}
         {...rest}
       />
     );

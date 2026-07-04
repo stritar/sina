@@ -14,11 +14,11 @@ describe("KpiStat", () => {
 
   it("shows a good trend pill for a rise and a bad one for a fall", () => {
     const { container: up } = render(<KpiStat value={120} comparisonValue={100} />);
-    const upPill = up.querySelector(".bg-success-bg");
+    const upPill = up.querySelector(".pillGood");
     expect(upPill?.textContent).toContain("+20");
 
     const { container: down } = render(<KpiStat value={80} comparisonValue={100} />);
-    const downPill = down.querySelector(".bg-danger-bg");
+    const downPill = down.querySelector(".pillBad");
     expect(downPill?.textContent).toContain("-20");
   });
 
@@ -31,8 +31,8 @@ describe("KpiStat", () => {
 
   it("inverts good/bad when invertChangeColors is set (down is good)", () => {
     const { container } = render(<KpiStat value={80} comparisonValue={100} invertChangeColors />);
-    expect(container.querySelector(".bg-success-bg")?.textContent).toContain("-20");
-    expect(container.querySelector(".bg-danger-bg")).toBeNull();
+    expect(container.querySelector(".pillGood")?.textContent).toContain("-20");
+    expect(container.querySelector(".pillBad")).toBeNull();
   });
 
   it("handles no-change, no-baseline, and null values", () => {
@@ -46,7 +46,7 @@ describe("KpiStat", () => {
 
     const { container: nul } = render(<KpiStat value={null} comparisonValue={5} />);
     expect(nul.textContent).toContain("—");
-    expect(nul.querySelector(".bg-success-bg")).toBeNull();
+    expect(nul.querySelector(".pillGood")).toBeNull();
   });
 
   it("shows the comparison label beside the pill", () => {

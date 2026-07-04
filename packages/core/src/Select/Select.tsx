@@ -18,6 +18,7 @@ import { CheckFatIcon, CaretDown } from "@phosphor-icons/react/dist/ssr";
 import { forwardRef } from "react";
 import type { ComponentPropsWithoutRef, ComponentRef } from "react";
 import { cn } from "../utils/cn.js";
+import styles from "./Select.module.css";
 
 export const Select = Primitive.Root;
 export const SelectValue = Primitive.Value;
@@ -27,20 +28,10 @@ export const SelectTrigger = forwardRef<
   ComponentRef<typeof Primitive.Trigger>,
   ComponentPropsWithoutRef<typeof Primitive.Trigger>
 >(({ className, children, ...props }, ref) => (
-  <Primitive.Trigger
-    ref={ref}
-    className={cn(
-      "inline-flex h-7 w-full items-center justify-between gap-1.5 rounded-md border border-border-subtle bg-surface px-2.5 text-ui text-text",
-      "data-[placeholder]:text-text-subtle transition-colors duration-fast ease-standard",
-      "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
-      "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",
-      className,
-    )}
-    {...props}
-  >
+  <Primitive.Trigger ref={ref} className={cn(styles.trigger, className)} {...props}>
     {children}
     <Primitive.Icon asChild>
-      <CaretDown aria-hidden weight="bold" className="size-control-2xs text-text-muted" />
+      <CaretDown aria-hidden weight="bold" className={styles.triggerIcon} />
     </Primitive.Icon>
   </Primitive.Trigger>
 ));
@@ -54,16 +45,11 @@ export const SelectContent = forwardRef<
     <Primitive.Content
       ref={ref}
       position={position}
-      className={cn(
-        "z-dropdown overflow-hidden rounded-md border border-border-subtle bg-surface-raised shadow-md",
-        "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
-        "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
-        className,
-      )}
+      className={cn(styles.content, className)}
       {...props}
     >
       <Primitive.Viewport
-        className={cn("p-1", position === "popper" && "w-[var(--radix-select-trigger-width)]")}
+        className={cn(styles.viewport, position === "popper" && styles.viewportPopper)}
       >
         {children}
       </Primitive.Viewport>
@@ -76,19 +62,10 @@ export const SelectItem = forwardRef<
   ComponentRef<typeof Primitive.Item>,
   ComponentPropsWithoutRef<typeof Primitive.Item>
 >(({ className, children, ...props }, ref) => (
-  <Primitive.Item
-    ref={ref}
-    className={cn(
-      "relative flex cursor-pointer select-none items-center gap-1.5 rounded-sm py-1.5 pl-6 pr-2 text-ui text-text outline-none",
-      "data-[highlighted]:bg-hover data-[state=checked]:font-medium",
-      "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      className,
-    )}
-    {...props}
-  >
-    <span className="absolute inset-y-0 left-1.5 inline-flex items-center">
+  <Primitive.Item ref={ref} className={cn(styles.item, className)} {...props}>
+    <span className={styles.itemIndicator}>
       <Primitive.ItemIndicator>
-        <CheckFatIcon aria-hidden weight="fill" className="size-control-2xs shrink-0" />
+        <CheckFatIcon aria-hidden weight="fill" className={styles.itemIndicatorIcon} />
       </Primitive.ItemIndicator>
     </span>
     <Primitive.ItemText>{children}</Primitive.ItemText>
@@ -100,11 +77,7 @@ export const SelectLabel = forwardRef<
   ComponentRef<typeof Primitive.Label>,
   ComponentPropsWithoutRef<typeof Primitive.Label>
 >(({ className, ...props }, ref) => (
-  <Primitive.Label
-    ref={ref}
-    className={cn("px-2 py-1 text-xs font-medium text-text-muted", className)}
-    {...props}
-  />
+  <Primitive.Label ref={ref} className={cn(styles.label, className)} {...props} />
 ));
 SelectLabel.displayName = "SelectLabel";
 
@@ -112,6 +85,6 @@ export const SelectSeparator = forwardRef<
   ComponentRef<typeof Primitive.Separator>,
   ComponentPropsWithoutRef<typeof Primitive.Separator>
 >(({ className, ...props }, ref) => (
-  <Primitive.Separator ref={ref} className={cn("-mx-1 my-1 h-px bg-border-subtle", className)} {...props} />
+  <Primitive.Separator ref={ref} className={cn(styles.separator, className)} {...props} />
 ));
 SelectSeparator.displayName = "SelectSeparator";

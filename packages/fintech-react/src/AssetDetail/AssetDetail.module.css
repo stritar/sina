@@ -1,0 +1,28 @@
+/* @sina-design-system/fintech-react — AssetDetail */
+
+:root {
+  --sina-asset-detail-surface: var(--sina-color-surface, #ffffff);
+  --sina-asset-detail-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-asset-detail-text-muted: var(--sina-color-text-muted, #52564e);
+  --sina-asset-detail-chart: var(--sina-color-primary, #353b31);
+}
+
+.root {
+  border: var(--sina-border-width--1, 1px) solid var(--sina-asset-detail-border, #edefeb);
+  border-radius: var(--sina-radius--lg, 8px);
+  background: var(--sina-asset-detail-surface, #ffffff);
+  padding: var(--sina-space--3, 0.75rem);
+}
+
+.chart {
+  width: 100%;
+  height: var(--sina-space--12, 3rem);
+  color: var(--sina-asset-detail-chart, #353b31);
+}
+
+.empty {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-asset-detail-text-muted, #52564e);
+}

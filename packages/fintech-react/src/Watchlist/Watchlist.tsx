@@ -8,6 +8,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack } from "@sina-design-system/core";
 
 import { formatAmount, formatPct, readWatchlist } from "../format.js";
+import styles from "./Watchlist.module.css";
 
 export interface WatchlistProps {
   payload: unknown;
@@ -18,15 +19,11 @@ export function Watchlist({ payload }: WatchlistProps) {
   const items = readWatchlist(payload);
 
   return (
-    <Stack
-      gap={3}
-      aria-label="Watchlist"
-      className="rounded-lg border border-border-subtle bg-surface p-3"
-    >
+    <Stack gap={3} aria-label="Watchlist" className={styles.card}>
       {items.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">Your watchlist is empty.</p>
+        <p className={styles.empty}>Your watchlist is empty.</p>
       ) : (
-        <Stack as="ul" gap={0} className="divide-y divide-border-subtle">
+        <Stack as="ul" gap={0} className={styles.list}>
           {items.map((w) => {
             const up = w.changePct >= 0;
             return (
@@ -37,16 +34,14 @@ export function Watchlist({ payload }: WatchlistProps) {
                 justify="between"
                 align="center"
                 gap={3}
-                className="py-2"
+                className={styles.row}
               >
-                <span className="flex min-w-0 flex-col">
-                  <span className="truncate text-ui font-medium text-text">{w.symbol}</span>
-                  <span className="truncate text-xs text-text-muted">{w.name}</span>
+                <span className={styles.info}>
+                  <span className={styles.symbol}>{w.symbol}</span>
+                  <span className={styles.sub}>{w.name}</span>
                 </span>
-                <span className="flex shrink-0 items-center gap-2">
-                  <span className="text-ui font-semibold text-text">
-                    {formatAmount(w.price, w.currency)}
-                  </span>
+                <span className={styles.meta}>
+                  <span className={styles.price}>{formatAmount(w.price, w.currency)}</span>
                   <Badge intent={up ? "success" : "danger"} size="sm">
                     {formatPct(w.changePct)}
                   </Badge>

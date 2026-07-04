@@ -13,6 +13,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Chart, Stack, SummaryList } from "@sina-design-system/core";
 
 import { formatAmount } from "../format.js";
+import styles from "./NetWorth.module.css";
 
 export interface NetWorthProps {
   /** The server-validated `net_worth` payload. */
@@ -62,7 +63,7 @@ export function NetWorth({ payload }: NetWorthProps) {
     <Stack
       gap={3}
       aria-label="Net worth"
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.root}
     >
       <SummaryList
         items={[
@@ -73,10 +74,10 @@ export function NetWorth({ payload }: NetWorthProps) {
       />
 
       {breakdown.length === 0 ? (
-        <p className="py-2 text-center text-ui text-text-muted">No breakdown to show.</p>
+        <p className={styles.empty}>No breakdown to show.</p>
       ) : (
         <>
-          <div className="h-12 w-full text-primary">
+          <div className={styles.chart}>
             <Chart
               variant="bar"
               data={breakdown.map((line) => line.amount)}
@@ -87,7 +88,7 @@ export function NetWorth({ payload }: NetWorthProps) {
             as="ul"
             gap={0}
             aria-label="Net worth breakdown"
-            className="divide-y divide-border-subtle"
+            className={styles.list}
           >
             {breakdown.map((line, index) => (
               <Stack
@@ -97,15 +98,15 @@ export function NetWorth({ payload }: NetWorthProps) {
                 justify="between"
                 align="center"
                 gap={3}
-                className="py-2"
+                className={styles.row}
               >
-                <span className="flex min-w-0 items-center gap-2">
+                <span className={styles.lineLabel}>
                   <Badge intent={line.kind === "asset" ? "success" : "neutral"} size="sm">
                     {line.kind === "asset" ? "Asset" : "Liability"}
                   </Badge>
-                  <span className="truncate text-ui font-medium text-text">{line.label}</span>
+                  <span className={styles.label}>{line.label}</span>
                 </span>
-                <span className="shrink-0 text-ui font-semibold text-text">
+                <span className={styles.amount}>
                   {formatAmount(line.amount, currency)}
                 </span>
               </Stack>

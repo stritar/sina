@@ -13,22 +13,23 @@
  */
 
 import type { CSSProperties } from "react";
-import { cva, type VariantProps } from "class-variance-authority";
 import { TrendDown, TrendUp } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "../utils/cn.js";
+import styles from "./KpiStat.module.css";
 
-const kpiValueVariants = cva("font-medium leading-tight tracking-tight text-text", {
-  variants: {
-    size: {
-      sm: "text-2xl",
-      md: "text-3xl",
-      lg: "text-5xl",
-    },
-  },
-  defaultVariants: { size: "md" },
-});
+type KpiStatSize = "sm" | "md" | "lg";
 
-export interface KpiStatProps extends VariantProps<typeof kpiValueVariants> {
+// Value type scales with `size`. (CSS Module class access is `string | undefined`
+// under noUncheckedIndexedAccess.)
+const valueSize: Record<KpiStatSize, string | undefined> = {
+  sm: styles.sizeSm,
+  md: styles.sizeMd,
+  lg: styles.sizeLg,
+};
+
+export interface KpiStatProps {
+  /** Type scale of the headline value. */
+  size?: KpiStatSize;
   /** The headline number. `null` renders `displayNullAs`. */
   value: number | null;
   /** Formats the value and the absolute delta (currency etc. is the caller's vocabulary). */
@@ -63,7 +64,7 @@ export function KpiStat({
   equalComparisonLabel = "No change",
   noPreviousDataLabel = "No prior data",
   displayNullAs = "—",
-  size,
+  size = "md",
   className,
   style,
 }: KpiStatProps) {
@@ -88,30 +89,30 @@ export function KpiStat({
   }
 
   return (
-    <div className={cn("flex flex-col gap-1", className)} style={style}>
-      <span className={kpiValueVariants({ size })}>
+    <div className={cn(styles.root, className)} style={style}>
+      <span className={cn(styles.value, valueSize[size])}>
         {value === null ? displayNullAs : format(value)}
       </span>
       {pill !== null ? (
-        <span className="flex items-center gap-2">
+        <span className={styles.pillRow}>
           <span
             className={cn(
-              "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-ui font-medium",
-              pill.tone === "good" && "bg-success-bg text-success",
-              pill.tone === "bad" && "bg-danger-bg text-danger",
-              pill.tone === "neutral" && "bg-secondary text-text-muted",
+              styles.pill,
+              pill.tone === "good" && styles.pillGood,
+              pill.tone === "bad" && styles.pillBad,
+              pill.tone === "neutral" && styles.pillNeutral,
             )}
           >
             {pill.rising !== undefined &&
               (pill.rising ? (
-                <TrendUp aria-hidden className="size-3 shrink-0" />
+                <TrendUp aria-hidden className={styles.trendIcon} />
               ) : (
-                <TrendDown aria-hidden className="size-3 shrink-0" />
+                <TrendDown aria-hidden className={styles.trendIcon} />
               ))}
             {pill.text}
           </span>
           {comparisonLabel !== undefined ? (
-            <span className="text-ui text-text-muted">{comparisonLabel}</span>
+            <span className={styles.comparisonLabel}>{comparisonLabel}</span>
           ) : null}
         </span>
       ) : null}

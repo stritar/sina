@@ -8,6 +8,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack, SummaryList } from "@sina-design-system/core";
 
 import { formatAmount, formatDate } from "../format.js";
+import styles from "./InvoiceList.module.css";
 
 export interface InvoiceListProps {
   /** The server-validated `list_invoices` payload. */
@@ -87,26 +88,26 @@ export function InvoiceList({ payload }: InvoiceListProps) {
     <Stack
       gap={3}
       aria-label="Invoices"
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.card}
     >
       {invoices.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">No invoices to show.</p>
+        <p className={styles.empty}>No invoices to show.</p>
       ) : (
         <SummaryList
           items={invoices.map((inv) => ({
             label: (
-              <span className="flex min-w-0 flex-col">
-                <span className="truncate text-ui font-medium text-text">{inv.number}</span>
-                <span className="truncate text-xs text-text-muted">{inv.counterparty}</span>
+              <span className={styles.labelCol}>
+                <span className={styles.number}>{inv.number}</span>
+                <span className={styles.counterparty}>{inv.counterparty}</span>
               </span>
             ),
             value: (
-              <span className="flex shrink-0 items-center gap-2">
-                <span className="flex flex-col items-end gap-0.5">
-                  <span className="text-ui font-semibold text-text">
+              <span className={styles.valueGroup}>
+                <span className={styles.amountCol}>
+                  <span className={styles.amount}>
                     {formatAmount(inv.amount, currency)}
                   </span>
-                  <span className="text-xs text-text-subtle">{formatDate(inv.dueAt)}</span>
+                  <span className={styles.due}>{formatDate(inv.dueAt)}</span>
                 </span>
                 <Badge intent={statusIntent(inv.status)} size="sm">
                   {titleCase(inv.status)}

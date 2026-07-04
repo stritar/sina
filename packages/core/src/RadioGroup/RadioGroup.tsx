@@ -13,12 +13,13 @@ import { RadioGroup as Primitive } from "radix-ui";
 import { forwardRef, useId } from "react";
 import type { ComponentPropsWithoutRef, ComponentRef, ReactNode } from "react";
 import { cn } from "../utils/cn.js";
+import styles from "./RadioGroup.module.css";
 
 export const RadioGroup = forwardRef<
   ComponentRef<typeof Primitive.Root>,
   ComponentPropsWithoutRef<typeof Primitive.Root>
 >(({ className, ...props }, ref) => (
-  <Primitive.Root ref={ref} className={cn("flex flex-col gap-2", className)} {...props} />
+  <Primitive.Root ref={ref} className={cn(styles.root, className)} {...props} />
 ));
 RadioGroup.displayName = "RadioGroup";
 
@@ -41,28 +42,19 @@ export const RadioGroupItem = forwardRef<
       ref={ref}
       id={controlId}
       aria-labelledby={label != null ? labelId : props["aria-labelledby"]}
-      className={cn(
-        // 16px visual; ::before expander keeps a ≥24px hit target (32px coarse).
-        "relative flex size-4 shrink-0 items-center justify-center rounded-full border border-border bg-surface",
-        "before:absolute before:-inset-1 before:content-[''] pointer-coarse:before:-inset-2",
-        "transition-colors duration-fast ease-standard",
-        "data-[state=checked]:border-primary",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-1 focus-visible:ring-offset-bg",
-        "disabled:cursor-not-allowed disabled:opacity-50",
-        className,
-      )}
+      className={cn(styles.item, className)}
       {...props}
     >
-      <Primitive.Indicator className="block size-1.5 rounded-full bg-primary" />
+      <Primitive.Indicator className={styles.indicator} />
     </Primitive.Item>
   );
 
   if (label == null) return control;
 
   return (
-    <div className="flex items-center gap-2">
+    <div className={styles.wrapper}>
       {control}
-      <label id={labelId} htmlFor={controlId} className="text-ui text-text">
+      <label id={labelId} htmlFor={controlId} className={styles.label}>
         {label}
       </label>
     </div>

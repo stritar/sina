@@ -1,0 +1,100 @@
+/* ChatThread — product-facing conversation */
+
+.surface {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--3);
+}
+
+.idle {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--2);
+  color: var(--sina-color-text-muted);
+}
+
+.idleLabel {
+  font-size: var(--sina-text--ui);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+}
+
+.reply {
+  animation: chatReplyIn var(--sina-duration--base) var(--sina-ease--out);
+}
+
+@keyframes chatReplyIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.empty {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sina-space--2);
+  padding: var(--sina-space--6);
+  text-align: center;
+}
+
+.emptyIcon {
+  width: var(--sina-space--8);
+  height: var(--sina-space--8);
+  color: var(--sina-color-text-subtle);
+}
+
+.emptyText {
+  font-size: var(--sina-text--ui);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-color-text-muted);
+}
+
+.thread {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--5);
+}
+
+.turn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--2);
+}
+
+.userRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.bubble {
+  max-width: 85%;
+  border-radius: var(--sina-radius--2xl);
+  background: var(--sina-color-secondary);
+  padding-inline: var(--sina-space--3);
+  padding-block: var(--sina-space--2);
+  font-size: var(--sina-text--ui);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-color-secondary-fg);
+}
+
+.assistant {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--1_5);
+}
+
+.badgeRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--1_5);
+}

@@ -24,6 +24,8 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "clean": "turbo run clean && rimraf node_modules",
+    "verify:tokens": "node scripts/verify-tokens.mjs",
+    "codemod:tokens": "node scripts/codemod-tokens.mjs",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,cjs,mjs}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,cjs,mjs}\""
   },

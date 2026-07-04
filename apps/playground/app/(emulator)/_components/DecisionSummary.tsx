@@ -7,6 +7,7 @@
 
 import { Badge } from "@sina-design-system/core";
 import type { GateTrace } from "../_lib/gate";
+import styles from "./DecisionSummary.module.css";
 
 export function DecisionSummary({ trace }: { trace: GateTrace }) {
   const governed = trace.result.valid;
@@ -14,28 +15,28 @@ export function DecisionSummary({ trace }: { trace: GateTrace }) {
 
   return (
     <div
-      className={`flex flex-wrap items-center justify-between gap-2 rounded-lg border p-3 ${
-        governed ? "border-success/40 bg-success-bg" : "border-danger/40 bg-danger-bg"
-      }`}
+      className={[styles.root, governed ? styles.governed : styles.blocked]
+        .filter(Boolean)
+        .join(" ")}
     >
       <span
-        className={`font-mono text-sm font-semibold tracking-wide ${
-          governed ? "text-success" : "text-danger"
-        }`}
+        className={[styles.verdict, governed ? styles.verdictGoverned : styles.verdictBlocked]
+          .filter(Boolean)
+          .join(" ")}
       >
         {governed ? "GOVERNED" : "BLOCKED"}
       </span>
-      <div className="flex flex-wrap items-center gap-1.5">
+      <div className={styles.metrics}>
         <Badge intent="neutral" size="sm">
-          <span className="font-mono">valid={String(governed)}</span>
+          <span className={styles.mono}>valid={String(governed)}</span>
         </Badge>
         <Badge intent={violations ? (governed ? "warning" : "danger") : "neutral"} size="sm">
-          <span className="font-mono">
+          <span className={styles.mono}>
             {violations} violation{violations === 1 ? "" : "s"}
           </span>
         </Badge>
         <Badge intent="neutral" size="sm">
-          <span className="font-mono">{trace.latencyMs.toFixed(1)} ms</span>
+          <span className={styles.mono}>{trace.latencyMs.toFixed(1)} ms</span>
         </Badge>
       </div>
     </div>

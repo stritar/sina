@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@sina-design-system/core";
 import { SCENARIOS, getScenario } from "../_lib/scenarios";
+import styles from "./ScenarioPicker.module.css";
 
 type Segment = "governed" | "read";
 
@@ -37,14 +38,10 @@ const SEGMENT_META: Record<Segment, { label: string; placeholder: string }> = {
   read: { label: "Ungoverned reads", placeholder: "Ungoverned reads…" },
 };
 
-const TRACK = "inline-flex rounded-md bg-surface-sunken p-0.5";
-const TAB =
-  "rounded-sm px-2 py-0.5 font-mono text-xs transition-colors duration-fast ease-standard focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-focus-ring";
-
-const EXPECTATION_INTENT: Record<string, string> = {
-  pass: "border-success/40 text-success",
-  escalate: "border-danger/40 text-danger",
-  reject: "border-danger/40 text-danger",
+const EXPECTATION_INTENT: Record<string, string | undefined> = {
+  pass: styles.expectPass,
+  escalate: styles.expectDanger,
+  reject: styles.expectDanger,
 };
 
 export function ScenarioPicker({
@@ -58,8 +55,8 @@ export function ScenarioPicker({
   const meta = SEGMENT_META[segment];
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className={TRACK} role="group" aria-label="Scenario type">
+    <div className={styles.root}>
+      <div className={styles.track} role="group" aria-label="Scenario type">
         {SEGMENTS.map((s) => (
           <button
             key={s.key}
@@ -67,15 +64,15 @@ export function ScenarioPicker({
             disabled={disabled}
             onClick={() => setSegment(s.key)}
             aria-pressed={segment === s.key}
-            className={`${TAB} disabled:pointer-events-none disabled:opacity-50 ${
-              segment === s.key ? "bg-surface text-text shadow-xs" : "text-text-muted hover:text-text"
-            }`}
+            className={[styles.tab, segment === s.key ? styles.tabActive : styles.tabInactive]
+              .filter(Boolean)
+              .join(" ")}
           >
             {s.label}
           </button>
         ))}
       </div>
-      <div className="flex flex-wrap gap-1.5">
+      <div className={styles.chips}>
         {QUICK_IDS[segment].map((id) => {
           const scenario = getScenario(id);
           if (!scenario) return null;
@@ -85,9 +82,12 @@ export function ScenarioPicker({
               type="button"
               disabled={disabled}
               onClick={() => onPick(id)}
-              className={`rounded-full border bg-surface px-2 py-0.5 text-xs transition-colors duration-fast ease-standard hover:bg-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-focus-ring disabled:pointer-events-none disabled:opacity-50 ${
-                EXPECTATION_INTENT[scenario.expectation] ?? "border-border text-text-muted"
-              }`}
+              className={[
+                styles.chip,
+                EXPECTATION_INTENT[scenario.expectation] ?? styles.chipDefault,
+              ]
+                .filter(Boolean)
+                .join(" ")}
             >
               {scenario.label}
             </button>

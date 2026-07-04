@@ -20,6 +20,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack } from "@sina-design-system/core";
 
 import { formatAmount, formatDate } from "../format.js";
+import styles from "./RecurringList.module.css";
 
 export interface RecurringListProps {
   /** The server-validated `list_recurring` payload. */
@@ -108,16 +109,16 @@ export function RecurringList({ payload }: RecurringListProps) {
     <Stack
       gap={3}
       aria-label="Recurring subscriptions"
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.card}
     >
       {subscriptions.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">No recurring subscriptions.</p>
+        <p className={styles.empty}>No recurring subscriptions.</p>
       ) : (
         <Stack
           as="ul"
           gap={0}
           aria-label="Recurring subscriptions"
-          className="divide-y divide-border-subtle"
+          className={styles.list}
         >
           {subscriptions.map((sub) => (
             <Stack
@@ -127,17 +128,17 @@ export function RecurringList({ payload }: RecurringListProps) {
               justify="between"
               align="center"
               gap={3}
-              className="py-2"
+              className={styles.row}
             >
-              <span className="flex min-w-0 flex-col">
-                <span className="truncate text-ui font-medium text-text">{sub.merchant}</span>
-                <span className="truncate text-xs text-text-muted">
+              <span className={styles.merchantCol}>
+                <span className={styles.merchant}>{sub.merchant}</span>
+                <span className={styles.cadence}>
                   {CADENCE_LABEL[sub.cadence]}
                   {sub.nextChargeAt ? ` · Next ${formatDate(sub.nextChargeAt)}` : ""}
                 </span>
               </span>
-              <span className="flex shrink-0 items-center gap-2">
-                <span className="text-ui font-semibold text-text">
+              <span className={styles.amountGroup}>
+                <span className={styles.amount}>
                   {formatAmount(sub.amount, currency)}
                 </span>
                 <Badge intent={STATUS_INTENT[sub.status]} size="sm">

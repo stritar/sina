@@ -15,6 +15,7 @@ import { CodeBlock } from "./CodeBlock";
 import { ConsoleStage } from "./ConsoleStage";
 import { DecisionSummary } from "./DecisionSummary";
 import { ServerBoundary } from "./ServerBoundary";
+import styles from "./ConsoleTimeline.module.css";
 
 function severityIntent(severity: Violation["severity"]): "danger" | "warning" | "neutral" {
   if (severity === "reject" || severity === "escalate") return "danger";
@@ -24,16 +25,16 @@ function severityIntent(severity: Violation["severity"]): "danger" | "warning" |
 
 function ViolationRow({ violation }: { violation: Violation }) {
   return (
-    <div className="flex flex-col gap-1 rounded-md border border-border-subtle bg-surface p-2.5">
-      <div className="flex items-center gap-1.5">
+    <div className={styles.violationRow}>
+      <div className={styles.violationHead}>
         <Badge intent={severityIntent(violation.severity)} size="sm">
-          <span className="font-mono">{violation.severity}</span>
+          <span className={styles.mono}>{violation.severity}</span>
         </Badge>
-        <span className="font-mono text-xs text-text-muted">{violation.code}</span>
+        <span className={styles.violationCode}>{violation.code}</span>
       </div>
-      <p className="text-ui text-text">{violation.message}</p>
+      <p className={styles.violationMessage}>{violation.message}</p>
       {violation.standard && (
-        <p className="font-mono text-xs text-text-subtle">{violation.standard}</p>
+        <p className={styles.violationStandard}>{violation.standard}</p>
       )}
     </div>
   );
@@ -42,8 +43,8 @@ function ViolationRow({ violation }: { violation: Violation }) {
 export function ConsoleTimeline({ view }: { view: ConsoleView }) {
   if (view.kind === "idle") {
     return (
-      <div className="flex h-full items-center justify-center p-6 text-center">
-        <p className="text-ui text-text-subtle">
+      <div className={styles.centered}>
+        <p className={styles.mutedSubtle}>
           Run a scenario to inspect the governance gate.
         </p>
       </div>
@@ -52,12 +53,12 @@ export function ConsoleTimeline({ view }: { view: ConsoleView }) {
 
   if (view.kind === "transport") {
     return (
-      <div className="flex flex-col gap-3 p-4">
+      <div className={styles.panel}>
         <ServerBoundary />
         <Alert variant="warning" title="Transport error — the gate did not run">
-          <span className="font-mono text-xs">{view.error.reason}</span> — {view.error.message}
+          <span className={styles.monoXs}>{view.error.reason}</span> — {view.error.message}
         </Alert>
-        <p className="text-ui text-text-subtle">
+        <p className={styles.mutedSubtle}>
           This is a model / transport failure, not a governance decision. Retry from the composer.
         </p>
       </div>
@@ -66,21 +67,18 @@ export function ConsoleTimeline({ view }: { view: ConsoleView }) {
 
   if (view.kind === "experience") {
     return (
-      <div className="flex flex-col gap-3 p-4">
+      <div className={styles.panel}>
         <ServerBoundary />
-        <p className="text-ui text-text-muted">
+        <p className={styles.note}>
           Composed experience — {view.traces.length} intents, each gated independently.
         </p>
-        <Separator className="my-1" />
+        <Separator className={styles.separator} />
         {view.traces.map((trace, i) => (
-          <div
-            key={i}
-            className="flex items-center justify-between gap-2 rounded-md border border-border-subtle bg-surface p-2.5"
-          >
-            <span className="font-mono text-xs text-text-muted">{trace.intent}</span>
-            <span className="flex items-center gap-2">
+          <div key={i} className={styles.experienceRow}>
+            <span className={styles.intent}>{trace.intent}</span>
+            <span className={styles.rowRight}>
               {trace.mount ? (
-                <span className="font-mono text-xs text-text">{trace.mount}</span>
+                <span className={styles.mount}>{trace.mount}</span>
               ) : null}
               <Badge intent={trace.result.valid ? "success" : "danger"} size="sm">
                 {trace.result.valid ? "mounted" : "blocked"}
@@ -103,10 +101,10 @@ export function ConsoleTimeline({ view }: { view: ConsoleView }) {
         : "pass";
 
   return (
-    <div className="flex flex-col gap-3 p-4">
+    <div className={styles.panel}>
       <DecisionSummary trace={trace} />
       <ServerBoundary />
-      <Separator className="my-1" />
+      <Separator className={styles.separator} />
 
       <ConsoleStage status="info" title="Intent received" defaultOpen>
         <CodeBlock title={`intent · ${trace.intent}`} code={pretty(trace.payload)} maxLines={14} />
@@ -118,13 +116,13 @@ export function ConsoleTimeline({ view }: { view: ConsoleView }) {
         defaultOpen={schemaFailed}
       >
         {schemaFailed ? (
-          <div className="flex flex-col gap-2">
+          <div className={styles.stack}>
             {trace.schemaViolations.map((v, i) => (
               <ViolationRow key={i} violation={v} />
             ))}
           </div>
         ) : (
-          <p className="text-ui text-text-muted">
+          <p className={styles.note}>
             `.strict()` structure + ISO format checks passed — no smuggled keys.
           </p>
         )}
@@ -142,15 +140,15 @@ export function ConsoleTimeline({ view }: { view: ConsoleView }) {
         defaultOpen={!schemaFailed && trace.policyViolations.length > 0}
       >
         {schemaFailed ? (
-          <p className="text-ui text-text-muted">Skipped — the payload was rejected at the schema gate.</p>
+          <p className={styles.note}>Skipped — the payload was rejected at the schema gate.</p>
         ) : trace.policyViolations.length > 0 ? (
-          <div className="flex flex-col gap-2">
+          <div className={styles.stack}>
             {trace.policyViolations.map((v, i) => (
               <ViolationRow key={i} violation={v} />
             ))}
           </div>
         ) : (
-          <p className="text-ui text-text-muted">No regulatory or limit bands tripped.</p>
+          <p className={styles.note}>No regulatory or limit bands tripped.</p>
         )}
       </ConsoleStage>
 
@@ -172,14 +170,14 @@ export function ConsoleTimeline({ view }: { view: ConsoleView }) {
 
       <ConsoleStage status="info" title="Audit event · redacted" last>
         {trace.audit ? (
-          <div className="flex flex-col gap-2">
+          <div className={styles.stack}>
             <CodeBlock title="AuditEvent" code={pretty(trace.audit)} maxLines={12} />
-            <p className="font-mono text-xs text-text-subtle">
+            <p className={styles.redaction}>
               redaction: card fields dropped · iban / accountNumber hashed
             </p>
           </div>
         ) : (
-          <p className="text-ui text-text-muted">No audit event captured.</p>
+          <p className={styles.note}>No audit event captured.</p>
         )}
       </ConsoleStage>
     </div>

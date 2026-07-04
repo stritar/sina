@@ -18,6 +18,7 @@ import { Label } from "radix-ui";
 import { cloneElement, useId } from "react";
 import type { ReactElement, ReactNode } from "react";
 import { cn } from "../utils/cn.js";
+import styles from "./Field.module.css";
 
 /** A11y props Field injects onto its control child. Forward them to the <input>. */
 export interface FieldControlProps {
@@ -57,18 +58,18 @@ export function Field({ label, description, error, required, className, children
   });
 
   return (
-    <div className={cn("flex flex-col gap-1.5", className)}>
-      <Label.Root htmlFor={id} className="text-ui font-medium text-text">
+    <div className={cn(styles.root, className)}>
+      <Label.Root htmlFor={id} className={styles.label}>
         {label}
         {required ? (
-          <span aria-hidden className="text-danger">
+          <span aria-hidden className={styles.required}>
             {" *"}
           </span>
         ) : null}
       </Label.Root>
 
       {description ? (
-        <p id={descriptionId} className="text-ui text-text-muted">
+        <p id={descriptionId} className={styles.description}>
           {description}
         </p>
       ) : null}
@@ -76,7 +77,7 @@ export function Field({ label, description, error, required, className, children
       {control}
 
       {invalid ? (
-        <p id={errorId} role="alert" className="text-ui text-danger">
+        <p id={errorId} role="alert" className={styles.error}>
           {error}
         </p>
       ) : null}

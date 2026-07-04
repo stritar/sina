@@ -9,6 +9,7 @@ import { Badge, Progress, Stack, SummaryList } from "@sina-design-system/core";
 import type { SummaryItem } from "@sina-design-system/core";
 
 import { formatAmount, readRewards } from "../format.js";
+import styles from "./RewardsSummary.module.css";
 
 export interface RewardsSummaryProps {
   payload: unknown;
@@ -42,13 +43,13 @@ export function RewardsSummary({ payload }: RewardsSummaryProps) {
     <Stack
       gap={3}
       aria-label={`${r.program} rewards`}
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.card}
     >
-      <span className="text-ui font-medium text-text">{r.program}</span>
+      <span className={styles.program}>{r.program}</span>
       <SummaryList items={items} />
       {pct !== null && r.nextTier ? (
         <Stack gap={1}>
-          <span className="text-xs text-text-subtle">
+          <span className={styles.nextTier}>
             {r.pointsToNextTier?.toLocaleString("en-US")} points to {r.nextTier}
           </span>
           <Progress value={pct} label={`Progress to ${r.nextTier}`} />

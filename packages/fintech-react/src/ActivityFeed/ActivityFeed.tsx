@@ -9,6 +9,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack } from "@sina-design-system/core";
 
 import { formatDate } from "../format.js";
+import styles from "./ActivityFeed.module.css";
 
 export interface ActivityFeedProps {
   payload: unknown;
@@ -79,16 +80,16 @@ export function ActivityFeed({ payload }: ActivityFeedProps) {
     <Stack
       gap={3}
       aria-label="Activity feed"
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.card}
     >
       {items.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">No recent activity.</p>
+        <p className={styles.empty}>No recent activity.</p>
       ) : (
         <Stack
           as="ul"
           gap={0}
           aria-label="Recent activity"
-          className="divide-y divide-border-subtle"
+          className={styles.list}
         >
           {items.map((item) => {
             const intent = KIND_INTENT[item.kind];
@@ -99,18 +100,18 @@ export function ActivityFeed({ payload }: ActivityFeedProps) {
                 direction="row"
                 align="start"
                 gap={3}
-                className="py-2"
+                className={styles.row}
               >
                 <Badge intent={intent} size="sm">
                   {item.kind}
                 </Badge>
-                <span className="flex min-w-0 flex-col">
-                  <span className="truncate text-ui font-medium text-text">{item.title}</span>
+                <span className={styles.titleCol}>
+                  <span className={styles.title}>{item.title}</span>
                   {item.detail ? (
-                    <span className="text-xs text-text-muted">{item.detail}</span>
+                    <span className={styles.detail}>{item.detail}</span>
                   ) : null}
                 </span>
-                <span className="ml-auto shrink-0 text-xs text-text-subtle">
+                <span className={styles.date}>
                   {formatDate(item.at)}
                 </span>
               </Stack>

@@ -21,7 +21,7 @@ export {
   DialogDescription,
   DialogClose,
 } from "./Dialog/Dialog.js";
-export { Button, buttonVariants } from "./Button/Button.js";
+export { Button } from "./Button/Button.js";
 export type { ButtonProps } from "./Button/Button.js";
 export { Field } from "./Field/Field.js";
 export type { FieldProps, FieldControlProps } from "./Field/Field.js";
@@ -45,7 +45,7 @@ export { Stack } from "./Stack/Stack.js";
 export type { StackProps, GapStep } from "./Stack/Stack.js";
 export { Grid } from "./Grid/Grid.js";
 export type { GridProps, GridCols } from "./Grid/Grid.js";
-export { Badge, badgeVariants } from "./Badge/Badge.js";
+export { Badge } from "./Badge/Badge.js";
 export type { BadgeProps } from "./Badge/Badge.js";
 export { Spinner } from "./Spinner/Spinner.js";
 export type { SpinnerProps } from "./Spinner/Spinner.js";
@@ -91,7 +91,6 @@ export {
   ToastDescription,
   ToastAction,
   ToastClose,
-  toastVariants,
 } from "./Toast/Toast.js";
 export type { ToastProps } from "./Toast/Toast.js";
 export { Combobox } from "./Combobox/Combobox.js";

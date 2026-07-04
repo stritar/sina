@@ -1,0 +1,15 @@
+/* Tooltip story — co-located styles (no Tailwind). */
+
+.sidesGrid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sina-space--12);
+  padding-inline: var(--sina-space--8);
+  padding-block: var(--sina-space--12);
+}
+
+.cell {
+  display: flex;
+  justify-content: center;
+}

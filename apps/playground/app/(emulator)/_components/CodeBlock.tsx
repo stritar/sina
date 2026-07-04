@@ -23,14 +23,15 @@ import {
   X,
 } from "@phosphor-icons/react/dist/ssr";
 import { tokenizeJsonLine, type Scope } from "./highlight";
+import styles from "./CodeBlock.module.css";
 
-const SCOPE_CLASS: Record<Scope, string> = {
-  key: "text-text",
-  string: "text-success",
-  number: "text-info",
-  boolean: "text-warning",
-  punctuation: "text-text-subtle",
-  plain: "text-text",
+const SCOPE_CLASS: Record<Scope, string | undefined> = {
+  key: styles.scopeKey,
+  string: styles.scopeString,
+  number: styles.scopeNumber,
+  boolean: styles.scopeBoolean,
+  punctuation: styles.scopePunctuation,
+  plain: styles.scopePlain,
 };
 
 export interface CodeBlockProps {
@@ -52,7 +53,7 @@ function CopyButton({ code }: { code: string }) {
       variant="ghost"
       size="sm"
       iconLeft={
-        copied ? <Check className="size-control-2xs" /> : <CopyIcon className="size-control-2xs" />
+        copied ? <Check className={styles.icon} /> : <CopyIcon className={styles.icon} />
       }
       onClick={() => {
         void navigator.clipboard?.writeText(code);
@@ -61,7 +62,7 @@ function CopyButton({ code }: { code: string }) {
       }}
       aria-label={copied ? "Copied" : "Copy code"}
     >
-      <span className="font-mono text-xs">{copied ? "Copied" : "Copy"}</span>
+      <span className={styles.monoLabel}>{copied ? "Copied" : "Copy"}</span>
     </Button>
   );
 }
@@ -77,22 +78,22 @@ function CodeView({
   showLineNumbers: boolean;
 }) {
   return (
-    <div className="overflow-x-auto">
-      <div className="min-w-full font-mono text-xs leading-snug">
+    <div className={styles.scroll}>
+      <div className={styles.grid}>
         {lines.map((line, index) => {
           const tokens = language === "json" ? tokenizeJsonLine(line) : [{ text: line, scope: "plain" as Scope }];
           return (
-            <div key={index} className="flex">
+            <div key={index} className={styles.line}>
               {showLineNumbers && (
                 <span
                   aria-hidden
-                  className="select-none pr-4 text-right text-text-subtle"
+                  className={styles.gutter}
                   style={{ minWidth: "2.5ch" }}
                 >
                   {index + 1}
                 </span>
               )}
-              <code className="whitespace-pre text-text">
+              <code className={styles.code}>
                 {tokens.map((token, t) => (
                   <span key={t} className={SCOPE_CLASS[token.scope]}>
                     {token.text}
@@ -123,22 +124,20 @@ export function CodeBlock({
   const visibleLines = collapsed ? lines.slice(0, maxLines) : lines;
 
   return (
-    <div
-      className={`overflow-hidden rounded-lg border border-border-subtle bg-surface-sunken ${className ?? ""}`}
-    >
+    <div className={[styles.root, className].filter(Boolean).join(" ")}>
       {(title || showCopy) && (
-        <div className="flex items-center justify-between border-b border-border-subtle px-3 py-1.5">
-          <span className="truncate font-mono text-xs text-text-muted">{title}</span>
+        <div className={styles.header}>
+          <span className={styles.title}>{title}</span>
           {showCopy && <CopyButton code={code} />}
         </div>
       )}
 
-      <div className="relative px-3 py-2">
+      <div className={styles.body}>
         <CodeView lines={visibleLines} language={language} showLineNumbers={showLineNumbers} />
         {collapsed && (
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-10"
+            className={styles.fade}
             style={{
               background: "linear-gradient(to top, var(--sina-color-surface-sunken), transparent)",
             }}
@@ -147,32 +146,32 @@ export function CodeBlock({
       </div>
 
       {collapsed && (
-        <div className="flex justify-center border-t border-border-subtle px-3 py-1.5">
+        <div className={styles.seeAll}>
           <Button
             variant="ghost"
             size="sm"
-            iconRight={<CaretDown className="size-control-2xs" />}
+            iconRight={<CaretDown className={styles.icon} />}
             onClick={() => setOpen(true)}
           >
-            <span className="font-mono text-xs">See all · {lines.length} lines</span>
+            <span className={styles.monoLabel}>See all · {lines.length} lines</span>
           </Button>
         </div>
       )}
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-2xl">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="font-mono text-sm">{title ?? "See all"}</DialogTitle>
-            <div className="flex items-center gap-1.5">
+        <DialogContent className={styles.dialogContent}>
+          <div className={styles.dialogHeader}>
+            <DialogTitle className={styles.dialogTitle}>{title ?? "See all"}</DialogTitle>
+            <div className={styles.dialogActions}>
               {showCopy && <CopyButton code={code} />}
               <DialogClose asChild>
                 <Button variant="ghost" size="sm" aria-label="Close">
-                  <X className="size-control-2xs" />
+                  <X className={styles.icon} />
                 </Button>
               </DialogClose>
             </div>
           </div>
-          <div className="max-h-[60vh] overflow-y-auto rounded-lg border border-border-subtle bg-surface-sunken px-3 py-2">
+          <div className={styles.dialogBody}>
             <CodeView lines={lines} language={language} showLineNumbers={showLineNumbers} />
           </div>
         </DialogContent>

@@ -2,15 +2,21 @@ import { describe, expect, it } from "vitest";
 import { cn } from "./cn.js";
 
 describe("cn", () => {
-  // Regression: the theme's custom `text-ui` font-size token collided with the
-  // `text-color` group in tailwind-merge's default config, silently dropping a
-  // preceding `text-<color>` — which erased button label colors (invisible text
-  // on filled variants). `ui` is now registered as a font-size.
-  it("keeps a text color alongside the custom `text-ui` font-size", () => {
-    expect(cn("text-primary-fg", "text-ui")).toBe("text-primary-fg text-ui");
+  // Post-Tailwind, cn() is clsx: it concatenates CSS Module class names and
+  // passthrough className, with no utility-conflict resolution (there are no
+  // Tailwind utilities left to conflict). It just joins truthy class values.
+  it("joins class names", () => {
+    expect(cn("root", "primary")).toBe("root primary");
   });
 
-  it("still lets a later class win within a real conflict group", () => {
-    expect(cn("px-1", "px-2")).toBe("px-2");
+  it("drops falsy values and honors conditionals", () => {
+    const on = true;
+    const off = false;
+    expect(cn("root", false, undefined, null, "", "active")).toBe("root active");
+    expect(cn("root", on && "on", off && "off")).toBe("root on");
+  });
+
+  it("keeps every provided class (no dedup/merge)", () => {
+    expect(cn("gap-a", "gap-b")).toBe("gap-a gap-b");
   });
 });

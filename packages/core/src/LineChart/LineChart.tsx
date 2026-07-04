@@ -35,6 +35,7 @@ import {
 import type { ChartData, ChartOptions } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { cn } from "../utils/cn.js";
+import styles from "./LineChart.module.css";
 import { buildElementClickHandler } from "../charts/click.js";
 import type { ChartElementClickDetail } from "../charts/click.js";
 import { colorizeLineData } from "../charts/data.js";
@@ -157,7 +158,7 @@ export const LineChart = forwardRef<HTMLDivElement, LineChartProps>(function Lin
       ref={setRefs}
       role="img"
       aria-label={label}
-      className={cn("relative h-full w-full", className)}
+      className={cn(styles.root, className)}
       style={style}
     >
       {el ? (

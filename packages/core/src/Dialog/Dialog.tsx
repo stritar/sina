@@ -18,6 +18,7 @@ import { Dialog as Primitive } from "radix-ui";
 import { forwardRef } from "react";
 import type { ComponentPropsWithoutRef, ComponentRef } from "react";
 import { cn } from "../utils/cn.js";
+import styles from "./Dialog.module.css";
 
 export const Dialog = Primitive.Root;
 export const DialogTrigger = Primitive.Trigger;
@@ -28,21 +29,8 @@ export const DialogContent = forwardRef<
   ComponentPropsWithoutRef<typeof Primitive.Content>
 >(({ className, children, ...props }, ref) => (
   <Primitive.Portal>
-    <Primitive.Overlay className="fixed inset-0 z-overlay bg-text/40 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0" />
-    <Primitive.Content
-      ref={ref}
-      className={cn(
-        "fixed left-1/2 top-1/2 z-modal w-full max-w-md -translate-x-1/2 -translate-y-1/2",
-        "flex flex-col gap-3 rounded-lg border border-border-subtle bg-surface-raised p-5 shadow-lg",
-        // Fade only — the centered element already owns `transform`, so a zoom
-        // keyframe would fight the -translate centering.
-        "data-[state=open]:animate-in data-[state=open]:fade-in-0",
-        "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
-        "focus-visible:outline-none",
-        className,
-      )}
-      {...props}
-    >
+    <Primitive.Overlay className={styles.overlay} />
+    <Primitive.Content ref={ref} className={cn(styles.content, className)} {...props}>
       {children}
     </Primitive.Content>
   </Primitive.Portal>
@@ -53,11 +41,7 @@ export const DialogTitle = forwardRef<
   ComponentRef<typeof Primitive.Title>,
   ComponentPropsWithoutRef<typeof Primitive.Title>
 >(({ className, ...props }, ref) => (
-  <Primitive.Title
-    ref={ref}
-    className={cn("text-base font-semibold text-text", className)}
-    {...props}
-  />
+  <Primitive.Title ref={ref} className={cn(styles.title, className)} {...props} />
 ));
 DialogTitle.displayName = "DialogTitle";
 
@@ -65,10 +49,6 @@ export const DialogDescription = forwardRef<
   ComponentRef<typeof Primitive.Description>,
   ComponentPropsWithoutRef<typeof Primitive.Description>
 >(({ className, ...props }, ref) => (
-  <Primitive.Description
-    ref={ref}
-    className={cn("text-ui text-text-muted", className)}
-    {...props}
-  />
+  <Primitive.Description ref={ref} className={cn(styles.description, className)} {...props} />
 ));
 DialogDescription.displayName = "DialogDescription";

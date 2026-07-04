@@ -1,0 +1,50 @@
+/* Playground — primitives index */
+
+.page {
+  margin-inline: auto;
+  min-height: 100vh;
+  max-width: 42rem;
+  background: var(--sina-color-bg);
+  padding: var(--sina-space--12);
+  color: var(--sina-color-text);
+}
+.heading {
+  font-size: var(--sina-text--3xl);
+  font-weight: var(--sina-font-weight--semibold);
+  letter-spacing: var(--sina-tracking--tight);
+}
+.lede {
+  margin-top: var(--sina-space--2);
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}
+.list {
+  margin-top: var(--sina-space--8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--2);
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--sina-radius--lg);
+  border: var(--sina-border-width--1) solid var(--sina-color-border);
+  background: var(--sina-color-surface);
+  padding-inline: var(--sina-space--4);
+  padding-block: var(--sina-space--3);
+  transition-property: background-color, border-color, color;
+  transition-duration: var(--sina-duration--fast);
+  transition-timing-function: var(--sina-ease--standard);
+}
+.row:hover {
+  background: var(--sina-color-surface-raised);
+}
+.rowName {
+  font-weight: var(--sina-font-weight--medium);
+}
+.rowTier {
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-subtle);
+}

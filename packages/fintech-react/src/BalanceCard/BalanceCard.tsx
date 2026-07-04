@@ -11,6 +11,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Stack, SummaryList } from "@sina-design-system/core";
 
 import { formatAmount, readBalance } from "../format.js";
+import styles from "./BalanceCard.module.css";
 
 export interface BalanceCardProps {
   /** The server-validated `account_balance` payload. */
@@ -26,12 +27,12 @@ export function BalanceCard({ payload }: BalanceCardProps) {
     <Stack
       gap={3}
       aria-label={`Balance for ${account.label}`}
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.card}
     >
       <Stack direction="row" justify="between" align="center" gap={2}>
-        <span className="text-ui font-medium text-text">{account.label}</span>
+        <span className={styles.accountLabel}>{account.label}</span>
         {account.maskedNumber ? (
-          <span className="font-mono text-xs text-text-subtle">{account.maskedNumber}</span>
+          <span className={styles.accountNumber}>{account.maskedNumber}</span>
         ) : null}
       </Stack>
       <SummaryList

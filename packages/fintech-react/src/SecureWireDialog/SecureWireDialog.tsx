@@ -35,6 +35,7 @@ import {
 import type { Violation } from "@sina-design-system/governance";
 
 import { formatAmount, readWire } from "../format.js";
+import styles from "./SecureWireDialog.module.css";
 
 /** What the approver contributes. The initiator identity is server-known, never here. */
 export interface WireApprovalEvidence {
@@ -135,7 +136,7 @@ export function SecureWireDialog({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="sm" iconLeft={<Lock className="size-control-2xs" />}>
+        <Button variant="secondary" size="sm" iconLeft={<Lock className={styles.icon} />}>
           {triggerLabel}
         </Button>
       </DialogTrigger>
@@ -147,7 +148,7 @@ export function SecureWireDialog({
           mount the transfer — the initiator cannot approve their own wire.
         </DialogDescription>
 
-        <Stack direction="col" gap={3} className="mt-3">
+        <Stack direction="col" gap={3} className={styles.body}>
           {terms}
 
           {phase === "review" && (
@@ -156,9 +157,9 @@ export function SecureWireDialog({
                 {blocking.length > 0 ? (
                   <Stack direction="col" gap={2} as="ul">
                     {blocking.map((v, i) => (
-                      <li key={i} className="flex items-center gap-1.5">
+                      <li key={i} className={styles.violationRow}>
                         <Badge intent="danger" size="sm">
-                          <span className="font-mono">{v.severity}</span>
+                          <span className={styles.severity}>{v.severity}</span>
                         </Badge>
                         <span>{v.message}</span>
                       </li>
@@ -207,14 +208,14 @@ export function SecureWireDialog({
           {phase === "pending" && (
             <>
               <Stack direction="col" gap={2}>
-                <span className="text-ui font-medium text-text">Approver second factor</span>
+                <span className={styles.fieldLabel}>Approver second factor</span>
                 <CredentialOTP
                   length={OTP_LENGTH}
                   value={secondFactor}
                   onChange={setSecondFactor}
                   aria-label="Approver one-time code"
                 />
-                <span className="text-xs text-text-subtle">
+                <span className={styles.hint}>
                   Approving binds to the exact terms above; SINA re-verifies server-side.
                 </span>
               </Stack>
@@ -286,5 +287,5 @@ export function SecureWireDialog({
 }
 
 function Footer({ children }: { children: ReactNode }) {
-  return <div className="mt-1 flex items-center justify-end gap-2">{children}</div>;
+  return <div className={styles.footer}>{children}</div>;
 }

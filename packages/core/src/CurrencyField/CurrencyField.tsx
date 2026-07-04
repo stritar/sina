@@ -13,6 +13,7 @@ import { forwardRef, useState } from "react";
 import type { InputHTMLAttributes, ReactNode } from "react";
 import { Field } from "../Field/Field.js";
 import { cn } from "../utils/cn.js";
+import styles from "./CurrencyField.module.css";
 
 /** Strip to digits + a single decimal point. */
 function sanitize(raw: string): string {
@@ -39,12 +40,9 @@ const AdornedInput = forwardRef<
   HTMLInputElement,
   { symbol?: string } & InputHTMLAttributes<HTMLInputElement>
 >(({ symbol, className, ...inputProps }, ref) => (
-  <div className="relative">
+  <div className={styles.wrapper}>
     {symbol ? (
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-y-0 left-2.5 flex items-center text-ui text-text-muted"
-      >
+      <span aria-hidden className={styles.symbol}>
         {symbol}
       </span>
     ) : null}
@@ -53,15 +51,7 @@ const AdornedInput = forwardRef<
       type="text"
       inputMode="decimal"
       {...inputProps}
-      className={cn(
-        "h-7 w-full rounded-md border border-border-subtle bg-surface text-ui text-text",
-        "placeholder:text-text-subtle transition-colors duration-fast ease-standard",
-        "focus-visible:outline-none focus-visible:border-focus-ring focus-visible:ring-1 focus-visible:ring-focus-ring",
-        "disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-text-subtle",
-        "aria-[invalid=true]:border-danger",
-        symbol ? "pl-7 pr-2.5" : "px-2.5",
-        className,
-      )}
+      className={cn(styles.input, symbol ? styles.padSymbol : styles.padPlain, className)}
     />
   </div>
 ));

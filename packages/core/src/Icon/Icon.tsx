@@ -15,6 +15,7 @@
 import { AccessibleIcon } from "radix-ui";
 import type { Icon as PhosphorIcon, IconWeight } from "@phosphor-icons/react";
 import { cn } from "../utils/cn.js";
+import styles from "./Icon.module.css";
 
 export interface IconProps {
   /** The Phosphor glyph component to render. */
@@ -39,7 +40,7 @@ export function Icon({
   className,
 }: IconProps) {
   const glyph = (
-    <Glyph aria-hidden size={size} weight={weight} className={cn("shrink-0", className)} />
+    <Glyph aria-hidden size={size} weight={weight} className={cn(styles.root, className)} />
   );
 
   if (decorative || !label) return glyph;

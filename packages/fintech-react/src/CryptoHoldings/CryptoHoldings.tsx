@@ -11,6 +11,7 @@ import type { SummaryItem } from "@sina-design-system/core";
 import { Badge, Chart, Stack, SummaryList } from "@sina-design-system/core";
 
 import { formatAmount, formatPct } from "../format.js";
+import styles from "./CryptoHoldings.module.css";
 
 export interface CryptoHoldingsProps {
   payload: unknown;
@@ -66,16 +67,16 @@ export function CryptoHoldings({ payload }: CryptoHoldingsProps) {
     const up = h.changePct >= 0;
     return {
       label: (
-        <span className="flex min-w-0 flex-col">
-          <span className="truncate text-ui font-medium text-text">{h.asset}</span>
-          <span className="truncate text-xs text-text-muted">
+        <span className={styles.assetCol}>
+          <span className={styles.asset}>{h.asset}</span>
+          <span className={styles.meta}>
             {h.name} · {h.quantity}
           </span>
         </span>
       ),
       value: (
-        <span className="flex shrink-0 items-center justify-end gap-2">
-          <span className="text-ui font-semibold text-text">{formatAmount(h.value, currency)}</span>
+        <span className={styles.valueCol}>
+          <span className={styles.value}>{formatAmount(h.value, currency)}</span>
           <Badge intent={up ? "success" : "danger"} size="sm">
             {formatPct(h.changePct)}
           </Badge>
@@ -88,20 +89,20 @@ export function CryptoHoldings({ payload }: CryptoHoldingsProps) {
     <Stack
       gap={3}
       aria-label="Crypto holdings"
-      className="rounded-lg border border-border-subtle bg-surface p-3"
+      className={styles.root}
     >
       <Stack direction="row" justify="between" align="center" gap={2}>
-        <span className="text-ui font-medium text-text">Crypto holdings</span>
-        <span className="text-ui font-semibold text-text">
+        <span className={styles.title}>Crypto holdings</span>
+        <span className={styles.total}>
           {formatAmount(totalValue, currency)}
         </span>
       </Stack>
 
       {holdings.length === 0 ? (
-        <p className="py-6 text-center text-ui text-text-muted">No crypto holdings to show.</p>
+        <p className={styles.empty}>No crypto holdings to show.</p>
       ) : (
         <>
-          <div className="h-12 w-full text-primary">
+          <div className={styles.chart}>
             <Chart
               variant="bar"
               data={holdings.map((h) => h.value)}
