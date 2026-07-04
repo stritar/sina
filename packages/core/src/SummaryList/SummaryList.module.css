@@ -3,7 +3,7 @@
 :root {
   --sina-summary-list-divider: var(--sina-color-border-subtle, #edefeb);
   --sina-summary-list-label: var(--sina-color-text-muted, #52564e);
-  --sina-summary-list-label-emphasis: var(--sina-color-text, #353b31);
+  --sina-summary-list-label--emphasis: var(--sina-color-text, #353b31);
   --sina-summary-list-value: var(--sina-color-text, #353b31);
 }
 
@@ -29,7 +29,7 @@
 }
 .labelEmphasis {
   font-weight: var(--sina-font-weight--medium, 500);
-  color: var(--sina-summary-list-label-emphasis, #353b31);
+  color: var(--sina-summary-list-label--emphasis, #353b31);
 }
 
 .value {

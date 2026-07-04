@@ -7,8 +7,8 @@
   --sina-combobox-placeholder: var(--sina-color-text-subtle, #a7ada0);
   --sina-combobox-focus-ring: var(--sina-color-focus-ring, #545f49);
   --sina-combobox-icon: var(--sina-color-text-muted, #52564e);
-  --sina-combobox-disabled-bg: var(--sina-color-surface-sunken, #f5f6f4);
-  --sina-combobox-disabled-fg: var(--sina-color-text-subtle, #a7ada0);
+  --sina-combobox-bg--disabled: var(--sina-color-surface-sunken, #f5f6f4);
+  --sina-combobox-fg--disabled: var(--sina-color-text-subtle, #a7ada0);
 
   --sina-combobox-surface: var(--sina-color-surface-raised, #ffffff);
   --sina-combobox-highlight: var(--sina-overlay--hover, color-mix(
@@ -72,8 +72,8 @@
 }
 .input:disabled {
   cursor: not-allowed;
-  background: var(--sina-combobox-disabled-bg, #f5f6f4);
-  color: var(--sina-combobox-disabled-fg, #a7ada0);
+  background: var(--sina-combobox-bg--disabled, #f5f6f4);
+  color: var(--sina-combobox-fg--disabled, #a7ada0);
 }
 
 /* Content */

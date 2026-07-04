@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
@@ -7,10 +8,11 @@ const read = (rel: string) =>
 
 const themeCss = read("theme.css");
 
-/** Every `--sina-*` custom property declared in theme.css (`--sina-x: value;`). */
-const declaredVars = new Set(
-  [...themeCss.matchAll(/(--sina-[\w-]+)\s*:/g)].map((m) => m[1]),
-);
+/** Every `--sina-*` custom property DEFINED in a CSS string (`--sina-x: value;`). */
+const definedNames = (css: string) =>
+  [...css.matchAll(/(--sina-[\w-]+)\s*:/g)].map((m) => m[1]);
+
+const declaredVars = new Set(definedNames(themeCss));
 
 describe("token set", () => {
   it("declares at least the full token set", () => {
@@ -34,6 +36,60 @@ describe("color tokens are authored in hex", () => {
       .filter(({ value }) => !value.startsWith("var(")) // aliases are references
       .filter(({ value }) => !/^#([0-9a-f]{6}|[0-9a-f]{8})$/i.test(value));
 
+    expect(offenders).toEqual([]);
+  });
+});
+
+/* ----------------------------------------------------------------------- */
+/* Naming grammar — interaction STATES are `--` modifiers (TOKEN_NAMING.md).*/
+/* A state word joined by a single dash (`-hover`) is the violation; the     */
+/* correct form is `--hover`. `focus` is deliberately absent so the atomic   */
+/* role `focus-ring` passes. Scans theme.css + every component token layer.  */
+/* ----------------------------------------------------------------------- */
+
+const STATE_WORDS = [
+  "hover",
+  "active",
+  "pressed",
+  "disabled",
+  "selected",
+  "checked",
+  "open",
+  "expanded",
+  "invalid",
+];
+
+/** All `--sina-*` names defined across a package's `*.module.css` files. */
+function moduleCssNames(pkgSrc: string): { name: string; file: string }[] {
+  const base = fileURLToPath(new URL(pkgSrc, import.meta.url));
+  const out: { name: string; file: string }[] = [];
+  const walk = (dir: string) => {
+    for (const entry of readdirSync(dir)) {
+      const p = join(dir, entry);
+      if (statSync(p).isDirectory()) walk(p);
+      else if (entry.endsWith(".module.css"))
+        for (const n of definedNames(readFileSync(p, "utf8")))
+          out.push({ name: n, file: p.slice(base.length + 1) });
+    }
+  };
+  walk(base);
+  return out;
+}
+
+describe("token naming grammar — states use a double dash", () => {
+  // Single dash before a state word → violation; `--<state>` passes.
+  const singleDashState = new RegExp(
+    `(^|[^-])-(?:${STATE_WORDS.join("|")})($|[^a-z])`,
+  );
+
+  const allNames = [
+    ...definedNames(themeCss).map((name) => ({ name, file: "theme.css" })),
+    ...moduleCssNames("../../core/src"),
+    ...moduleCssNames("../../fintech-react/src"),
+  ];
+
+  it("no token joins a state word with a single dash", () => {
+    const offenders = allNames.filter(({ name }) => singleDashState.test(name));
     expect(offenders).toEqual([]);
   });
 });

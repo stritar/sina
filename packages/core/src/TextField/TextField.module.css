@@ -6,9 +6,9 @@
   --sina-text-field-border: var(--sina-color-border-subtle, #edefeb);
   --sina-text-field-placeholder: var(--sina-color-text-subtle, #a7ada0);
   --sina-text-field-focus-ring: var(--sina-color-focus-ring, #545f49);
-  --sina-text-field-disabled-bg: var(--sina-color-surface-sunken, #f5f6f4);
-  --sina-text-field-disabled-fg: var(--sina-color-text-subtle, #a7ada0);
-  --sina-text-field-danger: var(--sina-color-danger, #c64c35);
+  --sina-text-field-bg--disabled: var(--sina-color-surface-sunken, #f5f6f4);
+  --sina-text-field-fg--disabled: var(--sina-color-text-subtle, #a7ada0);
+  --sina-text-field-border--danger: var(--sina-color-danger, #c64c35);
 }
 
 /* Attached focus: the border brightens + a faint 1px ring, instead of a
@@ -36,11 +36,11 @@
 }
 .control:disabled {
   cursor: not-allowed;
-  background: var(--sina-text-field-disabled-bg, #f5f6f4);
-  color: var(--sina-text-field-disabled-fg, #a7ada0);
+  background: var(--sina-text-field-bg--disabled, #f5f6f4);
+  color: var(--sina-text-field-fg--disabled, #a7ada0);
 }
 .control[aria-invalid="true"] {
-  border-color: var(--sina-text-field-danger, #c64c35);
+  border-color: var(--sina-text-field-border--danger, #c64c35);
 }
 
 .input {

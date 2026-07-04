@@ -6,7 +6,7 @@
   --sina-transaction-list-text: var(--sina-color-text, #353b31);
   --sina-transaction-list-text-muted: var(--sina-color-text-muted, #52564e);
   --sina-transaction-list-text-subtle: var(--sina-color-text-subtle, #a7ada0);
-  --sina-transaction-list-amount-credit: var(--sina-color-success, #2f7a45);
+  --sina-transaction-list-amount--credit: var(--sina-color-success, #2f7a45);
 }
 
 .card {
@@ -94,7 +94,7 @@
 }
 
 .amountCredit {
-  color: var(--sina-transaction-list-amount-credit, #2f7a45);
+  color: var(--sina-transaction-list-amount--credit, #2f7a45);
 }
 
 .amountDebit {

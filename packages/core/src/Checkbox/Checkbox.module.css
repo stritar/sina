@@ -4,8 +4,8 @@
   --sina-checkbox-bg: var(--sina-color-surface, #ffffff);
   --sina-checkbox-fg: var(--sina-color-primary-fg, #ffffff);
   --sina-checkbox-border: var(--sina-color-border, #dde0d9);
-  --sina-checkbox-checked-bg: var(--sina-color-primary, #353b31);
-  --sina-checkbox-checked-border: var(--sina-color-primary, #353b31);
+  --sina-checkbox-bg--checked: var(--sina-color-primary, #353b31);
+  --sina-checkbox-border--checked: var(--sina-color-primary, #353b31);
   --sina-checkbox-label: var(--sina-color-text, #353b31);
 }
 
@@ -39,8 +39,8 @@
 }
 .control[data-state="checked"],
 .control[data-state="indeterminate"] {
-  border-color: var(--sina-checkbox-checked-border, #353b31);
-  background: var(--sina-checkbox-checked-bg, #353b31);
+  border-color: var(--sina-checkbox-border--checked, #353b31);
+  background: var(--sina-checkbox-bg--checked, #353b31);
 }
 .control:focus-visible {
   outline: none;

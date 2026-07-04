@@ -2,12 +2,12 @@
 
 :root {
   --sina-kpi-stat-value: var(--sina-color-text, #353b31);
-  --sina-kpi-stat-good-bg: var(--sina-color-success-bg, #ecf5ef);
-  --sina-kpi-stat-good-fg: var(--sina-color-success, #2f7a45);
-  --sina-kpi-stat-bad-bg: var(--sina-color-danger-bg, #fbeeeb);
-  --sina-kpi-stat-bad-fg: var(--sina-color-danger, #c64c35);
-  --sina-kpi-stat-neutral-bg: var(--sina-color-secondary, #e5e7e2);
-  --sina-kpi-stat-neutral-fg: var(--sina-color-text-muted, #52564e);
+  --sina-kpi-stat-bg--good: var(--sina-color-success-bg, #ecf5ef);
+  --sina-kpi-stat-fg--good: var(--sina-color-success, #2f7a45);
+  --sina-kpi-stat-bg--bad: var(--sina-color-danger-bg, #fbeeeb);
+  --sina-kpi-stat-fg--bad: var(--sina-color-danger, #c64c35);
+  --sina-kpi-stat-bg--neutral: var(--sina-color-secondary, #e5e7e2);
+  --sina-kpi-stat-fg--neutral: var(--sina-color-text-muted, #52564e);
   --sina-kpi-stat-comparison-fg: var(--sina-color-text-muted, #52564e);
 }
 
@@ -56,16 +56,16 @@
 
 /* Rising is "good" by default; direction flips with invertChangeColors in JS. */
 .pillGood {
-  background: var(--sina-kpi-stat-good-bg, #ecf5ef);
-  color: var(--sina-kpi-stat-good-fg, #2f7a45);
+  background: var(--sina-kpi-stat-bg--good, #ecf5ef);
+  color: var(--sina-kpi-stat-fg--good, #2f7a45);
 }
 .pillBad {
-  background: var(--sina-kpi-stat-bad-bg, #fbeeeb);
-  color: var(--sina-kpi-stat-bad-fg, #c64c35);
+  background: var(--sina-kpi-stat-bg--bad, #fbeeeb);
+  color: var(--sina-kpi-stat-fg--bad, #c64c35);
 }
 .pillNeutral {
-  background: var(--sina-kpi-stat-neutral-bg, #e5e7e2);
-  color: var(--sina-kpi-stat-neutral-fg, #52564e);
+  background: var(--sina-kpi-stat-bg--neutral, #e5e7e2);
+  color: var(--sina-kpi-stat-fg--neutral, #52564e);
 }
 
 .trendIcon {

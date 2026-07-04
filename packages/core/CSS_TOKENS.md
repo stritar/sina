@@ -14,8 +14,12 @@ every value resolves from the `--sina-*` tokens in `packages/theme/theme.css`.
    `cn()` helper (now just `clsx`): `className={cn(styles.root, styles[variant], className)}`.
 3. **Per-component token layer** (mirrors remarkable-sandbox): declare
    `--sina-<name>-*` aliases of the semantic tokens in a `:root` block, and consume
-   them in the rules. Leave the fallbacks OFF — run `node scripts/codemod-tokens.mjs`
-   to inject the resolved `#hex`/length fallbacks. Example:
+   them in the rules. Name them per the grammar in `packages/theme/TOKEN_NAMING.md`
+   — single `-` for the identity path (component, slot, property), double `--`
+   before a variant/state modifier, which comes **after** the property:
+   `--sina-button-bg--primary--hover`, `--sina-checkbox-bg--checked`. Leave the
+   fallbacks OFF — run `node scripts/codemod-tokens.mjs` to inject the resolved
+   `#hex`/length fallbacks. Example:
    ```css
    :root {
      --sina-button-bg: var(--sina-color-primary);
@@ -43,7 +47,7 @@ Read left (old Tailwind utility) → write right (CSS declaration). `X` = a toke
 | `bg-surface` `bg-surface-raised` `bg-surface-sunken` `bg-surface-secure` | `var(--sina-color-surface[-raised|-sunken|-secure])` |
 | `text-text` `text-text-muted` `text-text-subtle` `text-text-inverse` | `var(--sina-color-text[-muted|-subtle|-inverse])` |
 | `border-border-subtle` | `var(--sina-color-border-subtle)` |
-| `bg-secondary` `bg-secondary-hover` `text-secondary-fg` | `var(--sina-color-secondary[-hover|-fg])` |
+| `bg-secondary` `bg-secondary--hover` `text-secondary-fg` | `var(--sina-color-secondary[--hover|-fg])` — state → `--`, `-fg` is a role |
 | **`/alpha` modifier** `bg-danger/90` `border-danger/40` | `color-mix(in srgb, var(--sina-color-danger) 90%, transparent)` (percent = the modifier; keep `in srgb`) |
 | `bg-current/10` | `color-mix(in srgb, currentColor 10%, transparent)` |
 | `bg-hover` `bg-pressed` `bg-selected` (overlays) | `var(--sina-overlay--hover|pressed|selected)` — already translucent, **don't** wrap again |

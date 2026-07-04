@@ -7,8 +7,8 @@
   --sina-select-placeholder: var(--sina-color-text-subtle, #a7ada0);
   --sina-select-focus-ring: var(--sina-color-focus-ring, #545f49);
   --sina-select-icon: var(--sina-color-text-muted, #52564e);
-  --sina-select-disabled-bg: var(--sina-color-surface-sunken, #f5f6f4);
-  --sina-select-disabled-fg: var(--sina-color-text-subtle, #a7ada0);
+  --sina-select-bg--disabled: var(--sina-color-surface-sunken, #f5f6f4);
+  --sina-select-fg--disabled: var(--sina-color-text-subtle, #a7ada0);
 
   --sina-select-surface: var(--sina-color-surface-raised, #ffffff);
   --sina-select-highlight: var(--sina-overlay--hover, color-mix(
@@ -50,8 +50,8 @@
 }
 .trigger:disabled {
   cursor: not-allowed;
-  background: var(--sina-select-disabled-bg, #f5f6f4);
-  color: var(--sina-select-disabled-fg, #a7ada0);
+  background: var(--sina-select-bg--disabled, #f5f6f4);
+  color: var(--sina-select-fg--disabled, #a7ada0);
 }
 
 .triggerIcon {

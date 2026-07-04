@@ -1,25 +1,25 @@
 /* @sina-design-system/core — Badge */
 
 :root {
-  --sina-badge-danger-bg: var(--sina-color-danger-bg, #fbeeeb);
-  --sina-badge-danger-border: var(--sina-color-danger, #c64c35);
-  --sina-badge-danger-fg: var(--sina-color-danger, #c64c35);
+  --sina-badge-bg--danger: var(--sina-color-danger-bg, #fbeeeb);
+  --sina-badge-border--danger: var(--sina-color-danger, #c64c35);
+  --sina-badge-fg--danger: var(--sina-color-danger, #c64c35);
 
-  --sina-badge-success-bg: var(--sina-color-success-bg, #ecf5ef);
-  --sina-badge-success-border: var(--sina-color-success, #2f7a45);
-  --sina-badge-success-fg: var(--sina-color-success, #2f7a45);
+  --sina-badge-bg--success: var(--sina-color-success-bg, #ecf5ef);
+  --sina-badge-border--success: var(--sina-color-success, #2f7a45);
+  --sina-badge-fg--success: var(--sina-color-success, #2f7a45);
 
-  --sina-badge-warning-bg: var(--sina-color-warning-bg, #faf3e6);
-  --sina-badge-warning-border: var(--sina-color-warning, #b8791f);
-  --sina-badge-warning-fg: var(--sina-color-warning, #b8791f);
+  --sina-badge-bg--warning: var(--sina-color-warning-bg, #faf3e6);
+  --sina-badge-border--warning: var(--sina-color-warning, #b8791f);
+  --sina-badge-fg--warning: var(--sina-color-warning, #b8791f);
 
-  --sina-badge-info-bg: var(--sina-color-info-bg, #ebf1f8);
-  --sina-badge-info-border: var(--sina-color-info, #36648f);
-  --sina-badge-info-fg: var(--sina-color-info, #36648f);
+  --sina-badge-bg--info: var(--sina-color-info-bg, #ebf1f8);
+  --sina-badge-border--info: var(--sina-color-info, #36648f);
+  --sina-badge-fg--info: var(--sina-color-info, #36648f);
 
-  --sina-badge-neutral-bg: var(--sina-color-surface, #ffffff);
-  --sina-badge-neutral-border: var(--sina-color-border, #dde0d9);
-  --sina-badge-neutral-fg: var(--sina-color-text-muted, #52564e);
+  --sina-badge-bg--neutral: var(--sina-color-surface, #ffffff);
+  --sina-badge-border--neutral: var(--sina-color-border, #dde0d9);
+  --sina-badge-fg--neutral: var(--sina-color-text-muted, #52564e);
 
   --sina-badge-focus-ring: var(--sina-color-focus-ring, #545f49);
 }
@@ -36,29 +36,29 @@
 
 /* Subtle tint: tinted bg + 40% intent border + intent text. */
 .danger {
-  border-color: color-mix(in srgb, var(--sina-badge-danger-border, #c64c35) 40%, transparent);
-  background: var(--sina-badge-danger-bg, #fbeeeb);
-  color: var(--sina-badge-danger-fg, #c64c35);
+  border-color: color-mix(in srgb, var(--sina-badge-border--danger, #c64c35) 40%, transparent);
+  background: var(--sina-badge-bg--danger, #fbeeeb);
+  color: var(--sina-badge-fg--danger, #c64c35);
 }
 .success {
-  border-color: color-mix(in srgb, var(--sina-badge-success-border, #2f7a45) 40%, transparent);
-  background: var(--sina-badge-success-bg, #ecf5ef);
-  color: var(--sina-badge-success-fg, #2f7a45);
+  border-color: color-mix(in srgb, var(--sina-badge-border--success, #2f7a45) 40%, transparent);
+  background: var(--sina-badge-bg--success, #ecf5ef);
+  color: var(--sina-badge-fg--success, #2f7a45);
 }
 .warning {
-  border-color: color-mix(in srgb, var(--sina-badge-warning-border, #b8791f) 40%, transparent);
-  background: var(--sina-badge-warning-bg, #faf3e6);
-  color: var(--sina-badge-warning-fg, #b8791f);
+  border-color: color-mix(in srgb, var(--sina-badge-border--warning, #b8791f) 40%, transparent);
+  background: var(--sina-badge-bg--warning, #faf3e6);
+  color: var(--sina-badge-fg--warning, #b8791f);
 }
 .info {
-  border-color: color-mix(in srgb, var(--sina-badge-info-border, #36648f) 40%, transparent);
-  background: var(--sina-badge-info-bg, #ebf1f8);
-  color: var(--sina-badge-info-fg, #36648f);
+  border-color: color-mix(in srgb, var(--sina-badge-border--info, #36648f) 40%, transparent);
+  background: var(--sina-badge-bg--info, #ebf1f8);
+  color: var(--sina-badge-fg--info, #36648f);
 }
 .neutral {
-  border-color: var(--sina-badge-neutral-border, #dde0d9);
-  background: var(--sina-badge-neutral-bg, #ffffff);
-  color: var(--sina-badge-neutral-fg, #52564e);
+  border-color: var(--sina-badge-border--neutral, #dde0d9);
+  background: var(--sina-badge-bg--neutral, #ffffff);
+  color: var(--sina-badge-fg--neutral, #52564e);
 }
 
 /* Sizes — outer padding only; the rest rides on the label. Weight scales with

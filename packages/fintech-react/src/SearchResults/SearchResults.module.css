@@ -4,7 +4,7 @@
   --sina-search-results-border: var(--sina-color-border-subtle, #edefeb);
   --sina-search-results-surface: var(--sina-color-surface, #ffffff);
   --sina-search-results-label: var(--sina-color-text, #353b31);
-  --sina-search-results-muted: var(--sina-color-text-muted, #52564e);
+  --sina-search-results-text-muted: var(--sina-color-text-muted, #52564e);
 }
 
 /* Outer framed results panel. */
@@ -20,7 +20,7 @@
   font-size: var(--sina-text--ui, 0.8125rem);
   line-height: 1.125rem;
   letter-spacing: -0.006em;
-  color: var(--sina-search-results-muted, #52564e);
+  color: var(--sina-search-results-text-muted, #52564e);
 }
 
 /* The query term emphasised within the echo line. */
@@ -36,7 +36,7 @@
   font-size: var(--sina-text--ui, 0.8125rem);
   line-height: 1.125rem;
   letter-spacing: -0.006em;
-  color: var(--sina-search-results-muted, #52564e);
+  color: var(--sina-search-results-text-muted, #52564e);
 }
 
 /* One result's label cell: kind badge + text column. */
@@ -72,7 +72,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: var(--sina-text--xs, 0.75rem);
-  color: var(--sina-search-results-muted, #52564e);
+  color: var(--sina-search-results-text-muted, #52564e);
 }
 
 /* Trailing amount value. */

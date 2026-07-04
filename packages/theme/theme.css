@@ -1,17 +1,22 @@
 /**
  * SINA design tokens — the runtime source of truth.
  *
- * Every value lives here as a `--sina-*` CSS custom property; the Tailwind preset
- * (`tailwind.cjs`) maps utilities onto these vars, so changing one line here
- * propagates to every app and every utility. No React, no JS — tokens only.
+ * Every value lives here as a `--sina-*` CSS custom property; component and app
+ * CSS Modules consume these vars, so changing one line here propagates
+ * everywhere. No React, no JS — tokens only.
  *
- * Conventions:
+ * Naming grammar (full spec: `packages/theme/TOKEN_NAMING.md`):
  *   - `--sina-` prefix on every token.
- *   - Scale steps are MODIFIERS joined by a double dash: `--sina-space--4`,
- *     `--sina-text--xl`, `--sina-radius--lg`, `--sina-size--xl`.
- *   - Semantic roles use single-dash role names: `--sina-color-text-muted`.
- *   - Colors are authored in HEX (`#rrggbb`). Opacity is provided by the Tailwind
- *     preset's `color-mix()` wrapper, so modifiers still work: `bg-primary/50`.
+ *   - Single `-` joins the IDENTITY path — category, semantic role & sub-role
+ *     (`text-muted`, `surface-raised`, `primary-fg`, `focus-ring`), and
+ *     multi-word property names (`border-color`).
+ *   - Double `--` precedes a LEAF MODIFIER — a scale step, variant, size, or
+ *     STATE — and modifiers come AFTER the property:
+ *       `--sina-space--4`, `--sina-radius--lg`, `--sina-color-neutral--500`,
+ *       `--sina-color-primary--hover`, `--sina-overlay--pressed`.
+ *   - Roles (a fixed slot the token always is) stay single-dash; only values on
+ *     a runtime axis (variant/state) get `--`. `focus-ring` is an atomic role.
+ *   - Colors are authored in HEX (`#rrggbb`, or `#rrggbbaa` for baked alpha).
  *
  * Apps consume this via `@import "@sina-design-system/theme/css";`.
  */
@@ -117,11 +122,11 @@
 
   /* Actions */
   --sina-color-primary: #353b31; /* brand--700                            */
-  --sina-color-primary-hover: #444d3b; /* brand--600                      */
-  --sina-color-primary-active: #2b3028; /* brand--800 — pressed            */
+  --sina-color-primary--hover: #444d3b; /* brand--600                     */
+  --sina-color-primary--active: #2b3028; /* brand--800 — pressed           */
   --sina-color-primary-fg: #ffffff;
   --sina-color-secondary: #e5e7e2;
-  --sina-color-secondary-hover: #dde0d9;
+  --sina-color-secondary--hover: #dde0d9;
   --sina-color-secondary-fg: #353b31;
 
   /* Status */
@@ -344,11 +349,11 @@
   --sina-color-border-subtle: #52564e; /* neutral--700 */
 
   --sina-color-primary: #b9c4b1; /* brand--200 */
-  --sina-color-primary-hover: #94a389; /* brand--300 */
-  --sina-color-primary-active: #6f7e63; /* brand--400 — pressed */
+  --sina-color-primary--hover: #94a389; /* brand--300 */
+  --sina-color-primary--active: #6f7e63; /* brand--400 — pressed */
   --sina-color-primary-fg: #21251e;
   --sina-color-secondary: #434841;
-  --sina-color-secondary-hover: #52564e;
+  --sina-color-secondary--hover: #52564e;
   --sina-color-secondary-fg: #f5f6f4;
 
   --sina-color-danger-bg: #4f1d13;

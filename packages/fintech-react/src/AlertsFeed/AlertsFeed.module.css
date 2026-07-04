@@ -4,7 +4,7 @@
   --sina-alerts-feed-border: var(--sina-color-border-subtle, #edefeb);
   --sina-alerts-feed-surface: var(--sina-color-surface, #ffffff);
   --sina-alerts-feed-title: var(--sina-color-text, #353b31);
-  --sina-alerts-feed-muted: var(--sina-color-text-muted, #52564e);
+  --sina-alerts-feed-text-muted: var(--sina-color-text-muted, #52564e);
   --sina-alerts-feed-divider: var(--sina-color-border-subtle, #edefeb);
 }
 
@@ -23,7 +23,7 @@
   font-size: var(--sina-text--ui, 0.8125rem);
   line-height: 1.125rem;
   letter-spacing: -0.006em;
-  color: var(--sina-alerts-feed-muted, #52564e);
+  color: var(--sina-alerts-feed-text-muted, #52564e);
 }
 
 /* Alert list — hairline divider between rows. */
@@ -70,12 +70,12 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: var(--sina-text--xs, 0.75rem);
-  color: var(--sina-alerts-feed-muted, #52564e);
+  color: var(--sina-alerts-feed-text-muted, #52564e);
 }
 
 /* Trailing date, right-aligned. */
 .date {
   flex-shrink: 0;
   font-size: var(--sina-text--xs, 0.75rem);
-  color: var(--sina-alerts-feed-muted, #52564e);
+  color: var(--sina-alerts-feed-text-muted, #52564e);
 }

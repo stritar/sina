@@ -6,24 +6,24 @@
   --sina-toast-title: var(--sina-color-text, #353b31);
   --sina-toast-description: var(--sina-color-text-muted, #52564e);
 
-  --sina-toast-success: var(--sina-color-success, #2f7a45);
-  --sina-toast-danger: var(--sina-color-danger, #c64c35);
-  --sina-toast-info: var(--sina-color-info, #36648f);
+  --sina-toast-accent--success: var(--sina-color-success, #2f7a45);
+  --sina-toast-accent--danger: var(--sina-color-danger, #c64c35);
+  --sina-toast-accent--info: var(--sina-color-info, #36648f);
 
   --sina-toast-action-fg: var(--sina-color-text, #353b31);
-  --sina-toast-action-hover: var(--sina-overlay--hover, color-mix(
+  --sina-toast-action-bg--hover: var(--sina-overlay--hover, color-mix(
     in srgb,
     #353b31 5%,
     transparent
   ));
 
   --sina-toast-close-fg: var(--sina-color-text-muted, #52564e);
-  --sina-toast-close-hover-bg: var(--sina-overlay--hover, color-mix(
+  --sina-toast-close-bg--hover: var(--sina-overlay--hover, color-mix(
     in srgb,
     #353b31 5%,
     transparent
   ));
-  --sina-toast-close-hover-fg: var(--sina-color-text, #353b31);
+  --sina-toast-close-fg--hover: var(--sina-color-text, #353b31);
 }
 
 /* Viewport */
@@ -77,15 +77,15 @@
 /* Intent variants — a colored left rule (base border stays on the other sides) */
 .success {
   border-left-width: var(--sina-border-width--4, 4px);
-  border-left-color: var(--sina-toast-success, #2f7a45);
+  border-left-color: var(--sina-toast-accent--success, #2f7a45);
 }
 .danger {
   border-left-width: var(--sina-border-width--4, 4px);
-  border-left-color: var(--sina-toast-danger, #c64c35);
+  border-left-color: var(--sina-toast-accent--danger, #c64c35);
 }
 .info {
   border-left-width: var(--sina-border-width--4, 4px);
-  border-left-color: var(--sina-toast-info, #36648f);
+  border-left-color: var(--sina-toast-accent--info, #36648f);
 }
 
 /* Leading intent glyph */
@@ -95,13 +95,13 @@
   flex-shrink: 0;
 }
 .iconInfo {
-  color: var(--sina-toast-info, #36648f);
+  color: var(--sina-toast-accent--info, #36648f);
 }
 .iconSuccess {
-  color: var(--sina-toast-success, #2f7a45);
+  color: var(--sina-toast-accent--success, #2f7a45);
 }
 .iconDanger {
-  color: var(--sina-toast-danger, #c64c35);
+  color: var(--sina-toast-accent--danger, #c64c35);
 }
 
 .body {
@@ -146,7 +146,7 @@
   transition-timing-function: var(--sina-ease--standard, cubic-bezier(0.2, 0, 0, 1));
 }
 .action:hover {
-  background: var(--sina-toast-action-hover, color-mix(
+  background: var(--sina-toast-action-bg--hover, color-mix(
     in srgb,
     #353b31 5%,
     transparent
@@ -175,12 +175,12 @@
   transition-timing-function: var(--sina-ease--standard, cubic-bezier(0.2, 0, 0, 1));
 }
 .close:hover {
-  background: var(--sina-toast-close-hover-bg, color-mix(
+  background: var(--sina-toast-close-bg--hover, color-mix(
     in srgb,
     #353b31 5%,
     transparent
   ));
-  color: var(--sina-toast-close-hover-fg, #353b31);
+  color: var(--sina-toast-close-fg--hover, #353b31);
 }
 .close:focus-visible {
   outline: none;

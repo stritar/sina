@@ -3,7 +3,7 @@
 :root {
   --sina-radio-group-bg: var(--sina-color-surface, #ffffff);
   --sina-radio-group-border: var(--sina-color-border, #dde0d9);
-  --sina-radio-group-checked-border: var(--sina-color-primary, #353b31);
+  --sina-radio-group-border--checked: var(--sina-color-primary, #353b31);
   --sina-radio-group-dot: var(--sina-color-primary, #353b31);
   --sina-radio-group-label: var(--sina-color-text, #353b31);
 }
@@ -41,7 +41,7 @@
   }
 }
 .item[data-state="checked"] {
-  border-color: var(--sina-radio-group-checked-border, #353b31);
+  border-color: var(--sina-radio-group-border--checked, #353b31);
 }
 .item:focus-visible {
   outline: none;
