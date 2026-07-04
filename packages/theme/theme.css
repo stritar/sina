@@ -141,6 +141,22 @@
   /* Accessibility */
   --sina-color-focus-ring: #545f49; /* brand--500 — focus-visible ring     */
 
+  /* Dataviz — categorical series palette. Series i wears chart--((i-1 mod 8)+1);
+     assigned in fixed order, never cycled or re-ranked. Hues follow the SINA
+     ramps (chroma-lifted where a ramp step reads as gray) plus three new
+     dataviz-only hues (violet/plum/teal). Slot order is the CVD-safety
+     mechanism — validated (Machado-2009 protan/deutan) against this exact
+     sequence; do not reorder. Steps are deliberately distinct from the status
+     roles so a series never impersonates danger/success/warning. */
+  --sina-color-chart--1: #6b8a3d; /* sage (brand hue)       */
+  --sina-color-chart--2: #3a7fbd; /* slate blue (info hue)  */
+  --sina-color-chart--3: #3f8a52; /* green (success--500)   */
+  --sina-color-chart--4: #7a6ec2; /* violet                 */
+  --sina-color-chart--5: #d26a53; /* red-orange (danger--400) */
+  --sina-color-chart--6: #9a5fa3; /* plum                   */
+  --sina-color-chart--7: #c1821d; /* amber (warning hue)    */
+  --sina-color-chart--8: #00949e; /* teal                   */
+
   /* Governance-flavored aliases (ROADMAP §1) — semantic, not new colors   */
   --sina-color-intent-danger: var(--sina-color-danger);
   --sina-color-intent-safe: var(--sina-color-success);
@@ -338,6 +354,17 @@
 
   --sina-color-focus-ring: #94a389; /* brand--300 */
   --sina-color-surface-secure: #2b3028; /* brand--800 */
+
+  /* Dataviz — same hues stepped lighter for the dark surface; same fixed
+     order (validated as a set against dark surface #353b31). */
+  --sina-color-chart--1: #7d9a50;
+  --sina-color-chart--2: #4f93d6;
+  --sina-color-chart--3: #55a06d;
+  --sina-color-chart--4: #8e85d3;
+  --sina-color-chart--5: #d5705a;
+  --sina-color-chart--6: #ab74b0;
+  --sina-color-chart--7: #c5861c;
+  --sina-color-chart--8: #00a5b0;
 }
 
 /* Respect reduced-motion at the token layer. */

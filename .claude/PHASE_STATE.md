@@ -23,6 +23,44 @@ See `ROADMAP.md` for the full definition of each phase and its exit criteria.
 
 ---
 
+## Chart primitives workstream — DONE (2026-07-04)
+
+Full Chart.js chart primitives recreated from the remarkable-sandbox reference (plan
+`we-currently-have-charts-sleepy-pumpkin.md`), extending the Phase-2 core surface while Phase 7 stays the frontier.
+
+**DONE & verified GREEN (do not redo):**
+- **`core` gains 5 primitives:** `LineChart` (line/area via `fill`), `BarChart` (horizontal × stacked), `PieChart` +
+  `DonutChart` (cutout + DOM-overlay center label), `KpiStat` (server-mountable stat tile, no `"use client"`, cva
+  `size`). Canvas charts: chart.js ^4.5 + react-chartjs-2 ^5.3 (**new core deps** + `vitest-canvas-mock` devDep),
+  `"use client"`, wrapper `role="img"` + required `label` (canvas `aria-hidden`), built-in Chart.js tooltip styled
+  as an inverse token chip, hover emphasis, `prefers-reduced-motion` → `animation:false`, `valueFormatter` hook
+  (keeps core domain-agnostic), `onElementClick` documented mouse-only. Shared infra `core/src/charts/` (internal):
+  element-scoped `getComputedStyle` token readers (rem→px), option builders, palette/colorizers, `deepMerge`,
+  `useChartTheme` MutationObserver re-render on `.dark`/`data-theme` flips. SSR-safe (options build after mount).
+  The Phase-6 SVG sparkline `Chart` is **untouched**.
+- **`theme` gains the dataviz palette:** `--sina-color-chart--1..8` (light + dark literal hexes) — derived from the
+  SINA ramps (chroma-lifted where a ramp step reads gray) + 3 new hues (violet/plum/teal); slot order is the
+  CVD-safety mechanism (validated Machado-2009, worst adjacent ΔE 56/51; all slots ≥3:1 on `surface`, steps distinct
+  from status roles). Wired through `tailwind.cjs` (`text-chart-1`…), `tokens.ts` + `create-theme.ts`
+  (**brand-open**; partition test), and `tokens.test.ts` chart-contrast guards.
+- **Playground:** 5 stories (`line-chart`, `bar-chart`, `pie-chart`, `donut-chart`, `kpi-stat`) + PRIMITIVES rows —
+  palette wrap (9 series), log scale, negative-value zero-line, orientation×stacked, donut center label, KPI state
+  matrix, scoped-`.dark` demos (element-scoped token reads make these work).
+- **Figma synced** (file `kRTCdsBg4WpiGxQQGfvoLU`, see [[sina-figma-file]]): Color collection gained `chart-1..8`
+  (Light+Dark); 4 new pages — LineChart `156:10` (set `158:27`), BarChart `156:11` (set `158:140`),
+  PieChart & Donut `156:12` (comps `157:1867`/`158:141`), KpiStat `156:13` (set `158:179`) — each with variant
+  matrix + booleans/TEXT props + States/Coverage frames; `/primitive-figma-sync` mapping table updated.
+- **Verified:** `CI=true pnpm build` (8/8) + `typecheck` (14/14) + `lint` (14/14) + `pnpm test` (14/14 tasks;
+  core 95 incl. canvas-mocked chart tests + charts unit suite, theme 26 incl. palette contrast) — sandbox-off;
+  `pnpm --filter playground build` (33 routes incl. the 5 new, all prerender) + prod-serve smoke (5× HTTP 200).
+- **Gotchas hardened:** vitest-canvas-mock works under globals-off; `h-64`-style examples in core JSDoc trip the
+  off-grid guard (scanner reads comments); Chart.js needs per-test ResizeObserver stubs.
+- **Follow-ups (not blocking):** nothing in `fintech-react` consumes the new charts yet (SpendingBreakdown donut /
+  CashflowBar / BalanceTrend upgrade via `/new-display-pattern`); `showValueLabels` via chartjs-plugin-datalabels
+  slots in non-breaking; visual tooltip-hover check in a real browser pending (only HTTP/prerender smoke ran).
+
+---
+
 ## Phase 6 + 6.5 — DONE: full fintech catalog (2026-07-03)
 
 Full workstream A–F surface + the entire `PATTERNS.md` catalog landed. Method: build the shared

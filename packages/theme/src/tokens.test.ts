@@ -108,4 +108,15 @@ describe("WCAG 2.2 AA contrast (light theme)", () => {
   it("focus-ring meets non-text contrast on bg (3:1)", () => {
     expect(contrast("focus-ring", "bg")).toBeGreaterThanOrEqual(3);
   });
+
+  // Chart marks are non-text graphics (WCAG 1.4.11) — every categorical series
+  // color must clear 3:1 against the card surface charts render on.
+  // (`channels()` matches the first — light — occurrence; the dark set is
+  // validated out-of-band against the dark surface.)
+  it.each([1, 2, 3, 4, 5, 6, 7, 8])(
+    "chart--%i meets non-text contrast on surface (3:1)",
+    (slot) => {
+      expect(contrast(`chart--${slot}`, "surface")).toBeGreaterThanOrEqual(3);
+    },
+  );
 });

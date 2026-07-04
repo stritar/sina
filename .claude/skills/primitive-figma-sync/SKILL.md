@@ -30,6 +30,10 @@ The Figma file is one component-family per page under `——— COMPONENTS —�
 | Progress · Spinner | Progress & Spinner `7:69` | `progress`, `spinner` |
 | SummaryList | SummaryList `7:70` | `summarylist` |
 | **Chart** | **Chart `123:2`** | **`chart`** (variant set `123:21`; `Variant`=line/area/bar; States strip + Coverage) |
+| **LineChart** | **LineChart `156:10`** | **`linechart`** (set `158:27`; `Variant`=line/area; booleans `Show Legend`/`Show Tooltip`; Coverage `161:2` incl. chart-1..8 palette strip) |
+| **BarChart** | **BarChart `156:11`** | **`barchart`** (set `158:140`; `Orientation`=vertical/horizontal × `Stacked`=false/true; same booleans; Coverage `161:1925`) |
+| **PieChart · DonutChart** | **PieChart & Donut `156:12`** | **`piechart`** (comp `157:1867`), **`donutchart`** (comp `158:141`; + `Center Label`/`Center Sub Label` TEXT, `Show Center Label`); Coverage `160:56` |
+| **KpiStat** | **KpiStat `156:13`** | **`kpistat`** (set `158:179`; `Size`=sm/md/lg; TEXT `Value`/`Delta`/`Comparison Label`; booleans `Show Trend`/`Show Comparison`; States `160:1915` + Coverage `160:1942`) |
 | Stack · Grid | Layout & Utilities `7:71` | — (layout primitives, doc-only) |
 | Icon · ScrollArea · Separator · VisuallyHidden | Layout & Utilities `7:71` | — (utilities; glyphs incl. FileText `130:2`) |
 

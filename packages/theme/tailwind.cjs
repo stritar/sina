@@ -110,6 +110,19 @@ module.exports = {
       "focus-ring": c("--sina-color-focus-ring"),
       "intent-danger": c("--sina-color-intent-danger"),
       "intent-safe": c("--sina-color-intent-safe"),
+
+      // Dataviz categorical palette — legend swatches / series accents
+      // (text-chart-1, bg-chart-3, …). Fixed order; see theme.css.
+      chart: {
+        1: c("--sina-color-chart--1"),
+        2: c("--sina-color-chart--2"),
+        3: c("--sina-color-chart--3"),
+        4: c("--sina-color-chart--4"),
+        5: c("--sina-color-chart--5"),
+        6: c("--sina-color-chart--6"),
+        7: c("--sina-color-chart--7"),
+        8: c("--sina-color-chart--8"),
+      },
     },
 
     spacing: {

@@ -51,6 +51,14 @@ export const colorTokens = {
   focusRing: "--sina-color-focus-ring",
   intentDanger: "--sina-color-intent-danger",
   intentSafe: "--sina-color-intent-safe",
+  chart1: "--sina-color-chart--1",
+  chart2: "--sina-color-chart--2",
+  chart3: "--sina-color-chart--3",
+  chart4: "--sina-color-chart--4",
+  chart5: "--sina-color-chart--5",
+  chart6: "--sina-color-chart--6",
+  chart7: "--sina-color-chart--7",
+  chart8: "--sina-color-chart--8",
 } as const satisfies Record<string, `--sina-${string}`>;
 
 /** Font families. */

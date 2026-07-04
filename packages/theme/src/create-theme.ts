@@ -54,6 +54,16 @@ export const brandColorTokens = {
   info: colorTokens.info,
   infoFg: colorTokens.infoFg,
   infoBg: colorTokens.infoBg,
+  // Dataviz series palette is brand-open: a consumer may rebrand its chart
+  // colors, but must preserve the fixed slot order contract (see theme.css).
+  chart1: colorTokens.chart1,
+  chart2: colorTokens.chart2,
+  chart3: colorTokens.chart3,
+  chart4: colorTokens.chart4,
+  chart5: colorTokens.chart5,
+  chart6: colorTokens.chart6,
+  chart7: colorTokens.chart7,
+  chart8: colorTokens.chart8,
 } as const satisfies Record<string, `--sina-${string}`>;
 
 /**

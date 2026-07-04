@@ -1,3 +1,4 @@
+import "vitest-canvas-mock";
 import { afterEach, expect } from "vitest";
 import { toHaveNoViolations } from "jest-axe";
 import { cleanup } from "@testing-library/react";
