@@ -150,8 +150,9 @@ export function getCartesianOptions(el: Element | null, cfg: CartesianChartConfi
   };
   const valueAxis = {
     stacked: cfg.stacked ?? false,
-    beginAtZero: true,
-    ...(cfg.logarithmic ? { type: "logarithmic" as const } : {}),
+    // `beginAtZero` is invalid on a logarithmic scale (log 0 = −∞), so it is
+    // applied only on the default linear scale.
+    ...(cfg.logarithmic ? { type: "logarithmic" as const } : { beginAtZero: true }),
     ...(cfg.valueRangeMin !== undefined ? { min: cfg.valueRangeMin } : {}),
     ...(cfg.valueRangeMax !== undefined ? { max: cfg.valueRangeMax } : {}),
     title: axisTitle(cfg.horizontal ? cfg.xAxisLabel : cfg.yAxisLabel),

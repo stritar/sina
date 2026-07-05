@@ -1,12 +1,19 @@
 /**
  * CashflowSummary — a SINA presentational fintech component (ungoverned).
  * Renders the validated `cashflow_summary` payload: a period's inflow / outflow /
- * net as a SummaryList, with a Progress bar for the outflow-to-inflow ratio.
- * Read-only; brand-open tokens.
+ * net as a SummaryList (the numbers, as text) plus a `BarChart` comparing the
+ * three (net dips below the baseline when the period runs negative). Read-only;
+ * brand-open tokens.
+ *
+ * Client component: the interactive chart needs the browser and the
+ * `valueFormatter` function cannot cross the RSC boundary. The gate stays
+ * server-side — this only renders the decision it already made.
  */
 
+"use client";
+
 import type { IntentEnvelope } from "@sina-design-system/governance";
-import { Progress, Stack, SummaryList } from "@sina-design-system/core";
+import { BarChart, Stack, SummaryList } from "@sina-design-system/core";
 import type { SummaryItem } from "@sina-design-system/core";
 
 import { formatAmount } from "../format.js";
@@ -43,7 +50,6 @@ function readCashflow(payload: unknown): CashflowView {
 export function CashflowSummary({ payload }: CashflowSummaryProps) {
   const { period, currency, inflow, outflow, net } = readCashflow(payload);
   const isEmpty = inflow === 0 && outflow === 0 && net === 0;
-  const ratio = inflow > 0 ? Math.min((outflow / inflow) * 100, 100) : 0;
 
   const items: SummaryItem[] = [
     { label: "Inflow", value: formatAmount(inflow, currency) },
@@ -62,9 +68,18 @@ export function CashflowSummary({ payload }: CashflowSummaryProps) {
       {isEmpty ? (
         <p className={styles.empty}>No cashflow this period.</p>
       ) : (
-        <Stack gap={2}>
+        <Stack gap={3}>
           <SummaryList items={items} />
-          <Progress value={ratio} label={`Outflow is ${Math.round(ratio)}% of inflow`} />
+          <div className={styles.chart}>
+            <BarChart
+              data={{
+                labels: ["Inflow", "Outflow", "Net"],
+                datasets: [{ label: period, data: [inflow, outflow, net] }],
+              }}
+              label={`Cashflow for ${period}: inflow, outflow, and net`}
+              valueFormatter={(v) => formatAmount(v, currency)}
+            />
+          </div>
         </Stack>
       )}
     </Stack>

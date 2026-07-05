@@ -55,9 +55,19 @@ Full Chart.js chart primitives recreated from the remarkable-sandbox reference (
   `pnpm --filter playground build` (33 routes incl. the 5 new, all prerender) + prod-serve smoke (5× HTTP 200).
 - **Gotchas hardened:** vitest-canvas-mock works under globals-off; `h-64`-style examples in core JSDoc trip the
   off-grid guard (scanner reads comments); Chart.js needs per-test ResizeObserver stubs.
-- **Follow-ups (not blocking):** nothing in `fintech-react` consumes the new charts yet (SpendingBreakdown donut /
-  CashflowBar / BalanceTrend upgrade via `/new-display-pattern`); `showValueLabels` via chartjs-plugin-datalabels
-  slots in non-breaking; visual tooltip-hover check in a real browser pending (only HTTP/prerender smoke ran).
+- **Follow-ups (not blocking):** `showValueLabels` via chartjs-plugin-datalabels slots in non-breaking; a
+  multi-series `LineChart` showcase (portfolio vs benchmark) is still unbuilt; browser tooltip-hover check
+  still pending (only prerender/test ran).
+
+**Update (2026-07-05) — `fintech-react` now consumes the Chart.js primitives** (resolves the "nothing consumes
+the new charts yet" follow-up). Five display components upgraded, **schemas/fixtures/scenarios unchanged**:
+`BalanceTrend` + `AssetDetail` → `LineChart` (BalanceTrend adds a `KpiStat` header), `CashflowSummary` →
+`BarChart`, `SpendingBreakdown` → `PieChart`, `PortfolioHoldings` → `DonutChart`. Each keeps its text
+summary/legend as the accessible path (chart is enhancement, not sole path) and became `"use client"` (passes a
+`valueFormatter` function to the client chart). Also fixed: `charts/options.ts` no longer sets `beginAtZero` on a
+logarithmic value axis; `vitest-canvas-mock` + a ResizeObserver stub added to the `fintech-react` and `playground`
+test envs. **Verified green (sandbox-off):** `core` build (37 `.d.ts`) · `fintech-react` build/lint/typecheck/test
+(96) · `playground` typecheck/test (109)/build.
 
 ---
 

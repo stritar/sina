@@ -16,8 +16,15 @@ describe("CashflowSummary", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("renders a known value from the valid fixture", () => {
+  it("renders the period (as text) and a labelled cashflow chart", () => {
     render(<CashflowSummary payload={cashflowFixtures.valid} />);
     expect(screen.getByText(/June 2026/)).toBeTruthy();
+    expect(screen.getByRole("img", { name: /cashflow/i })).toBeTruthy();
+  });
+
+  it("renders the zero state with no chart", () => {
+    render(<CashflowSummary payload={cashflowFixtures.validEmpty} />);
+    expect(screen.getByText(/No cashflow this period/)).toBeTruthy();
+    expect(screen.queryByRole("img")).toBeNull();
   });
 });

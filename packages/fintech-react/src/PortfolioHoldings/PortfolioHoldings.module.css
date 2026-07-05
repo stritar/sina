@@ -42,6 +42,11 @@
   color: var(--sina-portfolio-holdings-text-muted, #52564e);
 }
 
+.chart {
+  height: 14rem;
+  width: 100%;
+}
+
 .list > * + * {
   border-top-width: var(--sina-border-width--1, 1px);
   border-top-style: solid;

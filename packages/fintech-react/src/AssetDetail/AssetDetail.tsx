@@ -3,15 +3,23 @@
  *
  * Renders the validated `asset_detail` payload the gate already passed: one
  * instrument's symbol, name, price, and signed day change in a `SummaryList`,
- * plus a compact `Chart` sparkline over its bounded price series. Read-only and
- * carries NO governance logic — any action must emit a NEW intent through the
- * gate via `onIntent`, never a raw button. Free text (symbol / name) renders as
- * TEXT (never `dangerouslySetInnerHTML`), neutralising any markup a tool returned.
- * Brand-open tokens only.
+ * plus an interactive `LineChart` over its bounded price series (visible points +
+ * hover tooltip). Read-only and carries NO governance logic — any action must
+ * emit a NEW intent through the gate via `onIntent`, never a raw button. Free
+ * text (symbol / name) renders as TEXT (never `dangerouslySetInnerHTML`),
+ * neutralising any markup a tool returned. The SummaryList carries the numbers as
+ * text (the chart canvas is `aria-hidden`, its tooltip mouse-only). Brand-open
+ * tokens only.
+ *
+ * Client component: the interactive chart needs the browser (and the
+ * `valueFormatter` function cannot cross the RSC boundary). The gate still runs
+ * server-side — this only renders the decision it already made.
  */
 
+"use client";
+
 import type { IntentEnvelope } from "@sina-design-system/governance";
-import { Chart, Stack, SummaryList, type SummaryItem } from "@sina-design-system/core";
+import { LineChart, Stack, SummaryList, type SummaryItem } from "@sina-design-system/core";
 
 import { formatAmount, formatPct } from "../format.js";
 import styles from "./AssetDetail.module.css";
@@ -77,7 +85,17 @@ export function AssetDetail({ payload }: AssetDetailProps) {
 
       {points.length > 0 ? (
         <div className={styles.chart}>
-          <Chart data={points} label={`${symbol} price trend, ${points.length} points`} />
+          <LineChart
+            data={{
+              // No time axis on the wire — the series is a bare price walk, so the
+              // x labels stay blank and the tooltip surfaces the formatted price.
+              labels: points.map(() => ""),
+              datasets: [{ label: `${symbol} price`, data: points }],
+            }}
+            label={`${symbol} price trend, ${points.length} points`}
+            valueFormatter={(v) => formatAmount(v, currency)}
+            fill
+          />
         </div>
       ) : (
         <p className={styles.empty}>No chart data</p>

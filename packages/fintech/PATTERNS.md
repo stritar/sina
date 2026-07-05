@@ -38,9 +38,9 @@ test, and a playground scenario; display components pass jest-axe.
 | Transaction detail | `transaction_detail` | `TransactionDetail` | SummaryList, Badge, Separator | ✅ |
 | Account list / switcher | `list_accounts` | `AccountList` | Grid/Stack, SummaryList | ✅ |
 | Statement list | `list_statements` | `StatementList` | SummaryList | ✅ |
-| Spending breakdown | `spending_breakdown` | `SpendingBreakdown` | Stack, Progress | ✅ |
-| Cashflow summary | `cashflow_summary` | `CashflowSummary` | SummaryList, Progress | ✅ |
-| Balance trend | `balance_trend` | `BalanceTrend` | **Chart¹** | ✅ |
+| Spending breakdown | `spending_breakdown` | `SpendingBreakdown` | Stack, **PieChart**¹ | ✅ |
+| Cashflow summary | `cashflow_summary` | `CashflowSummary` | SummaryList, **BarChart**¹ | ✅ |
+| Balance trend | `balance_trend` | `BalanceTrend` | KpiStat, **LineChart**¹ | ✅ |
 | Recent activity feed | `activity_feed` | `ActivityFeed` | Stack, Badge | ✅ |
 | Insight card | `insight` | `InsightCard` | Alert, Badge | ✅ |
 | Card display / wallet | `list_cards` | `CardList` | Grid, Badge, Stack | ✅ |
@@ -49,8 +49,8 @@ test, and a playground scenario; display components pass jest-axe.
 | Subscriptions / recurring | `list_recurring` | `RecurringList` | SummaryList, Badge | ✅ |
 | Invoice list / detail (B2B) | `list_invoices` | `InvoiceList` | SummaryList, Badge | ✅ |
 | Upcoming payments | `upcoming_payments` | `UpcomingPayments` | Stack, Badge | ✅ |
-| Portfolio holdings | `portfolio_holdings` | `PortfolioHoldings` | Stack, Badge | ✅ |
-| Asset detail / quote | `asset_detail` | `AssetDetail` | SummaryList, **Chart¹** | ✅ |
+| Portfolio holdings | `portfolio_holdings` | `PortfolioHoldings` | Stack, Badge, **DonutChart**¹ | ✅ |
+| Asset detail / quote | `asset_detail` | `AssetDetail` | SummaryList, **LineChart**¹ | ✅ |
 | Watchlist | `watchlist` | `Watchlist` | Stack, Badge | ✅ |
 | Order history | `order_history` | `OrderHistory` | SummaryList, Badge | ✅ |
 | FX quote | `fx_quote` | `FxQuote` | SummaryList, Badge | ✅ |
@@ -61,10 +61,14 @@ test, and a playground scenario; display components pass jest-axe.
 | Alerts feed | `alerts_feed` | `AlertsFeed` | Stack, Alert, Badge | ✅ |
 | Search results | `search_results` | `SearchResults` | SummaryList, Combobox | ✅ |
 
-¹ **Chart/sparkline** — now a shipped `core` primitive (`Chart`, an accessible SVG sparkline;
-`role="img"` + label, `currentColor`-driven). `BalanceTrend` and `AssetDetail` compose it. Tabular
-reads (transactions/holdings/orders) still use the axe-clean list form; a `Table` primitive remains
-optional.
+¹ **Charts** — two `core` chart families back these reads. The interactive **Chart.js** primitives
+(`LineChart`, `BarChart`, `PieChart`, `DonutChart` — `role="img"` + label, canvas `aria-hidden`,
+hover tooltip, `valueFormatter` hook) are composed by `BalanceTrend`, `AssetDetail`, `CashflowSummary`,
+`SpendingBreakdown`, and `PortfolioHoldings`; each pairs its chart with a text summary/legend so the
+mouse-only tooltip is never the sole path to the data (and each is therefore `"use client"`). The
+lightweight SVG sparkline `Chart` (`currentColor`-driven, server-mountable) still backs the compact
+list reads (`CryptoHoldings`, `NetWorth`, `StatementList`). Tabular reads (transactions/orders) still
+use the axe-clean list form; a `Table` primitive remains optional.
 
 ---
 

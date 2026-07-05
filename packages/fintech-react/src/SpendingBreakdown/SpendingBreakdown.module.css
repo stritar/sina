@@ -41,6 +41,11 @@
   color: var(--sina-spending-breakdown-text-muted, #52564e);
 }
 
+.chart {
+  height: 14rem;
+  width: 100%;
+}
+
 .categoryLabel {
   font-size: var(--sina-text--ui, 0.8125rem);
   line-height: 1.125rem;

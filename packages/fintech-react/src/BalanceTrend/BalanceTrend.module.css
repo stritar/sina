@@ -46,7 +46,6 @@
 }
 
 .chart {
-  height: var(--sina-space--16, 4rem);
+  height: 12rem;
   width: 100%;
-  color: var(--sina-balance-trend-accent, #353b31);
 }

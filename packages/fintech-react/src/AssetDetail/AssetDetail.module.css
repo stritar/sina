@@ -16,8 +16,7 @@
 
 .chart {
   width: 100%;
-  height: var(--sina-space--12, 3rem);
-  color: var(--sina-asset-detail-chart, #353b31);
+  height: 12rem;
 }
 
 .empty {

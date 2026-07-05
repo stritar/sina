@@ -31,3 +31,8 @@
   letter-spacing: -0.006em;
   color: var(--sina-cashflow-summary-text-muted, #52564e);
 }
+
+.chart {
+  height: 12rem;
+  width: 100%;
+}

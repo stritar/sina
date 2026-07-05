@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { axe } from "jest-axe";
 import { assetDetailFixtures } from "@sina-design-system/fintech";
 
@@ -16,8 +16,15 @@ describe("AssetDetail", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("renders a known value from the validated payload", () => {
-    const { container } = render(<AssetDetail payload={assetDetailFixtures.valid} />);
-    expect(container.textContent).toContain("Apple Inc.");
+  it("renders the name (as text) and a labelled price-trend chart", () => {
+    render(<AssetDetail payload={assetDetailFixtures.valid} />);
+    expect(screen.getByText("Apple Inc.")).toBeTruthy();
+    expect(screen.getByRole("img", { name: /price trend/i })).toBeTruthy();
+  });
+
+  it("renders the empty state with no chart", () => {
+    render(<AssetDetail payload={assetDetailFixtures.validEmpty} />);
+    expect(screen.getByText("No chart data")).toBeTruthy();
+    expect(screen.queryByRole("img")).toBeNull();
   });
 });

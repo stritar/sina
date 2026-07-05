@@ -7,6 +7,9 @@
  * zero violations.
  */
 
+// Chart.js display components (BalanceTrend, SpendingBreakdown, …) mount a
+// <canvas>; jsdom has no 2D context, so mock it before anything renders.
+import "vitest-canvas-mock";
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";

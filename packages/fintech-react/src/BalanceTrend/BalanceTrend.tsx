@@ -2,17 +2,26 @@
  * BalanceTrend — a SINA presentational fintech component (ungoverned).
  *
  * Renders the validated `balance_trend` payload the gate already passed: a masked
- * account, its latest balance, and a compact `Chart` sparkline over the point
- * series. It carries NO governance logic and offers no write action — any action
- * must emit a NEW intent through the gate via `onIntent`, never a raw button. The
- * account label renders as TEXT (never `dangerouslySetInnerHTML`), neutralising
- * any markup a tool might have returned. Brand-open tokens only.
+ * account, a `KpiStat` headline (latest balance + change vs the start of the
+ * window), and an interactive `LineChart` over the point series (visible points +
+ * hover tooltip). It carries NO governance logic and offers no write action — any
+ * action must emit a NEW intent through the gate via `onIntent`, never a raw
+ * button. The account label renders as TEXT (never `dangerouslySetInnerHTML`),
+ * neutralising any markup a tool might have returned. The chart's canvas is
+ * `aria-hidden` and its tooltip is mouse-only, so the KpiStat text carries the
+ * data. Brand-open tokens only.
+ *
+ * Client component: the interactive chart needs the browser (and we pass a
+ * `valueFormatter` function to it, which cannot cross the RSC boundary). The gate
+ * still runs server-side — this only renders the decision it already made.
  */
 
-import type { IntentEnvelope } from "@sina-design-system/governance";
-import { Chart, Stack } from "@sina-design-system/core";
+"use client";
 
-import { formatAmount } from "../format.js";
+import type { IntentEnvelope } from "@sina-design-system/governance";
+import { KpiStat, LineChart, Stack } from "@sina-design-system/core";
+
+import { formatAmount, formatDate } from "../format.js";
 import styles from "./BalanceTrend.module.css";
 
 export interface BalanceTrendProps {
@@ -63,6 +72,7 @@ function readBalanceTrend(payload: unknown): BalanceTrendView {
 export function BalanceTrend({ payload }: BalanceTrendProps) {
   const { account, currency, points } = readBalanceTrend(payload);
   const latest = points.length > 0 ? points[points.length - 1] : undefined;
+  const first = points.length > 0 ? points[0] : undefined;
 
   return (
     <Stack
@@ -78,16 +88,29 @@ export function BalanceTrend({ payload }: BalanceTrendProps) {
       </Stack>
 
       {latest ? (
-        <span className={styles.balance}>
-          {formatAmount(latest.balance, currency)}
-        </span>
+        <>
+          <KpiStat
+            size="lg"
+            value={latest.balance}
+            comparisonValue={first?.balance}
+            comparisonLabel="since start of period"
+            showChangeAsPercentage
+            valueFormatter={(v) => formatAmount(v, currency)}
+          />
+          <div className={styles.chart}>
+            <LineChart
+              data={{
+                labels: points.map((point) => formatDate(point.date)),
+                datasets: [{ label: "Balance", data: points.map((point) => point.balance) }],
+              }}
+              label={`Balance trend, ${points.length} points`}
+              valueFormatter={(v) => formatAmount(v, currency)}
+            />
+          </div>
+        </>
       ) : (
         <p className={styles.empty}>No trend data</p>
       )}
-
-      <div className={styles.chart}>
-        <Chart data={points.map((point) => point.balance)} label={`Balance trend, ${points.length} points`} />
-      </div>
     </Stack>
   );
 }
