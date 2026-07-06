@@ -1,29 +1,33 @@
 /* @sina-design-system/core — Toast */
 
 :root {
-  --sina-toast-bg: var(--sina-color-surface-raised, #ffffff);
-  --sina-toast-border: var(--sina-color-border-subtle, #edefeb);
-  --sina-toast-title: var(--sina-color-text, #353b31);
-  --sina-toast-description: var(--sina-color-text-muted, #52564e);
+  --sina-toast-bg--success: var(--sina-color-success-fill, #66d091);
+  --sina-toast-bg--danger: var(--sina-color-danger-fill, #ff7e48);
+  --sina-toast-bg--info: var(--sina-color-info-fill, #88baf1);
 
-  --sina-toast-accent--success: var(--sina-color-success, #178a45);
-  --sina-toast-accent--danger: var(--sina-color-danger, #d5341f);
-  --sina-toast-accent--info: var(--sina-color-info, #1478cc);
+  /* Per-status ink on the vivid fill — each intent class resolves --sina-toast-fg,
+     which all ink (title/description/icon/action/close) inherits. */
+  --sina-toast-fg--success: var(--sina-color-status-fg--success, #000000);
+  --sina-toast-fg--danger: var(--sina-color-status-fg--danger, #000000);
+  --sina-toast-fg--info: var(--sina-color-status-fg--info, #000000);
+  --sina-toast-title: var(--sina-toast-fg, #000000);
+  --sina-toast-description: var(--sina-toast-fg, #000000);
 
-  --sina-toast-action-fg: var(--sina-color-text, #353b31);
-  --sina-toast-action-bg--hover: var(--sina-overlay--hover, color-mix(
+  --sina-toast-close-fg: var(--sina-toast-fg, #000000);
+  --sina-toast-close-bg--hover: color-mix(
     in srgb,
-    #353b31 5%,
+    var(--sina-toast-fg, #000000) 10%,
     transparent
-  ));
+  );
+  --sina-toast-close-fg--hover: var(--sina-toast-fg, #000000);
 
-  --sina-toast-close-fg: var(--sina-color-text-muted, #52564e);
-  --sina-toast-close-bg--hover: var(--sina-overlay--hover, color-mix(
-    in srgb,
-    #353b31 5%,
-    transparent
-  ));
-  --sina-toast-close-fg--hover: var(--sina-color-text, #353b31);
+  /* Placeholder border — present but invisible: 1px black at 0 alpha, per status.
+     A themer reveals one status's border by raising that color's alpha; each
+     intent class resolves --sina-toast-border-color. */
+  --sina-toast-border-color--success: var(--sina-color-status-border--success, #00000000);
+  --sina-toast-border-color--danger: var(--sina-color-status-border--danger, #00000000);
+  --sina-toast-border-color--info: var(--sina-color-status-border--info, #00000000);
+  --sina-toast-border-width: var(--sina-border-width--1, 1px);
 }
 
 /* Viewport */
@@ -48,8 +52,8 @@
   align-items: flex-start;
   gap: var(--sina-space--2_5, 0.625rem);
   border-radius: var(--sina-radius--md, 6px);
-  border: var(--sina-border-width--1, 1px) solid var(--sina-toast-border, #edefeb);
-  background: var(--sina-toast-bg, #ffffff);
+  border: var(--sina-toast-border-width, 0) solid
+    var(--sina-toast-border-color, transparent);
   padding: var(--sina-space--3, 0.75rem);
   padding-right: var(--sina-space--7, 1.75rem);
   box-shadow: var(--sina-shadow--md, 0 4px 8px color-mix(in srgb, #383e33 8%, transparent),
@@ -74,34 +78,30 @@
   transform: translateX(var(--radix-toast-swipe-end-x));
 }
 
-/* Intent variants — a colored left rule (base border stays on the other sides) */
+/* Intent variants — vivid saturated fill; each resolves the per-status ink +
+   border that every descendant inherits (see --sina-toast-fg). */
 .success {
-  border-left-width: var(--sina-border-width--4, 4px);
-  border-left-color: var(--sina-toast-accent--success, #178a45);
+  background: var(--sina-toast-bg--success, #66d091);
+  --sina-toast-fg: var(--sina-toast-fg--success, #000000);
+  --sina-toast-border-color: var(--sina-toast-border-color--success, #00000000);
 }
 .danger {
-  border-left-width: var(--sina-border-width--4, 4px);
-  border-left-color: var(--sina-toast-accent--danger, #d5341f);
+  background: var(--sina-toast-bg--danger, #ff7e48);
+  --sina-toast-fg: var(--sina-toast-fg--danger, #000000);
+  --sina-toast-border-color: var(--sina-toast-border-color--danger, #00000000);
 }
 .info {
-  border-left-width: var(--sina-border-width--4, 4px);
-  border-left-color: var(--sina-toast-accent--info, #1478cc);
+  background: var(--sina-toast-bg--info, #88baf1);
+  --sina-toast-fg: var(--sina-toast-fg--info, #000000);
+  --sina-toast-border-color: var(--sina-toast-border-color--info, #00000000);
 }
 
-/* Leading intent glyph */
+/* Leading intent glyph — per-status ink. */
 .icon {
-  width: var(--sina-space--5, 1.25rem);
-  height: var(--sina-space--5, 1.25rem);
+  width: var(--sina-size--xs, 1rem);
+  height: var(--sina-size--xs, 1rem);
   flex-shrink: 0;
-}
-.iconInfo {
-  color: var(--sina-toast-accent--info, #1478cc);
-}
-.iconSuccess {
-  color: var(--sina-toast-accent--success, #178a45);
-}
-.iconDanger {
-  color: var(--sina-toast-accent--danger, #d5341f);
+  color: var(--sina-toast-fg, #000000);
 }
 
 .body {
@@ -109,7 +109,7 @@
   min-width: 0;
   flex: 1 1 0%;
   flex-direction: column;
-  gap: var(--sina-space--0_5, 0.125rem);
+  gap: var(--sina-space--2, 0.5rem);
 }
 
 .title {
@@ -117,45 +117,21 @@
   line-height: 1.125rem;
   letter-spacing: -0.006em;
   font-weight: var(--sina-font-weight--medium, 500);
-  color: var(--sina-toast-title, #353b31);
+  color: var(--sina-toast-title, #000000);
 }
 
 .description {
   font-size: var(--sina-text--ui, 0.8125rem);
   line-height: 1.125rem;
   letter-spacing: -0.006em;
-  color: var(--sina-toast-description, #52564e);
+  color: var(--sina-toast-description, #000000);
 }
 
-/* Action */
+/* Action slot — always an asChild <Button> (e.g. a primary "Undo"), so this is
+   positioning only; the wrapped Button owns its fill, padding, hover, and focus ring. */
 .action {
-  margin-left: calc(var(--sina-space--1_5, 0.375rem) * -1);
-  display: inline-flex;
+  align-self: flex-start;
   width: fit-content;
-  align-items: center;
-  border-radius: var(--sina-radius--sm, 4px);
-  padding-inline: var(--sina-space--1_5, 0.375rem);
-  padding-block: var(--sina-space--0_5, 0.125rem);
-  font-size: var(--sina-text--ui, 0.8125rem);
-  line-height: 1.125rem;
-  letter-spacing: -0.006em;
-  font-weight: var(--sina-font-weight--medium, 500);
-  color: var(--sina-toast-action-fg, #353b31);
-  transition-property: color, background-color, border-color;
-  transition-duration: var(--sina-duration--fast, 120ms);
-  transition-timing-function: var(--sina-ease--standard, cubic-bezier(0.2, 0, 0, 1));
-}
-.action:hover {
-  background: var(--sina-toast-action-bg--hover, color-mix(
-    in srgb,
-    #353b31 5%,
-    transparent
-  ));
-}
-.action:focus-visible {
-  outline: none;
-  box-shadow: var(--sina-shadow--focus-ring, 0 0 0 1px #f5f6f4,
-    0 0 0 3px #545f49);
 }
 
 /* Close */
@@ -169,7 +145,7 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--sina-radius--sm, 4px);
-  color: var(--sina-toast-close-fg, #52564e);
+  color: var(--sina-toast-close-fg, #000000);
   transition-property: color, background-color, border-color;
   transition-duration: var(--sina-duration--fast, 120ms);
   transition-timing-function: var(--sina-ease--standard, cubic-bezier(0.2, 0, 0, 1));
@@ -177,10 +153,10 @@
 .close:hover {
   background: var(--sina-toast-close-bg--hover, color-mix(
     in srgb,
-    #353b31 5%,
+    #000000 10%,
     transparent
   ));
-  color: var(--sina-toast-close-fg--hover, #353b31);
+  color: var(--sina-toast-close-fg--hover, #000000);
 }
 .close:focus-visible {
   outline: none;
@@ -188,8 +164,8 @@
     0 0 0 3px #545f49);
 }
 .closeIcon {
-  width: var(--sina-size--icon-sm, 0.875rem);
-  height: var(--sina-size--icon-sm, 0.875rem);
+  width: var(--sina-size--xs, 1rem);
+  height: var(--sina-size--xs, 1rem);
 }
 
 /* Radix Presence waits for animationend, so both open + closed need a real

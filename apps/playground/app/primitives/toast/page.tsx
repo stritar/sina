@@ -116,7 +116,7 @@ export default function ToastStory() {
             ) : null}
             {spec.action ? (
               <ToastAction asChild altText={spec.action}>
-                <Button variant="ghost" size="sm" className={styles.action}>
+                <Button variant="primary" size="sm" className={styles.action}>
                   {spec.action}
                 </Button>
               </ToastAction>

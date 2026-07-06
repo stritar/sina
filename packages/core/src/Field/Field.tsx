@@ -14,6 +14,7 @@
  */
 "use client";
 
+import { WarningOctagon } from "@phosphor-icons/react/dist/ssr";
 import { Label } from "radix-ui";
 import { cloneElement, useId } from "react";
 import type { ReactElement, ReactNode } from "react";
@@ -78,6 +79,7 @@ export function Field({ label, description, error, required, className, children
 
       {invalid ? (
         <p id={errorId} role="alert" className={styles.error}>
+          <WarningOctagon aria-hidden weight="bold" className={styles.errorIcon} />
           {error}
         </p>
       ) : null}

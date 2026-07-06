@@ -7,7 +7,7 @@
  * the Phase-4 blocked state composes from. Domain-agnostic: neutral intents only,
  * no governance vocabulary baked in.
  */
-import { WarningCircle, CheckCircle, Info, Warning } from "@phosphor-icons/react/dist/ssr";
+import { WarningOctagon, CheckCircle, Info, Warning } from "@phosphor-icons/react/dist/ssr";
 import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { cn } from "../utils/cn.js";
@@ -19,7 +19,6 @@ interface VariantConfig {
   role: "status" | "alert";
   icon: PhosphorIcon;
   container: string | undefined;
-  iconColor: string | undefined;
 }
 
 const VARIANTS: Record<AlertVariant, VariantConfig> = {
@@ -27,25 +26,21 @@ const VARIANTS: Record<AlertVariant, VariantConfig> = {
     role: "status",
     icon: Info,
     container: styles.info,
-    iconColor: styles.iconInfo,
   },
   success: {
     role: "status",
     icon: CheckCircle,
     container: styles.success,
-    iconColor: styles.iconSuccess,
   },
   warning: {
     role: "status",
     icon: Warning,
     container: styles.warning,
-    iconColor: styles.iconWarning,
   },
   danger: {
     role: "alert",
-    icon: WarningCircle,
+    icon: WarningOctagon,
     container: styles.danger,
-    iconColor: styles.iconDanger,
   },
 };
 
@@ -66,7 +61,7 @@ export function Alert({ variant = "info", title, children, icon, className }: Al
   return (
     <div role={config.role} className={cn(styles.root, config.container, className)}>
       {Glyph ? (
-        <Glyph aria-hidden weight="fill" className={cn(styles.icon, config.iconColor)} />
+        <Glyph aria-hidden weight="bold" className={styles.icon} />
       ) : null}
       <div className={styles.body}>
         {title ? <p className={styles.title}>{title}</p> : null}

@@ -11,7 +11,7 @@
 "use client";
 
 import { Toast as Primitive } from "radix-ui";
-import { X, Info, CheckCircle, WarningCircle } from "@phosphor-icons/react/dist/ssr";
+import { X, Info, CheckCircle, WarningOctagon } from "@phosphor-icons/react/dist/ssr";
 import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
 import { forwardRef } from "react";
 import type { ComponentPropsWithoutRef, ComponentRef } from "react";
@@ -30,7 +30,7 @@ ToastViewport.displayName = "ToastViewport";
 
 type ToastVariant = "success" | "danger" | "info";
 
-// Intent variant → its colored-left-rule class. (CSS Module class access is
+// Intent variant → its vivid-fill background class. (CSS Module class access is
 // `string | undefined` under noUncheckedIndexedAccess.)
 const variantClass: Record<ToastVariant, string | undefined> = {
   success: styles.success,
@@ -38,11 +38,11 @@ const variantClass: Record<ToastVariant, string | undefined> = {
   info: styles.info,
 };
 
-/** Leading intent glyph + color class per variant (mirrors Alert). */
-const TOAST_ICONS: Record<ToastVariant, { icon: PhosphorIcon; color: string | undefined }> = {
-  info: { icon: Info, color: styles.iconInfo },
-  success: { icon: CheckCircle, color: styles.iconSuccess },
-  danger: { icon: WarningCircle, color: styles.iconDanger },
+/** Leading intent glyph per variant (mirrors Alert). Ink is shared black. */
+const TOAST_ICONS: Record<ToastVariant, PhosphorIcon> = {
+  info: Info,
+  success: CheckCircle,
+  danger: WarningOctagon,
 };
 
 export interface ToastProps extends ComponentPropsWithoutRef<typeof Primitive.Root> {
@@ -54,7 +54,7 @@ export interface ToastProps extends ComponentPropsWithoutRef<typeof Primitive.Ro
 
 export const Toast = forwardRef<ComponentRef<typeof Primitive.Root>, ToastProps>(
   ({ className, variant, icon, children, ...props }, ref) => {
-    const { icon: defaultIcon, color } = TOAST_ICONS[variant ?? "info"];
+    const defaultIcon = TOAST_ICONS[variant ?? "info"];
     const Glyph = icon === false ? null : (icon ?? defaultIcon);
     return (
       <Primitive.Root
@@ -62,7 +62,7 @@ export const Toast = forwardRef<ComponentRef<typeof Primitive.Root>, ToastProps>
         className={cn(styles.toast, variantClass[variant ?? "info"], className)}
         {...props}
       >
-        {Glyph ? <Glyph aria-hidden weight="fill" className={cn(styles.icon, color)} /> : null}
+        {Glyph ? <Glyph aria-hidden weight="bold" className={styles.icon} /> : null}
         <div className={styles.body}>{children}</div>
       </Primitive.Root>
     );

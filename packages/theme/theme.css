@@ -139,9 +139,39 @@
   --sina-color-warning: #f2a20c;
   --sina-color-warning-fg: #21251e;
   --sina-color-warning-bg: #fef7e7;
+  --sina-color-warning-text: #7d5206; /* warning--800 — amber legible on -bg tint (AA); base amber fails contrast */
   --sina-color-info: #1478cc;
   --sina-color-info-fg: #ffffff;
   --sina-color-info-bg: #e9f3fc;
+  --sina-color-neutral-bg: #f5f6f4; /* neutral--50 — badge/chip tint */
+
+  /* Status fills (vivid, saturated) + per-status ink & border — the "0000 dark
+     on vivid fill" language. Consumed by Badge/Alert/Toast. DISTINCT from the
+     pale `-bg` tints (KpiStat's surface, kept). Theme-invariant: each surface
+     carries its own fill, so black-on-fill contrast holds in light AND dark (all
+     AAA; guarded in tokens.test.ts). */
+  --sina-color-neutral-fill: #e6e9e3;
+  --sina-color-info-fill: #88baf1;
+  --sina-color-success-fill: #66d091;
+  --sina-color-warning-fill: #fcb737;
+  --sina-color-danger-fill: #ff7e48;
+
+  /* Per-status ink on the vivid fill — one knob per status so an adopter can
+     rebrand (e.g.) danger ink without touching the others. Default "0000 dark"
+     across all, holding AAA on every fill (guarded in tokens.test.ts). */
+  --sina-color-status-fg--neutral: #000000;
+  --sina-color-status-fg--info: #000000;
+  --sina-color-status-fg--success: #000000;
+  --sina-color-status-fg--warning: #000000;
+  --sina-color-status-fg--danger: #000000;
+
+  /* Per-status placeholder border — black at 0 alpha; a themer raises the alpha
+     per status to reveal it (or overrides the color outright). */
+  --sina-color-status-border--neutral: #00000000;
+  --sina-color-status-border--info: #00000000;
+  --sina-color-status-border--success: #00000000;
+  --sina-color-status-border--warning: #00000000;
+  --sina-color-status-border--danger: #00000000;
 
   /* Accessibility */
   --sina-color-focus-ring: #545f49; /* brand--500 — focus-visible ring     */
@@ -360,6 +390,8 @@
   --sina-color-success-bg: #0d4324;
   --sina-color-warning-bg: #573a04;
   --sina-color-info-bg: #082b48;
+  --sina-color-neutral-bg: #434841; /* neutral--800 — raised grey chip on dark */
+  --sina-color-warning-text: #f2a20c; /* bright amber legible on the dark warning tint */
 
   --sina-color-focus-ring: #94a389; /* brand--300 */
   --sina-color-surface-secure: #2b3028; /* brand--800 */

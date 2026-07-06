@@ -24,6 +24,11 @@ export default function BadgeStory() {
         )}
       />
 
+      <Demo label="Mandatory glyph · danger / warning render a filled icon by default">
+        <Badge intent="danger">Blocked</Badge>
+        <Badge intent="warning">Review</Badge>
+      </Demo>
+
       <Demo label="Modifiers · dot / icon / dot sm">
         <Badge intent="success" dot>
           Dot

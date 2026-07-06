@@ -1,25 +1,30 @@
 /* @sina-design-system/core — Badge */
 
 :root {
-  --sina-badge-bg--danger: var(--sina-color-danger-bg, #fdece9);
-  --sina-badge-border--danger: var(--sina-color-danger, #d5341f);
-  --sina-badge-fg--danger: var(--sina-color-danger, #d5341f);
+  --sina-badge-bg--danger: var(--sina-color-danger-fill, #ff7e48);
+  --sina-badge-fg--danger: var(--sina-color-status-fg--danger, #000000);
 
-  --sina-badge-bg--success: var(--sina-color-success-bg, #e9f9ef);
-  --sina-badge-border--success: var(--sina-color-success, #178a45);
-  --sina-badge-fg--success: var(--sina-color-success, #178a45);
+  --sina-badge-bg--success: var(--sina-color-success-fill, #66d091);
+  --sina-badge-fg--success: var(--sina-color-status-fg--success, #000000);
 
-  --sina-badge-bg--warning: var(--sina-color-warning-bg, #fef7e7);
-  --sina-badge-border--warning: var(--sina-color-warning, #f2a20c);
-  --sina-badge-fg--warning: var(--sina-color-warning, #f2a20c);
+  --sina-badge-bg--warning: var(--sina-color-warning-fill, #fcb737);
+  --sina-badge-fg--warning: var(--sina-color-status-fg--warning, #000000);
 
-  --sina-badge-bg--info: var(--sina-color-info-bg, #e9f3fc);
-  --sina-badge-border--info: var(--sina-color-info, #1478cc);
-  --sina-badge-fg--info: var(--sina-color-info, #1478cc);
+  --sina-badge-bg--info: var(--sina-color-info-fill, #88baf1);
+  --sina-badge-fg--info: var(--sina-color-status-fg--info, #000000);
 
-  --sina-badge-bg--neutral: var(--sina-color-surface, #ffffff);
-  --sina-badge-border--neutral: var(--sina-color-border, #dde0d9);
-  --sina-badge-fg--neutral: var(--sina-color-text-muted, #52564e);
+  --sina-badge-bg--neutral: var(--sina-color-neutral-fill, #e6e9e3);
+  --sina-badge-fg--neutral: var(--sina-color-status-fg--neutral, #000000);
+
+  /* Placeholder border — present but invisible: 1px black at 0 alpha, per status.
+     A themer reveals one status's border by raising that color's alpha (or
+     overriding the token); each intent class picks its own via --sina-badge-border-color. */
+  --sina-badge-border-color--danger: var(--sina-color-status-border--danger, #00000000);
+  --sina-badge-border-color--success: var(--sina-color-status-border--success, #00000000);
+  --sina-badge-border-color--warning: var(--sina-color-status-border--warning, #00000000);
+  --sina-badge-border-color--info: var(--sina-color-status-border--info, #00000000);
+  --sina-badge-border-color--neutral: var(--sina-color-status-border--neutral, #00000000);
+  --sina-badge-border-width: var(--sina-border-width--1, 1px);
 
   --sina-badge-focus-ring: var(--sina-color-focus-ring, #545f49);
 }
@@ -29,36 +34,35 @@
   align-items: center;
   white-space: nowrap;
   border-radius: var(--sina-radius--full, 9999px);
-  border-width: var(--sina-border-width--1, 1px);
-  border-style: solid;
-  border-color: transparent;
+  border: var(--sina-badge-border-width, 0) solid
+    var(--sina-badge-border-color, transparent);
 }
 
-/* Subtle tint: tinted bg + 40% intent border + intent text. */
+/* Vivid fill: saturated bg + per-status ink + per-status placeholder border. */
 .danger {
-  border-color: color-mix(in srgb, var(--sina-badge-border--danger, #d5341f) 40%, transparent);
-  background: var(--sina-badge-bg--danger, #fdece9);
-  color: var(--sina-badge-fg--danger, #d5341f);
+  background: var(--sina-badge-bg--danger, #ff7e48);
+  color: var(--sina-badge-fg--danger, #000000);
+  --sina-badge-border-color: var(--sina-badge-border-color--danger, #00000000);
 }
 .success {
-  border-color: color-mix(in srgb, var(--sina-badge-border--success, #178a45) 40%, transparent);
-  background: var(--sina-badge-bg--success, #e9f9ef);
-  color: var(--sina-badge-fg--success, #178a45);
+  background: var(--sina-badge-bg--success, #66d091);
+  color: var(--sina-badge-fg--success, #000000);
+  --sina-badge-border-color: var(--sina-badge-border-color--success, #00000000);
 }
 .warning {
-  border-color: color-mix(in srgb, var(--sina-badge-border--warning, #f2a20c) 40%, transparent);
-  background: var(--sina-badge-bg--warning, #fef7e7);
-  color: var(--sina-badge-fg--warning, #f2a20c);
+  background: var(--sina-badge-bg--warning, #fcb737);
+  color: var(--sina-badge-fg--warning, #000000);
+  --sina-badge-border-color: var(--sina-badge-border-color--warning, #00000000);
 }
 .info {
-  border-color: color-mix(in srgb, var(--sina-badge-border--info, #1478cc) 40%, transparent);
-  background: var(--sina-badge-bg--info, #e9f3fc);
-  color: var(--sina-badge-fg--info, #1478cc);
+  background: var(--sina-badge-bg--info, #88baf1);
+  color: var(--sina-badge-fg--info, #000000);
+  --sina-badge-border-color: var(--sina-badge-border-color--info, #00000000);
 }
 .neutral {
-  border-color: var(--sina-badge-border--neutral, #dde0d9);
-  background: var(--sina-badge-bg--neutral, #ffffff);
-  color: var(--sina-badge-fg--neutral, #52564e);
+  background: var(--sina-badge-bg--neutral, #e6e9e3);
+  color: var(--sina-badge-fg--neutral, #000000);
+  --sina-badge-border-color: var(--sina-badge-border-color--neutral, #00000000);
 }
 
 /* Sizes — outer padding only; the rest rides on the label. Weight scales with
@@ -100,6 +104,10 @@
 }
 .icon {
   flex-shrink: 0;
+  /* Leading glyph reads as the badge's label color (currentColor). `inherit`
+     follows the per-intent fg the root sets, and outranks a stray global
+     `svg`/icon color rule that would otherwise capture it. */
+  color: inherit;
 }
 
 .dot {
@@ -115,8 +123,8 @@
   height: var(--sina-space--3, 0.75rem);
 }
 .glyphMd {
-  width: var(--sina-size--icon-sm, 0.875rem);
-  height: var(--sina-size--icon-sm, 0.875rem);
+  width: var(--sina-size--xs, 1rem);
+  height: var(--sina-size--xs, 1rem);
 }
 
 /* Trailing dismiss button — inherits the pill's text color; hover adds a faint

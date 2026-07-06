@@ -137,6 +137,12 @@ describe("WCAG 2.2 AA contrast (light theme)", () => {
     ["text-muted", "surface"],
     ["primary-fg", "primary"],
     ["danger-fg", "danger"],
+    // Vivid status fills carry per-status ink (status-fg--<status>) — Badge/Alert/Toast.
+    ["status-fg--neutral", "neutral-fill"],
+    ["status-fg--info", "info-fill"],
+    ["status-fg--success", "success-fill"],
+    ["status-fg--warning", "warning-fill"],
+    ["status-fg--danger", "danger-fill"],
   ])("%s on %s meets AA (4.5:1)", (fg, bg) => {
     expect(contrast(fg, bg)).toBeGreaterThanOrEqual(4.5);
   });
