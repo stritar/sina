@@ -2,12 +2,6 @@
 
 :root {
   --sina-kpi-stat-value: var(--sina-color-text, #353b31);
-  --sina-kpi-stat-bg--good: var(--sina-color-success-bg, #e9f9ef);
-  --sina-kpi-stat-fg--good: var(--sina-color-success, #178a45);
-  --sina-kpi-stat-bg--bad: var(--sina-color-danger-bg, #fdece9);
-  --sina-kpi-stat-fg--bad: var(--sina-color-danger, #d5341f);
-  --sina-kpi-stat-bg--neutral: var(--sina-color-secondary, #e5e7e2);
-  --sina-kpi-stat-fg--neutral: var(--sina-color-text-muted, #52564e);
   --sina-kpi-stat-comparison-fg: var(--sina-color-text-muted, #52564e);
 }
 
@@ -35,43 +29,11 @@
   font-size: var(--sina-text--5xl, 2.5rem);
 }
 
+/* Flex row wrapping the status Badge + the comparison label. */
 .pillRow {
   display: flex;
   align-items: center;
   gap: var(--sina-space--2, 0.5rem);
-}
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sina-space--1, 0.25rem);
-  border-radius: var(--sina-radius--full, 9999px);
-  padding-inline: var(--sina-space--2, 0.5rem);
-  padding-block: var(--sina-space--0_5, 0.125rem);
-  font-size: var(--sina-text--ui, 0.8125rem);
-  line-height: 1.125rem;
-  letter-spacing: -0.006em;
-  font-weight: var(--sina-font-weight--medium, 500);
-}
-
-/* Rising is "good" by default; direction flips with invertChangeColors in JS. */
-.pillGood {
-  background: var(--sina-kpi-stat-bg--good, #e9f9ef);
-  color: var(--sina-kpi-stat-fg--good, #178a45);
-}
-.pillBad {
-  background: var(--sina-kpi-stat-bg--bad, #fdece9);
-  color: var(--sina-kpi-stat-fg--bad, #d5341f);
-}
-.pillNeutral {
-  background: var(--sina-kpi-stat-bg--neutral, #e5e7e2);
-  color: var(--sina-kpi-stat-fg--neutral, #52564e);
-}
-
-.trendIcon {
-  width: var(--sina-space--3, 0.75rem);
-  height: var(--sina-space--3, 0.75rem);
-  flex-shrink: 0;
 }
 
 .comparisonLabel {

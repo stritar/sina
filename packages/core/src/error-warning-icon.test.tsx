@@ -17,6 +17,7 @@ import { ShieldCheck } from "@phosphor-icons/react/dist/ssr";
 import { Alert } from "./Alert/Alert.js";
 import { Badge } from "./Badge/Badge.js";
 import { Field } from "./Field/Field.js";
+import { KpiStat } from "./KpiStat/KpiStat.js";
 import { Toast } from "./Toast/Toast.js";
 import { ToastProvider, ToastViewport } from "./Toast/Toast.js";
 
@@ -25,6 +26,8 @@ import { ToastProvider, ToastViewport } from "./Toast/Toast.js";
 const CASES: Array<{ name: string; node: ReactElement }> = [
   { name: "Badge intent=danger", node: <Badge intent="danger">Blocked</Badge> },
   { name: "Badge intent=warning", node: <Badge intent="warning">Review</Badge> },
+  // A falling KpiStat surfaces its status through a danger Badge (with a TrendDown glyph).
+  { name: "KpiStat falling (danger)", node: <KpiStat value={80} comparisonValue={100} /> },
   {
     name: "Field error",
     node: (

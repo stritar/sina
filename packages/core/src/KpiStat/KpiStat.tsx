@@ -1,19 +1,21 @@
 /**
  * @sina-design-system/core — KpiStat
  *
- * A headline statistic: a large value with an optional trend pill and
+ * A headline statistic: a large value with an optional trend `Badge` and
  * comparison label. Domain-agnostic — it knows nothing about currencies or
- * balances; the caller formats values through `valueFormatter`. Styled only
- * via theme tokens: the pill wears `success`/`danger` status colors (direction
- * of "good" flips with `invertChangeColors`), the value wears `text`. Purely
- * presentational (no hooks) → server-mountable, no `"use client"`.
+ * balances; the caller formats values through `valueFormatter`. The status
+ * indicator is the shared `Badge` primitive: `success`/`danger`/`neutral`
+ * intent by direction (which flips with `invertChangeColors`), the value wears
+ * `text`. Purely presentational (no hooks) → server-mountable, no `"use client"`.
  *
- * A11y: everything is real text — no image, no canvas. The trend icon is
- * decorative (`aria-hidden`); the signed delta text carries the meaning.
+ * A11y: everything is real text — no image, no canvas. The trend arrow rides in
+ * the Badge as a decorative (`aria-hidden`) glyph; the signed delta text carries
+ * the meaning.
  */
 
 import type { CSSProperties } from "react";
 import { TrendDown, TrendUp } from "@phosphor-icons/react/dist/ssr";
+import { Badge } from "../Badge/Badge.js";
 import { cn } from "../utils/cn.js";
 import styles from "./KpiStat.module.css";
 
@@ -95,22 +97,13 @@ export function KpiStat({
       </span>
       {pill !== null ? (
         <span className={styles.pillRow}>
-          <span
-            className={cn(
-              styles.pill,
-              pill.tone === "good" && styles.pillGood,
-              pill.tone === "bad" && styles.pillBad,
-              pill.tone === "neutral" && styles.pillNeutral,
-            )}
+          <Badge
+            intent={pill.tone === "good" ? "success" : pill.tone === "bad" ? "danger" : "neutral"}
+            size="sm"
+            icon={pill.rising === undefined ? undefined : pill.rising ? TrendUp : TrendDown}
           >
-            {pill.rising !== undefined &&
-              (pill.rising ? (
-                <TrendUp aria-hidden weight="bold" className={styles.trendIcon} />
-              ) : (
-                <TrendDown aria-hidden weight="bold" className={styles.trendIcon} />
-              ))}
             {pill.text}
-          </span>
+          </Badge>
           {comparisonLabel !== undefined ? (
             <span className={styles.comparisonLabel}>{comparisonLabel}</span>
           ) : null}
