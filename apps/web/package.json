@@ -5,6 +5,7 @@
   "description": "SINA marketing site + docs. Fumadocs (headless) docs, bespoke landing. Never published to npm.",
   "scripts": {
     "dev": "next dev --port 3000",
+    "prebuild": "pnpm exec turbo run build --filter=web^...",
     "build": "next build",
     "start": "next start --port 3000",
     "lint": "eslint .",
@@ -12,7 +13,7 @@
     "test": "vitest run",
     "clean": "rimraf .next .source",
     "postinstall": "fumadocs-mdx",
-    "pages:build": "next-on-pages",
+    "pages:build": "pnpm exec turbo run build --filter=web^... && next-on-pages",
     "pages:preview": "wrangler pages dev .vercel/output/static --compatibility-flags=nodejs_compat"
   },
   "dependencies": {

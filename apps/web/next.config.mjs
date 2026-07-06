@@ -3,7 +3,11 @@ import { createMDX } from "fumadocs-mdx/next";
 /** @type {import("next").NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // Compile SINA workspace packages from source rather than requiring a prebuild.
+  // Resolution of these packages still follows each one's `exports` map → `dist/`
+  // (transpilePackages does NOT redirect the entry to `src`), so their `dist/`
+  // must be built before `next build` — see the `prebuild` script in package.json.
+  // transpilePackages only lets Next transpile that resolved `dist` output under
+  // its own compiler.
   transpilePackages: [
     "@sina-design-system/core",
     "@sina-design-system/theme",
