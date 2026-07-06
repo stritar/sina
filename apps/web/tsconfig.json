@@ -3,6 +3,11 @@
   "compilerOptions": {
     "jsx": "preserve",
     "noEmit": true,
+    // Apps emit no declarations; disabling this avoids TS2742 declaration-
+    // portability errors on build-config exports (e.g. fumadocs `defineDocs`,
+    // whose inferred type references fumadocs-mdx's bundled zod v4).
+    "declaration": false,
+    "declarationMap": false,
     "allowJs": true,
     "incremental": true,
     "plugins": [{ "name": "next" }],

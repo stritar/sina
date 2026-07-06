@@ -8,7 +8,7 @@
 
 import { Alert, Button } from "@sina-design-system/core";
 import { ArrowsClockwise } from "@phosphor-icons/react/dist/ssr";
-import type { TransportError } from "../_lib/types";
+import type { TransportError } from "./types";
 import styles from "./TransportState.module.css";
 
 const TITLE: Record<TransportError["reason"], string> = {
@@ -38,7 +38,7 @@ export function TransportState({
           <Button
             variant="secondary"
             size="sm"
-            iconLeft={<ArrowsClockwise className={styles.icon} />}
+            iconLeft={<ArrowsClockwise weight="bold" className={styles.icon} />}
             onClick={onRetry}
           >
             Retry

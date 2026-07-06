@@ -16,7 +16,7 @@ import {
 } from "@sina-design-system/fintech-react";
 
 import { regateWithApproval } from "../_lib/regate";
-import type { ConsoleView, GovernedComponentProps } from "../_lib/types";
+import type { ConsoleView, GovernedComponentProps } from "@sina-design-system/governance-demo";
 
 export function SecureWireDialogHost({ trace, turnId, onApproved }: GovernedComponentProps) {
   const pending = useRef<ConsoleView | null>(null);

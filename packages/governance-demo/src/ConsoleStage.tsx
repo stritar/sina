@@ -54,7 +54,7 @@ export function ConsoleStage({
       {!last && <span aria-hidden className={styles.rail} />}
       {/* status node */}
       <span className={styles.nodeSlot}>
-        <Icon className={[styles.node, className].filter(Boolean).join(" ")} aria-hidden />
+        <Icon weight="fill" className={[styles.node, className].filter(Boolean).join(" ")} aria-hidden />
       </span>
 
       <div className={styles.body}>
@@ -66,9 +66,9 @@ export function ConsoleStage({
             className={styles.toggle}
           >
             {open ? (
-              <CaretDown className={styles.caret} aria-hidden />
+              <CaretDown weight="bold" className={styles.caret} aria-hidden />
             ) : (
-              <CaretRight className={styles.caret} aria-hidden />
+              <CaretRight weight="bold" className={styles.caret} aria-hidden />
             )}
             <span className={styles.title}>{title}</span>
             {latencyMs != null && (

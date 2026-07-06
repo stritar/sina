@@ -105,9 +105,9 @@ export function KpiStat({
           >
             {pill.rising !== undefined &&
               (pill.rising ? (
-                <TrendUp aria-hidden className={styles.trendIcon} />
+                <TrendUp aria-hidden weight="bold" className={styles.trendIcon} />
               ) : (
-                <TrendDown aria-hidden className={styles.trendIcon} />
+                <TrendDown aria-hidden weight="bold" className={styles.trendIcon} />
               ))}
             {pill.text}
           </span>

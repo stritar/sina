@@ -14,13 +14,13 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 
-import { runGate, runExperience } from "../_lib/gate";
-import { getScenario } from "../_lib/scenarios";
+import { runGate, runExperience } from "@sina-design-system/governance-demo";
+import { getScenario } from "@sina-design-system/governance-demo";
 import { ChatThread } from "./ChatThread";
 import { Composer } from "./Composer";
-import { ConsoleTimeline } from "./ConsoleTimeline";
-import { AuditLedger } from "./AuditLedger";
-import type { Turn } from "../_lib/types";
+import { ConsoleTimeline } from "@sina-design-system/governance-demo";
+import { AuditLedger } from "@sina-design-system/governance-demo";
+import type { Turn } from "@sina-design-system/governance-demo";
 
 expect.extend(toHaveNoViolations);
 

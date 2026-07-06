@@ -10,13 +10,13 @@
 import { Badge, Spinner } from "@sina-design-system/core";
 import { ShieldCheck } from "@phosphor-icons/react/dist/ssr";
 import { INTENTS } from "@sina-design-system/fintech";
-import type { GateTrace } from "../_lib/gate";
+import type { GateTrace } from "@sina-design-system/governance-demo";
 import { resolvePresentational } from "../_lib/registry";
-import type { ConsoleView, Turn } from "../_lib/types";
+import type { ConsoleView, Turn } from "@sina-design-system/governance-demo";
 import { BlockedState } from "./BlockedState";
-import { ComparisonToggle } from "./ComparisonToggle";
-import { GovernedWireSummary } from "./GovernedWireSummary";
-import { TransportState } from "./TransportState";
+import { ComparisonToggle } from "@sina-design-system/governance-demo";
+import { GovernedWireSummary } from "@sina-design-system/governance-demo";
+import { TransportState } from "@sina-design-system/governance-demo";
 import styles from "./ChatThread.module.css";
 
 /**
@@ -129,7 +129,7 @@ export function ChatThread({
   if (turns.length === 0) {
     return (
       <div className={styles.empty}>
-        <ShieldCheck className={styles.emptyIcon} aria-hidden />
+        <ShieldCheck weight="fill" className={styles.emptyIcon} aria-hidden />
         <p className={styles.emptyText}>
           Send a prompt or pick a scenario — every reply is governed before it mounts.
         </p>

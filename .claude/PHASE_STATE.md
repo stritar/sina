@@ -15,11 +15,30 @@ See `ROADMAP.md` for the full definition of each phase and its exit criteria.
 | 5 — Governed Fintech Components | done | 2026-07-01 | `CI=true pnpm build` (8/8) + `typecheck` (14/14) + `lint` (14/14, `fintech-react` boundary enforced) all green; tests: fintech 37 (+8 secondary-approval), fintech-react 3 (jest-axe zero violations across dialog states), playground 12 (8 gate incl. approved/self-approval/mismatch + 4 a11y), core 60 / governance 9 / theme 18. New `@sina-design-system/fintech-react` (the governed-UI third layer) houses `SecureWireDialog`; `fintech` gained the server-side approval extension (`formats/canonical.ts` binding hash, `ApprovalContext` initiator **server-supplied**, `makeWirePolicy` payload-binding + four-eyes, v1.0.0→1.1.0). Runtime smoke vs built dist: over-limit→forces `SecureWireDialog`, cross-manager approve→valid, self-approval→`SELF_APPROVAL_FORBIDDEN`, approve-$5k-exec-$60k→`APPROVAL_PAYLOAD_MISMATCH`. `/new-governed-component` skill + CLAUDE.md boundary landed. Gaps: replay/staleness (`challengeId` reserved, P8), identity/session. Run tests `CI=true` + sandbox-off. |
 | 6 — Agentic Fintech Experience (Governed + Ungoverned) | done | 2026-07-03 | `CI=true pnpm build` (8/8) + `typecheck` (14/14) + `lint` (14/14) green; tests 14/14 (sandbox-off) — core 65 / governance 18 / theme 18 / fintech 132 / fintech-react 85 / playground 109. Full workstream A–F surface landed (see below). |
 | 6.5 — Full Fintech Pattern Catalog (agent-executed) | done | 2026-07-03 | Whole `PATTERNS.md` catalog ✅: 17 new ungoverned reads + 20 new governed flows, each with schema + fixtures + registry entry + green gate test + playground scenario (reads also jest-axe). Fanned out via a Workflow (36 agents), assembled + verified centrally. Same green commands as Phase 6. |
-| 7 — Documentation (Fumadocs) | not-started | — | — |
+| 7 — Documentation (Fumadocs) | in-progress | — (foundation+slice 2026-07-06) | `CI=true pnpm --config.verify-deps-before-run=false typecheck` (16/16) + `lint` (16/16) + `test` (exit 0); `apps/web` next build (sandbox-off) → `/` + `/api/search` Static, `/docs/*` SSG (3 pages); playground next build green |
 | 8 — Marketing Site | not-started | — | — |
 | 9 — Release Hardening | not-started | — | — |
 
 **Status values:** `not-started` · `in-progress` · `blocked` · `done`.
+
+---
+
+## Phase 7 — IN PROGRESS: docs foundation + vertical slice (2026-07-06)
+
+Full plan: `kickoff-phase-7-binary-russell.md`. Kickoff landed the docs **foundation + a vertical slice**; the full phase is not done. See [[phase7-docs-fumadocs-headless]].
+
+**Decision (with the user):** docs use **headless `fumadocs-core` ONLY — no `fumadocs-ui`, no Tailwind** (fumadocs-ui hard-couples to Tailwind v4; the repo removed Tailwind). All docs chrome is hand-built from SINA `core` primitives + `--sina-*` CSS Modules. **The ROADMAP §Phase-7 "compose Tailwind presets / map `--color-fd-*`" language is superseded — ignore it.**
+
+**DONE & verified GREEN (do not redo):**
+- **`apps/web` docs engine (headless):** `fumadocs-core@15.8.5` + `fumadocs-mdx@14.2.13` (NOT the 15.x mdx line — it forces Next 16); `next` bumped `^15.1.4`→`^15.3.0` monorepo-wide. `source.config.ts` + `lib/source.ts` (collection imported from **`@/.source/server`**) + `next.config` `createMDX()` + `postinstall: fumadocs-mdx`. Catch-all `app/docs/[[...slug]]/page.tsx` (`dynamicParams=false`, `generateStaticParams`, headless `page.data.body` render) + `app/docs/layout.tsx`.
+- **Custom chrome (CSS Modules over `--sina-*`):** `app/components/docs/` — `DocsShell`, `DocsHeader` (mobile Dialog drawer), `Sidebar` (page tree + `aria-current`), `DocsTOC` (`fumadocs-core/toc` scroll-spy), `CodePre` (copy button over shiki `<pre>`), `Search` (`useDocsSearch({type:'static'})` in a `core` Dialog), `mdx-components` + `.prose` typography. jest-axe chrome test.
+- **Static search:** `app/api/search/route.ts` = `createFromSource(source, {buildIndex})` + `revalidate=false` (explicit `buildIndex` — the v14 server runtime doesn't surface `structuredData` at static export). Cloudflare-static-safe.
+- **3 MDX pages:** Introduction · The One Invariant (§1b, embeds the demo) · The Interception Contract. Marketing home moved into a reserved **`(marketing)` route group** for Phase 8.
+- **New `@sina-design-system/governance-demo`** (`private`, Vite-lib build like fintech-react): the deterministic **LLM-free** gate + read-only interception console, **extracted from the playground** (pure `gate`/`scenarios`/`types`/`format` + presentational `ConsoleTimeline`/`ComparisonToggle`/`GovernedWireSummary`/… ). New **`GovernanceDemo` RSC** runs `runGate` at build (SSG) — honors §1b with no `"use server"`/edge. The AI-SDK/`gateLive`, `regate*`, registry, interactive `*Host`/shell **stay in the playground** (re-pointed to import the package). Embedded via `<GovernanceDemo scenario="over-limit" />` in `the-one-invariant.mdx`.
+- **Cloudflare pipeline stood up:** `apps/web/wrangler.toml` (`nodejs_compat`), `.gitignore` (`.vercel`, `.source`), `pages:build`/`pages:preview` scripts. **Cloudflare serve is user-run** (sandbox can't bind ports; `wrangler pages dev` needs the `workerd` build script approved).
+- **Verified:** typecheck 16/16, lint 16/16, `pnpm test` exit 0 (governance-demo 107 = 105 gate + 2 embed a11y; playground 4 a11y; web 3 chrome a11y; rest unchanged); `apps/web` next build → `/` + `/api/search` **Static**, `/docs/*` **SSG** (3 pages); playground next build green. **Run pnpm scripts with `CI=true --config.verify-deps-before-run=false`; `next build` must run sandbox-off** (webpack cache hangs under sandbox — see [[next-build-sandbox-hang]]).
+
+**DEFERRED to later Phase 7 passes (not done):** full 6-section IA (Concepts / Architecture / Guides / Reference / Components) content; auto-generated API reference (TSDoc→MDX); `llms.txt` + per-page markdown export; docs dark-mode toggle; token-driven shiki theme; the actual Cloudflare deploy.
 
 ---
 

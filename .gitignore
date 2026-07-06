@@ -129,6 +129,12 @@ dist
 # Turborepo
 .turbo
 
+# Cloudflare / next-on-pages build output
+.vercel
+
+# fumadocs-mdx generated source (apps/web/.source)
+.source
+
 # pnpm
 .pnpm-store
 

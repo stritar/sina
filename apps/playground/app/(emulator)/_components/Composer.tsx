@@ -45,7 +45,7 @@ export function Composer({
         <Button
           onClick={onSend}
           disabled={disabled || value.trim().length === 0}
-          iconRight={<PaperPlaneTilt className={styles.sendIcon} />}
+          iconRight={<PaperPlaneTilt weight="fill" className={styles.sendIcon} />}
         >
           Send
         </Button>

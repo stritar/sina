@@ -1,0 +1,56 @@
+---
+title: The Interception Contract
+description: Every schema returns the same surface — { valid, violations, requiredComponent } — so governance never drifts across domains.
+---
+
+Every governance schema in SINA returns the **same shape**. That uniform surface
+is what lets the intent router, the audit trail, and the playground treat every
+rule identically — governance never drifts from one domain to the next.
+
+## The shape
+
+```ts
+interface InterceptionResult {
+  valid: boolean;
+  violations: Violation[];
+  requiredComponent: string | null;
+}
+```
+
+- **Pass** → `{ valid: true, violations: [], requiredComponent: null }`
+- **Fail** → `{ valid: false, violations: [...], requiredComponent: "SecureWireDialog" }`
+
+On a clean pass, SINA mounts the pattern's own component. On a failure, the
+`requiredComponent` names the governed component that **must** render instead —
+the model never gets to choose it.
+
+## The audit event
+
+Every interception — pass or fail — emits a structured, auditable event:
+
+```ts
+interface AuditEvent {
+  timestamp: string;
+  payload: unknown; // redacted: secrets dropped, identifiers hashed
+  result: InterceptionResult;
+  violations: Violation[];
+  decidedComponent: string | null;
+}
+```
+
+Sensitive fields are redacted before the event is emitted — a card CVV or a
+second-factor code never appears in the ledger. This is the seam the compliance
+story rests on.
+
+## Governed vs. ungoverned
+
+The contract is universal, but governance is an **optional escalation layer**:
+
+- A **governed** pattern has a policy — it can escalate and force a
+  `requiredComponent`.
+- An **ungoverned** pattern (a read-only view like a transaction list) is
+  shape-validated only — `.strict()`, bounded, masked, and still audited — then
+  mounts a presentational component. Nothing to escalate, but the same
+  validate-then-mount path.
+
+Either way: validate first, then mount.

@@ -10,7 +10,7 @@
 import { useState, type ReactNode } from "react";
 import { Button } from "@sina-design-system/core";
 import { Warning } from "@phosphor-icons/react/dist/ssr";
-import { formatAmount } from "../_lib/format";
+import { formatAmount } from "./format";
 import styles from "./ComparisonToggle.module.css";
 
 function UngovernedConfirm({ payload }: { payload: unknown }) {
@@ -25,7 +25,7 @@ function UngovernedConfirm({ payload }: { payload: unknown }) {
   return (
     <div className={styles.confirmRoot}>
       <div className={styles.confirmHeader}>
-        <Warning className={styles.confirmIcon} aria-hidden />
+        <Warning weight="fill" className={styles.confirmIcon} aria-hidden />
         <span className={styles.confirmTag}>ungoverned · no gate ran</span>
       </div>
       <p className={styles.confirmText}>

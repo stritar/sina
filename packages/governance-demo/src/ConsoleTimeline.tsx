@@ -9,8 +9,8 @@
 
 import { Alert, Badge, Separator } from "@sina-design-system/core";
 import type { Violation } from "@sina-design-system/governance";
-import type { ConsoleView } from "../_lib/types";
-import { pretty } from "../_lib/format";
+import type { ConsoleView } from "./types";
+import { pretty } from "./format";
 import { CodeBlock } from "./CodeBlock";
 import { ConsoleStage } from "./ConsoleStage";
 import { DecisionSummary } from "./DecisionSummary";

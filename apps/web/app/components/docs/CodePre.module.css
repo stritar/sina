@@ -1,0 +1,33 @@
+.wrap {
+  position: relative;
+  margin: var(--sina-space--5) 0;
+  border: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+  border-radius: var(--sina-radius--lg);
+  overflow: hidden;
+}
+
+.pre {
+  margin: 0;
+  padding: var(--sina-space--4) var(--sina-space--5);
+  overflow-x: auto;
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--sm);
+  line-height: var(--sina-leading--relaxed);
+  /* shiki sets an inline background; fall back to a token surface otherwise. */
+  background: var(--sina-color-surface-sunken);
+}
+
+.copy {
+  position: absolute;
+  top: var(--sina-space--2);
+  right: var(--sina-space--2);
+  z-index: var(--sina-z--base);
+  opacity: 0;
+  transition: opacity var(--sina-duration--fast) var(--sina-ease--standard);
+  background: color-mix(in srgb, var(--sina-color-surface) 80%, transparent);
+}
+
+.wrap:hover .copy,
+.copy:focus-visible {
+  opacity: 1;
+}

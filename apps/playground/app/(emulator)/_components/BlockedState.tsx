@@ -5,9 +5,9 @@
  */
 
 import { Alert, Badge } from "@sina-design-system/core";
-import type { GateTrace } from "../_lib/gate";
+import type { GateTrace } from "@sina-design-system/governance-demo";
 import type { Violation } from "@sina-design-system/governance";
-import type { ConsoleView } from "../_lib/types";
+import type { ConsoleView } from "@sina-design-system/governance-demo";
 import { resolveGovernedComponent } from "../_lib/registry";
 import styles from "./BlockedState.module.css";
 

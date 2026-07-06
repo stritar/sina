@@ -6,12 +6,19 @@
   --sina-chart-color: var(--sina-color-primary, #353b31);
 }
 
+/* Fills its (sized) wrapper so the SVG's 100% resolves against a definite box.
+   Consumers always place Chart in a fixed-height container (`.chart`, `.spark`,
+   `.wide`); an auto-sized inline-block here would leave the SVG's percentage
+   height indefinite, and it would fall back to the replaced default and spill. */
 .root {
-  display: inline-block;
+  display: block;
+  width: 100%;
+  height: 100%;
   color: var(--sina-chart-color, #353b31);
 }
 
 .svg {
+  display: block;
   height: 100%;
   width: 100%;
   overflow: visible;

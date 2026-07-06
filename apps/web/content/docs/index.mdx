@@ -1,0 +1,26 @@
+---
+title: Introduction
+description: SINA is a governed design system for AI agents — validate the model's intent server-side, then mount an accessible primitive.
+---
+
+SINA is a **governed design system for AI agents**. An LLM emits _intent_ — a
+payload describing what it wants to render — and SINA validates that intent
+against Zod schemas (the "Constitution") **on the server**, then either blocks
+the stream or mounts an accessible, governed React primitive.
+
+The principle is **validate-then-mount**: never mount, then check.
+
+## Why SINA exists
+
+Agentic UIs hallucinate business logic, ship broken accessibility, and take
+unauthorized actions. SINA neutralizes all three at the edge — before a single
+component reaches the browser — so startups and individuals can adopt
+agent-generated UI without building the governance layer themselves.
+
+## The three layers
+
+- **`theme`** — design tokens (`--sina-*` CSS custom properties) + a reset. No React.
+- **`core`** — headless, accessible primitives on Radix, styled with CSS Modules. Domain-agnostic.
+- **`fintech` / `fintech-react`** — the Zod constitution and the governed components that render the decisions it makes.
+
+Read [The One Invariant](/docs/the-one-invariant) next.

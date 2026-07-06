@@ -14,13 +14,13 @@ import type { AuditEvent } from "@sina-design-system/governance";
 import type { IntentEnvelope } from "@sina-design-system/fintech";
 
 import { gateExperience, gateIntent, gateLive } from "../_lib/run-emulator";
-import { getScenario } from "../_lib/scenarios";
-import { pretty } from "../_lib/format";
-import type { ConsoleView, Turn } from "../_lib/types";
+import { getScenario } from "@sina-design-system/governance-demo";
+import { pretty } from "@sina-design-system/governance-demo";
+import type { ConsoleView, Turn } from "@sina-design-system/governance-demo";
 import { ChatThread } from "./ChatThread";
 import { Composer } from "./Composer";
-import { ConsoleTimeline } from "./ConsoleTimeline";
-import { AuditLedger } from "./AuditLedger";
+import { ConsoleTimeline } from "@sina-design-system/governance-demo";
+import { AuditLedger } from "@sina-design-system/governance-demo";
 import { ModeToggle, type Mode } from "./ModeToggle";
 import styles from "./EmulatorShell.module.css";
 
@@ -169,7 +169,7 @@ export function EmulatorShell({ initialScenarioId }: { initialScenarioId?: strin
     <div className={styles.root}>
       <header className={styles.header}>
         <div className={styles.brand}>
-          <ShieldCheck className={styles.brandIcon} aria-hidden />
+          <ShieldCheck weight="fill" className={styles.brandIcon} aria-hidden />
           <span className={styles.brandTitle}>SINA Emulator</span>
           <span className={styles.sandbox}>
             governed-agent sandbox
@@ -183,7 +183,7 @@ export function EmulatorShell({ initialScenarioId }: { initialScenarioId?: strin
             aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
             className={styles.themeButton}
           >
-            {theme === "dark" ? <Sun className={styles.themeIcon} /> : <Moon className={styles.themeIcon} />}
+            {theme === "dark" ? <Sun weight="fill" className={styles.themeIcon} /> : <Moon weight="fill" className={styles.themeIcon} />}
           </button>
           <Link href="/primitives" className={styles.link}>
             Primitives →

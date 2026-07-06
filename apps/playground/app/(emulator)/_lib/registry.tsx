@@ -41,7 +41,7 @@ import {
   SearchResults,
 } from "@sina-design-system/fintech-react";
 
-import type { GovernedComponentProps } from "./types";
+import type { GovernedComponentProps } from "@sina-design-system/governance-demo";
 import { SecureWireDialogHost } from "../_components/SecureWireDialogHost";
 import { GovernedActionDialogHost } from "../_components/GovernedActionDialogHost";
 import { MandatoryDisclosureHost } from "../_components/MandatoryDisclosureHost";

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styles from "./page.module.css";
 
 export default function HomePage() {
@@ -5,8 +6,12 @@ export default function HomePage() {
     <main className={styles.main}>
       <h1 className={styles.title}>SINA</h1>
       <p className={styles.tagline}>
-        Marketing shell — scaffold only. Landing layouts land next.
+        The governed design system for AI agents. The model emits intent — SINA
+        decides what renders.
       </p>
+      <Link className={styles.cta} href="/docs">
+        Read the docs →
+      </Link>
     </main>
   );
 }

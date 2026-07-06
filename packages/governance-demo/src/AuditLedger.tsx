@@ -10,7 +10,7 @@ import { useState } from "react";
 import { Button } from "@sina-design-system/core";
 import { CaretDown, CaretRight, Check, Copy as CopyIcon } from "@phosphor-icons/react/dist/ssr";
 import type { AuditEvent } from "@sina-design-system/governance";
-import { pretty } from "../_lib/format";
+import { pretty } from "./format";
 import { CodeBlock } from "./CodeBlock";
 import styles from "./AuditLedger.module.css";
 
@@ -25,9 +25,9 @@ function LedgerRow({ event }: { event: AuditEvent }) {
         className={styles.rowButton}
       >
         {open ? (
-          <CaretDown className={styles.caret} aria-hidden />
+          <CaretDown weight="bold" className={styles.caret} aria-hidden />
         ) : (
-          <CaretRight className={styles.caret} aria-hidden />
+          <CaretRight weight="bold" className={styles.caret} aria-hidden />
         )}
         <span className={styles.decisionId}>{event.decisionId}</span>
         <span className={styles.decidedComponent}>
@@ -57,9 +57,9 @@ export function AuditLedger({ events }: { events: AuditEvent[] }) {
           className={styles.headerToggle}
         >
           {open ? (
-            <CaretDown className={styles.caret} aria-hidden />
+            <CaretDown weight="bold" className={styles.caret} aria-hidden />
           ) : (
-            <CaretRight className={styles.caret} aria-hidden />
+            <CaretRight weight="bold" className={styles.caret} aria-hidden />
           )}
           <span className={styles.title}>Audit ledger</span>
           <span className={styles.count}>({events.length})</span>
@@ -69,7 +69,7 @@ export function AuditLedger({ events }: { events: AuditEvent[] }) {
             variant="ghost"
             size="sm"
             iconLeft={
-              copied ? <Check className={styles.exportIcon} /> : <CopyIcon className={styles.exportIcon} />
+              copied ? <Check weight="bold" className={styles.exportIcon} /> : <CopyIcon weight="fill" className={styles.exportIcon} />
             }
             onClick={() => {
               void navigator.clipboard?.writeText(pretty(events));

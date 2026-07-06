@@ -89,7 +89,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           <>
             {loading ? (
               <span className={glyph}>
-                <CircleNotch aria-hidden weight="fill" className={styles.spinner} />
+                <CircleNotch aria-hidden weight="bold" className={styles.spinner} />
               </span>
             ) : (
               iconLeft && <span className={glyph}>{iconLeft}</span>

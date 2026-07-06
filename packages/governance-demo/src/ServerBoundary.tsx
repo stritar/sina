@@ -9,7 +9,7 @@ import styles from "./ServerBoundary.module.css";
 export function ServerBoundary({ className }: { className?: string }) {
   return (
     <div className={[styles.root, className].filter(Boolean).join(" ")}>
-      <ShieldCheck className={styles.icon} aria-hidden />
+      <ShieldCheck weight="fill" className={styles.icon} aria-hidden />
       <span className={styles.caption}>
         server-side · validated before mount
       </span>

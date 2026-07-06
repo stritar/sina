@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@sina-design-system/core";
-import { SCENARIOS, getScenario } from "../_lib/scenarios";
+import { SCENARIOS, getScenario } from "@sina-design-system/governance-demo";
 import styles from "./ScenarioPicker.module.css";
 
 type Segment = "governed" | "read";

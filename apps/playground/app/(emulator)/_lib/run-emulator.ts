@@ -36,8 +36,8 @@ import {
   watchlistFixtures,
   type IntentEnvelope,
 } from "@sina-design-system/fintech";
-import { runGate, runExperience } from "./gate";
-import type { ConsoleView, TransportError } from "./types";
+import { runGate, runExperience } from "@sina-design-system/governance-demo";
+import type { ConsoleView, TransportError } from "@sina-design-system/governance-demo";
 
 export async function gateIntent(envelope: IntentEnvelope): Promise<ConsoleView> {
   return { kind: "gate", trace: runGate(envelope) };

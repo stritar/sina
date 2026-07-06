@@ -53,7 +53,7 @@ function CopyButton({ code }: { code: string }) {
       variant="ghost"
       size="sm"
       iconLeft={
-        copied ? <Check className={styles.icon} /> : <CopyIcon className={styles.icon} />
+        copied ? <Check weight="bold" className={styles.icon} /> : <CopyIcon weight="fill" className={styles.icon} />
       }
       onClick={() => {
         void navigator.clipboard?.writeText(code);
@@ -150,7 +150,7 @@ export function CodeBlock({
           <Button
             variant="ghost"
             size="sm"
-            iconRight={<CaretDown className={styles.icon} />}
+            iconRight={<CaretDown weight="bold" className={styles.icon} />}
             onClick={() => setOpen(true)}
           >
             <span className={styles.monoLabel}>See all · {lines.length} lines</span>
@@ -166,7 +166,7 @@ export function CodeBlock({
               {showCopy && <CopyButton code={code} />}
               <DialogClose asChild>
                 <Button variant="ghost" size="sm" aria-label="Close">
-                  <X className={styles.icon} />
+                  <X weight="bold" className={styles.icon} />
                 </Button>
               </DialogClose>
             </div>

@@ -1,0 +1,32 @@
+.demo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--4);
+  margin: var(--sina-space--6) 0;
+  padding: var(--sina-space--5);
+  border: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+  border-radius: var(--sina-radius--lg);
+  background: var(--sina-color-surface);
+}
+
+.label {
+  margin: 0;
+  font-size: var(--sina-text--sm);
+  font-weight: var(--sina-font-weight--semibold);
+  color: var(--sina-color-text);
+}
+
+.desc {
+  margin: 0;
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}
+
+.missing {
+  margin: var(--sina-space--4) 0;
+  padding: var(--sina-space--4);
+  border: var(--sina-border-width--1) solid var(--sina-color-border);
+  border-radius: var(--sina-radius--md);
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}

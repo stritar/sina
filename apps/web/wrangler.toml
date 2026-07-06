@@ -1,0 +1,12 @@
+# Cloudflare Pages deploy for the SINA docs (Phase 7). Build the static output
+# with `pnpm --filter web pages:build` (@cloudflare/next-on-pages), then preview
+# with `pnpm --filter web pages:preview`.
+#
+# The docs slice is fully static (SSG docs + prebuilt static Orama search), so
+# next-on-pages emits static assets with no per-request worker functions.
+name = "sina-docs"
+compatibility_date = "2025-01-01"
+# Mandatory (carried from the Phase 0 spike): without nodejs_compat the worker
+# errors instead of serving.
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"

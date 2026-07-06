@@ -168,8 +168,8 @@ Grouped into workstreams (each a candidate hand-off; sequence by product priorit
 - **Exit criteria:** every catalog row has a registry entry, a green gate test, and a playground scenario (display components also pass jest-axe); `PATTERNS.md` status column is all ✅.
 
 ### Phase 7 — Documentation (Fumadocs) (`apps/web/docs`)
-**Design hand-off:** the docs *skin* — Fumadocs chrome themed to SINA tokens (nav, sidebar, TOC, search, code blocks), plus the docs information architecture. Not the bespoke landing (that is Phase 8).
-**Goal:** The reference + conceptual documentation: App-Router-native, MDX-based (so we embed live read-only React demos inside the docs), themed to SINA tokens rather than Fumadocs' default skin. This is the **first `apps/web` content**, so it stands up the shared web infrastructure (Cloudflare deploy pipeline, Tailwind-preset composition, `transpilePackages`) that Phase 8 then reuses.
+**Design hand-off:** the docs *skin* — Fumadocs chrome themed to SINA tokens (nav, sidebar, TOC, search, code blocks), plus the docs information architecture. Not the bespoke landing (that is Phase 9).
+**Goal:** The reference + conceptual documentation: App-Router-native, MDX-based (so we embed live read-only React demos inside the docs), themed to SINA tokens rather than Fumadocs' default skin. This is the **first `apps/web` content**, so it stands up the shared web infrastructure (Cloudflare deploy pipeline, Tailwind-preset composition, `transpilePackages`) that Phase 9 then reuses.
 
 **Tooling decision — Fumadocs.** Docs are built with [Fumadocs](https://fumadocs.dev): App-Router-native, MDX-based, with built-in search, sidebar, and TOC. *Constraint:* the repo is on Tailwind 3.4 — pin the Tailwind-3-compatible Fumadocs line and compose its preset with the existing `@sina-design-system/theme` preset (do not pull the Tailwind-4-only major).
 
@@ -182,13 +182,13 @@ Grouped into workstreams (each a candidate hand-off; sequence by product priorit
 | **Getting Started** | Introduction · The One Invariant (§1b) · Quickstart | `[now]` |
 | **Concepts** | Threat model · Interception contract (`{ valid, violations, requiredComponent }`) · Audit trail · Mock vs. live mode | `[now]` |
 | **Architecture** | The three layers · Package boundaries (the three rules + how ESLint enforces them) · streamUI integration (the §3 seam) | `[now]` |
-| **Guides** | ★ **Add a governed domain** (the extensibility path the `governance` abstraction enables) · **Theme the primitives** (brand-open vs governance-locked tokens · `createTheme` · `[data-theme]` scopes) `[needs P9]` · Add a primitive · Add a schema · Write an adversarial test | `[now]` |
+| **Guides** | ★ **Add a governed domain** (the extensibility path the `governance` abstraction enables) · **Theme the primitives** (brand-open vs governance-locked tokens · `createTheme` · `[data-theme]` scopes) `[needs P8]` · Add a primitive · Add a schema · Write an adversarial test | `[now]` |
 | **Reference** | `theme` · `core` · `fintech` · `governance` — **auto-generated from TSDoc** | `[needs P1–P3]` |
 | **Components** | Read-only live demos: Dialog · CurrencyField · Grid · SecureWireDialog | `[needs P2/P5]` |
 
 **Implementation notes (not a full build plan):**
-- Add Fumadocs deps; put docs under a `docs` segment (reserve a `(marketing)` route group for the Phase 8 landing so the two layout systems don't collide); compose Tailwind presets; map Fumadocs' `--color-fd-*` variables onto SINA semantic tokens so docs chrome inherits the SINA palette.
-- **Live governance demo (factored here, reused in Phase 8):** reuse the Phase 4 deterministic harness as a read-only, mock-mode widget (canned hostile/compliant streams, no live LLM), embedded in the Components/Concepts pages. **Factor the harness's presentational component + fixtures** so both the docs *and* the Phase 8 landing can embed the same thing. Run the schema check **server-side** (server action / edge route) to honor §1b — the embed mirrors the real gate, it doesn't fake it. Add `@sina-design-system/fintech` to `transpilePackages` in `apps/web/next.config.mjs`.
+- Add Fumadocs deps; put docs under a `docs` segment (reserve a `(marketing)` route group for the Phase 9 landing so the two layout systems don't collide); compose Tailwind presets; map Fumadocs' `--color-fd-*` variables onto SINA semantic tokens so docs chrome inherits the SINA palette.
+- **Live governance demo (factored here, reused in Phase 9):** reuse the Phase 4 deterministic harness as a read-only, mock-mode widget (canned hostile/compliant streams, no live LLM), embedded in the Components/Concepts pages. **Factor the harness's presentational component + fixtures** so both the docs *and* the Phase 9 landing can embed the same thing. Run the schema check **server-side** (server action / edge route) to honor §1b — the embed mirrors the real gate, it doesn't fake it. Add `@sina-design-system/fintech` to `transpilePackages` in `apps/web/next.config.mjs`.
 - **Auto-generated API Reference:** generate the Reference section from **TSDoc comments** in `packages/*` (TypeDoc → MDX) so reference docs never drift from the typed contracts; hand-write only the narrative around them. This puts a light TSDoc-comment expectation on `theme`/`core`/`fintech` as they fill in.
 - **`llms.txt` + Markdown export:** emit a Fumadocs `llms.txt` index and per-page raw-Markdown so AI agents can consume SINA's own docs — on-brand for a product about governing AI agents.
 - **Cloudflare deploy (stood up here):** `@cloudflare/next-on-pages` with the mandatory `nodejs_compat` flag (carried forward from the Phase 0 spike — without it the worker errors instead of serving). Prefer Fumadocs **static search** (prebuilt index, client-side) on Pages over an edge search route. `allowBuilds` for `esbuild`+`sharp` is already set in `pnpm-workspace.yaml`.
@@ -196,9 +196,21 @@ Grouped into workstreams (each a candidate hand-off; sequence by product priorit
 
 - **Exit criteria:** docs build and deploy to Cloudflare Pages; the docs **themselves pass the a11y bar** (axe + keyboard + screen-reader), dogfooding the same gate `core` primitives must meet. Verify locally with `pnpm dlx @cloudflare/next-on-pages@1` then `wrangler pages dev .vercel/output/static --compatibility-flags=nodejs_compat`, mirroring the Phase 0 spike.
 
-### Phase 8 — Marketing Site (`apps/web` landing)
+### Phase 8 — Release Hardening
+**Goal:** Publishable, versioned, CI-gated.
+- Versioning/release flow (changesets) for `@sina-design-system/*` packages.
+- CI: typecheck + lint + `vitest` schema tests + axe a11y checks + playground adversarial suite (mock mode) on every PR.
+- Wire the **audit trail** to a real sink (replacing the Phase 3 stub).
+- **Theming contract & primitive packaging** (so published `core` is both consumable *and* rebrandable — see §6):
+  - **Ship prebuilt CSS + keep the preset (both modes).** Add a Tailwind CSS build to `core` emitting `styles.css` (utilities only), exported as `@sina-design-system/core/styles.css`, so a non-Tailwind app works from one import; keep `@sina-design-system/theme/tailwind` for Tailwind shops. The compiled CSS references `--sina-*` via `color-mix` — **never inlined hex** — so var-override rebranding flows through both modes.
+  - **Publish the typed theming API** in `theme`: `createTheme()` / `themeVars()` over the **brand-open** token set, with **governance-locked** roles (`danger*`, `surface-secure`, `focus-ring`, `intent-*`) excluded from the type so a sanctioned theme cannot neuter a security/a11y affordance. *(Seeded now — `packages/theme/src/create-theme.ts` + partition test.)*
+  - **Contrast guard:** generalize the `theme` WCAG-AA test into `assertThemeContrast(overrides)` so a brand override that breaks a required fg/bg pairing fails loudly.
+  - **Build guard:** assert `core/styles.css` contains `var(--sina-` and no raw hex in themeable properties (proves rebranding survives the compile).
+- **Exit criteria:** packages publishable; adversarial suite + axe checks are required checks; audit events land in a real sink; `core` renders styled from `styles.css` alone (no Tailwind) *and* via the preset, and a `createTheme` brand theme rebrands both without touching primitives or governance-locked tokens.
+
+### Phase 9 — Marketing Site (`apps/web` landing)
 **Design hand-off:** bespoke landing layouts, narrative, live demo embeds, and a rendered/animated version of the interception-seam diagram (§3 is ASCII today — the real one is a design artifact).
-**Goal:** The public face — a single rich, fully bespoke scrollytelling landing page consuming `theme` (and read-only demos of `core`). It reuses the docs engine's shared web infra + the mock-mode demo embed factored in Phase 7, and links into `/docs`.
+**Goal:** The public face — a single rich, fully bespoke scrollytelling landing page consuming `theme` (and read-only demos of `core`). It reuses the docs engine's shared web infra + the mock-mode demo embed factored in Phase 7, and links into `/docs`. Deliberately last: it markets the released, hardened system (Phase 8), so the story it tells is already true.
 
 **Information architecture** — *Landing* (bespoke, `app/(marketing)/page.tsx`), one scrollytelling page consuming `theme`:
 1. Hero — the thesis (*the model emits intent; SINA decides what renders*) + CTA → `/docs`. **Lead with the positioning: free, for startups & individuals, no governance tax — pick up a governed design system instead of building one.** `[now]`
@@ -215,18 +227,6 @@ Grouped into workstreams (each a candidate hand-off; sequence by product priorit
 
 - **Exit criteria:** the landing builds and deploys to Cloudflare Pages through the Phase 7 pipeline; the landing **itself passes the a11y bar** (axe + keyboard + screen-reader), dogfooding the same gate `core` primitives must meet.
 
-### Phase 9 — Release Hardening
-**Goal:** Publishable, versioned, CI-gated.
-- Versioning/release flow (changesets) for `@sina-design-system/*` packages.
-- CI: typecheck + lint + `vitest` schema tests + axe a11y checks + playground adversarial suite (mock mode) on every PR.
-- Wire the **audit trail** to a real sink (replacing the Phase 3 stub).
-- **Theming contract & primitive packaging** (so published `core` is both consumable *and* rebrandable — see §6):
-  - **Ship prebuilt CSS + keep the preset (both modes).** Add a Tailwind CSS build to `core` emitting `styles.css` (utilities only), exported as `@sina-design-system/core/styles.css`, so a non-Tailwind app works from one import; keep `@sina-design-system/theme/tailwind` for Tailwind shops. The compiled CSS references `--sina-*` via `color-mix` — **never inlined hex** — so var-override rebranding flows through both modes.
-  - **Publish the typed theming API** in `theme`: `createTheme()` / `themeVars()` over the **brand-open** token set, with **governance-locked** roles (`danger*`, `surface-secure`, `focus-ring`, `intent-*`) excluded from the type so a sanctioned theme cannot neuter a security/a11y affordance. *(Seeded now — `packages/theme/src/create-theme.ts` + partition test.)*
-  - **Contrast guard:** generalize the `theme` WCAG-AA test into `assertThemeContrast(overrides)` so a brand override that breaks a required fg/bg pairing fails loudly.
-  - **Build guard:** assert `core/styles.css` contains `var(--sina-` and no raw hex in themeable properties (proves rebranding survives the compile).
-- **Exit criteria:** packages publishable; adversarial suite + axe checks are required checks; audit events land in a real sink; `core` renders styled from `styles.css` alone (no Tailwind) *and* via the preset, and a `createTheme` brand theme rebrands both without touching primitives or governance-locked tokens.
-
 ---
 
 ## 3. Playground × AI SDK — When & Where (explicit)
@@ -240,8 +240,8 @@ The `apps/playground` Adversarial Sandbox is the **only** place the Vercel AI SD
 | **Phase 5** | Runs the `<SecureWireDialog>` loop end-to-end against hostile $60k streams. |
 | **Phase 6** | Runs the full governed-fintech-component family against hostile streams across every surface — payments/FX, payee/KYC, card ops, masked data displays, mandatory disclosures. |
 | **Phase 7** | The docs (Fumadocs) embed this harness's **mock mode** as read-only demos in the Components/Concepts pages (no live LLM); the schema check still runs server-side per §1b. |
-| **Phase 8** | The marketing landing embeds the same factored **mock-mode** demo as its live-governance section. |
-| **Phase 9** | The adversarial suite becomes a required CI check. |
+| **Phase 8** | The adversarial suite becomes a required CI check. |
+| **Phase 9** | The marketing landing embeds the same factored **mock-mode** demo as its live-governance section. |
 
 **The interception seam (the heart of SINA), exercised in Phase 4:**
 ```
@@ -280,8 +280,8 @@ LLM stream (streamUI intent / tool payload)
 
 **Later:**
 - **Phase 7 (`apps/web` docs):** new `source.config.ts`, `lib/source.ts`, `app/docs/[[...slug]]/page.tsx`, `app/docs/layout.tsx`, `content/docs/**/*.mdx`, `wrangler.toml`; edit `next.config.mjs` (add `fintech` to `transpilePackages`), `tailwind.config.ts` (compose Fumadocs preset), `app/globals.css` (map `--color-fd-*` → SINA tokens); factor the reusable mock-mode demo embed
-- **Phase 8 (`apps/web` landing):** new `app/(marketing)/page.tsx` + section components (bespoke landing); reuses the Phase 7 demo embed + Cloudflare pipeline
-- **Phase 9 (packaging/theming):** `packages/theme/src/create-theme.ts` (typed brand-open/governance-locked contract — **seeded**) + `assertThemeContrast`; `packages/core` CSS build → `packages/core/styles.css` + `exports["./styles.css"]`
+- **Phase 8 (packaging/theming):** `packages/theme/src/create-theme.ts` (typed brand-open/governance-locked contract — **seeded**) + `assertThemeContrast`; `packages/core` CSS build → `packages/core/styles.css` + `exports["./styles.css"]`
+- **Phase 9 (`apps/web` landing):** new `app/(marketing)/page.tsx` + section components (bespoke landing); reuses the Phase 7 demo embed + Cloudflare pipeline
 
 ---
 
@@ -293,7 +293,7 @@ Per phase, "done" means:
 - **Core (P2):** keyboard/focus-trap/screen-reader checks pass **and automated axe checks are green** on primitives in the playground.
 - **Schemas (P3):** `vitest` over valid + adversarial fixtures; `.safeParse` returns typed `{valid, violations, requiredComponent}`; each decision emits an audit event.
 - **Interception (P4–P6) — the real test:** run the playground (`pnpm dev`, port 3001) in **mock mode**, feed a $60,000 transfer stream → assert the raw confirm is **blocked**, the designed blocked state shows, and `<SecureWireDialog>` renders; feed a compliant $5,000 stream → assert the standard primitive renders. Confirm validation is server-side (§1b).
-- **CI (P9):** adversarial suite (mock mode) + axe checks are required checks on every PR.
+- **CI (P8):** adversarial suite (mock mode) + axe checks are required checks on every PR.
 
 ---
 
@@ -310,7 +310,7 @@ SINA ships primitives *and* a supported way to make them match a consumer's bran
 
 **Distribution (both modes, so var-override works either way).** `core` ships a prebuilt `styles.css` (compiled utilities that still reference `--sina-*` via `color-mix` — never inlined hex) *and* keeps the Tailwind preset. A non-Tailwind app imports the CSS; a Tailwind shop uses the preset. Because neither inlines color, Tier-1 rebranding flows through both.
 
-**Where it lands:** the typed contract is seeded now (`packages/theme/src/create-theme.ts`); the prebuilt-CSS build, `assertThemeContrast` guard, and the "Theme the primitives" docs guide complete in **Phase 9 / Phase 7** respectively.
+**Where it lands:** the typed contract is seeded now (`packages/theme/src/create-theme.ts`); the prebuilt-CSS build, `assertThemeContrast` guard, and the "Theme the primitives" docs guide complete in **Phase 8 / Phase 7** respectively.
 
 ---
 

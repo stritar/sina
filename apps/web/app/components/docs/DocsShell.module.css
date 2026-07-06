@@ -1,0 +1,50 @@
+/* Docs frame layout. Consumes --sina-* tokens directly (app-level CSS Modules). */
+
+.shell {
+  --sina-docs-sidebar-width: 16rem;
+  --sina-docs-content-max: 90rem;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background: var(--sina-color-bg);
+  color: var(--sina-color-text);
+}
+
+.body {
+  display: grid;
+  grid-template-columns: var(--sina-docs-sidebar-width) minmax(0, 1fr);
+  width: 100%;
+  max-width: var(--sina-docs-content-max);
+  margin: 0 auto;
+  flex: 1;
+}
+
+.sidebar {
+  position: sticky;
+  top: var(--sina-space--16);
+  align-self: start;
+  height: calc(100vh - var(--sina-space--16));
+  border-right: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+  padding: var(--sina-space--6) var(--sina-space--4);
+}
+
+.main {
+  min-width: 0;
+  padding: var(--sina-space--8) var(--sina-space--10) var(--sina-space--24);
+}
+
+/* Below the layout breakpoint the sidebar column collapses; the mobile Dialog
+   drawer in the header takes over. */
+@media (max-width: 60rem) {
+  .body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .main {
+    padding: var(--sina-space--6) var(--sina-space--5) var(--sina-space--20);
+  }
+}

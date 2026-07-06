@@ -4,7 +4,7 @@
  */
 
 import { Alert, SummaryList } from "@sina-design-system/core";
-import { formatAmount } from "../_lib/format";
+import { formatAmount } from "./format";
 import styles from "./GovernedWireSummary.module.css";
 
 interface WireParty {

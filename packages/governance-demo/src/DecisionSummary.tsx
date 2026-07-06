@@ -6,7 +6,7 @@
  */
 
 import { Badge } from "@sina-design-system/core";
-import type { GateTrace } from "../_lib/gate";
+import type { GateTrace } from "./gate";
 import styles from "./DecisionSummary.module.css";
 
 export function DecisionSummary({ trace }: { trace: GateTrace }) {

@@ -17,8 +17,8 @@
 
 import { actionHash } from "@sina-design-system/fintech";
 
-import { runGate } from "./gate";
-import type { ConsoleView } from "./types";
+import { runGate } from "@sina-design-system/governance-demo";
+import type { ConsoleView } from "@sina-design-system/governance-demo";
 
 export interface ActionEvidence {
   approverId?: string;
