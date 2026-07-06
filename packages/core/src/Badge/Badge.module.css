@@ -1,21 +1,21 @@
 /* @sina-design-system/core — Badge */
 
 :root {
-  --sina-badge-bg--danger: var(--sina-color-danger-bg, #fbeeeb);
-  --sina-badge-border--danger: var(--sina-color-danger, #c64c35);
-  --sina-badge-fg--danger: var(--sina-color-danger, #c64c35);
+  --sina-badge-bg--danger: var(--sina-color-danger-bg, #fdece9);
+  --sina-badge-border--danger: var(--sina-color-danger, #d5341f);
+  --sina-badge-fg--danger: var(--sina-color-danger, #d5341f);
 
-  --sina-badge-bg--success: var(--sina-color-success-bg, #ecf5ef);
-  --sina-badge-border--success: var(--sina-color-success, #2f7a45);
-  --sina-badge-fg--success: var(--sina-color-success, #2f7a45);
+  --sina-badge-bg--success: var(--sina-color-success-bg, #e9f9ef);
+  --sina-badge-border--success: var(--sina-color-success, #178a45);
+  --sina-badge-fg--success: var(--sina-color-success, #178a45);
 
-  --sina-badge-bg--warning: var(--sina-color-warning-bg, #faf3e6);
-  --sina-badge-border--warning: var(--sina-color-warning, #b8791f);
-  --sina-badge-fg--warning: var(--sina-color-warning, #b8791f);
+  --sina-badge-bg--warning: var(--sina-color-warning-bg, #fef7e7);
+  --sina-badge-border--warning: var(--sina-color-warning, #f2a20c);
+  --sina-badge-fg--warning: var(--sina-color-warning, #f2a20c);
 
-  --sina-badge-bg--info: var(--sina-color-info-bg, #ebf1f8);
-  --sina-badge-border--info: var(--sina-color-info, #36648f);
-  --sina-badge-fg--info: var(--sina-color-info, #36648f);
+  --sina-badge-bg--info: var(--sina-color-info-bg, #e9f3fc);
+  --sina-badge-border--info: var(--sina-color-info, #1478cc);
+  --sina-badge-fg--info: var(--sina-color-info, #1478cc);
 
   --sina-badge-bg--neutral: var(--sina-color-surface, #ffffff);
   --sina-badge-border--neutral: var(--sina-color-border, #dde0d9);
@@ -36,24 +36,24 @@
 
 /* Subtle tint: tinted bg + 40% intent border + intent text. */
 .danger {
-  border-color: color-mix(in srgb, var(--sina-badge-border--danger, #c64c35) 40%, transparent);
-  background: var(--sina-badge-bg--danger, #fbeeeb);
-  color: var(--sina-badge-fg--danger, #c64c35);
+  border-color: color-mix(in srgb, var(--sina-badge-border--danger, #d5341f) 40%, transparent);
+  background: var(--sina-badge-bg--danger, #fdece9);
+  color: var(--sina-badge-fg--danger, #d5341f);
 }
 .success {
-  border-color: color-mix(in srgb, var(--sina-badge-border--success, #2f7a45) 40%, transparent);
-  background: var(--sina-badge-bg--success, #ecf5ef);
-  color: var(--sina-badge-fg--success, #2f7a45);
+  border-color: color-mix(in srgb, var(--sina-badge-border--success, #178a45) 40%, transparent);
+  background: var(--sina-badge-bg--success, #e9f9ef);
+  color: var(--sina-badge-fg--success, #178a45);
 }
 .warning {
-  border-color: color-mix(in srgb, var(--sina-badge-border--warning, #b8791f) 40%, transparent);
-  background: var(--sina-badge-bg--warning, #faf3e6);
-  color: var(--sina-badge-fg--warning, #b8791f);
+  border-color: color-mix(in srgb, var(--sina-badge-border--warning, #f2a20c) 40%, transparent);
+  background: var(--sina-badge-bg--warning, #fef7e7);
+  color: var(--sina-badge-fg--warning, #f2a20c);
 }
 .info {
-  border-color: color-mix(in srgb, var(--sina-badge-border--info, #36648f) 40%, transparent);
-  background: var(--sina-badge-bg--info, #ebf1f8);
-  color: var(--sina-badge-fg--info, #36648f);
+  border-color: color-mix(in srgb, var(--sina-badge-border--info, #1478cc) 40%, transparent);
+  background: var(--sina-badge-bg--info, #e9f3fc);
+  color: var(--sina-badge-fg--info, #1478cc);
 }
 .neutral {
   border-color: var(--sina-badge-border--neutral, #dde0d9);

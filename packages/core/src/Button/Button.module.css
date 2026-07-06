@@ -14,9 +14,9 @@
   --sina-button-border--secondary: var(--sina-color-border, #dde0d9);
   --sina-button-bg--secondary--hover: var(--sina-color-secondary--hover, #dde0d9);
 
-  --sina-button-bg--danger: var(--sina-color-danger, #c64c35);
+  --sina-button-bg--danger: var(--sina-color-danger, #d5341f);
   --sina-button-fg--danger: var(--sina-color-danger-fg, #ffffff);
-  --sina-button-border--danger: var(--sina-color-danger, #c64c35);
+  --sina-button-border--danger: var(--sina-color-danger, #d5341f);
 
   --sina-button-fg--ghost: var(--sina-color-text, #353b31);
   --sina-button-border--ghost: var(--sina-color-border, #dde0d9);
@@ -78,15 +78,15 @@
 
 /* Danger keeps full strength (governance carve-out — never quieted). */
 .danger {
-  border-color: var(--sina-button-border--danger, #c64c35);
-  background: var(--sina-button-bg--danger, #c64c35);
+  border-color: var(--sina-button-border--danger, #d5341f);
+  background: var(--sina-button-bg--danger, #d5341f);
   color: var(--sina-button-fg--danger, #ffffff);
 }
 .danger:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--sina-color-danger, #c64c35) 90%, transparent);
+  background: color-mix(in srgb, var(--sina-color-danger, #d5341f) 90%, transparent);
 }
 .danger:active:not(:disabled) {
-  background: color-mix(in srgb, var(--sina-color-danger, #c64c35) 80%, transparent);
+  background: color-mix(in srgb, var(--sina-color-danger, #d5341f) 80%, transparent);
 }
 
 /* Quiet control: translucent overlay, not a color swap. */

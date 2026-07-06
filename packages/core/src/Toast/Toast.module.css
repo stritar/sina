@@ -6,9 +6,9 @@
   --sina-toast-title: var(--sina-color-text, #353b31);
   --sina-toast-description: var(--sina-color-text-muted, #52564e);
 
-  --sina-toast-accent--success: var(--sina-color-success, #2f7a45);
-  --sina-toast-accent--danger: var(--sina-color-danger, #c64c35);
-  --sina-toast-accent--info: var(--sina-color-info, #36648f);
+  --sina-toast-accent--success: var(--sina-color-success, #178a45);
+  --sina-toast-accent--danger: var(--sina-color-danger, #d5341f);
+  --sina-toast-accent--info: var(--sina-color-info, #1478cc);
 
   --sina-toast-action-fg: var(--sina-color-text, #353b31);
   --sina-toast-action-bg--hover: var(--sina-overlay--hover, color-mix(
@@ -77,15 +77,15 @@
 /* Intent variants — a colored left rule (base border stays on the other sides) */
 .success {
   border-left-width: var(--sina-border-width--4, 4px);
-  border-left-color: var(--sina-toast-accent--success, #2f7a45);
+  border-left-color: var(--sina-toast-accent--success, #178a45);
 }
 .danger {
   border-left-width: var(--sina-border-width--4, 4px);
-  border-left-color: var(--sina-toast-accent--danger, #c64c35);
+  border-left-color: var(--sina-toast-accent--danger, #d5341f);
 }
 .info {
   border-left-width: var(--sina-border-width--4, 4px);
-  border-left-color: var(--sina-toast-accent--info, #36648f);
+  border-left-color: var(--sina-toast-accent--info, #1478cc);
 }
 
 /* Leading intent glyph */
@@ -95,13 +95,13 @@
   flex-shrink: 0;
 }
 .iconInfo {
-  color: var(--sina-toast-accent--info, #36648f);
+  color: var(--sina-toast-accent--info, #1478cc);
 }
 .iconSuccess {
-  color: var(--sina-toast-accent--success, #2f7a45);
+  color: var(--sina-toast-accent--success, #178a45);
 }
 .iconDanger {
-  color: var(--sina-toast-accent--danger, #c64c35);
+  color: var(--sina-toast-accent--danger, #d5341f);
 }
 
 .body {

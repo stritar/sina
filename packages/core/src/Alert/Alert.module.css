@@ -1,21 +1,21 @@
 /* @sina-design-system/core — Alert */
 
 :root {
-  --sina-alert-bg--info: var(--sina-color-info-bg, #ebf1f8);
-  --sina-alert-border--info: var(--sina-color-info, #36648f);
-  --sina-alert-icon--info: var(--sina-color-info, #36648f);
+  --sina-alert-bg--info: var(--sina-color-info-bg, #e9f3fc);
+  --sina-alert-border--info: var(--sina-color-info, #1478cc);
+  --sina-alert-icon--info: var(--sina-color-info, #1478cc);
 
-  --sina-alert-bg--success: var(--sina-color-success-bg, #ecf5ef);
-  --sina-alert-border--success: var(--sina-color-success, #2f7a45);
-  --sina-alert-icon--success: var(--sina-color-success, #2f7a45);
+  --sina-alert-bg--success: var(--sina-color-success-bg, #e9f9ef);
+  --sina-alert-border--success: var(--sina-color-success, #178a45);
+  --sina-alert-icon--success: var(--sina-color-success, #178a45);
 
-  --sina-alert-bg--warning: var(--sina-color-warning-bg, #faf3e6);
-  --sina-alert-border--warning: var(--sina-color-warning, #b8791f);
-  --sina-alert-icon--warning: var(--sina-color-warning, #b8791f);
+  --sina-alert-bg--warning: var(--sina-color-warning-bg, #fef7e7);
+  --sina-alert-border--warning: var(--sina-color-warning, #f2a20c);
+  --sina-alert-icon--warning: var(--sina-color-warning, #f2a20c);
 
-  --sina-alert-bg--danger: var(--sina-color-danger-bg, #fbeeeb);
-  --sina-alert-border--danger: var(--sina-color-danger, #c64c35);
-  --sina-alert-icon--danger: var(--sina-color-danger, #c64c35);
+  --sina-alert-bg--danger: var(--sina-color-danger-bg, #fdece9);
+  --sina-alert-border--danger: var(--sina-color-danger, #d5341f);
+  --sina-alert-icon--danger: var(--sina-color-danger, #d5341f);
 
   --sina-alert-title: var(--sina-color-text, #353b31);
   --sina-alert-message: var(--sina-color-text-muted, #52564e);
@@ -34,34 +34,34 @@
 
 /* Intent surfaces — tinted bg + 40% intent border. */
 .info {
-  border-color: color-mix(in srgb, var(--sina-alert-border--info, #36648f) 40%, transparent);
-  background: var(--sina-alert-bg--info, #ebf1f8);
+  border-color: color-mix(in srgb, var(--sina-alert-border--info, #1478cc) 40%, transparent);
+  background: var(--sina-alert-bg--info, #e9f3fc);
 }
 .success {
-  border-color: color-mix(in srgb, var(--sina-alert-border--success, #2f7a45) 40%, transparent);
-  background: var(--sina-alert-bg--success, #ecf5ef);
+  border-color: color-mix(in srgb, var(--sina-alert-border--success, #178a45) 40%, transparent);
+  background: var(--sina-alert-bg--success, #e9f9ef);
 }
 .warning {
-  border-color: color-mix(in srgb, var(--sina-alert-border--warning, #b8791f) 40%, transparent);
-  background: var(--sina-alert-bg--warning, #faf3e6);
+  border-color: color-mix(in srgb, var(--sina-alert-border--warning, #f2a20c) 40%, transparent);
+  background: var(--sina-alert-bg--warning, #fef7e7);
 }
 .danger {
-  border-color: color-mix(in srgb, var(--sina-alert-border--danger, #c64c35) 40%, transparent);
-  background: var(--sina-alert-bg--danger, #fbeeeb);
+  border-color: color-mix(in srgb, var(--sina-alert-border--danger, #d5341f) 40%, transparent);
+  background: var(--sina-alert-bg--danger, #fdece9);
 }
 
 /* Intent icon color. */
 .iconInfo {
-  color: var(--sina-alert-icon--info, #36648f);
+  color: var(--sina-alert-icon--info, #1478cc);
 }
 .iconSuccess {
-  color: var(--sina-alert-icon--success, #2f7a45);
+  color: var(--sina-alert-icon--success, #178a45);
 }
 .iconWarning {
-  color: var(--sina-alert-icon--warning, #b8791f);
+  color: var(--sina-alert-icon--warning, #f2a20c);
 }
 .iconDanger {
-  color: var(--sina-alert-icon--danger, #c64c35);
+  color: var(--sina-alert-icon--danger, #d5341f);
 }
 
 .icon {

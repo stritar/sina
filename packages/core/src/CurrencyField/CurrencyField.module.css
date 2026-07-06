@@ -8,7 +8,7 @@
   --sina-currency-field-focus-ring: var(--sina-color-focus-ring, #545f49);
   --sina-currency-field-bg--disabled: var(--sina-color-surface-sunken, #f5f6f4);
   --sina-currency-field-fg--disabled: var(--sina-color-text-subtle, #a7ada0);
-  --sina-currency-field-border--danger: var(--sina-color-danger, #c64c35);
+  --sina-currency-field-border--danger: var(--sina-color-danger, #d5341f);
   --sina-currency-field-symbol: var(--sina-color-text-muted, #52564e);
 }
 
@@ -59,7 +59,7 @@
   color: var(--sina-currency-field-fg--disabled, #a7ada0);
 }
 .input[aria-invalid="true"] {
-  border-color: var(--sina-currency-field-border--danger, #c64c35);
+  border-color: var(--sina-currency-field-border--danger, #d5341f);
 }
 
 /* Padding leaves room for the leading symbol. */

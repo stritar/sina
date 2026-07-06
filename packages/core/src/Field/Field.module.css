@@ -3,7 +3,7 @@
 :root {
   --sina-field-fg: var(--sina-color-text, #353b31);
   --sina-field-description-fg: var(--sina-color-text-muted, #52564e);
-  --sina-field-fg--danger: var(--sina-color-danger, #c64c35);
+  --sina-field-fg--danger: var(--sina-color-danger, #d5341f);
 }
 
 .root {
@@ -21,7 +21,7 @@
 }
 
 .required {
-  color: var(--sina-field-fg--danger, #c64c35);
+  color: var(--sina-field-fg--danger, #d5341f);
 }
 
 .description {
@@ -35,5 +35,5 @@
   font-size: var(--sina-text--ui, 0.8125rem);
   line-height: 1.125rem;
   letter-spacing: -0.006em;
-  color: var(--sina-field-fg--danger, #c64c35);
+  color: var(--sina-field-fg--danger, #d5341f);
 }
