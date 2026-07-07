@@ -3,7 +3,7 @@
 :root {
   --sina-upcoming-payments-radius: var(--sina-radius--lg, 8px);
   --sina-upcoming-payments-surface: var(--sina-color-surface, #ffffff);
-  --sina-upcoming-payments-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-upcoming-payments-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-upcoming-payments-text: var(--sina-color-text, #353b31);
   --sina-upcoming-payments-text-muted: var(--sina-color-text-muted, #52564e);
   --sina-upcoming-payments-text-subtle: var(--sina-color-text-subtle, #a7ada0);
@@ -12,7 +12,7 @@
 .card {
   border-width: var(--sina-border-width--1, 1px);
   border-style: solid;
-  border-color: var(--sina-upcoming-payments-border, #edefeb);
+  border-color: var(--sina-upcoming-payments-border, #e9ece8);
   border-radius: var(--sina-upcoming-payments-radius, 8px);
   background: var(--sina-upcoming-payments-surface, #ffffff);
   padding: var(--sina-space--3, 0.75rem);
@@ -30,7 +30,7 @@
 .list > * + * {
   border-top-width: var(--sina-border-width--1, 1px);
   border-top-style: solid;
-  border-top-color: var(--sina-upcoming-payments-border, #edefeb);
+  border-top-color: var(--sina-upcoming-payments-border, #e9ece8);
 }
 
 .row {

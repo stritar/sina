@@ -61,6 +61,7 @@ export const Toast = forwardRef<ComponentRef<typeof Primitive.Root>, ToastProps>
         ref={ref}
         className={cn(styles.toast, variantClass[variant ?? "info"], className)}
         {...props}
+        data-sina-status="toast"
       >
         {Glyph ? <Glyph aria-hidden weight="bold" className={styles.icon} /> : null}
         <div className={styles.body}>{children}</div>

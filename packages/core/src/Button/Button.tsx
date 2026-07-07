@@ -7,8 +7,10 @@
  * / `iconRight` slots flank the label; the button sizes the glyphs per `size`. With
  * no label (icon-only) it renders square — pass `aria-label` for an accessible name.
  * Spacing lives on the label (not a flex gap), so it stays even with or without icons.
- * Every variant carries a zero-width, per-variant border as an outlined-button hook:
- * a caller setting `className` with a border width gets a correctly-colored outline.
+ * The vivid fills (primary / danger) carry a present-but-invisible 1px placeholder
+ * border (the Badge/Alert pattern): a themer reveals it by raising the alpha on
+ * `--sina-color-button-border--{primary,danger}`, with no layout shift. Secondary /
+ * ghost keep a zero-width fill-contrast border as a latent outlined-button hook.
  * Domain-agnostic: labels like "Confirm" / "Approve" are the caller's concern.
  */
 "use client";

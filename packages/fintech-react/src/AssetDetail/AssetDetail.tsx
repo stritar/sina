@@ -98,7 +98,7 @@ export function AssetDetail({ payload }: AssetDetailProps) {
           />
         </div>
       ) : (
-        <p className={styles.empty}>No chart data</p>
+        <p className={styles.empty}>No chart data.</p>
       )}
     </Stack>
   );

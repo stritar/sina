@@ -154,21 +154,25 @@ export function SecureWireDialog({
           {phase === "review" && (
             <>
               <Alert variant="warning" title="Why this is blocked">
-                {blocking.length > 0 ? (
-                  <Stack direction="col" gap={2} as="ul">
-                    {blocking.map((v, i) => (
-                      <li key={i} className={styles.violationRow}>
-                        <Badge intent="danger" size="sm">
-                          <span className={styles.severity}>{v.severity}</span>
-                        </Badge>
-                        <span>{v.message}</span>
-                      </li>
-                    ))}
-                  </Stack>
-                ) : (
-                  "Wires above $50,000 require secondary managerial approval."
-                )}
+                {blocking.length > 0
+                  ? "This wire exceeds the approval threshold and requires secondary approval before it can proceed."
+                  : "Wires above $50,000 require secondary managerial approval."}
               </Alert>
+              {blocking.length > 0 && (
+                // Severity Badges are SIBLINGS of the Alert, never nested inside it —
+                // status elements never wrap other status elements (mirrors BlockedState).
+                // See CLAUDE.md "Never nest status elements inside one another".
+                <Stack direction="col" gap={2} as="ul" className={styles.violations}>
+                  {blocking.map((v, i) => (
+                    <li key={i} className={styles.violationRow}>
+                      <Badge intent="danger" size="sm">
+                        <span className={styles.severity}>{v.severity}</span>
+                      </Badge>
+                      <span>{v.message}</span>
+                    </li>
+                  ))}
+                </Stack>
+              )}
               <Footer>
                 <DialogClose asChild>
                   <Button variant="secondary">Close</Button>

@@ -2,13 +2,13 @@
 
 :root {
   --sina-fx-quote-surface: var(--sina-color-surface, #ffffff);
-  --sina-fx-quote-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-fx-quote-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-fx-quote-text: var(--sina-color-text, #353b31);
   --sina-fx-quote-text-muted: var(--sina-color-text-muted, #52564e);
 }
 
 .root {
-  border: var(--sina-border-width--1, 1px) solid var(--sina-fx-quote-border, #edefeb);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-fx-quote-border, #e9ece8);
   border-radius: var(--sina-radius--lg, 8px);
   background: var(--sina-fx-quote-surface, #ffffff);
   padding: var(--sina-space--3, 0.75rem);

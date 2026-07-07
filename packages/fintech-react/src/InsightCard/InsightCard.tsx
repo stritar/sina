@@ -68,25 +68,28 @@ export function InsightCard({ payload }: InsightCardProps) {
   const intent = TONE_INTENT[insight.tone];
 
   return (
-    <Stack aria-label="Insight">
+    <Stack aria-label="Insight" gap={2}>
       {!hasContent ? (
         <p className={styles.empty}>No insight to show.</p>
       ) : (
-        <Alert variant={intent} title={insight.title || undefined}>
-          <Stack gap={2}>
+        <>
+          <Alert variant={intent} title={insight.title || undefined}>
             {insight.body ? <p>{insight.body}</p> : null}
-            {insight.metricValue ? (
-              <Stack direction="row" align="center" gap={2}>
-                {insight.metricLabel ? (
-                  <span className={styles.metricLabel}>{insight.metricLabel}</span>
-                ) : null}
-                <Badge intent={intent} size="sm">
-                  {insight.metricValue}
-                </Badge>
-              </Stack>
-            ) : null}
-          </Stack>
-        </Alert>
+          </Alert>
+          {/* The metric Badge is a SIBLING of the Alert, never nested inside it —
+              status elements never wrap other status elements.
+              See CLAUDE.md "Never nest status elements inside one another". */}
+          {insight.metricValue ? (
+            <Stack direction="row" align="center" gap={2}>
+              {insight.metricLabel ? (
+                <span className={styles.metricLabel}>{insight.metricLabel}</span>
+              ) : null}
+              <Badge intent={intent} size="sm">
+                {insight.metricValue}
+              </Badge>
+            </Stack>
+          ) : null}
+        </>
       )}
     </Stack>
   );

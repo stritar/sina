@@ -2,14 +2,14 @@
 
 :root {
   --sina-crypto-holdings-surface: var(--sina-color-surface, #ffffff);
-  --sina-crypto-holdings-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-crypto-holdings-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-crypto-holdings-text: var(--sina-color-text, #353b31);
   --sina-crypto-holdings-text-muted: var(--sina-color-text-muted, #52564e);
   --sina-crypto-holdings-chart: var(--sina-color-primary, #353b31);
 }
 
 .root {
-  border: var(--sina-border-width--1, 1px) solid var(--sina-crypto-holdings-border, #edefeb);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-crypto-holdings-border, #e9ece8);
   border-radius: var(--sina-radius--lg, 8px);
   background: var(--sina-crypto-holdings-surface, #ffffff);
   padding: var(--sina-space--3, 0.75rem);

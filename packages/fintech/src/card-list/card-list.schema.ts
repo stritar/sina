@@ -17,7 +17,7 @@ const card = z
     label: z.string().min(1).max(80),
     network: z.enum(["visa", "mastercard", "amex", "discover"]),
     maskedNumber,
-    status: z.enum(["active", "frozen", "cancelled"]),
+    status: z.enum(["active", "frozen", "canceled"]),
     expiry: z.string().regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "expiry must be MM/YY"),
   })
   .strict();

@@ -3,7 +3,7 @@
 :root {
   --sina-account-list-radius: var(--sina-radius--lg, 8px);
   --sina-account-list-surface: var(--sina-color-surface, #ffffff);
-  --sina-account-list-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-account-list-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-account-list-text: var(--sina-color-text, #353b31);
   --sina-account-list-text-muted: var(--sina-color-text-muted, #52564e);
   --sina-account-list-text-subtle: var(--sina-color-text-subtle, #a7ada0);
@@ -12,7 +12,7 @@
 .card {
   border-width: var(--sina-border-width--1, 1px);
   border-style: solid;
-  border-color: var(--sina-account-list-border, #edefeb);
+  border-color: var(--sina-account-list-border, #e9ece8);
   border-radius: var(--sina-account-list-radius, 8px);
   background: var(--sina-account-list-surface, #ffffff);
   padding: var(--sina-space--3, 0.75rem);
@@ -30,7 +30,7 @@
 .list > * + * {
   border-top-width: var(--sina-border-width--1, 1px);
   border-top-style: solid;
-  border-top-color: var(--sina-account-list-border, #edefeb);
+  border-top-color: var(--sina-account-list-border, #e9ece8);
 }
 
 .row {

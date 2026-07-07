@@ -2,14 +2,14 @@
 
 :root {
   --sina-net-worth-surface: var(--sina-color-surface, #ffffff);
-  --sina-net-worth-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-net-worth-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-net-worth-text: var(--sina-color-text, #353b31);
   --sina-net-worth-text-muted: var(--sina-color-text-muted, #52564e);
   --sina-net-worth-chart: var(--sina-color-primary, #353b31);
 }
 
 .root {
-  border: var(--sina-border-width--1, 1px) solid var(--sina-net-worth-border, #edefeb);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-net-worth-border, #e9ece8);
   border-radius: var(--sina-radius--lg, 8px);
   background: var(--sina-net-worth-surface, #ffffff);
   padding: var(--sina-space--3, 0.75rem);
@@ -32,7 +32,7 @@
 
 /* divide-y divide-border-subtle: hairline between rows, none above the first. */
 .list > * + * {
-  border-top: var(--sina-border-width--1, 1px) solid var(--sina-net-worth-border, #edefeb);
+  border-top: var(--sina-border-width--1, 1px) solid var(--sina-net-worth-border, #e9ece8);
 }
 
 .row {

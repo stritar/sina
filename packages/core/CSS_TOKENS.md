@@ -45,6 +45,7 @@ Read left (old Tailwind utility) → write right (CSS declaration). `X` = a toke
 | `bg-primary` / `text-primary-fg` / `border-border` | `background: var(--sina-color-primary)` / `color: var(--sina-color-primary-fg)` / `border-color: var(--sina-color-border)` |
 | `bg-danger` `text-danger` `bg-danger-bg` `text-danger-fg` | `var(--sina-color-danger)` / `…-danger` / `…-danger-bg` / `…-danger-fg` (same for success/warning/info) |
 | _(vivid status fill: Badge/Alert/Toast)_ | `background: var(--sina-color-<status>-fill)` + ink `var(--sina-color-status-fg--<status>)` + border `var(--sina-color-status-border--<status>)` — per-status knobs (`neutral`/`info`/`success`/`warning`/`danger`); ink defaults black, border transparent |
+| _(vivid button fill: Button primary/danger)_ | present-but-invisible 1px placeholder border `var(--sina-color-button-border--{primary,danger})` — decoupled from `status-border`; transparent until a themer raises the alpha (Badge/Alert pattern, no layout shift) |
 | `bg-surface` `bg-surface-raised` `bg-surface-sunken` `bg-surface-secure` | `var(--sina-color-surface[-raised|-sunken|-secure])` |
 | `text-text` `text-text-muted` `text-text-subtle` `text-text-inverse` | `var(--sina-color-text[-muted|-subtle|-inverse])` |
 | `border-border-subtle` | `var(--sina-color-border-subtle)` |

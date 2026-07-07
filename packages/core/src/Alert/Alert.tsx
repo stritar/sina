@@ -59,7 +59,11 @@ export function Alert({ variant = "info", title, children, icon, className }: Al
   const Glyph = icon === false ? null : (icon ?? config.icon);
 
   return (
-    <div role={config.role} className={cn(styles.root, config.container, className)}>
+    <div
+      role={config.role}
+      data-sina-status="alert"
+      className={cn(styles.root, config.container, className)}
+    >
       {Glyph ? (
         <Glyph aria-hidden weight="bold" className={styles.icon} />
       ) : null}

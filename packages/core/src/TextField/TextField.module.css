@@ -3,12 +3,12 @@
 :root {
   --sina-text-field-bg: var(--sina-color-surface, #ffffff);
   --sina-text-field-fg: var(--sina-color-text, #353b31);
-  --sina-text-field-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-text-field-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-text-field-placeholder: var(--sina-color-text-subtle, #a7ada0);
   --sina-text-field-focus-ring: var(--sina-color-focus-ring, #545f49);
   --sina-text-field-bg--disabled: var(--sina-color-surface-sunken, #f5f6f4);
   --sina-text-field-fg--disabled: var(--sina-color-text-subtle, #a7ada0);
-  --sina-text-field-border--danger: var(--sina-color-danger, #d5341f);
+  --sina-text-field-border--danger: var(--sina-color-danger, #c43a00);
 }
 
 /* Attached focus: the border brightens + a faint 1px ring, instead of a
@@ -16,7 +16,7 @@
 .control {
   width: 100%;
   border-radius: var(--sina-radius--md, 6px);
-  border: var(--sina-border-width--1, 1px) solid var(--sina-text-field-border, #edefeb);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-text-field-border, #e9ece8);
   background: var(--sina-text-field-bg, #ffffff);
   font-size: var(--sina-text--ui, 0.8125rem);
   line-height: 1.125rem;

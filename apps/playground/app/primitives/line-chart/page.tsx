@@ -84,7 +84,7 @@ export default function LineChartStory() {
         </div>
       </Demo>
 
-      <Demo label="Empty data → labelled blank plot">
+      <Demo label="Empty data → labeled blank plot">
         <LineChart
           data={{ labels: [], datasets: [] }}
           label="No data available"

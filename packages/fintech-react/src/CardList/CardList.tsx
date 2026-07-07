@@ -21,7 +21,13 @@ export interface CardListProps {
 const STATUS_INTENT: Record<string, NonNullable<BadgeProps["intent"]>> = {
   active: "success",
   frozen: "warning",
-  cancelled: "neutral",
+  canceled: "neutral",
+};
+
+const STATUS_LABEL: Record<string, string> = {
+  active: "Active",
+  frozen: "Frozen",
+  canceled: "Canceled",
 };
 
 export function CardList({ payload }: CardListProps) {
@@ -49,7 +55,7 @@ export function CardList({ payload }: CardListProps) {
           <Stack direction="row" justify="between" align="center" gap={2}>
             <span className={styles.cardLabel}>{c.label}</span>
             <Badge intent={STATUS_INTENT[c.status] ?? "neutral"} size="sm">
-              {c.status}
+              {STATUS_LABEL[c.status] ?? c.status}
             </Badge>
           </Stack>
           <span className={styles.maskedNumber}>{c.maskedNumber}</span>

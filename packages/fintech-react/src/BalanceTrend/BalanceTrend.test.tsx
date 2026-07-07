@@ -25,7 +25,7 @@ describe("BalanceTrend", () => {
 
   it("renders the empty state with no chart", () => {
     render(<BalanceTrend payload={balanceTrendFixtures.validEmpty} />);
-    expect(screen.getByText("No trend data")).toBeTruthy();
+    expect(screen.getByText("No trend data.")).toBeTruthy();
     expect(screen.queryByRole("img")).toBeNull();
   });
 });

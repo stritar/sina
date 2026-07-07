@@ -3,7 +3,7 @@
 :root {
   --sina-invoice-list-radius: var(--sina-radius--lg, 8px);
   --sina-invoice-list-surface: var(--sina-color-surface, #ffffff);
-  --sina-invoice-list-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-invoice-list-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-invoice-list-text: var(--sina-color-text, #353b31);
   --sina-invoice-list-text-muted: var(--sina-color-text-muted, #52564e);
   --sina-invoice-list-text-subtle: var(--sina-color-text-subtle, #a7ada0);
@@ -11,7 +11,7 @@
 
 .card {
   border-radius: var(--sina-invoice-list-radius, 8px);
-  border: var(--sina-border-width--1, 1px) solid var(--sina-invoice-list-border, #edefeb);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-invoice-list-border, #e9ece8);
   background: var(--sina-invoice-list-surface, #ffffff);
   padding: var(--sina-space--3, 0.75rem);
 }

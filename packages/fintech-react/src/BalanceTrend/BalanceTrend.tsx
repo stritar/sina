@@ -109,7 +109,7 @@ export function BalanceTrend({ payload }: BalanceTrendProps) {
           </div>
         </>
       ) : (
-        <p className={styles.empty}>No trend data</p>
+        <p className={styles.empty}>No trend data.</p>
       )}
     </Stack>
   );

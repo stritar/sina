@@ -3,7 +3,7 @@
 :root {
   --sina-activity-feed-radius: var(--sina-radius--lg, 8px);
   --sina-activity-feed-surface: var(--sina-color-surface, #ffffff);
-  --sina-activity-feed-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-activity-feed-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-activity-feed-text: var(--sina-color-text, #353b31);
   --sina-activity-feed-text-muted: var(--sina-color-text-muted, #52564e);
   --sina-activity-feed-text-subtle: var(--sina-color-text-subtle, #a7ada0);
@@ -11,7 +11,7 @@
 
 .card {
   border-radius: var(--sina-activity-feed-radius, 8px);
-  border: var(--sina-border-width--1, 1px) solid var(--sina-activity-feed-border, #edefeb);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-activity-feed-border, #e9ece8);
   background: var(--sina-activity-feed-surface, #ffffff);
   padding: var(--sina-space--3, 0.75rem);
 }
@@ -26,7 +26,7 @@
 }
 
 .list > * + * {
-  border-top: var(--sina-border-width--1, 1px) solid var(--sina-activity-feed-border, #edefeb);
+  border-top: var(--sina-border-width--1, 1px) solid var(--sina-activity-feed-border, #e9ece8);
 }
 
 .row {

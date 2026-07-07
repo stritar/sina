@@ -54,7 +54,7 @@ describe("presentational reads — content", () => {
   it("CardList shows the masked number and a status", () => {
     render(<CardList payload={cardFixtures.validCards} />);
     expect(screen.getByText("****4021")).toBeTruthy();
-    expect(screen.getByText("frozen")).toBeTruthy();
+    expect(screen.getByText("Frozen")).toBeTruthy();
   });
 
   it("BudgetProgress flags an over-budget category", () => {

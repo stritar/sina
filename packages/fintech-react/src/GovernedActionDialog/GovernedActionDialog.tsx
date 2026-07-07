@@ -149,21 +149,25 @@ export function GovernedActionDialog({
           {phase === "review" && (
             <>
               <Alert variant="warning" title="Why this is blocked">
-                {blocking.length > 0 ? (
-                  <Stack direction="col" gap={2} as="ul">
-                    {blocking.map((v, i) => (
-                      <li key={i} className={styles.violationRow}>
-                        <Badge intent="danger" size="sm">
-                          <span className={styles.severity}>{v.severity}</span>
-                        </Badge>
-                        <span>{v.message}</span>
-                      </li>
-                    ))}
-                  </Stack>
-                ) : (
-                  "This action requires authorization before it can proceed."
-                )}
+                {blocking.length > 0
+                  ? "This action exceeds a governed threshold and requires authorization before it can proceed."
+                  : "This action requires authorization before it can proceed."}
               </Alert>
+              {blocking.length > 0 && (
+                // Severity Badges are SIBLINGS of the Alert, never nested inside it —
+                // status elements never wrap other status elements (mirrors BlockedState).
+                // See CLAUDE.md "Never nest status elements inside one another".
+                <Stack direction="col" gap={2} as="ul" className={styles.violations}>
+                  {blocking.map((v, i) => (
+                    <li key={i} className={styles.violationRow}>
+                      <Badge intent="danger" size="sm">
+                        <span className={styles.severity}>{v.severity}</span>
+                      </Badge>
+                      <span>{v.message}</span>
+                    </li>
+                  ))}
+                </Stack>
+              )}
               <Footer>
                 <DialogClose asChild>
                   <Button variant="secondary">Close</Button>

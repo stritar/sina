@@ -3,7 +3,7 @@
 :root {
   --sina-dialog-overlay: color-mix(in srgb, var(--sina-color-text, #353b31) 40%, transparent);
   --sina-dialog-surface: var(--sina-color-surface-raised, #ffffff);
-  --sina-dialog-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-dialog-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-dialog-title: var(--sina-color-text, #353b31);
   --sina-dialog-description: var(--sina-color-text-muted, #52564e);
 }
@@ -35,7 +35,7 @@
   flex-direction: column;
   gap: var(--sina-space--3, 0.75rem);
   border-radius: var(--sina-radius--lg, 8px);
-  border: var(--sina-border-width--1, 1px) solid var(--sina-dialog-border, #edefeb);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-dialog-border, #e9ece8);
   background: var(--sina-dialog-surface, #ffffff);
   padding: var(--sina-space--5, 1.25rem);
   box-shadow: var(--sina-shadow--lg, 0 12px 24px color-mix(in srgb, #383e33 10%, transparent),

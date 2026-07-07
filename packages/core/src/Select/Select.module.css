@@ -3,7 +3,7 @@
 :root {
   --sina-select-bg: var(--sina-color-surface, #ffffff);
   --sina-select-fg: var(--sina-color-text, #353b31);
-  --sina-select-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-select-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-select-placeholder: var(--sina-color-text-subtle, #a7ada0);
   --sina-select-focus-ring: var(--sina-color-focus-ring, #545f49);
   --sina-select-icon: var(--sina-color-text-muted, #52564e);
@@ -17,7 +17,7 @@
     transparent
   ));
   --sina-select-label: var(--sina-color-text-muted, #52564e);
-  --sina-select-separator: var(--sina-color-border-subtle, #edefeb);
+  --sina-select-separator: var(--sina-color-border-subtle, #e9ece8);
 }
 
 /* Trigger */
@@ -29,7 +29,7 @@
   justify-content: space-between;
   gap: var(--sina-space--1_5, 0.375rem);
   border-radius: var(--sina-radius--md, 6px);
-  border: var(--sina-border-width--1, 1px) solid var(--sina-select-border, #edefeb);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-select-border, #e9ece8);
   background: var(--sina-select-bg, #ffffff);
   padding-inline: var(--sina-space--2_5, 0.625rem);
   font-size: var(--sina-text--ui, 0.8125rem);
@@ -65,7 +65,7 @@
   z-index: var(--sina-z--dropdown, 1000);
   overflow: hidden;
   border-radius: var(--sina-radius--md, 6px);
-  border: var(--sina-border-width--1, 1px) solid var(--sina-select-border, #edefeb);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-select-border, #e9ece8);
   background: var(--sina-select-surface, #ffffff);
   box-shadow: var(--sina-shadow--md, 0 4px 8px color-mix(in srgb, #383e33 8%, transparent),
     0 2px 4px color-mix(in srgb, #383e33 6%, transparent));
@@ -145,7 +145,7 @@
   margin-inline: calc(var(--sina-space--1, 0.25rem) * -1);
   margin-block: var(--sina-space--1, 0.25rem);
   height: 1px;
-  background: var(--sina-select-separator, #edefeb);
+  background: var(--sina-select-separator, #e9ece8);
 }
 
 /* Radix Presence waits for animationend, so both open + closed need a real

@@ -2,7 +2,7 @@
 
 :root {
   --sina-spending-breakdown-surface: var(--sina-color-surface, #ffffff);
-  --sina-spending-breakdown-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-spending-breakdown-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-spending-breakdown-text: var(--sina-color-text, #353b31);
   --sina-spending-breakdown-text-muted: var(--sina-color-text-muted, #52564e);
 }
@@ -11,7 +11,7 @@
   border-radius: var(--sina-radius--lg, 8px);
   border-width: var(--sina-border-width--1, 1px);
   border-style: solid;
-  border-color: var(--sina-spending-breakdown-border, #edefeb);
+  border-color: var(--sina-spending-breakdown-border, #e9ece8);
   background: var(--sina-spending-breakdown-surface, #ffffff);
   padding: var(--sina-space--3, 0.75rem);
 }

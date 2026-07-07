@@ -24,7 +24,7 @@ describe("AssetDetail", () => {
 
   it("renders the empty state with no chart", () => {
     render(<AssetDetail payload={assetDetailFixtures.validEmpty} />);
-    expect(screen.getByText("No chart data")).toBeTruthy();
+    expect(screen.getByText("No chart data.")).toBeTruthy();
     expect(screen.queryByRole("img")).toBeNull();
   });
 });

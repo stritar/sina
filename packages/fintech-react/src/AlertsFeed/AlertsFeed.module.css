@@ -1,17 +1,17 @@
 /* @sina-design-system/fintech-react — AlertsFeed */
 
 :root {
-  --sina-alerts-feed-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-alerts-feed-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-alerts-feed-surface: var(--sina-color-surface, #ffffff);
   --sina-alerts-feed-title: var(--sina-color-text, #353b31);
   --sina-alerts-feed-text-muted: var(--sina-color-text-muted, #52564e);
-  --sina-alerts-feed-divider: var(--sina-color-border-subtle, #edefeb);
+  --sina-alerts-feed-divider: var(--sina-color-border-subtle, #e9ece8);
 }
 
 /* Outer framed feed. */
 .feed {
   border-radius: var(--sina-radius--lg, 8px);
-  border: var(--sina-border-width--1, 1px) solid var(--sina-alerts-feed-border, #edefeb);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-alerts-feed-border, #e9ece8);
   background: var(--sina-alerts-feed-surface, #ffffff);
   padding: var(--sina-space--3, 0.75rem);
 }
@@ -28,7 +28,7 @@
 
 /* Alert list — hairline divider between rows. */
 .list > * + * {
-  border-top: var(--sina-border-width--1, 1px) solid var(--sina-alerts-feed-divider, #edefeb);
+  border-top: var(--sina-border-width--1, 1px) solid var(--sina-alerts-feed-divider, #e9ece8);
 }
 
 /* One alert row. */

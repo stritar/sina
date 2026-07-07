@@ -16,10 +16,19 @@
   margin-top: var(--sina-space--3, 0.75rem);
 }
 
-/* One blocking-violation row inside the "why this is blocked" alert. */
+/* Blocking-violation list — a SIBLING beneath the "why this is blocked" alert,
+   never nested inside it (status elements don't wrap other status elements). */
+.violations {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* One blocking-violation row: a severity Badge beside its message. */
 .violationRow {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   gap: var(--sina-space--1_5, 0.375rem);
 }
 

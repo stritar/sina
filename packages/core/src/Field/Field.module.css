@@ -3,7 +3,7 @@
 :root {
   --sina-field-fg: var(--sina-color-text, #353b31);
   --sina-field-description-fg: var(--sina-color-text-muted, #52564e);
-  --sina-field-fg--danger: var(--sina-color-danger, #d5341f);
+  --sina-field-fg--danger: var(--sina-color-danger, #c43a00);
 }
 
 .root {

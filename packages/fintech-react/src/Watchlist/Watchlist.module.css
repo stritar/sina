@@ -3,7 +3,7 @@
 :root {
   --sina-watchlist-radius: var(--sina-radius--lg, 8px);
   --sina-watchlist-surface: var(--sina-color-surface, #ffffff);
-  --sina-watchlist-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-watchlist-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-watchlist-text: var(--sina-color-text, #353b31);
   --sina-watchlist-text-muted: var(--sina-color-text-muted, #52564e);
 }
@@ -11,7 +11,7 @@
 .card {
   border-width: var(--sina-border-width--1, 1px);
   border-style: solid;
-  border-color: var(--sina-watchlist-border, #edefeb);
+  border-color: var(--sina-watchlist-border, #e9ece8);
   border-radius: var(--sina-watchlist-radius, 8px);
   background: var(--sina-watchlist-surface, #ffffff);
   padding: var(--sina-space--3, 0.75rem);
@@ -29,7 +29,7 @@
 .list > * + * {
   border-top-width: var(--sina-border-width--1, 1px);
   border-top-style: solid;
-  border-top-color: var(--sina-watchlist-border, #edefeb);
+  border-top-color: var(--sina-watchlist-border, #e9ece8);
 }
 
 .row {

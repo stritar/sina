@@ -3,12 +3,12 @@
 :root {
   --sina-currency-field-bg: var(--sina-color-surface, #ffffff);
   --sina-currency-field-fg: var(--sina-color-text, #353b31);
-  --sina-currency-field-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-currency-field-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-currency-field-placeholder: var(--sina-color-text-subtle, #a7ada0);
   --sina-currency-field-focus-ring: var(--sina-color-focus-ring, #545f49);
   --sina-currency-field-bg--disabled: var(--sina-color-surface-sunken, #f5f6f4);
   --sina-currency-field-fg--disabled: var(--sina-color-text-subtle, #a7ada0);
-  --sina-currency-field-border--danger: var(--sina-color-danger, #d5341f);
+  --sina-currency-field-border--danger: var(--sina-color-danger, #c43a00);
   --sina-currency-field-symbol: var(--sina-color-text-muted, #52564e);
 }
 
@@ -35,7 +35,7 @@
   height: var(--sina-space--7, 1.75rem);
   width: 100%;
   border-radius: var(--sina-radius--md, 6px);
-  border: var(--sina-border-width--1, 1px) solid var(--sina-currency-field-border, #edefeb);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-currency-field-border, #e9ece8);
   background: var(--sina-currency-field-bg, #ffffff);
   font-size: var(--sina-text--ui, 0.8125rem);
   line-height: 1.125rem;

@@ -1,7 +1,7 @@
 /* @sina-design-system/core — SummaryList */
 
 :root {
-  --sina-summary-list-divider: var(--sina-color-border-subtle, #edefeb);
+  --sina-summary-list-divider: var(--sina-color-border-subtle, #e9ece8);
   --sina-summary-list-label: var(--sina-color-text-muted, #52564e);
   --sina-summary-list-label--emphasis: var(--sina-color-text, #353b31);
   --sina-summary-list-value: var(--sina-color-text, #353b31);
@@ -9,7 +9,7 @@
 
 /* Hairline divider between rows (mirrors `divide-y`). */
 .list > * + * {
-  border-top: var(--sina-border-width--1, 1px) solid var(--sina-summary-list-divider, #edefeb);
+  border-top: var(--sina-border-width--1, 1px) solid var(--sina-summary-list-divider, #e9ece8);
 }
 
 .row {

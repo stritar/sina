@@ -5,7 +5,6 @@
 
   --sina-button-bg--primary: var(--sina-color-primary, #353b31);
   --sina-button-fg--primary: var(--sina-color-primary-fg, #ffffff);
-  --sina-button-border--primary: var(--sina-color-primary, #353b31);
   --sina-button-bg--primary--hover: var(--sina-color-primary--hover, #444d3b);
   --sina-button-bg--primary--active: var(--sina-color-primary--active, #2b3028);
 
@@ -14,15 +13,21 @@
   --sina-button-border--secondary: var(--sina-color-border, #dde0d9);
   --sina-button-bg--secondary--hover: var(--sina-color-secondary--hover, #dde0d9);
 
-  --sina-button-bg--danger: var(--sina-color-danger, #d5341f);
+  --sina-button-bg--danger: var(--sina-color-danger, #c43a00);
   --sina-button-fg--danger: var(--sina-color-danger-fg, #ffffff);
-  --sina-button-border--danger: var(--sina-color-danger, #d5341f);
 
   --sina-button-fg--ghost: var(--sina-color-text, #353b31);
   --sina-button-border--ghost: var(--sina-color-border, #dde0d9);
 
   --sina-button-bg--disabled: var(--sina-color-secondary, #e5e7e2);
   --sina-button-fg--disabled: var(--sina-color-text-subtle, #a7ada0);
+
+  /* Placeholder border for the vivid fills — present but invisible: 1px black at
+     0 alpha. A themer reveals one by raising its alpha (or overriding the token);
+     primary/danger each pick their own below. */
+  --sina-button-border-color--primary: var(--sina-color-button-border--primary, #00000000);
+  --sina-button-border-color--danger: var(--sina-color-button-border--danger, #00000000);
+  --sina-button-border-width: var(--sina-border-width--1, 1px);
 }
 
 .root {
@@ -53,7 +58,8 @@
 
 /* Variants */
 .primary {
-  border-color: var(--sina-button-border--primary, #353b31);
+  border-width: var(--sina-button-border-width, 1px);
+  border-color: var(--sina-button-border-color--primary, #00000000);
   background: var(--sina-button-bg--primary, #353b31);
   color: var(--sina-button-fg--primary, #ffffff);
 }
@@ -78,15 +84,16 @@
 
 /* Danger keeps full strength (governance carve-out — never quieted). */
 .danger {
-  border-color: var(--sina-button-border--danger, #d5341f);
+  border-width: var(--sina-button-border-width, 1px);
+  border-color: var(--sina-button-border-color--danger, #00000000);
   background: var(--sina-button-bg--danger, #d5341f);
   color: var(--sina-button-fg--danger, #ffffff);
 }
 .danger:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--sina-color-danger, #d5341f) 90%, transparent);
+  background: color-mix(in srgb, var(--sina-color-danger, #c43a00) 90%, transparent);
 }
 .danger:active:not(:disabled) {
-  background: color-mix(in srgb, var(--sina-color-danger, #d5341f) 80%, transparent);
+  background: color-mix(in srgb, var(--sina-color-danger, #c43a00) 80%, transparent);
 }
 
 /* Quiet control: translucent overlay, not a color swap. */

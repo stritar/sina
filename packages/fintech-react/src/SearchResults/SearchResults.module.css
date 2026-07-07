@@ -1,7 +1,7 @@
 /* @sina-design-system/fintech-react — SearchResults */
 
 :root {
-  --sina-search-results-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-search-results-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-search-results-surface: var(--sina-color-surface, #ffffff);
   --sina-search-results-label: var(--sina-color-text, #353b31);
   --sina-search-results-text-muted: var(--sina-color-text-muted, #52564e);
@@ -10,7 +10,7 @@
 /* Outer framed results panel. */
 .results {
   border-radius: var(--sina-radius--lg, 8px);
-  border: var(--sina-border-width--1, 1px) solid var(--sina-search-results-border, #edefeb);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-search-results-border, #e9ece8);
   background: var(--sina-search-results-surface, #ffffff);
   padding: var(--sina-space--3, 0.75rem);
 }

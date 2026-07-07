@@ -52,53 +52,57 @@
   --sina-color-brand--900: #21251e;
   --sina-color-brand--950: #161913;
 
-  /* Danger — vivid red (edra-lively; base AA vs white fg 4.5:1)            */
-  --sina-color-danger--50: #fdece9;
-  --sina-color-danger--100: #fbd3cd;
-  --sina-color-danger--200: #f4a89d;
-  --sina-color-danger--300: #ec7c6a;
-  --sina-color-danger--400: #e15540;
-  --sina-color-danger--500: #d5341f;
-  --sina-color-danger--600: #b32819;
-  --sina-color-danger--700: #8f2014;
-  --sina-color-danger--800: #6b1810;
-  --sina-color-danger--900: #4d110b;
+  /* Danger — vivid coral (anchored on the Badge/Alert/Toast fill at --300;   */
+  /* solid at --600 keeps AA vs white fg 4.5:1)                              */
+  --sina-color-danger--50: #faf0ed;
+  --sina-color-danger--100: #f7d9cd;
+  --sina-color-danger--200: #f9b091;
+  --sina-color-danger--300: #ff7e48;
+  --sina-color-danger--400: #ff5b17;
+  --sina-color-danger--500: #eb4500;
+  --sina-color-danger--600: #c43a00;
+  --sina-color-danger--700: #9d2e00;
+  --sina-color-danger--800: #7b2400;
+  --sina-color-danger--900: #5b1c02;
 
-  /* Success — vivid green (edra-lively)                                    */
-  --sina-color-success--50: #e9f9ef;
-  --sina-color-success--100: #c6f0d6;
-  --sina-color-success--200: #8fe0b0;
-  --sina-color-success--300: #4fce86;
-  --sina-color-success--400: #25b364;
-  --sina-color-success--500: #1f9d4d;
-  --sina-color-success--600: #178a45;
-  --sina-color-success--700: #137038;
-  --sina-color-success--800: #10592d;
-  --sina-color-success--900: #0d4324;
+  /* Success — mint green (anchored on the Badge/Alert/Toast fill at --300;   */
+  /* solid at --700 keeps AA vs white fg 4.5:1)                              */
+  --sina-color-success--50: #eef6f1;
+  --sina-color-success--100: #d3ebdd;
+  --sina-color-success--200: #a2deba;
+  --sina-color-success--300: #66d091;
+  --sina-color-success--400: #3fc977;
+  --sina-color-success--500: #2fb163;
+  --sina-color-success--600: #279353;
+  --sina-color-success--700: #217443;
+  --sina-color-success--800: #1b5934;
+  --sina-color-success--900: #164228;
 
-  /* Warning — bright gold/amber (edra-lively; pairs with dark fg)          */
-  --sina-color-warning--50: #fef7e7;
-  --sina-color-warning--100: #fdeac1;
-  --sina-color-warning--200: #fbd482;
-  --sina-color-warning--300: #f8bd45;
-  --sina-color-warning--400: #f5ac22;
-  --sina-color-warning--500: #f2a20c;
-  --sina-color-warning--600: #cc880a;
-  --sina-color-warning--700: #a66d08;
-  --sina-color-warning--800: #7d5206;
-  --sina-color-warning--900: #573a04;
+  /* Warning — bright gold/amber (anchored on the Badge/Alert/Toast fill at   */
+  /* --300; solid at --400 stays bright and pairs with dark fg)              */
+  --sina-color-warning--50: #f9f4eb;
+  --sina-color-warning--100: #f5e5c8;
+  --sina-color-warning--200: #f7d087;
+  --sina-color-warning--300: #fcb737;
+  --sina-color-warning--400: #ffa806;
+  --sina-color-warning--500: #dd9000;
+  --sina-color-warning--600: #b87800;
+  --sina-color-warning--700: #936000;
+  --sina-color-warning--800: #714a02;
+  --sina-color-warning--900: #543803;
 
-  /* Info — vivid azure (edra #0099ff, deepened for legible white fg)       */
-  --sina-color-info--50: #e9f3fc;
-  --sina-color-info--100: #c5e1f8;
-  --sina-color-info--200: #8fc4f2;
-  --sina-color-info--300: #4fa2e7;
-  --sina-color-info--400: #238ede;
-  --sina-color-info--500: #1478cc;
-  --sina-color-info--600: #1163a8;
-  --sina-color-info--700: #0e4f85;
-  --sina-color-info--800: #0b3d66;
-  --sina-color-info--900: #082b48;
+  /* Info — sky azure (anchored on the Badge/Alert/Toast fill at --300;       */
+  /* solid at --600 keeps AA vs white fg 4.5:1)                              */
+  --sina-color-info--50: #f3f6fa;
+  --sina-color-info--100: #dee9f6;
+  --sina-color-info--200: #b7d4f3;
+  --sina-color-info--300: #88baf1;
+  --sina-color-info--400: #519cf0;
+  --sina-color-info--500: #2083ef;
+  --sina-color-info--600: #0f6cd3;
+  --sina-color-info--700: #0f57a6;
+  --sina-color-info--800: #0f447e;
+  --sina-color-info--900: #0d345e;
 
   /* ===================================================================== */
   /* Color — semantic roles (LIGHT). Components reference these, not ramps. */
@@ -118,7 +122,7 @@
 
   /* Borders */
   --sina-color-border: #dde0d9; /* neutral--200                           */
-  --sina-color-border-subtle: #edefeb; /* hairlines                       */
+  --sina-color-border-subtle: #e9ece8; /* neutral--100 — hairlines        */
 
   /* Actions */
   --sina-color-primary: #353b31; /* brand--700                            */
@@ -130,19 +134,19 @@
   --sina-color-secondary-fg: #353b31;
 
   /* Status */
-  --sina-color-danger: #d5341f;
+  --sina-color-danger: #c43a00; /* danger--600 — dark coral, AA vs white fg */
   --sina-color-danger-fg: #ffffff;
-  --sina-color-danger-bg: #fdece9;
-  --sina-color-success: #178a45;
+  --sina-color-danger-bg: #faf0ed; /* danger--50 */
+  --sina-color-success: #217443; /* success--700 — AA vs white fg */
   --sina-color-success-fg: #ffffff;
-  --sina-color-success-bg: #e9f9ef;
-  --sina-color-warning: #f2a20c;
+  --sina-color-success-bg: #eef6f1; /* success--50 */
+  --sina-color-warning: #ffa806; /* warning--400 — bright gold, pairs with dark fg */
   --sina-color-warning-fg: #21251e;
-  --sina-color-warning-bg: #fef7e7;
-  --sina-color-warning-text: #7d5206; /* warning--800 — amber legible on -bg tint (AA); base amber fails contrast */
-  --sina-color-info: #1478cc;
+  --sina-color-warning-bg: #f9f4eb; /* warning--50 */
+  --sina-color-warning-text: #714a02; /* warning--800 — amber legible on -bg tint (AA); base amber fails contrast */
+  --sina-color-info: #0f6cd3; /* info--600 — AA vs white fg */
   --sina-color-info-fg: #ffffff;
-  --sina-color-info-bg: #e9f3fc;
+  --sina-color-info-bg: #f3f6fa; /* info--50 */
   --sina-color-neutral-bg: #f5f6f4; /* neutral--50 — badge/chip tint */
 
   /* Status fills (vivid, saturated) + per-status ink & border — the "0000 dark
@@ -151,10 +155,10 @@
      carries its own fill, so black-on-fill contrast holds in light AND dark (all
      AAA; guarded in tokens.test.ts). */
   --sina-color-neutral-fill: #e6e9e3;
-  --sina-color-info-fill: #88baf1;
-  --sina-color-success-fill: #66d091;
-  --sina-color-warning-fill: #fcb737;
-  --sina-color-danger-fill: #ff7e48;
+  --sina-color-info-fill: #88baf1; /* = info--300 */
+  --sina-color-success-fill: #66d091; /* = success--300 */
+  --sina-color-warning-fill: #fcb737; /* = warning--300 */
+  --sina-color-danger-fill: #ff7e48; /* = danger--300 */
 
   /* Per-status ink on the vivid fill — one knob per status so an adopter can
      rebrand (e.g.) danger ink without touching the others. Default "0000 dark"
@@ -172,6 +176,13 @@
   --sina-color-status-border--success: #00000000;
   --sina-color-status-border--warning: #00000000;
   --sina-color-status-border--danger: #00000000;
+
+  /* Per-variant placeholder border for Button's vivid fills — black at 0 alpha;
+     raise the alpha (or override) to reveal. Decoupled from
+     --sina-color-status-border--* so revealing a button border does not touch
+     Badge/Alert/Toast. */
+  --sina-color-button-border--primary: #00000000;
+  --sina-color-button-border--danger: #00000000;
 
   /* Accessibility */
   --sina-color-focus-ring: #545f49; /* brand--500 — focus-visible ring     */
@@ -386,12 +397,12 @@
   --sina-color-secondary--hover: #52564e;
   --sina-color-secondary-fg: #f5f6f4;
 
-  --sina-color-danger-bg: #4d110b;
-  --sina-color-success-bg: #0d4324;
-  --sina-color-warning-bg: #573a04;
-  --sina-color-info-bg: #082b48;
+  --sina-color-danger-bg: #5b1c02; /* danger--900 */
+  --sina-color-success-bg: #164228; /* success--900 */
+  --sina-color-warning-bg: #543803; /* warning--900 */
+  --sina-color-info-bg: #0d345e; /* info--900 */
   --sina-color-neutral-bg: #434841; /* neutral--800 — raised grey chip on dark */
-  --sina-color-warning-text: #f2a20c; /* bright amber legible on the dark warning tint */
+  --sina-color-warning-text: #fcb737; /* warning--300 — bright amber legible on the dark warning tint */
 
   --sina-color-focus-ring: #94a389; /* brand--300 */
   --sina-color-surface-secure: #2b3028; /* brand--800 */

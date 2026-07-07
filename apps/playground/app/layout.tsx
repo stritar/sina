@@ -7,6 +7,7 @@ import "@sina-design-system/theme/reset.css";
 import "@sina-design-system/theme/css";
 import "@sina-design-system/core/styles.css";
 import "@sina-design-system/fintech-react/styles.css";
+import "@sina-design-system/governance-demo/styles.css";
 import "./globals.css";
 
 // Self-hosted via next/font; exposed as CSS variables the SINA font tokens map to.

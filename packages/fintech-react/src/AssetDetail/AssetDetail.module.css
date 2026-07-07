@@ -2,13 +2,13 @@
 
 :root {
   --sina-asset-detail-surface: var(--sina-color-surface, #ffffff);
-  --sina-asset-detail-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-asset-detail-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-asset-detail-text-muted: var(--sina-color-text-muted, #52564e);
   --sina-asset-detail-chart: var(--sina-color-primary, #353b31);
 }
 
 .root {
-  border: var(--sina-border-width--1, 1px) solid var(--sina-asset-detail-border, #edefeb);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-asset-detail-border, #e9ece8);
   border-radius: var(--sina-radius--lg, 8px);
   background: var(--sina-asset-detail-surface, #ffffff);
   padding: var(--sina-space--3, 0.75rem);

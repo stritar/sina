@@ -2,7 +2,7 @@
 
 :root {
   --sina-mandatory-disclosure-scroll-bg: var(--sina-color-surface-sunken, #f5f6f4);
-  --sina-mandatory-disclosure-scroll-border: var(--sina-color-border-subtle, #edefeb);
+  --sina-mandatory-disclosure-scroll-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-mandatory-disclosure-paragraph: var(--sina-color-text-muted, #52564e);
   --sina-mandatory-disclosure-version: var(--sina-color-text-subtle, #a7ada0);
 }
@@ -22,7 +22,7 @@
 .scroll {
   max-height: 14rem;
   border-radius: var(--sina-radius--lg, 8px);
-  border: var(--sina-border-width--1, 1px) solid var(--sina-mandatory-disclosure-scroll-border, #edefeb);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-mandatory-disclosure-scroll-border, #e9ece8);
   background: var(--sina-mandatory-disclosure-scroll-bg, #f5f6f4);
   padding: var(--sina-space--3, 0.75rem);
 }

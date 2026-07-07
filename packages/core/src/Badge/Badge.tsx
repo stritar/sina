@@ -102,6 +102,7 @@ export function Badge({
     <span
       className={cn(styles.root, intentClass[resolvedIntent], sizeClass[resolvedSize], className)}
       {...props}
+      data-sina-status="badge"
     >
       {showDot ? (
         // Dot rides in an icon-sized, centered container so it lands in the same
