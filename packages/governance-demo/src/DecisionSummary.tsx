@@ -28,15 +28,13 @@ export function DecisionSummary({ trace }: { trace: GateTrace }) {
       </span>
       <div className={styles.metrics}>
         <Badge intent="neutral" size="sm">
-          <span className={styles.mono}>valid={String(governed)}</span>
+          valid={String(governed)}
         </Badge>
         <Badge intent={violations ? (governed ? "warning" : "danger") : "neutral"} size="sm">
-          <span className={styles.mono}>
-            {violations} violation{violations === 1 ? "" : "s"}
-          </span>
+          {violations} violation{violations === 1 ? "" : "s"}
         </Badge>
         <Badge intent="neutral" size="sm">
-          <span className={styles.mono}>{trace.latencyMs.toFixed(1)} ms</span>
+          {trace.latencyMs.toFixed(1)} ms
         </Badge>
       </div>
     </div>

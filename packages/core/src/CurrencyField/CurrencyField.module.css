@@ -59,7 +59,7 @@
   color: var(--sina-currency-field-fg--disabled, #a7ada0);
 }
 .input[aria-invalid="true"] {
-  border-color: var(--sina-currency-field-border--danger, #d5341f);
+  border-color: var(--sina-currency-field-border--danger, #c43a00);
 }
 
 /* Padding leaves room for the leading symbol. */

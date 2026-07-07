@@ -13,19 +13,17 @@
 
 .governed {
   border-color: color-mix(in srgb, var(--sina-color-success) 40%, transparent);
-  background: var(--sina-color-success-bg);
 }
 
 .blocked {
   border-color: color-mix(in srgb, var(--sina-color-danger) 40%, transparent);
-  background: var(--sina-color-danger-bg);
 }
 
 .verdict {
   font-family: var(--sina-font--mono);
   font-size: var(--sina-text--sm);
-  font-weight: var(--sina-font-weight--semibold);
-  letter-spacing: var(--sina-tracking--wide);
+  font-weight: var(--sina-font-weight--regular);
+  letter-spacing: 0.5px;
 }
 
 .verdictGoverned {
@@ -41,8 +39,4 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--sina-space--1_5);
-}
-
-.mono {
-  font-family: var(--sina-font--mono);
 }

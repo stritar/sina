@@ -15,7 +15,7 @@ import {
   CheckCircle,
   Info,
   Warning,
-  WarningCircle,
+  WarningOctagon,
 } from "@phosphor-icons/react/dist/ssr";
 import styles from "./ConsoleStage.module.css";
 
@@ -23,7 +23,7 @@ export type StageStatus = "pass" | "fail" | "flag" | "info";
 
 const NODE: Record<StageStatus, { Icon: typeof CheckCircle; className: string | undefined }> = {
   pass: { Icon: CheckCircle, className: styles.nodePass },
-  fail: { Icon: WarningCircle, className: styles.nodeFail },
+  fail: { Icon: WarningOctagon, className: styles.nodeFail },
   flag: { Icon: Warning, className: styles.nodeFlag },
   info: { Icon: Info, className: styles.nodeInfo },
 };
@@ -54,7 +54,7 @@ export function ConsoleStage({
       {!last && <span aria-hidden className={styles.rail} />}
       {/* status node */}
       <span className={styles.nodeSlot}>
-        <Icon weight="fill" className={[styles.node, className].filter(Boolean).join(" ")} aria-hidden />
+        <Icon weight="regular" className={[styles.node, className].filter(Boolean).join(" ")} aria-hidden />
       </span>
 
       <div className={styles.body}>
@@ -66,14 +66,14 @@ export function ConsoleStage({
             className={styles.toggle}
           >
             {open ? (
-              <CaretDown weight="bold" className={styles.caret} aria-hidden />
+              <CaretDown weight="regular" className={styles.caret} aria-hidden />
             ) : (
-              <CaretRight weight="bold" className={styles.caret} aria-hidden />
+              <CaretRight weight="regular" className={styles.caret} aria-hidden />
             )}
             <span className={styles.title}>{title}</span>
             {latencyMs != null && (
               <Badge intent="neutral" size="sm">
-                <span className={styles.mono}>{latencyMs.toFixed(1)} ms</span>
+                {latencyMs.toFixed(1)} ms
               </Badge>
             )}
           </button>
@@ -82,7 +82,7 @@ export function ConsoleStage({
             <span className={styles.title}>{title}</span>
             {latencyMs != null && (
               <Badge intent="neutral" size="sm">
-                <span className={styles.mono}>{latencyMs.toFixed(1)} ms</span>
+                {latencyMs.toFixed(1)} ms
               </Badge>
             )}
           </div>

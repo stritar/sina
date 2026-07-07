@@ -86,7 +86,7 @@
 .danger {
   border-width: var(--sina-button-border-width, 1px);
   border-color: var(--sina-button-border-color--danger, #00000000);
-  background: var(--sina-button-bg--danger, #d5341f);
+  background: var(--sina-button-bg--danger, #c43a00);
   color: var(--sina-button-fg--danger, #ffffff);
 }
 .danger:hover:not(:disabled) {

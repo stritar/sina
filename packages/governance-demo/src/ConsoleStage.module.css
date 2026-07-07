@@ -1,8 +1,8 @@
 /* ConsoleStage — one span row on the interception timeline */
 
 .node {
-  width: var(--sina-size--sm);
-  height: var(--sina-size--sm);
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .nodePass {
@@ -28,17 +28,17 @@
 
 .rail {
   position: absolute;
-  left: 9px;
+  left: 9.25px;
   top: var(--sina-space--6);
   bottom: 0;
-  width: 1px;
+  width: 1.5px;
   background: var(--sina-color-border);
 }
 
 .nodeSlot {
   position: absolute;
   left: 0;
-  top: var(--sina-space--0_5);
+  top: 0;
 }
 
 .body {
@@ -60,8 +60,8 @@
 }
 
 .caret {
-  width: var(--sina-size--icon-sm);
-  height: var(--sina-size--icon-sm);
+  width: 0.75rem;
+  height: 0.75rem;
   color: var(--sina-color-text-muted);
 }
 
@@ -71,10 +71,6 @@
   letter-spacing: -0.006em;
   font-weight: var(--sina-font-weight--medium);
   color: var(--sina-color-text);
-}
-
-.mono {
-  font-family: var(--sina-font--mono);
 }
 
 .staticTitle {

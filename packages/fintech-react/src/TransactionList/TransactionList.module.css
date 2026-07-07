@@ -94,7 +94,7 @@
 }
 
 .amountCredit {
-  color: var(--sina-transaction-list-amount--credit, #178a45);
+  color: var(--sina-transaction-list-amount--credit, #217443);
 }
 
 .amountDebit {
