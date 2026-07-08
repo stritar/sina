@@ -5,3 +5,18 @@
   --sina-font--sans: var(--font-rubik), ui-sans-serif, system-ui, sans-serif;
   --sina-font--mono: var(--font-ibm-plex-mono), ui-monospace, monospace;
 }
+
+/* Dual-theme shiki (see source.config.ts): each token ships both `--shiki-light`
+   and `--shiki-dark` as CSS variables (no baked-in color). Default to the light
+   color; flip to the dark color under the `[data-theme="dark"]` root the
+   ThemeToggle stamps. The code-block background stays a SINA surface token (set in
+   CodePre.module.css) in both themes, so only the syntax colors switch. */
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+}
+
+[data-theme="dark"] .shiki,
+[data-theme="dark"] .shiki span {
+  color: var(--shiki-dark);
+}

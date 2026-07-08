@@ -18,7 +18,7 @@ export interface GovernanceDemoProps {
 
 /**
  * A read-only, deterministic governance demo — mountable in docs (Phase 7) and
- * the marketing landing (Phase 8). It runs the real constitution through
+ * the marketing landing (Phase 9). It runs the real constitution through
  * `runGate` and renders the interception console.
  *
  * This is a Server Component (no `"use client"`): the gate executes here — on

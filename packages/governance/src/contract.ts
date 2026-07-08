@@ -50,7 +50,7 @@ export interface AuditEvent {
   timestamp: string;
   /** Correlates this single decision across logs. */
   decisionId: string;
-  /** Constitution / rule-set version, so the Phase 8 sink isn't a breaking change. */
+  /** Constitution / rule-set version, so the Phase 10 sink isn't a breaking change. */
   version: string;
   /** The **redacted** payload — sensitive fields are masked/dropped/fingerprinted. */
   payload: unknown;

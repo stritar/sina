@@ -98,7 +98,7 @@ export const wireApproval = z
     approverName: z.string().min(1, "approver name is required"),
     secondFactor: z.string().regex(/^\d{6}$/, "second factor must be a 6-digit code").optional(),
     payloadHash: z.string().min(1, "approval must bind to the transfer terms"),
-    /** Reserved for Phase 8 freshness/replay checks (no server challenge store yet). */
+    /** Reserved for Phase 10 freshness/replay checks (no server challenge store yet). */
     challengeId: z.string().optional(),
   })
   .strict();

@@ -1,0 +1,52 @@
+---
+title: Package Boundaries
+description: The hard import rules between packages, enforced by ESLint so the agent and the linter say the same thing
+---
+
+The [three layers](/docs/architecture/three-layers) are only real if they are
+enforced. SINA encodes the boundaries as per-package ESLint
+`no-restricted-imports` rules, with the same wording that appears in `CLAUDE.md`
+— so an agent editing the code and the linter checking it say the **same thing**.
+
+## The rules
+
+**`@sina-design-system/theme`** — tokens + reset only.
+
+- No React, no react-dom, no Tailwind.
+
+**`@sina-design-system/core`** — headless primitives, styled with CSS Modules.
+
+- No `zod`.
+- No domain packages (`fintech`, `defense`) and no domain **vocabulary** — no
+  `$50,000`, NSN, CAC, "limit", "approval".
+- No Tailwind and no `class-variance-authority`. Strictly domain-agnostic.
+
+**`@sina-design-system/fintech`** — the pure Zod constitution.
+
+- No React, no `core`, no `theme`, no UI of any kind.
+
+**`@sina-design-system/fintech-react`** — governed components.
+
+- The **one** package allowed to import both `core` and `fintech` (plus
+  `theme` / `governance`).
+- Still no `zod` — it composes schemas, never authors them — and no `defense`.
+- Never validates a payload; the gate stays server-side.
+
+## Why the boundaries are directional
+
+Dependencies only ever point **down** the stack. `fintech` depends on
+`governance` but never the reverse; `governance` is domain-agnostic and knows
+nothing about wire transfers. `core` sits below all domain logic, so a primitive
+can be reused by any domain — or shipped standalone — without dragging fintech
+rules along. `fintech-react` is the only place the two halves meet, and even
+there it merely renders decisions.
+
+## Enforcement
+
+Because each rule is an ESLint `no-restricted-imports` message, a violation is a
+lint error with an explanation that points to where the concern belongs. A React
+import landing in `theme` or a `zod` import landing in `core` fails the build.
+The boundary is not a convention you can forget — it is a check that runs on
+every edit, and it is the same message the agent reads when it proposes a change.
+
+Next: [The Interception Seam](/docs/architecture/interception-seam).

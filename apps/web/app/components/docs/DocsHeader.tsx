@@ -13,6 +13,7 @@ import {
 } from "@sina-design-system/core";
 import { Sidebar } from "./Sidebar";
 import { Search } from "./Search";
+import { ThemeToggle } from "./ThemeToggle";
 import styles from "./DocsHeader.module.css";
 
 /**
@@ -55,6 +56,7 @@ export function DocsHeader({ tree }: { tree: Root }) {
 
       <div className={styles.right}>
         <Search />
+        <ThemeToggle />
         <Link
           href="https://github.com"
           className={styles.ghostLink}

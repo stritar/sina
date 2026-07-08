@@ -173,7 +173,7 @@ export const smuggledInsideApproval: unknown = {
 /**
  * A well-formed, correctly-bound approval carrying a `challengeId`. Freshness /
  * replay is NOT enforced in Phase 5 (no server-side challenge store), so this
- * PASSES today — the documented gap the Phase 8 audit sink closes.
+ * PASSES today — the documented gap the Phase 10 audit sink closes.
  */
 export const staleApproval: unknown = {
   ...sixtyThousandCore,

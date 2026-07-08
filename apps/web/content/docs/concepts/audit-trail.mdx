@@ -1,0 +1,51 @@
+---
+title: The Audit Trail
+description: Every interception — pass or fail — emits a structured, redacted, auditable event
+---
+
+Governance you cannot inspect is not governance. Every interception in SINA —
+pass **or** fail — emits a structured, auditable event. This is the seam the
+compliance story rests on.
+
+## The event shape
+
+```ts
+interface AuditEvent {
+  timestamp: string;
+  payload: unknown; // redacted before emit
+  result: InterceptionResult;
+  violations: Violation[];
+  decidedComponent: string | null;
+}
+```
+
+`result` is the full `{ valid, violations, requiredComponent }` decision;
+`decidedComponent` records what actually mounted — the pattern's own component
+on a clean pass, or the forced governed component on an escalation. Reads are
+audited too, so the ledger captures every render, not only the blocks.
+
+## Redaction
+
+The `payload` is **redacted before the event is emitted**. Secrets are dropped
+entirely and identifiers are hashed, never stored raw:
+
+- A card **CVV** or a **second-factor / step-up code** never appears in the
+  ledger — these are dropped, not masked.
+- Account and card numbers are already masked at the schema boundary; anything
+  identifying that survives is hashed.
+
+`@sina-design-system/governance` exports the `redact` helper and a
+`RedactionConfig` so a domain declares which fields are secrets and which are
+identifiers. The rule is simple: the audit trail must be safe to keep forever,
+so nothing that could compromise a user may enter it.
+
+## A contract now, a sink later
+
+`emitAudit` and the `AuditSink` interface are wired today as a **contract** —
+every decision already produces a well-formed, redacted `AuditEvent`. The
+default sink is a no-op you can override with `setAuditSink`. Persisting those
+events to a **real sink** is deferred to Phase 10 (Release Hardening); the event
+shape and redaction guarantees will not change when it lands.
+
+See the shape in context in
+[The Interception Contract](/docs/concepts/interception-contract).

@@ -3,7 +3,7 @@
 /**
  * AuditLedger — the running compliance ledger: one row per decision this session
  * (the real emitted, redacted AuditEvents), with copy/export-JSON. Previews the
- * Phase-8 audit sink; the contract is unchanged.
+ * Phase-10 audit sink; the contract is unchanged.
  */
 
 import { useState } from "react";

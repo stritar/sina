@@ -1,0 +1,46 @@
+---
+title: Components
+description: Read-only live demos of the core primitives and the governed decision they compose into.
+---
+
+These demos import the **real published primitives** — the same code a consumer
+runs — so the docs dogfood `core` rather than screenshotting it. Every `core`
+primitive meets the full a11y bar: focus-trap, correct ARIA, keyboard
+operability, and an automated `axe` pass.
+
+## Dialog
+
+A focus-trapped, Radix-backed modal. Tab through it — focus never escapes;
+<kbd>Esc</kbd> closes and returns focus to the trigger.
+
+<DialogDemo />
+
+## CurrencyField
+
+Display formatting only — it groups digits on blur and constrains entry to a
+decimal value. It holds **no** limit, threshold, or approval logic; that lives
+server-side in the constitution. The currency symbol is a neutral formatting
+affordance, not a business amount.
+
+<CurrencyFieldDemo />
+
+## Grid
+
+Wrapped-column layout whose column count and gap come from on-system enums (the
+8-pt spacing scale), never arbitrary values.
+
+<GridDemo />
+
+## SecureWireDialog — the governed decision
+
+The governed components live in `@sina-design-system/fintech-react` and are
+never chosen by the model. When the constitution blocks an over-limit transfer,
+it forces `SecureWireDialog` — a secondary managerial approval the stream cannot
+fabricate. Here is that decision, run server-side against the real constitution
+at build time:
+
+<GovernanceDemo scenario="over-limit" />
+
+The dialog is the *forced* outcome of a failed gate, not a component the stream
+requested. That is [The One
+Invariant](/docs/getting-started/the-one-invariant) in action.

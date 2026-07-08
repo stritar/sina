@@ -3,6 +3,15 @@
   "version": "0.0.0",
   "description": "SINA governance seam — the shared interception contract, audit emit, and Zod intercept engine every domain constitution implements.",
   "license": "MIT",
+  "author": "Denis Stritar",
+  "keywords": ["sina", "design-system", "governance", "zod", "validation", "interception", "audit"],
+  "homepage": "https://github.com/stritar/sina#readme",
+  "bugs": "https://github.com/stritar/sina/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stritar/sina.git",
+    "directory": "packages/governance"
+  },
   "type": "module",
   "sideEffects": false,
   "publishConfig": {

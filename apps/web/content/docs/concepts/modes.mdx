@@ -1,0 +1,45 @@
+---
+title: Mock vs. Live Mode
+description: A deterministic mock gate and a live AI-SDK gate share the same server-side interception seam
+---
+
+SINA's playground runs in two modes. They differ only in **where the intent
+comes from** — the interception seam that decides what renders is byte-for-byte
+identical, and server-side, in both.
+
+## Mock mode
+
+Mock mode drives the gate from **canned intent streams** — recorded compliant
+and hostile payloads — with no LLM in the loop. It is deterministic, cheap, and
+reproducible, which is exactly what a governance suite needs:
+
+- The **adversarial test suite** runs in mock mode so a hostile stream (an
+  over-limit transfer, a fabricated Confirm button) produces the same block on
+  every run.
+- **CI** runs the adversarial suite in mock mode as a required check — no
+  network, no API key, no flakiness.
+- The **docs demos** on this site are mock mode: the `<GovernanceDemo>` embeds
+  replay a canned stream through the real constitution at build time. What you
+  see is the actual gate deciding, not a screenshot.
+
+## Live mode
+
+Live mode wires the **Vercel AI SDK (`streamUI`)** to a real model, which emits
+genuine intent as it responds. It is for manual exploration — pointing a real
+LLM at the constitution and watching it get governed. It needs a model API key
+via env and is never part of CI.
+
+## The seam is the same
+
+This is the point of [The One Invariant](/docs/getting-started/the-one-invariant):
+validation runs **server-side only**, and the model never selects a component.
+Whether the intent arrives from a canned fixture or a live `streamUI` response,
+it passes through the identical `.safeParse` gate on the server before any
+`core` primitive is allowed to mount.
+
+That equivalence is what makes the demos honest. A mock-mode block in the docs
+is the same code path that blocks a live model — the fixture just makes it
+repeatable.
+
+See the seam itself in
+[The Interception Seam](/docs/architecture/interception-seam).

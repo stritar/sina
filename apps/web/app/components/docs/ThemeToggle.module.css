@@ -1,0 +1,5 @@
+.toggle {
+  min-width: var(--sina-space--8);
+  font-size: var(--sina-text--base);
+  line-height: 1;
+}

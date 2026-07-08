@@ -1,0 +1,56 @@
+---
+title: Threat Model
+description: The three failure modes of agentic UI, and how validate-then-mount neutralizes each at the server edge
+---
+
+Letting a model generate UI opens three distinct failure modes. SINA treats
+them as a single problem — untrusted intent reaching the browser — and closes
+all three at the same seam: the server-side gate that runs **before** any
+primitive mounts.
+
+## The three failure modes
+
+**Hallucinated business logic.** The model invents a rule that does not exist —
+a transfer above the legal limit, a fee that was never disclosed, a "confirmed"
+state it was never entitled to assert. Left unchecked, the UI presents fiction
+as fact.
+
+**Broken accessibility.** A model emitting raw markup produces inaccessible
+output at random — missing labels, unreachable controls, no focus management,
+no screen-reader semantics. Accessibility becomes a coin flip per render.
+
+**Unauthorized actions.** The model fabricates an action it has no authority to
+offer — a bare "Confirm" button that executes a wire, a self-approval that
+skips dual control. The action looks legitimate because the model drew it.
+
+## How validate-then-mount neutralizes each
+
+The invariant is that the model emits **intent and props, never a component**,
+and validation runs **server-side only** (see
+[The One Invariant](/docs/getting-started/the-one-invariant)). That single rule
+answers all three:
+
+- **Hallucinated logic** is caught because every payload is `.safeParse`d
+  against the Zod constitution before it renders. An over-limit amount fails the
+  schema; the fiction never reaches the client.
+- **Broken accessibility** is impossible because the model never emits markup.
+  It names an intent; SINA mounts a vetted `core` primitive that already meets
+  the four-part a11y bar (focus-trap, ARIA, keyboard, axe).
+- **Unauthorized actions** are neutralized because the model cannot select the
+  component. On a violation the constitution **forces** a `requiredComponent` —
+  a governed dialog that re-verifies server-side and cannot be bypassed by a
+  fabricated button.
+
+## The forced-component moment
+
+A model that fabricates a completed confirmation is the sharpest case. The
+stream claims the transfer is already approved; the gate rejects the intent and
+forces the governed component instead of the fake confirm.
+
+<GovernanceDemo scenario="fabricated-confirm" />
+
+Because RSC tokens that have already streamed cannot be un-rendered, the check
+has to sit ahead of the mount. That is why SINA validates, then mounts — never
+mounts, then checks.
+
+Next: [The Interception Contract](/docs/concepts/interception-contract).

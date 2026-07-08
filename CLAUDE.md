@@ -39,7 +39,7 @@ These mirror the per-package ESLint `no-restricted-imports` messages, so the age
   - fail → `{ valid: false, violations: [...], requiredComponent: "SecureWireDialog" }`
 - **Audit event** — every interception emits:
   `{ timestamp, payload, result, violations, decidedComponent }`
-  Contract now; the real sink is wired in Phase 8.
+  Contract now; the real sink is wired in Phase 10.
 
 ## Commands
 

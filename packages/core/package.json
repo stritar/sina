@@ -3,6 +3,15 @@
   "version": "0.0.0",
   "description": "SINA headless, accessible UI primitives. Consumes @sina-design-system/theme. No domain logic.",
   "license": "MIT",
+  "author": "Denis Stritar",
+  "keywords": ["sina", "design-system", "react", "ui-primitives", "accessibility", "radix", "headless"],
+  "homepage": "https://github.com/stritar/sina#readme",
+  "bugs": "https://github.com/stritar/sina/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stritar/sina.git",
+    "directory": "packages/core"
+  },
   "type": "module",
   "sideEffects": ["**/*.css"],
   "publishConfig": {

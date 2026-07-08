@@ -2,7 +2,7 @@
  * @sina-design-system/governance — audit emit + payload redaction.
  *
  * Every interception emits a structured {@link AuditEvent}. The sink is a
- * no-op contract stub here; the real sink is wired in Phase 8. Redaction is
+ * no-op contract stub here; the real sink is wired in Phase 10. Redaction is
  * **mandatory** before emit so the audit trail can never itself store the data
  * the constitution forbids (CVV/PIN under PCI-DSS, raw account numbers/IBANs).
  */
@@ -14,7 +14,7 @@ export type AuditSink = (event: AuditEvent) => void;
 const noopSink: AuditSink = () => {};
 let sink: AuditSink = noopSink;
 
-/** Install the audit sink (Phase 8 wires the real one; tests inject a spy). */
+/** Install the audit sink (Phase 10 wires the real one; tests inject a spy). */
 export function setAuditSink(next: AuditSink): void {
   sink = next;
 }
@@ -84,7 +84,7 @@ function maskTail(value: unknown): string {
 /**
  * FNV-1a 32-bit fingerprint — non-reversible, **not** cryptographic. Its only
  * job here is to keep raw account numbers/IBANs out of the audit payload at the
- * contract level. Phase 8 swaps this for a keyed hash when the real sink lands.
+ * contract level. Phase 10 swaps this for a keyed hash when the real sink lands.
  */
 function fingerprint(value: unknown): string {
   const text = String(value);

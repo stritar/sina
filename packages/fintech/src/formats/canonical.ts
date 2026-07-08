@@ -8,7 +8,7 @@
  *
  * The hash is FNV-1a 32-bit — non-reversible, **not** cryptographic. Like the
  * audit fingerprint it only needs to be stable and collision-resistant enough
- * to bind terms; Phase 8 swaps in a keyed hash with the real sink. Everything
+ * to bind terms; Phase 10 swaps in a keyed hash with the real sink. Everything
  * here is deterministic (no `Date.now`/`Math.random`) so the same terms always
  * hash the same, in tests and at runtime.
  */

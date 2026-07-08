@@ -3,6 +3,7 @@ import type { AnchorHTMLAttributes } from "react";
 import Link from "next/link";
 import { GovernanceDemo } from "@sina-design-system/governance-demo";
 import { CodePre } from "./CodePre";
+import { DialogDemo, CurrencyFieldDemo, GridDemo } from "./demos/PrimitiveDemos";
 
 /**
  * MDX element → SINA renderer map for the headless docs. Prose typography is
@@ -15,6 +16,9 @@ export function getMDXComponents(extra?: MDXComponents): MDXComponents {
   return {
     // Custom MDX components usable directly in `.mdx` content.
     GovernanceDemo,
+    DialogDemo,
+    CurrencyFieldDemo,
+    GridDemo,
     pre: (props) => <CodePre {...props} />,
     a: ({ href = "", children, ...rest }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
       const isExternal = /^https?:\/\//.test(href) || href.startsWith("//");

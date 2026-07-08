@@ -1,0 +1,53 @@
+---
+title: "@sina-design-system/theme"
+description: Design tokens as CSS custom properties, a reset, and the typed brand-theming API
+---
+
+> Hand-maintained reference. The TSDoc→MDX auto-generation is deferred to
+> Phase 10.
+
+`@sina-design-system/theme` is the visual source of truth: the `--sina-*` CSS
+custom properties, the reset, and the typed token surface. **No React** — tokens
+only.
+
+## CSS entry points
+
+| Export | What it ships |
+|---|---|
+| `@sina-design-system/theme/css` | The runtime `--sina-*` token layer (`theme.css`), including the `[data-theme="dark"]` block. |
+| `@sina-design-system/theme/reset.css` | The CSS reset, in `@layer reset`. |
+
+Apps import both in `app/layout.tsx` before any component CSS.
+
+## Token scales
+
+The typed token objects re-exported from `src/index.ts` (via `tokens.ts`):
+
+| Export | Covers |
+|---|---|
+| `colorTokens` | The full semantic color role set (bg, surface, text, border, primary/secondary, success/warning/info, danger, chart series, and governance roles). |
+| `space` | Spacing scale. |
+| `radius` | Corner-radius scale. |
+| `borderWidth` | Border-width scale. |
+| `fontFamily`, `fontSize`, `fontWeight`, `lineHeight` | Type scales. |
+| `size` | Sizing scale. |
+| `breakpoints` | Responsive breakpoints. |
+| `zIndex` | Layering scale. |
+| `duration` | Motion durations (zeroed under `prefers-reduced-motion`). |
+| `cssVar(name, alpha?)` | Helper to reference a `--sina-*` variable (with optional alpha) from TS. |
+
+## Brand theming API
+
+From `create-theme.ts`:
+
+| Export | Purpose |
+|---|---|
+| `createTheme(theme, options?)` | Emit a scoped CSS rule string that rebrands the **brand-open** tokens. |
+| `themeVars(theme)` | The same overrides as an inline-style object for React `style={}` / CSS-in-JS. |
+| `brandColorTokens` | The rebrandable color roles. |
+| `governanceLockedColorTokens` | Reserved roles (`danger*`, `surfaceSecure`, `focusRing`, `intent*`) excluded from `BrandTheme`. |
+| `BrandTheme`, `CreateThemeOptions` | The typed input shapes. |
+| `BrandColorRole`, `RadiusStep`, `SpaceStep`, `TextStep`, `FontFamilyRole` | The role/step key unions. |
+
+See [Theme the Primitives](/docs/guides/theme-the-primitives) for the
+brand-open vs. governance-locked split and usage.

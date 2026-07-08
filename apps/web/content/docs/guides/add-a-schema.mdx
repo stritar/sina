@@ -1,0 +1,61 @@
+---
+title: Add a Schema
+description: Scaffold a Zod governance schema in fintech implementing the interception contract, with valid and adversarial fixtures
+---
+
+A schema is a rule in the Constitution: pure Zod, server-side, returning the
+uniform interception contract. This guide mirrors the `/new-schema` skill. The
+boundary is hard: **pure Zod, no React, no `core`, no `theme`, no UI**. The
+shared contract and engine live in `@sina-design-system/governance`; the domain
+depends on it, never the reverse.
+
+## The golden rule
+
+**Never invent a limit or format.** Every numeric threshold, format, and
+required-field rule must trace to a standard or regulator, with the **citation
+in the code** — a `// 31 CFR …` comment on the constant and `standard: "…"` on
+the `Violation`. If you cannot cite it, do not encode it — ask.
+
+## 1. Reuse the format primitives
+
+Build on the cited primitives in `packages/fintech/src/formats/*` (`currency`,
+`amount`, `iban`, `bic`, `routing`, `card`, and the minor-units model). Amounts
+are integer **minor units** — never floats.
+
+## 2. Author the rule
+
+Create `packages/fintech/src/<name>/<name>.schema.ts` modeled on the flagship
+`wire-transfer` schema:
+
+- A `.strict()` Zod object so smuggled keys are rejected, not ignored.
+- Policy checks (limits, velocity, dual control) via `intercept`, each
+  producing a `Violation` with its `code`, `message`, and cited `standard`.
+- An escalation that names the `requiredComponent` a violation must force.
+
+It must return the [interception contract](/docs/concepts/interception-contract):
+
+```ts
+// pass
+{ valid: true, violations: [], requiredComponent: null }
+// fail
+{ valid: false, violations: [{ code, message, standard }], requiredComponent: "SecureWireDialog" }
+```
+
+An **ungoverned** display schema is the same skeleton minus the policy and
+escalation — shape-only (`.strict()`, bounded arrays, masked account numbers)
+that mounts a presentational component. Use `/new-display-pattern` for that.
+
+## 3. Add fixtures
+
+Add a `fixtures.ts` beside the schema with **valid** payloads that must pass and
+**adversarial** payloads that must be blocked. These are consumed by both the
+unit tests and the playground.
+
+## 4. Register and verify
+
+Register the verb in `src/registry.ts` (and `fintechIntentManifest()`) so
+`evaluateFintechIntent` can route to it, then run
+`pnpm --filter @sina-design-system/fintech test`.
+
+Next, prove it cannot be bypassed:
+[Write an Adversarial Test](/docs/guides/adversarial-test).

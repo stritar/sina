@@ -3,6 +3,15 @@
   "version": "0.0.0",
   "description": "SINA design tokens — foundational CSS custom properties + reset. No React, no Tailwind.",
   "license": "MIT",
+  "author": "Denis Stritar",
+  "keywords": ["sina", "design-system", "design-tokens", "css-variables", "theming"],
+  "homepage": "https://github.com/stritar/sina#readme",
+  "bugs": "https://github.com/stritar/sina/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stritar/sina.git",
+    "directory": "packages/theme"
+  },
   "type": "module",
   "sideEffects": ["*.css"],
   "publishConfig": {

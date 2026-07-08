@@ -1,0 +1,4 @@
+{
+  "title": "Architecture",
+  "pages": ["three-layers", "package-boundaries", "interception-seam"]
+}

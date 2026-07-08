@@ -1,0 +1,68 @@
+---
+title: "@sina-design-system/core"
+description: Headless, accessible, domain-agnostic React primitives on Radix, styled with CSS Modules
+---
+
+> Hand-maintained reference. The TSDoc→MDX auto-generation is deferred to
+> Phase 10.
+
+`@sina-design-system/core` is the headless primitive library — accessible,
+domain-agnostic, and styled only with co-located CSS Modules consuming `theme`
+tokens. Every primitive meets the four-part a11y bar. Named exports only.
+
+## A11y substrate
+
+| Export | Purpose |
+|---|---|
+| `VisuallyHidden` | Screen-reader-only text. |
+| `Icon` | Phosphor-glyph wrapper (`AccessibleIcon`). |
+
+## Inputs & forms
+
+| Export | Purpose |
+|---|---|
+| `Button` | The action primitive. |
+| `Field` | Label + control + description/error wrapper. |
+| `TextField` | Single-line text input. |
+| `CurrencyField` | Minor-unit-correct currency input. |
+| `Checkbox` | Boolean control. |
+| `RadioGroup`, `RadioGroupItem` | Single-choice group. |
+| `Select` + `SelectTrigger` / `SelectValue` / `SelectContent` / `SelectItem` / `SelectGroup` / `SelectLabel` / `SelectSeparator` | Listbox select. |
+| `Combobox` | Typeahead select. |
+| `CredentialField`, `CredentialOTP` | Sensitive-credential and one-time-code inputs. |
+
+## Overlays & feedback
+
+| Export | Purpose |
+|---|---|
+| `Dialog` + `DialogTrigger` / `DialogContent` / `DialogTitle` / `DialogDescription` / `DialogClose` | Focus-trapped modal. |
+| `Tooltip` + `TooltipProvider` / `TooltipTrigger` / `TooltipContent` | Hover/focus tooltip. |
+| `Toast` + `ToastProvider` / `ToastViewport` / `ToastTitle` / `ToastDescription` / `ToastAction` / `ToastClose` | Transient notification. |
+| `Alert` | Inline status message (carries the bold status glyph). |
+| `Badge` | Compact status label. |
+| `Spinner` | Indeterminate loading. |
+| `Progress` | Determinate progress. |
+
+## Layout
+
+| Export | Purpose |
+|---|---|
+| `Stack` | One-dimensional flex layout with a `gap` step. |
+| `Grid` | Column-based grid layout. |
+| `Separator` | Visual/semantic divider. |
+| `ScrollArea` | Styled scroll container. |
+| `SummaryList` | Key/value description list. |
+
+## Data visualization
+
+| Export | Purpose |
+|---|---|
+| `Chart` | Lightweight, server-mountable SVG sparkline (`currentColor`-driven). |
+| `LineChart`, `BarChart`, `PieChart`, `DonutChart` | Interactive Chart.js primitives (`role="img"` + label, hover tooltip, `valueFormatter`). |
+| `KpiStat` | Single headline metric with trend. |
+
+Supporting types include `ChartElementClickDetail` and `ChartValueFormatter`,
+plus per-primitive prop/variant types (`ButtonProps`, `AlertVariant`,
+`GridCols`, `GapStep`, `SummaryItem`, …).
+
+To add one, see [Add a Primitive](/docs/guides/add-a-primitive).

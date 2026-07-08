@@ -10,4 +10,14 @@ export const docs = defineDocs({
   dir: "content/docs",
 });
 
-export default defineConfig();
+export default defineConfig({
+  mdxOptions: {
+    // Dual-theme shiki: each token carries both a light and a dark color as CSS
+    // variables (`--shiki-light` / `--shiki-dark`). globals.css flips between them
+    // on `[data-theme="dark"]`, so code blocks track the SINA theme toggle instead
+    // of baking one palette in.
+    rehypeCodeOptions: {
+      themes: { light: "github-light", dark: "github-dark" },
+    },
+  },
+});

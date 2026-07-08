@@ -175,6 +175,8 @@ Grouped into workstreams (each a candidate hand-off; sequence by product priorit
 
 **Sequencing — build the shell now, fill later.** The docs engine, deploy pipeline, information architecture, and all architecture/boundary/"add a domain" prose are buildable today against the current stubs. The component showcase and the live demo embed are stubbed placeholders that light up as `theme`/`core`/the playground land. Each area below is tagged `[now]` or `[needs Px]`.
 
+**As-built note (supersedes the Tailwind language below).** Tailwind was removed repo-wide (co-located CSS Modules now), so docs use **headless `fumadocs-core` only — no `fumadocs-ui`, no Tailwind preset, no `--color-fd-*` mapping**; all docs chrome is hand-built from SINA `core` primitives + `--sina-*` CSS Modules. The API Reference is **hand-written**; the TSDoc→MDX auto-generation is deferred to Phase 10. See `.claude/PHASE_STATE.md` for the verified as-built state.
+
 **Information architecture** — *Docs* (`/docs`, MDX in `content/docs/`), six sections:
 
 | Section | Pages | Status |
@@ -182,9 +184,9 @@ Grouped into workstreams (each a candidate hand-off; sequence by product priorit
 | **Getting Started** | Introduction · The One Invariant (§1b) · Quickstart | `[now]` |
 | **Concepts** | Threat model · Interception contract (`{ valid, violations, requiredComponent }`) · Audit trail · Mock vs. live mode | `[now]` |
 | **Architecture** | The three layers · Package boundaries (the three rules + how ESLint enforces them) · streamUI integration (the §3 seam) | `[now]` |
-| **Guides** | ★ **Add a governed domain** (the extensibility path the `governance` abstraction enables) · **Theme the primitives** (brand-open vs governance-locked tokens · `createTheme` · `[data-theme]` scopes) `[needs P8]` · Add a primitive · Add a schema · Write an adversarial test | `[now]` |
-| **Reference** | `theme` · `core` · `fintech` · `governance` — **auto-generated from TSDoc** | `[needs P1–P3]` |
-| **Components** | Read-only live demos: Dialog · CurrencyField · Grid · SecureWireDialog | `[needs P2/P5]` |
+| **Guides** | ★ **Add a governed domain** (the extensibility path the `governance` abstraction enables) · **Theme the primitives** (brand-open vs governance-locked tokens · `createTheme` · `[data-theme]` scopes) `[needs P10]` · Add a primitive · Add a schema · Write an adversarial test | `[now]` |
+| **Reference** | `theme` · `core` · `fintech` · `governance` — **hand-written now; TSDoc→MDX auto-gen deferred to P10** | `[now]` |
+| **Components** | Read-only live demos: Dialog · CurrencyField · Grid · SecureWireDialog | `[now]` |
 
 **Implementation notes (not a full build plan):**
 - Add Fumadocs deps; put docs under a `docs` segment (reserve a `(marketing)` route group for the Phase 9 landing so the two layout systems don't collide); compose Tailwind presets; map Fumadocs' `--color-fd-*` variables onto SINA semantic tokens so docs chrome inherits the SINA palette.
@@ -196,21 +198,18 @@ Grouped into workstreams (each a candidate hand-off; sequence by product priorit
 
 - **Exit criteria:** docs build and deploy to Cloudflare Pages; the docs **themselves pass the a11y bar** (axe + keyboard + screen-reader), dogfooding the same gate `core` primitives must meet. Verify locally with `pnpm dlx @cloudflare/next-on-pages@1` then `wrangler pages dev .vercel/output/static --compatibility-flags=nodejs_compat`, mirroring the Phase 0 spike.
 
-### Phase 8 — Release Hardening
-**Goal:** Publishable, versioned, CI-gated.
-- Versioning/release flow (changesets) for `@sina-design-system/*` packages.
-- CI: typecheck + lint + `vitest` schema tests + axe a11y checks + playground adversarial suite (mock mode) on every PR.
-- Wire the **audit trail** to a real sink (replacing the Phase 3 stub).
-- **Theming contract & primitive packaging** (so published `core` is both consumable *and* rebrandable — see §6):
-  - **Ship prebuilt CSS + keep the preset (both modes).** Add a Tailwind CSS build to `core` emitting `styles.css` (utilities only), exported as `@sina-design-system/core/styles.css`, so a non-Tailwind app works from one import; keep `@sina-design-system/theme/tailwind` for Tailwind shops. The compiled CSS references `--sina-*` via `color-mix` — **never inlined hex** — so var-override rebranding flows through both modes.
-  - **Publish the typed theming API** in `theme`: `createTheme()` / `themeVars()` over the **brand-open** token set, with **governance-locked** roles (`danger*`, `surface-secure`, `focus-ring`, `intent-*`) excluded from the type so a sanctioned theme cannot neuter a security/a11y affordance. *(Seeded now — `packages/theme/src/create-theme.ts` + partition test.)*
-  - **Contrast guard:** generalize the `theme` WCAG-AA test into `assertThemeContrast(overrides)` so a brand override that breaks a required fg/bg pairing fails loudly.
-  - **Build guard:** assert `core/styles.css` contains `var(--sina-` and no raw hex in themeable properties (proves rebranding survives the compile).
-- **Exit criteria:** packages publishable; adversarial suite + axe checks are required checks; audit events land in a real sink; `core` renders styled from `styles.css` alone (no Tailwind) *and* via the preset, and a `createTheme` brand theme rebrands both without touching primitives or governance-locked tokens.
+### Phase 8 — npm Publish Pipeline
+**Goal:** The `@sina-design-system/*` packages are publishable to npm — versioned, CI-gated, and validated — so a consumer can `pnpm add @sina-design-system/core`. This phase makes everything *ready*; the first real publish is a manual, credentialed maintainer step.
+- **Versioning/release flow (changesets):** `@changesets/cli` at the root with `access: "public"`; `changeset` / `version` / `release` scripts. The five public packages (`theme`/`core`/`governance`/`fintech`/`fintech-react`) version independently; `config` + `governance-demo` stay `private` and are never published. `workspace:*` internal deps are rewritten to real versions on publish.
+- **CI (`.github/workflows/`):** `ci.yml` runs `build` + `typecheck` + `lint` + `test` (vitest schema/gate + jest-axe + the playground adversarial suite, mock mode) on every PR — the adversarial suite + axe checks are **required checks**. `release.yml` uses the changesets action to open a Version PR and publish on merge (`NPM_TOKEN` + provenance via `id-token: write`).
+- **Package metadata:** every public package ships a `README.md`, a `LICENSE` (MIT), and full npm fields (`description` / `repository`+`directory` / `homepage` / `bugs` / `keywords` / `author`) so its npm page isn't bare.
+- **Publishability validation:** a dependency-classification audit (every runtime import is a real `dependency`; `react`/`react-dom` stay peers), `publint` + `arethetypeswrong` on each package/tarball, and `pnpm publish -r --dry-run` proving the tarballs assemble (`dist` + README + LICENSE, no `src`) with the private packages skipped.
+- **Prerequisite (manual):** the `@sina-design-system` npm org must exist and be owned by the maintainer before the first scoped publish.
+- **Exit criteria:** `changeset status` shows pending versions; `publint`/`attw` clean; `pnpm publish -r --dry-run` green for the five public packages (private ones skipped); CI required checks enforced on PRs. The first real `changeset publish` is a maintainer step (npm login + 2FA).
 
 ### Phase 9 — Marketing Site (`apps/web` landing)
 **Design hand-off:** bespoke landing layouts, narrative, live demo embeds, and a rendered/animated version of the interception-seam diagram (§3 is ASCII today — the real one is a design artifact).
-**Goal:** The public face — a single rich, fully bespoke scrollytelling landing page consuming `theme` (and read-only demos of `core`). It reuses the docs engine's shared web infra + the mock-mode demo embed factored in Phase 7, and links into `/docs`. Deliberately last: it markets the released, hardened system (Phase 8), so the story it tells is already true.
+**Goal:** The public face — a single rich, fully bespoke scrollytelling landing page consuming `theme` (and read-only demos of `core`). It reuses the docs engine's shared web infra + the mock-mode demo embed factored in Phase 7, and links into `/docs`. It markets the **published** system (Phase 8 makes the packages installable), with final release hardening (Phase 10) following.
 
 **Information architecture** — *Landing* (bespoke, `app/(marketing)/page.tsx`), one scrollytelling page consuming `theme`:
 1. Hero — the thesis (*the model emits intent; SINA decides what renders*) + CTA → `/docs`. **Lead with the positioning: free, for startups & individuals, no governance tax — pick up a governed design system instead of building one.** `[now]`
@@ -227,6 +226,17 @@ Grouped into workstreams (each a candidate hand-off; sequence by product priorit
 
 - **Exit criteria:** the landing builds and deploys to Cloudflare Pages through the Phase 7 pipeline; the landing **itself passes the a11y bar** (axe + keyboard + screen-reader), dogfooding the same gate `core` primitives must meet.
 
+### Phase 10 — Release Hardening
+**Goal:** The published system is production-hardened — a real audit sink + a locked-down theming/rebranding contract. (Versioning, CI, and publishability landed in Phase 8.)
+- Wire the **audit trail** to a real sink (replacing the Phase 3 stub).
+- **Theming contract & primitive packaging** (so published `core` is both consumable *and* rebrandable — see §6):
+  - **Ship prebuilt CSS + keep the token contract (both modes).** `core` already ships `styles.css` (co-located CSS Modules, extracted at Vite-lib build), exported as `@sina-design-system/core/styles.css`; the compiled CSS references `--sina-*` via `color-mix` — **never inlined hex** — so var-override rebranding flows through. (Tailwind was removed repo-wide; the earlier "Tailwind CSS build / preset" framing is superseded.)
+  - **Publish the typed theming API** in `theme`: `createTheme()` / `themeVars()` over the **brand-open** token set, with **governance-locked** roles (`danger*`, `surface-secure`, `focus-ring`, `intent-*`) excluded from the type so a sanctioned theme cannot neuter a security/a11y affordance. *(Seeded now — `packages/theme/src/create-theme.ts` + partition test.)*
+  - **Contrast guard:** generalize the `theme` WCAG-AA test into `assertThemeContrast(overrides)` so a brand override that breaks a required fg/bg pairing fails loudly.
+  - **Build guard:** assert `core/styles.css` contains `var(--sina-` and no raw hex in themeable properties (proves rebranding survives the compile).
+- **API Reference auto-generation:** stand up the TSDoc→MDX pipeline (deferred from Phase 7) so the docs Reference section never drifts from the typed contracts.
+- **Exit criteria:** audit events land in a real sink; `core` renders styled from `styles.css` alone *and* a `createTheme` brand theme rebrands it without touching primitives or governance-locked tokens; the "Theme the primitives" docs guide is live.
+
 ---
 
 ## 3. Playground × AI SDK — When & Where (explicit)
@@ -240,7 +250,7 @@ The `apps/playground` Adversarial Sandbox is the **only** place the Vercel AI SD
 | **Phase 5** | Runs the `<SecureWireDialog>` loop end-to-end against hostile $60k streams. |
 | **Phase 6** | Runs the full governed-fintech-component family against hostile streams across every surface — payments/FX, payee/KYC, card ops, masked data displays, mandatory disclosures. |
 | **Phase 7** | The docs (Fumadocs) embed this harness's **mock mode** as read-only demos in the Components/Concepts pages (no live LLM); the schema check still runs server-side per §1b. |
-| **Phase 8** | The adversarial suite becomes a required CI check. |
+| **Phase 8** | The adversarial suite (mock mode) becomes a **required CI check** in the npm publish pipeline. |
 | **Phase 9** | The marketing landing embeds the same factored **mock-mode** demo as its live-governance section. |
 
 **The interception seam (the heart of SINA), exercised in Phase 4:**
@@ -279,9 +289,10 @@ LLM stream (streamUI intent / tool payload)
 - mock-model provider module for deterministic CI runs
 
 **Later:**
-- **Phase 7 (`apps/web` docs):** new `source.config.ts`, `lib/source.ts`, `app/docs/[[...slug]]/page.tsx`, `app/docs/layout.tsx`, `content/docs/**/*.mdx`, `wrangler.toml`; edit `next.config.mjs` (add `fintech` to `transpilePackages`), `tailwind.config.ts` (compose Fumadocs preset), `app/globals.css` (map `--color-fd-*` → SINA tokens); factor the reusable mock-mode demo embed
-- **Phase 8 (packaging/theming):** `packages/theme/src/create-theme.ts` (typed brand-open/governance-locked contract — **seeded**) + `assertThemeContrast`; `packages/core` CSS build → `packages/core/styles.css` + `exports["./styles.css"]`
+- **Phase 7 (`apps/web` docs):** `source.config.ts`, `lib/source.ts`, `app/docs/page.tsx` + `app/docs/[...slug]/page.tsx` (split static index + catch-all), `app/docs/layout.tsx`, hand-built chrome under `app/components/docs/**`, `content/docs/**/*.mdx` (six sections), `app/llms.txt/route.ts` + per-page `.md` export, `wrangler.toml`; edit `next.config.mjs` (`transpilePackages` for all `@sina-design-system/*`); new `@sina-design-system/governance-demo` package = the factored mock-mode demo embed. *(Headless `fumadocs-core` — no Tailwind/`--color-fd-*`.)*
+- **Phase 8 (release/CI pipeline):** `.changeset/config.json` + root `changeset`/`version`/`release` scripts; `.github/workflows/{ci,release}.yml`; per-public-package `README.md` + `LICENSE` + npm metadata fields
 - **Phase 9 (`apps/web` landing):** new `app/(marketing)/page.tsx` + section components (bespoke landing); reuses the Phase 7 demo embed + Cloudflare pipeline
+- **Phase 10 (packaging/theming):** `packages/theme/src/create-theme.ts` (typed brand-open/governance-locked contract — **seeded**) + `assertThemeContrast`; `core/styles.css` build guard; real audit sink; TSDoc→MDX Reference generation
 
 ---
 
@@ -310,10 +321,10 @@ SINA ships primitives *and* a supported way to make them match a consumer's bran
 
 **Distribution (both modes, so var-override works either way).** `core` ships a prebuilt `styles.css` (compiled utilities that still reference `--sina-*` via `color-mix` — never inlined hex) *and* keeps the Tailwind preset. A non-Tailwind app imports the CSS; a Tailwind shop uses the preset. Because neither inlines color, Tier-1 rebranding flows through both.
 
-**Where it lands:** the typed contract is seeded now (`packages/theme/src/create-theme.ts`); the prebuilt-CSS build, `assertThemeContrast` guard, and the "Theme the primitives" docs guide complete in **Phase 8 / Phase 7** respectively.
+**Where it lands:** the typed contract is seeded now (`packages/theme/src/create-theme.ts`); the prebuilt-CSS build guard, `assertThemeContrast` guard, and the "Theme the primitives" docs guide complete in **Phase 10** (packaged/published in **Phase 8**).
 
 ---
 
 ## Next Step
 
-Phases 0–4 are complete (see `.claude/PHASE_STATE.md` for verified status). **Next: Phase 5 — Governed Fintech Components** — compose the Phase 2 `core` primitives with the Phase 3 `fintech` constitution into `<SecureWireDialog>`, validated end-to-end against the Phase 4 emulator harness. Its design hand-off is the `<SecureWireDialog>` anatomy (secondary managerial approval flow + states).
+Phases 0–7 are complete (see `.claude/PHASE_STATE.md` for verified status). **Next: Phase 8 — npm Publish Pipeline** — changesets versioning, GitHub Actions CI + release, per-package README/LICENSE/metadata, and publishability validation (dependency audit + `publint`/`attw` + dry-run) so the five public `@sina-design-system/*` packages are ready to publish. The first real publish is a maintainer step (npm login + 2FA; the `@sina-design-system` org must exist).

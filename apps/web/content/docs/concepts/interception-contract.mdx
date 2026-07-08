@@ -1,0 +1,71 @@
+---
+title: The Interception Contract
+description: Every schema returns the same surface — { valid, violations, requiredComponent } — so governance never drifts across domains
+---
+
+Every governance rule in SINA returns the **same shape**. That uniform surface
+is what lets the intent router, the audit trail, and the playground treat every
+rule identically — governance never drifts from one domain to the next.
+
+## The shape
+
+```ts
+interface InterceptionResult {
+  valid: boolean;
+  violations: Violation[];
+  requiredComponent: string | null;
+}
+```
+
+- **Pass** → `{ valid: true, violations: [], requiredComponent: null }`
+- **Fail** → `{ valid: false, violations: [...], requiredComponent: "SecureWireDialog" }`
+
+The type lives in `@sina-design-system/governance`; `fintech` supplies the rules
+and the component names.
+
+## Pass vs. fail
+
+`evaluateFintechIntent` is the single entry point. A compliant payload clears
+the gate:
+
+```ts
+const { valid, violations, requiredComponent } = evaluateFintechIntent({
+  intent: "wire_transfer",
+  props: { amount: 500000 /* $5,000 in minor units */ },
+});
+// → { valid: true, violations: [], requiredComponent: null }
+```
+
+An over-limit payload is rejected and the escalation target is named for you:
+
+```ts
+const result = evaluateFintechIntent({
+  intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 */ },
+});
+// → { valid: false, violations: [{ code, message, standard }], requiredComponent: "SecureWireDialog" }
+```
+
+## The model never chooses
+
+On a clean pass, SINA mounts the pattern's own component. On a failure, the
+`requiredComponent` names the governed component that **must** render instead.
+The model proposes a payload; **SINA** decides what mounts. A fabricated
+"Confirm" button in the stream is irrelevant — the decided component comes from
+the schema result, not from the model.
+
+## Governed vs. ungoverned
+
+The contract is universal, but governance is an **optional escalation layer**:
+
+- A **governed** pattern carries a policy — cited limits, velocity, dual
+  control, step-up — so it can escalate and force a `requiredComponent`
+  (`wire_transfer` → `SecureWireDialog`).
+- An **ungoverned** pattern (a read-only view like a transaction list) has a
+  schema but **no policy and no escalation**. It is shape-validated only —
+  `.strict()` against smuggled keys, bounded arrays, integer minor-unit amounts,
+  masked account numbers — then mounts a presentational component. There is
+  nothing to escalate, but it still runs the same validate-then-mount path and
+  still emits an [audit event](/docs/concepts/audit-trail).
+
+Either way: validate first, then mount.

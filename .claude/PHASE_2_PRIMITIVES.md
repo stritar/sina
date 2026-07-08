@@ -59,7 +59,7 @@ Decomposing those into the smallest reusable, domain-agnostic pieces yields the 
 | Primitive | Radix base | Role | Notes |
 |---|---|---|---|
 | **Separator** | `@radix-ui/react-separator` | Section divider | low effort, cosmetic |
-| **Toast** | `@radix-ui/react-toast` | Transient notification | pairs with audit-event surfacing (Phase 8 sink) |
+| **Toast** | `@radix-ui/react-toast` | Transient notification | pairs with audit-event surfacing (Phase 10 sink) |
 | **Tooltip** | `@radix-ui/react-tooltip` | Explain *why* something is blocked / requires approval | governance-status affordance |
 | **ScrollArea** | `@radix-ui/react-scroll-area` | Scrollable dialog body without breaking the focus trap | long transfer summary + approval content |
 | **Combobox** | `@radix-ui/react-combobox` or Select + filter | Searchable account picker | upgrade over `Select` when account lists grow |

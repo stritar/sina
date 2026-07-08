@@ -22,9 +22,20 @@ export const metadata: Metadata = {
   description: "Governed UI for LLM-generated interfaces.",
 };
 
+// Applied before paint so the theme is correct on first render (no flash). Reads
+// the persisted choice, else the OS preference; stamps `data-theme` on <html>.
+const themeInitScript = `(function(){try{var t=localStorage.getItem("sina-docs-theme");if(t!=="light"&&t!=="dark"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}document.documentElement.setAttribute("data-theme",t);}catch(e){}})();`;
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${rubik.variable} ${ibmPlexMono.variable}`}>
+    <html
+      lang="en"
+      className={`${rubik.variable} ${ibmPlexMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body>{children}</body>
     </html>
   );

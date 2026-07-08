@@ -59,7 +59,7 @@ export const stepUpApproval = z
     acknowledged: z.literal(true).optional(),
     /** Binds this authorization to the exact action terms; recomputed server-side, never trusted. */
     payloadHash: z.string().min(1).optional(),
-    /** Reserved for Phase 8 freshness / replay checks (no server challenge store yet). */
+    /** Reserved for Phase 10 freshness / replay checks (no server challenge store yet). */
     challengeId: z.string().optional(),
   })
   .strict();
@@ -81,7 +81,7 @@ export interface StepUpRequirement {
 /**
  * The action's binding terms = the payload minus its `stepUp` envelope, so
  * `actionHash(x)` is stable whether or not `x` already carries a step-up. FNV-1a
- * via the shared {@link canonicalize} (deterministic; non-cryptographic — Phase 8
+ * via the shared {@link canonicalize} (deterministic; non-cryptographic — Phase 10
  * swaps in a keyed hash).
  */
 export function actionHash(payload: unknown): string {

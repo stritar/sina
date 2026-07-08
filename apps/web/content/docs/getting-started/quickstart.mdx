@@ -1,0 +1,64 @@
+---
+title: Quickstart
+description: Install the layers, wire the token stylesheets, and mount a governed decision in an App Router project.
+---
+
+SINA is a set of scoped packages you compose. This walks through the smallest
+real setup: tokens, a primitive, and a governed decision rendered from a
+validated intent.
+
+## Install
+
+```bash
+pnpm add @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+`theme` and `governance` are pure logic (no React). `core` and `fintech-react`
+are the React layers and declare `react`/`react-dom` as peer dependencies.
+
+## Wire the stylesheets
+
+Import the token layers once, in App Router order — the reset is layered, tokens
+and component CSS are unlayered and win over it:
+
+```ts
+// app/layout.tsx
+import "@sina-design-system/theme/reset.css";
+import "@sina-design-system/theme/css";
+import "@sina-design-system/core/styles.css";
+import "@sina-design-system/fintech-react/styles.css";
+```
+
+## The three layers
+
+| Layer | Package | Job |
+| --- | --- | --- |
+| Tokens | `theme` | `--sina-*` custom properties + reset. No React. |
+| Primitives | `core` | Headless, accessible Radix primitives. Domain-agnostic. |
+| Constitution | `fintech` / `governance` | Zod schemas + the interception engine. |
+| Governed UI | `fintech-react` | Composes a `core` primitive with a `fintech` schema. |
+
+## Validate, then mount
+
+The model never picks a component. It emits an **intent + props** envelope; the
+constitution runs **server-side** and hands back a decision. You render the
+decision — you never trust the client:
+
+```ts
+"use server";
+import { evaluateFintechIntent } from "@sina-design-system/fintech";
+
+export async function gate(envelope: { intent: string; props: unknown }) {
+  // { valid, violations, requiredComponent } — the uniform interception contract.
+  return evaluateFintechIntent(envelope);
+}
+```
+
+On a clean pass you mount the pattern's own component; on a failure the decision
+names a `requiredComponent` that **must** render instead — for an over-limit
+wire, that is `SecureWireDialog`. Read [The One
+Invariant](/docs/getting-started/the-one-invariant) for why this ordering is
+non-negotiable, then [The Interception
+Contract](/docs/concepts/interception-contract) for the exact shape.

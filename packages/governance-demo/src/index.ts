@@ -4,7 +4,7 @@
  * The deterministic, LLM-free governance demo substrate: the server-side gate
  * seam (`runGate`), the canned scenario catalog, and the read-only interception
  * console (the "X-ray") + the governed/ungoverned comparison. Extracted from the
- * playground so the docs (Phase 7) and the marketing landing (Phase 8) mount the
+ * playground so the docs (Phase 7) and the marketing landing (Phase 9) mount the
  * SAME real demo — never a fake, never a duplicate.
  *
  * Boundary note: this is app-support, above the layered libraries. It composes

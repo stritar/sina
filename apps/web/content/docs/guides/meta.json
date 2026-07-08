@@ -1,0 +1,10 @@
+{
+  "title": "Guides",
+  "pages": [
+    "add-a-governed-domain",
+    "theme-the-primitives",
+    "add-a-primitive",
+    "add-a-schema",
+    "adversarial-test"
+  ]
+}

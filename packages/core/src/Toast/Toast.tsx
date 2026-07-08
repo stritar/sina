@@ -5,7 +5,7 @@
  * auto-dismiss, stacks in a viewport). Ships as named exports
  * (ToastProvider / ToastViewport / Toast / ToastTitle / ToastDescription /
  * ToastAction / ToastClose) so each is its own client reference across the RSC
- * boundary. In SINA it pairs with audit-event surfacing (Phase 8), but it carries
+ * boundary. In SINA it pairs with audit-event surfacing (Phase 10), but it carries
  * no governance meaning. Domain-agnostic.
  */
 "use client";

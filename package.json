@@ -27,9 +27,15 @@
     "verify:tokens": "node scripts/verify-tokens.mjs",
     "codemod:tokens": "node scripts/codemod-tokens.mjs",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,cjs,mjs}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,cjs,mjs}\""
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,cjs,mjs}\"",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build --filter=./packages/* && changeset publish",
+    "publint": "pnpm --filter \"@sina-design-system/*\" --filter \"!@sina-design-system/config\" --filter \"!@sina-design-system/governance-demo\" exec publint"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
+    "@changesets/cli": "^2.27.11",
     "@sina-design-system/config": "workspace:*",
     "@testing-library/react": "^16.1.0",
     "@types/jest-axe": "^3.5.9",
@@ -37,6 +43,7 @@
     "jest-axe": "^9.0.0",
     "jsdom": "^25.0.1",
     "prettier": "^3.4.2",
+    "publint": "^0.3.2",
     "rimraf": "^6.0.1",
     "turbo": "^2.3.3",
     "typescript": "^5.7.3",
