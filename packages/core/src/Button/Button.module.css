@@ -13,8 +13,8 @@
   --sina-button-border--secondary: var(--sina-color-border, #dde0d9);
   --sina-button-bg--secondary--hover: var(--sina-color-secondary--hover, #dde0d9);
 
-  --sina-button-bg--danger: var(--sina-color-danger, #c43a00);
-  --sina-button-fg--danger: var(--sina-color-danger-fg, #ffffff);
+  --sina-button-bg--danger: var(--sina-color-danger-fill, #ff7e48);
+  --sina-button-fg--danger: var(--sina-color-status-fg--danger, #000000);
 
   --sina-button-fg--ghost: var(--sina-color-text, #353b31);
   --sina-button-border--ghost: var(--sina-color-border, #dde0d9);
@@ -82,18 +82,20 @@
   background: var(--sina-button-bg--secondary--hover, #dde0d9);
 }
 
-/* Danger keeps full strength (governance carve-out — never quieted). */
+/* Danger keeps full strength (governance carve-out — never quieted). Vivid coral
+   fill + black status ink, converged with Badge/Alert/Toast; hover/active darken the
+   coral toward the solid dark-coral role so the black label stays AA-legible. */
 .danger {
   border-width: var(--sina-button-border-width, 1px);
   border-color: var(--sina-button-border-color--danger, #00000000);
-  background: var(--sina-button-bg--danger, #c43a00);
-  color: var(--sina-button-fg--danger, #ffffff);
+  background: var(--sina-button-bg--danger, #ff7e48);
+  color: var(--sina-button-fg--danger, #000000);
 }
 .danger:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--sina-color-danger, #c43a00) 90%, transparent);
+  background: color-mix(in srgb, var(--sina-color-danger-fill, #ff7e48) 88%, var(--sina-color-danger, #c43a00));
 }
 .danger:active:not(:disabled) {
-  background: color-mix(in srgb, var(--sina-color-danger, #c43a00) 80%, transparent);
+  background: color-mix(in srgb, var(--sina-color-danger-fill, #ff7e48) 76%, var(--sina-color-danger, #c43a00));
 }
 
 /* Quiet control: translucent overlay, not a color swap. */

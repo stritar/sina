@@ -65,7 +65,7 @@
   overflow: hidden;
   border-radius: var(--sina-radius--lg);
   border: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
-  background: var(--sina-color-surface-sunken);
+  background: var(--sina-color-surface-secure);
 }
 
 .header {
@@ -135,7 +135,7 @@
   overflow-y: auto;
   border-radius: var(--sina-radius--lg);
   border: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
-  background: var(--sina-color-surface-sunken);
+  background: var(--sina-color-surface-secure);
   padding-inline: var(--sina-space--3);
   padding-block: var(--sina-space--2);
 }
