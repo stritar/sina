@@ -1,10 +1,18 @@
 {
   "name": "@sina-design-system/fintech",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "SINA Fintech constitution — pure Zod schemas that validate LLM intents before render.",
   "license": "MIT",
   "author": "Denis Stritar",
-  "keywords": ["sina", "design-system", "governance", "fintech", "zod", "validation", "constitution"],
+  "keywords": [
+    "sina",
+    "design-system",
+    "governance",
+    "fintech",
+    "zod",
+    "validation",
+    "constitution"
+  ],
   "homepage": "https://github.com/stritar/sina#readme",
   "bugs": "https://github.com/stritar/sina/issues",
   "repository": {
@@ -25,7 +33,9 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",
