@@ -4,8 +4,10 @@
   "private": true,
   "description": "SINA marketing site + docs. Fumadocs (headless) docs, bespoke landing. Never published to npm.",
   "scripts": {
+    "predev": "node scripts/generate-llms.mjs",
     "dev": "next dev --port 3000",
-    "prebuild": "pnpm exec turbo run build --filter=web^...",
+    "generate:llms": "node scripts/generate-llms.mjs",
+    "prebuild": "pnpm exec turbo run build --filter=web^... && node scripts/generate-llms.mjs",
     "build": "next build",
     "start": "next start --port 3000",
     "lint": "eslint .",

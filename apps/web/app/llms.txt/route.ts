@@ -20,8 +20,9 @@ export function GET() {
     ...pages.map((page) => {
       const title = page.data.title ?? page.url;
       const description = page.data.description ? `: ${page.data.description}` : "";
-      // Raw markdown for each page lives at `/llms<url>` (see app/llms/[...slug]).
-      const raw = page.url === "/docs" ? page.url : `/llms${page.url}`;
+      // Raw markdown for each page is emitted as a static asset at
+      // `/llms<url>.md` (see scripts/generate-llms.mjs).
+      const raw = page.url === "/docs" ? page.url : `/llms${page.url}.md`;
       return `- [${title}](${page.url})${description} — raw: ${raw}`;
     }),
     "",

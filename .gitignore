@@ -135,6 +135,9 @@ dist
 # fumadocs-mdx generated source (apps/web/.source)
 .source
 
+# generated per-page raw markdown for agents (apps/web/scripts/generate-llms.mjs)
+apps/web/public/llms/docs/
+
 # pnpm
 .pnpm-store
 
