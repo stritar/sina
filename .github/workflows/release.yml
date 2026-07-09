@@ -11,7 +11,9 @@ concurrency:
 permissions:
   contents: write # create the Version PR / git tags
   pull-requests: write # open the Version PR
-  id-token: write # npm provenance (OIDC)
+  # id-token: write — only needed for npm provenance, which requires a PUBLIC
+  # repo. `stritar/sina` is private, so provenance is off (see the env below).
+  # Re-add this permission + NPM_CONFIG_PROVENANCE if the repo goes public.
 
 jobs:
   release:
@@ -44,4 +46,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: "true"
+          # NPM_CONFIG_PROVENANCE requires a public repo — off while private.
