@@ -16,7 +16,7 @@ See `ROADMAP.md` for the full definition of each phase and its exit criteria.
 | 6 — Agentic Fintech Experience (Governed + Ungoverned) | done | 2026-07-03 | `CI=true pnpm build` (8/8) + `typecheck` (14/14) + `lint` (14/14) green; tests 14/14 (sandbox-off) — core 65 / governance 18 / theme 18 / fintech 132 / fintech-react 85 / playground 109. Full workstream A–F surface landed (see below). |
 | 6.5 — Full Fintech Pattern Catalog (agent-executed) | done | 2026-07-03 | Whole `PATTERNS.md` catalog ✅: 17 new ungoverned reads + 20 new governed flows, each with schema + fixtures + registry entry + green gate test + playground scenario (reads also jest-axe). Fanned out via a Workflow (36 agents), assembled + verified centrally. Same green commands as Phase 6. |
 | 7 — Documentation (Fumadocs) | done | 2026-07-09 | `CI=true pnpm --config.verify-deps-before-run=false typecheck` (16/16) + `lint` (16/16) + `test` (16/16 tasks; core 106 / fintech-react 100 / web docs-chrome incl. ThemeToggle + nested sidebar) all green; `apps/web` next build (sandbox-off) → **45 static pages**: `/` + `/api/search` + `/llms.txt` Static, `/docs` Static, `/docs/[...slug]` SSG (19 pages), `/llms/[...slug]` SSG (19). Full 6-section IA + dark-mode toggle + dual-theme shiki + llms.txt/per-page `.md` export landed. **Deploy LIVE on Cloudflare Pages** (`sina-docs`, auto on push to `main`; see 2026-07-09 deploy close-out below); TSDoc auto-gen deferred to P10. See detail below. |
-| 8 — npm Publish Pipeline | in-progress | — (scaffolded + dry-run green 2026-07-09) | changesets + CI/release workflows + per-package README/LICENSE/metadata landed; `publint` clean ×5, `attw` clean ×5 (JS/types; CSS validated by publint), dependency audit clean, `changeset status` → 5 packages minor (0.1.0), `pnpm publish -r --dry-run` publishes exactly the 5 public packages (private skipped), tarballs = dist+README+LICENSE, no src. **Open (user):** own the `@sina-design-system` npm org, add `NPM_TOKEN` secret, run the first real publish. |
+| 8 — npm Publish Pipeline | done | 2026-07-09 | **First real publish shipped.** changesets + CI/release workflows + per-package README/LICENSE/metadata; `publint`/`attw` clean ×5; the changesets Version PR merged → `release.yml` ran `changeset publish`. Verified live: `npm view @sina-design-system/{theme,core,governance,fintech,fintech-react} version` → all **0.1.0** (`latest`; core's old manual 0.0.7 superseded). Provenance off (private repo). See close-out below. |
 | 9 — Marketing Site | not-started | — | — |
 | 10 — Release Hardening | not-started | — | — |
 
@@ -74,7 +74,14 @@ Full plan: `ok-lets-wrap-up-serialized-dragon.md`. The pipeline is **ready to pu
 
 **OPEN (user steps — not blocking the phase scaffolding):** own/create the `@sina-design-system` npm org; add the `NPM_TOKEN` repo secret; run the first real publish (npm login + 2FA) — merging the changesets Version PR on `main` triggers `release.yml`.
 
-**Re-validated 2026-07-09:** fixed `release.yml`'s Node-20 `node:sqlite` crash (→ Node 22, shared with the Cloudflare fix); re-ran build-all + `pnpm publish -r --dry-run --no-git-checks` → still publishes exactly the 5 public packages (config + governance-demo skipped). Pipeline unchanged and green; only the user publish steps remain.
+**Re-validated 2026-07-09:** fixed `release.yml`'s Node-20 `node:sqlite` crash (→ Node 22, shared with the Cloudflare fix); re-ran build-all + `pnpm publish -r --dry-run --no-git-checks` → still publishes exactly the 5 public packages (config + governance-demo skipped). Pipeline unchanged and green.
+
+**PUBLISH CLOSE-OUT (2026-07-09) — DONE, all 5 packages live at 0.1.0:**
+- **Provenance off:** `stritar/sina` is **private** and npm provenance needs a public repo, so `NPM_CONFIG_PROVENANCE` + `id-token: write` were removed from `release.yml` (commit `e312617`). Re-add both if the repo goes public. See [[npm-publish-pipeline]].
+- **Token:** a **granular** npm token — Read **and** write on the `@sina-design-system` scope, Organizations: No access — stored as the `NPM_TOKEN` repo secret.
+- **Two GitHub gotchas the user cleared:** (1) the Node-20 crash (fixed to Node 22); (2) Release failed opening the Version PR with *"GitHub Actions is not permitted to create or approve pull requests"* → enable **Settings → Actions → General → Workflow permissions → "Allow GitHub Actions to create and approve pull requests"** (+ Read and write permissions).
+- **Flow that worked:** push → Release opens the "Version Packages" PR (0.0.0→0.1.0) → **merge it** → Release runs `changeset publish`. `core` already existed on npm at a manual `0.0.7`; `0.1.0 > 0.0.7` so it published cleanly and `latest` moved to 0.1.0 with the correct new metadata.
+- **Future releases:** `pnpm changeset` → merge to `main` → merge the auto-opened Version PR.
 
 ---
 
