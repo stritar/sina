@@ -207,6 +207,18 @@ Grouped into workstreams (each a candidate hand-off; sequence by product priorit
 - **Prerequisite (manual):** the `@sina-design-system` npm org must exist and be owned by the maintainer before the first scoped publish.
 - **Exit criteria:** `changeset status` shows pending versions; `publint`/`attw` clean; `pnpm publish -r --dry-run` green for the five public packages (private ones skipped); CI required checks enforced on PRs. The first real `changeset publish` is a maintainer step (npm login + 2FA).
 
+### Phase 8.5 — Documentation UX (make the docs user-friendly)
+**Design hand-off:** the content *voice* + a first-run reading path (what a newcomer reads in their first ~10 minutes), and any diagrams/screenshots that should replace dense prose.
+**Goal:** Rewrite and restructure the *existing* Phase 7 docs so a reader with **no prior SINA context** understands what it is, why they'd use it, and can get something running — concrete over conceptual, task-oriented over reference-first. No docs-engine work (Phase 7 stands); this is a content pass on `apps/web/content/docs/**`.
+- **Lead with outcomes, not architecture:** rewrite Introduction + Quickstart so the first thing a reader sees is "what problem this solves *for me*" and a copy-pasteable start path — not the threat model. Keep the positioning (free · for startups & individuals · no governance tax).
+- **Cut the jargon (or define it on first use):** `intent`, `constitution`, `interception seam`, `validate-then-mount` are defined the first time they appear, or replaced with plain language; the precise terms stay in Concepts for readers who want depth.
+- **Show, don't tell:** every Concept page carries a real snippet or the mock-mode live demo (already factored in Phase 7) instead of describing the behavior in prose.
+- **Task-oriented Guides:** reframe Guides as "I want to…" jobs (brand the primitives · install and render one governed component · block an over-limit action) with end-to-end steps.
+- **Progressive disclosure:** a clear path — Introduction → Quickstart → one governed component → Concepts — so depth is opt-in, not front-loaded.
+- **Visuals over walls of text:** use a static interception-seam diagram / screenshots where a picture is clearer (the animated seam artifact still lands in Phase 9).
+- **Dogfood unchanged:** docs still pass the a11y bar (axe + keyboard + screen-reader) and all internal links stay valid after the restructure.
+- **Exit criteria:** a reader unfamiliar with SINA can, from the live docs — (1) state what SINA does and why in one sentence, (2) install and render a primitive/governed component straight from the Quickstart *without* reading the architecture, and (3) find a task-oriented guide for their goal. Jargon is defined-on-first-use; docs still build + deploy to Cloudflare and pass axe.
+
 ### Phase 9 — Marketing Site (`apps/web` landing)
 **Design hand-off:** bespoke landing layouts, narrative, live demo embeds, and a rendered/animated version of the interception-seam diagram (§3 is ASCII today — the real one is a design artifact).
 **Goal:** The public face — a single rich, fully bespoke scrollytelling landing page consuming `theme` (and read-only demos of `core`). It reuses the docs engine's shared web infra + the mock-mode demo embed factored in Phase 7, and links into `/docs`. It markets the **published** system (Phase 8 makes the packages installable), with final release hardening (Phase 10) following.
@@ -291,6 +303,7 @@ LLM stream (streamUI intent / tool payload)
 **Later:**
 - **Phase 7 (`apps/web` docs):** `source.config.ts`, `lib/source.ts`, `app/docs/page.tsx` + `app/docs/[...slug]/page.tsx` (split static index + catch-all), `app/docs/layout.tsx`, hand-built chrome under `app/components/docs/**`, `content/docs/**/*.mdx` (six sections), `app/llms.txt/route.ts` + per-page `.md` export, `wrangler.toml`; edit `next.config.mjs` (`transpilePackages` for all `@sina-design-system/*`); new `@sina-design-system/governance-demo` package = the factored mock-mode demo embed. *(Headless `fumadocs-core` — no Tailwind/`--color-fd-*`.)*
 - **Phase 8 (release/CI pipeline):** `.changeset/config.json` + root `changeset`/`version`/`release` scripts; `.github/workflows/{ci,release}.yml`; per-public-package `README.md` + `LICENSE` + npm metadata fields
+- **Phase 8.5 (docs UX):** rewrite `apps/web/content/docs/**/*.mdx` (Getting Started + Guides + Concepts voice); no engine/route changes
 - **Phase 9 (`apps/web` landing):** new `app/(marketing)/page.tsx` + section components (bespoke landing); reuses the Phase 7 demo embed + Cloudflare pipeline
 - **Phase 10 (packaging/theming):** `packages/theme/src/create-theme.ts` (typed brand-open/governance-locked contract — **seeded**) + `assertThemeContrast`; `core/styles.css` build guard; real audit sink; TSDoc→MDX Reference generation
 
@@ -327,4 +340,4 @@ SINA ships primitives *and* a supported way to make them match a consumer's bran
 
 ## Next Step
 
-Phases 0–7 are complete (see `.claude/PHASE_STATE.md` for verified status). **Next: Phase 8 — npm Publish Pipeline** — changesets versioning, GitHub Actions CI + release, per-package README/LICENSE/metadata, and publishability validation (dependency audit + `publint`/`attw` + dry-run) so the five public `@sina-design-system/*` packages are ready to publish. The first real publish is a maintainer step (npm login + 2FA; the `@sina-design-system` org must exist).
+Phases 0–8 are complete (see `.claude/PHASE_STATE.md` for verified status) — the docs are live on Cloudflare Pages and all five public `@sina-design-system/*` packages are published to npm at 0.1.0. **Next: Phase 8.5 — Documentation UX** — a content pass on the existing Phase 7 docs (`apps/web/content/docs/**`) to make them user-friendly for a newcomer with no prior SINA context: lead with outcomes over architecture, define/cut the jargon, favor runnable snippets and the mock-mode demo over prose, and reframe Guides as task-oriented "I want to…" jobs. No docs-engine work; Phase 7 stands. Then **Phase 9 — Marketing Site** drives traffic into the improved `/docs`.
