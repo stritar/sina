@@ -1,10 +1,18 @@
 {
   "name": "@sina-design-system/governance",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "SINA governance seam — the shared interception contract, audit emit, and Zod intercept engine every domain constitution implements.",
   "license": "MIT",
   "author": "Denis Stritar",
-  "keywords": ["sina", "design-system", "governance", "zod", "validation", "interception", "audit"],
+  "keywords": [
+    "sina",
+    "design-system",
+    "governance",
+    "zod",
+    "validation",
+    "interception",
+    "audit"
+  ],
   "homepage": "https://github.com/stritar/sina#readme",
   "bugs": "https://github.com/stritar/sina/issues",
   "repository": {
@@ -25,7 +33,9 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",
