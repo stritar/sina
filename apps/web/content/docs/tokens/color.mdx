@@ -1,0 +1,63 @@
+---
+title: Color
+description: SINA's color tokens are organized by role, not by hue — so you pick a color by what it means. Every swatch below is live and copyable.
+---
+
+You don't pick SINA colors by hue ("the green one"). You pick them by **role**
+("the primary action color"). That's what keeps a UI consistent and re-brandable.
+Click any swatch to copy its variable.
+
+## Surfaces & text
+
+Backgrounds and the text that sits on them. These are the workhorses.
+
+<TokenSwatchGrid>
+  <TokenSwatch name="--sina-color-bg" note="Page background" />
+  <TokenSwatch name="--sina-color-surface" note="Card / panel" />
+  <TokenSwatch name="--sina-color-surface-raised" note="Popover, raised" />
+  <TokenSwatch name="--sina-color-surface-sunken" note="Inset, code" />
+  <TokenSwatch name="--sina-color-text" note="Body text" />
+  <TokenSwatch name="--sina-color-text-muted" note="Secondary text" />
+  <TokenSwatch name="--sina-color-text-subtle" note="Hints, captions" />
+  <TokenSwatch name="--sina-color-border" note="Borders" />
+</TokenSwatchGrid>
+
+## Actions
+
+The interactive colors, each with a **foreground** partner for the text on top.
+
+<TokenSwatchGrid>
+  <TokenSwatch name="--sina-color-primary" note="Primary action" />
+  <TokenSwatch name="--sina-color-primary-fg" note="Text on primary" />
+  <TokenSwatch name="--sina-color-secondary" note="Secondary action" />
+  <TokenSwatch name="--sina-color-secondary-fg" note="Text on secondary" />
+</TokenSwatchGrid>
+
+<Callout variant="tip" title="The foreground pairing">
+  Every surface role has a `-fg` partner — the color guaranteed to be readable on
+  it. Use `--sina-color-primary` for a button's background and
+  `--sina-color-primary-fg` for its label, and contrast takes care of itself.
+</Callout>
+
+## Status
+
+Feedback colors, each with a `-fg` (text) and `-bg` (tint) companion.
+
+<TokenSwatchGrid>
+  <TokenSwatch name="--sina-color-danger" note="Error / destructive" />
+  <TokenSwatch name="--sina-color-warning" note="Warning" />
+  <TokenSwatch name="--sina-color-success" note="Success" />
+  <TokenSwatch name="--sina-color-info" note="Info" />
+</TokenSwatchGrid>
+
+<Callout variant="governance" title="Some colors are protected">
+  Status colors like `danger`, plus the focus ring and the secure-surface tint,
+  are **governance-locked** — a brand theme can't quiet them, because a security or
+  accessibility signal must never disappear. See [the locked
+  boundary](/docs/theming/brand-and-the-locked-boundary).
+</Callout>
+
+The full ramps (`--sina-color-brand--50…950`, etc.) and every value live in the
+[token index](/docs/tokens/scales).
+
+Next: [Scales & index](/docs/tokens/scales).

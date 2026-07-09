@@ -1,27 +1,68 @@
 ---
 title: Introduction
-description: SINA is a governed design system for AI agents — validate the model's intent server-side, then mount an accessible primitive.
+description: SINA is a design system with a gate. When an AI builds part of your interface, SINA checks the request on your server and only lets safe, accessible, on-brand components through.
 ---
 
-SINA is a **governed design system for AI agents**. An LLM emits _intent_ — a
-payload describing what it wants to render — and SINA validates that intent
-against Zod schemas (the "Constitution") **on the server**, then either blocks
-the stream or mounts an accessible, governed React primitive.
+SINA is a **design system with a gate**. When an AI builds part of your app's
+interface, SINA checks that request on your server first — and only lets safe,
+accessible, on-brand components through.
 
-The principle is **validate-then-mount**: never mount, then check.
+A normal design system is a box of parts and a rulebook. It hopes everyone
+follows the rules. SINA is different: the rules are **enforced by code**, so an
+AI can't ship a broken or unsafe screen even if it tries.
 
-## Why SINA exists
+<FlowDiagram />
 
-Agentic UIs hallucinate business logic, ship broken accessibility, and take
-unauthorized actions. SINA neutralizes all three at the edge — before a single
-component reaches the browser — so startups and individuals can adopt
-agent-generated UI without building the governance layer themselves.
+## The problem it solves
 
-## The three layers
+AI agents can now build UI on the fly. That's powerful — and risky. An agent can
+invent a "Confirm" button for a payment that was never approved, render a form
+that a screen reader can't use, or show account data it shouldn't. Left alone, it
+will eventually do all three.
 
-- **`theme`** — design tokens (`--sina-*` CSS custom properties) + a reset. No React.
-- **`core`** — headless, accessible primitives on Radix, styled with CSS Modules. Domain-agnostic.
-- **`fintech` / `fintech-react`** — the Zod constitution and the governed components that render the decisions it makes.
+SINA closes that gap. The AI never picks the component. It sends an **intent** — a
+plain description of what it wants to show — and your server decides what actually
+renders. Safe requests become real, accessible components. Unsafe ones are blocked
+or redirected to a stricter, governed component. Nothing skips the check.
 
-Read [The One Invariant](/docs/getting-started/the-one-invariant) next, or jump
-to the [Quickstart](/docs/getting-started/quickstart).
+<Callout variant="governance" title="The one idea">
+  The model proposes; the server decides; the screen only shows what passed. SINA
+  calls this **validate, then mount** — check first, render second, never the
+  other way around.
+</Callout>
+
+## Who it's for
+
+SINA is **free**, and built for startups and individual builders who want a
+governed design system without building the governance themselves. It ships
+today for **fintech** — money movement, accounts, cards, disclosures — because
+that's where getting it wrong is most expensive.
+
+You don't need an AI agent, an LLM key, or a policy of your own to try it. The
+docs run the real gate live, right in the page.
+
+<Callout variant="note" title="Is SINA for you?">
+  SINA fits if you generate UI with AI (or plan to) and can run a check on the
+  server (a Next.js server action, a route handler). If you just want beautiful,
+  accessible React components without the governance, you can use SINA's
+  [primitives on their own](/docs/guides/primitives-without-governance) — no gate
+  required.
+</Callout>
+
+## Start here
+
+<CardGrid columns={2}>
+  <Card href="/docs/getting-started/why-sina" eyebrow="5 min" title="Why SINA">
+    The problem in plain terms, and how SINA differs from a style guide, a
+    component library, and governance-by-PDF.
+  </Card>
+  <Card href="/docs/getting-started/how-sina-works" eyebrow="5 min" title="How SINA works">
+    The whole mechanism, walked once through a real $60,000 wire transfer.
+  </Card>
+  <Card href="/docs/getting-started/quickstart" eyebrow="10 min" title="Quickstart">
+    Install the packages and render your first governed decision.
+  </Card>
+  <Card href="/docs/getting-started/choose-your-path" eyebrow="Pick a lane" title="Choose your path">
+    A tailored route for developers, designers, and product & engineering leads.
+  </Card>
+</CardGrid>

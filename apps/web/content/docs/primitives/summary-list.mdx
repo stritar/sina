@@ -1,0 +1,33 @@
+---
+title: SummaryList
+description: Key/value review rows on a semantic description list — for confirming details before an action.
+---
+
+`SummaryList` renders labelled values as a proper `<dl>`. It's what a governed
+dialog uses to show the exact terms you're approving.
+
+```tsx
+import { SummaryList } from "@sina-design-system/core";
+
+<SummaryList
+  items={[
+    { label: "Amount", value: "$60,000.00", emphasis: true },
+    { label: "To", value: "Beta LLC" },
+    { label: "Rail", value: "Wire" },
+  ]}
+/>
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "items", type: "SummaryItem[]", description: "The { label, value, emphasis? } rows." },
+    { prop: "emphasis (per item)", type: "boolean", description: "Highlight a key row, like the amount." },
+  ]}
+/>
+
+Rendered as `<dl>`/`<dt>`/`<dd>`, so the label–value relationship is exposed to
+assistive tech.
+
+See all [primitives](/docs/primitives).

@@ -1,0 +1,58 @@
+---
+title: Validation
+description: SINA checks an intent in two layers — its shape, then its values. That's how it strips fabricated buttons and enforces real limits.
+---
+
+Validation is where safety actually happens. SINA checks every intent in two
+layers: first its **shape**, then its **values**.
+
+## Layer 1 — structure
+
+The first check asks: is this payload exactly the right shape? SINA schemas are
+**strict** — they reject any field that isn't supposed to be there.
+
+This one line does a lot of work. If an AI tries to smuggle in a fabricated
+`confirmButton`, or a `cvv`, or a full card number, those are *extra fields* — and
+strict parsing throws them out before any value is even looked at.
+
+<BeforeAfter>
+  <Before title="What a hostile stream sends">
+    <code>{`{ amount: 500, confirmButton: true, cvv: "123" }`}</code> — a real
+    amount, plus a fake button and smuggled card data.
+  </Before>
+  <After title="What the schema accepts">
+    <code>{`{ amount: 500 }`}</code> — the extra fields are rejected. The fake
+    button can't render; the card data never reaches the log.
+  </After>
+</BeforeAfter>
+
+## Layer 2 — policy
+
+If the shape is valid, the second check asks: do the values obey the rules? These
+are the cited limits — the ones with real regulations behind them.
+
+```ts
+// From the wire-transfer rule (simplified):
+if (amount > WIRE_SECONDARY_APPROVAL_MINOR /* $50,000 */) {
+  violation("AMOUNT_REQUIRES_APPROVAL", "escalate"); // → force SecureWireDialog
+}
+```
+
+Each threshold is a named constant with its source noted right beside it, so a
+block always traces back to *why*. See
+[the standards](/docs/governance/standards).
+
+## Money is counted in whole units
+
+One subtle but important rule: SINA counts money in **integer minor units** —
+cents, not dollars — following ISO 4217. `$60,000` is `6000000`, an integer.
+There's no floating-point math, so there's no rounding drift and no
+`0.1 + 0.2` surprise. Amounts either match exactly or they don't.
+
+<Callout variant="tip" title="Good rules are narrow">
+  A rule that blocks too much frustrates users; one that blocks too little is
+  useless. The best rules are specific — "over $50,000 *and* no approval," not
+  "anything that looks big." SINA's cited thresholds are deliberately precise.
+</Callout>
+
+Next: [Escalation & enforcement](/docs/concepts/escalation-and-enforcement).

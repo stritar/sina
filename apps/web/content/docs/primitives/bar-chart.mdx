@@ -1,0 +1,35 @@
+---
+title: BarChart
+description: An interactive bar chart (Chart.js) — vertical or horizontal, grouped or stacked.
+---
+
+`BarChart` compares values across categories. Flip `horizontal` for long labels,
+and `stacked` to show composition.
+
+```tsx
+import { BarChart } from "@sina-design-system/core";
+
+<BarChart
+  label="Spending by category"
+  data={/* Chart.js data */}
+  horizontal
+  valueFormatter={(n) => `$${n}`}
+/>
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "Required accessible name." },
+    { prop: "data", type: "ChartData", description: "Categories and series (Chart.js shape)." },
+    { prop: "horizontal", type: "boolean", default: "false", description: "Bars run left-to-right." },
+    { prop: "stacked", type: "boolean", default: "false", description: "Stack series into one bar." },
+    { prop: "valueFormatter", type: "(n: number) => string", description: "Formats tooltip and axis values." },
+  ]}
+/>
+
+Like all canvas charts, it's `"use client"`, `role="img"`, and pairs with a text
+summary as the accessible path.
+
+See all [primitives](/docs/primitives).

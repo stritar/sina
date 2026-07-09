@@ -1,0 +1,37 @@
+---
+title: The one invariant
+description: The model sends an intent, never a component. Validation runs on the server. Validate, then mount — never the other way around.
+---
+
+Everything in SINA rests on a single rule. If this rule holds, unsafe UI can't
+render. If it ever breaks, the whole guarantee is gone. So we state it plainly:
+
+> **The model sends an intent and props — never a component. Validation runs on
+> the server only. We validate, _then_ mount. We never mount, then check.**
+
+## Why it can't be "check it on the client"
+
+Modern React streams UI to the browser as it's built. Once a piece has streamed,
+you can't take it back — there's no "un-render." So the check has to happen
+**before** anything mounts, and the only place you control is your server.
+
+- The model proposes a **payload**. It may never name or pick the component that
+  renders.
+- **SINA** decides what renders, by turning the rules' result into a component.
+- Any check in the browser is treated as untrusted convenience. The real gate is
+  server-side — and that's the thing tests prove.
+
+## See it
+
+This runs the real gate, server-side, at build time. The $60,000 transfer is
+blocked and escalated — the raw confirm never mounts.
+
+<GovernanceDemo scenario="over-limit" />
+
+<Callout variant="enforced" title="The test that matters">
+  "Done" isn't "it compiles." Done is: a hostile stream — an over-limit transfer,
+  a fabricated button, smuggled card data — cannot get its unsafe UI to mount.
+  Every SINA feature is judged against this one rule.
+</Callout>
+
+Next: [Intent & the Constitution](/docs/concepts/intent-and-the-constitution).

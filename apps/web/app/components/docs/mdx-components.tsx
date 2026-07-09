@@ -4,16 +4,19 @@ import Link from "next/link";
 import { GovernanceDemo } from "@sina-design-system/governance-demo";
 import { CodePre } from "./CodePre";
 import { DialogDemo, CurrencyFieldDemo, GridDemo } from "./demos/PrimitiveDemos";
+import * as visuals from "./visuals";
 
 /**
  * MDX element → SINA renderer map for the headless docs. Prose typography is
  * handled by the `.prose` class on the article; here we override only where we
  * need behavior: code blocks (copy button) and links (internal `next/link` vs
- * external). Custom MDX components (e.g. `<GovernanceDemo>`) are merged via the
- * `extra` argument at call sites.
+ * external). Custom MDX components (e.g. `<GovernanceDemo>`, the visual kit) are
+ * merged here and via the `extra` argument at call sites.
  */
 export function getMDXComponents(extra?: MDXComponents): MDXComponents {
   return {
+    // The reusable docs visual kit (Callout, Steps, Card, Tabs, diagrams, …).
+    ...visuals,
     // Custom MDX components usable directly in `.mdx` content.
     GovernanceDemo,
     DialogDemo,

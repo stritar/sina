@@ -1,0 +1,35 @@
+---
+title: Field
+description: Wraps any form control with a label, description, and error message — and wires up the accessibility for you.
+---
+
+`Field` is the wrapper every input uses. It renders a label, an optional
+description and error, and clones its child to connect them with the right `id`,
+`aria-describedby`, and `aria-invalid`. You get correct form accessibility without
+threading IDs by hand.
+
+```tsx
+import { Field } from "@sina-design-system/core";
+
+<Field label="Email" description="We'll never share it." error={errors.email}>
+  <input type="email" name="email" />
+</Field>
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "ReactNode", description: "The field label (associated with the control)." },
+    { prop: "description", type: "ReactNode", description: "Helper text below the label." },
+    { prop: "error", type: "ReactNode", description: "An error message — sets aria-invalid and shows a bold warning glyph." },
+  ]}
+/>
+
+<Callout variant="note" title="Errors carry a glyph">
+  When `error` is set, Field renders the mandatory bold warning glyph beside the
+  message — never color alone. That's a SINA-wide rule for error and warning
+  states.
+</Callout>
+
+See all [primitives](/docs/primitives).

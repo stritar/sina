@@ -1,0 +1,78 @@
+---
+title: Wire transfer, end to end
+description: Follow one real request — a $60,000 wire — all the way through the gate, the forced approval dialog, the server re-check, and the audit record.
+---
+
+<YouWillLearn>
+- What the gate finds in an over-limit wire, and which standard each finding cites
+- How the forced approval dialog works, and why it can't be faked
+- How an approved transfer clears the gate on the second pass
+</YouWillLearn>
+
+This is SINA's flagship flow. We'll follow a single $60,000 wire from request to
+resolution. Every other governed flow is a variation on this one.
+
+## The request
+
+The AI proposes a transfer. Just data — no component:
+
+```ts
+{ intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 in cents */, currency: "USD", /* … */ } }
+```
+
+## The gate finds three things
+
+The shape is valid, so the policy check runs. It trips **three** violations — and
+each cites where it comes from:
+
+| Finding | Severity | Standard |
+|---|---|---|
+| Reportable transaction (CTR) | `flag` | FinCEN — 31 CFR 1010.311 |
+| Suspicious-activity review (SAR) | `flag` | FinCEN — 31 CFR Ch. X |
+| Over the $50,000 approval limit | `escalate` | SINA dual-control policy |
+
+The two flags are informational — recorded, not blocking. The **escalate** is the
+one that acts: it refuses the plain confirm and forces a governed component.
+
+<FlowDiagram highlight="block" />
+
+## The forced dialog
+
+Because the decision names `requiredComponent: "SecureWireDialog"`, SINA mounts
+that instead of a confirm button. The dialog walks a second person through:
+
+1. **Review** the exact terms (amount, recipient) — shown as a read-only summary.
+2. **Identify** as the approver — an ID and name that must differ from the initiator.
+3. **Confirm** with a one-time code.
+
+When they submit, the evidence goes **back to the server** and the constitution
+runs again. The dialog itself validates nothing — it just collects the approval.
+
+<Callout variant="enforced" title="Two checks make it un-bypassable">
+  On the second pass the server enforces two things a hostile stream can't fake:
+  **four-eyes** (the approver must differ from the server-known initiator — you
+  can't approve your own wire) and **payload binding** (the approval is tied to the
+  exact terms, recomputed on the server — you can't approve $5,000 and execute
+  $60,000).
+</Callout>
+
+## The happy ending
+
+Governance escalates; it doesn't just refuse. A *valid* approval — a different
+manager, bound to the exact $60,000 terms — clears the gate on the second pass, and
+the transfer mounts as a completed, governed action. A fresh audit event records
+the approval.
+
+Try it: toggle the governed vs. un-gated views, and picture the second-approver
+loop turning this block into a pass.
+
+<GovernanceDemo scenario="over-limit" comparison />
+
+<Recap>
+Over-limit wire → three violations (two flags, one escalate) → `SecureWireDialog`
+→ a *different* approver + one-time code → server re-checks four-eyes and payload
+binding → approved and mounted, or refused. The raw confirm is never an option.
+</Recap>
+
+Next: [Governed components](/docs/governance/governed-components).

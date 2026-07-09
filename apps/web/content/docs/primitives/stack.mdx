@@ -1,0 +1,30 @@
+---
+title: Stack
+description: One-axis flex layout — line things up in a row or a column with consistent spacing from the token scale.
+---
+
+`Stack` lays out its children along a single axis with a `gap` drawn from the
+spacing scale. It's the everyday layout primitive; reach for
+[Grid](/docs/primitives/grid) when you need wrapping columns.
+
+```tsx
+import { Stack } from "@sina-design-system/core";
+
+<Stack direction="row" gap={3} align="center">
+  <Badge>Draft</Badge>
+  <span>Invoice #204</span>
+</Stack>
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "direction", type: '"row" | "column"', default: '"column"', description: "Layout axis." },
+    { prop: "gap", type: "GapStep", description: "Spacing between children (from the 8pt scale)." },
+    { prop: "align / justify", type: "string", description: "Flex alignment along each axis." },
+    { prop: "as", type: "ElementType", description: "Render as a different element (polymorphic)." },
+  ]}
+/>
+
+See all [primitives](/docs/primitives).

@@ -1,0 +1,27 @@
+---
+title: Spinner
+description: A loading indicator for indeterminate waits, with an accessible label.
+---
+
+`Spinner` signals that something is happening but you don't know how long it'll
+take. For a known duration, use [Progress](/docs/primitives/progress) instead.
+
+```tsx
+import { Spinner } from "@sina-design-system/core";
+
+<Spinner size="md" label="Loading transactions" />
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Indicator size." },
+    { prop: "label", type: "string", description: "Announced to screen readers (visually hidden)." },
+  ]}
+/>
+
+The animation respects `prefers-reduced-motion`. Always pass a `label` so the wait
+is announced, not silent.
+
+See all [primitives](/docs/primitives).

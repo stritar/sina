@@ -1,0 +1,29 @@
+---
+title: Chart
+description: A tiny, server-safe sparkline — line, area, or bar — drawn as SVG with currentColor. No client JS.
+---
+
+`Chart` is a compact sparkline for inline trends. It's pure SVG driven by
+`currentColor`, so it renders on the server and inherits the surrounding text
+color. For full, interactive charts, use
+[LineChart](/docs/primitives/line-chart) and friends.
+
+```tsx
+import { Chart } from "@sina-design-system/core";
+
+<Chart variant="area" data={[3, 5, 4, 8, 7, 11]} />
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "variant", type: '"line" | "area" | "bar"', default: '"line"', description: "Sparkline style." },
+    { prop: "data", type: "number[]", description: "The series to plot." },
+  ]}
+/>
+
+Renders as `role="img"` with a required label. Degrades to a flat baseline for a
+single point.
+
+See all [primitives](/docs/primitives).

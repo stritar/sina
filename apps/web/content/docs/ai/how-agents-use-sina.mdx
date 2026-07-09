@@ -1,0 +1,52 @@
+---
+title: How agents use SINA
+description: An agent picks an intent verb and nothing else. It never names the component, and it never invents the data. Here's why that's enough.
+---
+
+From the AI's side, using SINA is simple: it picks an **intent** and fills in the
+data. That's all it can do — and the two things it *can't* do are what make it
+safe.
+
+## What the agent sends
+
+SINA gives the model a menu of intent verbs — a manifest like:
+
+```ts
+[
+  { intent: "wire_transfer", kind: "governed", summary: "Move money by wire" },
+  { intent: "list_transactions", kind: "display", summary: "Show recent activity" },
+  // …
+]
+```
+
+The model chooses one verb and supplies its props. It's describing a goal, not
+building a screen.
+
+## The two things it can never do
+
+- **It can't name the component.** The manifest has verbs, not components. SINA
+  maps the verb to a component *after* the gate runs — so the model can't reach
+  for the raw confirm button. It doesn't know the button exists.
+- **It can't invent the data for a read.** When the model asks to *show* something
+  — a balance, a transaction list — your server supplies the real values from your
+  source of truth. The model picks *what* to show, never *what the numbers are*, so
+  it can't fabricate an account balance or hallucinate a transaction.
+
+## The un-bypassable moment
+
+Put those together on the $60,000 wire. The model asks to move the money. The gate
+sees it's over the approval limit and forces a `SecureWireDialog`. The model has
+no way around this:
+
+- It can't render the confirm button — it never chose components.
+- It can't approve the transfer itself — approval requires a *different* person,
+  checked on the server.
+- It can't approve a small amount and swap in a big one — the approval is bound to
+  the exact terms, and the server recomputes that binding.
+
+<Callout variant="enforced" title="Asking is not doing">
+  The agent can *ask* for anything. It can't *do* anything the gate didn't allow.
+  That gap — between proposing and rendering — is where all of SINA's safety lives.
+</Callout>
+
+Next: [Try it: the emulator](/docs/ai/try-it).

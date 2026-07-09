@@ -1,0 +1,48 @@
+---
+title: Governed components
+description: When a rule escalates, it forces one of three governed components. Here's what each is, when it appears, and how it behaves.
+---
+
+Dozens of governed rules, but only **three** components they escalate to. The
+rules differ; the safe destinations are shared and battle-tested. Each one renders
+the decision the gate already made — none of them validate anything themselves.
+
+## SecureWireDialog
+
+**Forced when:** a wire (or a wire-like transfer) needs a second approver.
+
+The flagship. It runs the four-eyes approval loop: review the exact terms →
+collect a *different* approver's identity → confirm with a one-time code →
+re-check on the server. A denied re-check keeps the dialog open, so there's no way
+to "click past" it. See it in full on [Wire transfer, end to
+end](/docs/governance/wire-transfer).
+
+## GovernedActionDialog
+
+**Forced when:** almost any other authorization-gated action escalates — ACH and
+P2P payments, bill pay, FX, card operations, limit changes, security changes,
+account opening, trades.
+
+The generalized version of the wire dialog. Same shape — review → authorize →
+confirm → server re-check — with the specific terms derived from whatever action
+is being governed. It's why SINA can cover a whole banking app without a bespoke
+dialog per flow.
+
+## MandatoryDisclosure
+
+**Forced when:** the user must acknowledge required text before proceeding —
+margin suitability, a lending (TILA) disclosure, an FX-spread notice.
+
+This one exists because some rules aren't "get approval," they're "you must be
+*shown* this, verbatim." The disclosure text comes from the rule, not the model —
+so an AI can't soften, shorten, or skip a legally required notice. The user reads
+it, acknowledges, and only then proceeds.
+
+<Callout variant="note" title="The same phases every time">
+  All three share a small, predictable state machine — review → collect → pending →
+  resolved. That consistency is deliberate: one interaction pattern to learn, one
+  set of states to test, one accessible experience across every governed flow.
+</Callout>
+
+Next: [Display patterns](/docs/governance/display-patterns) — the ungoverned
+other half.

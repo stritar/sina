@@ -1,0 +1,65 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: var(--sina-space--2);
+  margin: var(--sina-space--5) 0;
+}
+
+.swatch {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--3);
+  padding: var(--sina-space--2);
+  font-family: inherit;
+  text-align: left;
+  background: var(--sina-color-surface);
+  border: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+  border-radius: var(--sina-radius--md);
+  cursor: pointer;
+  transition: border-color var(--sina-duration--fast) var(--sina-ease--standard);
+}
+
+.swatch:hover {
+  border-color: var(--sina-color-border);
+}
+
+.swatch:focus-visible {
+  outline: none;
+  box-shadow: var(--sina-shadow--focus-ring);
+}
+
+.chip {
+  flex-shrink: 0;
+  width: var(--sina-space--10);
+  height: var(--sina-space--10);
+  border-radius: var(--sina-radius--sm);
+  border: var(--sina-border-width--1) solid
+    color-mix(in srgb, var(--sina-color-text) 12%, transparent);
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.name {
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--ui);
+  color: var(--sina-color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.note {
+  font-size: var(--sina-text--ui);
+  color: var(--sina-color-text-subtle);
+}
+
+.copy {
+  flex-shrink: 0;
+  font-size: var(--sina-text--ui);
+  color: var(--sina-color-text-subtle);
+}

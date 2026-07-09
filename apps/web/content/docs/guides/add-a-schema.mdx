@@ -1,5 +1,5 @@
 ---
-title: Add a Schema
+title: Add a schema
 description: Scaffold a Zod governance schema in fintech implementing the interception contract, with valid and adversarial fixtures
 ---
 
@@ -32,7 +32,7 @@ Create `packages/fintech/src/<name>/<name>.schema.ts` modeled on the flagship
   producing a `Violation` with its `code`, `message`, and cited `standard`.
 - An escalation that names the `requiredComponent` a violation must force.
 
-It must return the [interception contract](/docs/concepts/interception-contract):
+It must return the [interception contract](/docs/concepts/the-interception-contract):
 
 ```ts
 // pass
@@ -58,4 +58,4 @@ Register the verb in `src/registry.ts` (and `fintechIntentManifest()`) so
 `pnpm --filter @sina-design-system/fintech test`.
 
 Next, prove it cannot be bypassed:
-[Write an Adversarial Test](/docs/guides/adversarial-test).
+[Write an adversarial test](/docs/guides/write-an-adversarial-test).

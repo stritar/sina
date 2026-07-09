@@ -1,0 +1,28 @@
+---
+title: Progress
+description: A progress bar for known-duration tasks — determinate or indeterminate.
+---
+
+`Progress` shows how far along a task is. Pass a `value` for determinate progress;
+omit it for an indeterminate bar.
+
+```tsx
+import { Progress } from "@sina-design-system/core";
+
+<Progress value={62} />      {/* 62% */}
+<Progress />                 {/* indeterminate */}
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "value", type: "number", description: "0–100. Omit for an indeterminate bar." },
+    { prop: "label", type: "string", description: "Accessible name for the progressbar." },
+  ]}
+/>
+
+Built on Radix Progress with `role="progressbar"` and the correct `aria-valuenow`
+/ `aria-valuemin` / `aria-valuemax`.
+
+See all [primitives](/docs/primitives).

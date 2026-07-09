@@ -1,5 +1,5 @@
 ---
-title: Add a Governed Domain
+title: Add a governed domain
 description: The extensibility path the governance abstraction enables — a pure Zod constitution plus a react layer that composes it with core primitives
 ---
 
@@ -39,13 +39,13 @@ Create a `packages/<domain>-react` that composes a `core` primitive with a
 It still **never authors schemas** (no `zod`) and **never validates** a payload.
 A governed component collects intent, calls a server action that re-runs the
 constitution, and renders the verdict — the gate stays server-side per
-[The One Invariant](/docs/getting-started/the-one-invariant).
+[The one invariant](/docs/concepts/the-one-invariant).
 
 ## Why this stays safe
 
 Because the contract is uniform, the new domain's rules drop straight into the
-same [interception seam](/docs/architecture/interception-seam), emit the same
-[audit event](/docs/concepts/audit-trail), and are exercised by the same
+same [interception gate](/docs/concepts/how-interception-works), emit the same
+[audit event](/docs/concepts/the-audit-trail), and are exercised by the same
 adversarial harness. Governance does not fork per domain — it is inherited from
 `governance` and re-gated server-side everywhere.
 

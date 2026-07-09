@@ -1,0 +1,45 @@
+---
+title: Write an adversarial test
+description: A rule isn't done when it compiles — it's done when a hostile request can't get past it. Here's how to prove that.
+---
+
+SINA's guarantees only hold if they're tested like an attacker would probe them.
+For every rule, write the request you're afraid of and assert it's blocked. This
+mirrors the `/adversarial-test` skill.
+
+## The mindset
+
+Don't test that a *valid* request passes — test that an *invalid* one can't sneak
+through. For each rule, ask: what's the worst thing a hostile stream could send?
+Then encode it as a fixture that **must** be rejected.
+
+## Common attacks to cover
+
+- **A smuggled field** — a fabricated `confirmButton` or a `cvv`. Assert it's
+  rejected by the strict parse.
+- **An over-limit value** — just past a threshold. Assert it escalates to the right
+  component.
+- **A bypass attempt** — approve a small amount, execute a big one; or self-approve.
+  Assert the server-side binding and four-eyes checks reject it.
+- **A flood** — an oversized array. Assert the bound rejects it.
+
+See the full catalog on [Security & the threat
+model](/docs/governance/security).
+
+## Assert the decision, not just an error
+
+```ts
+const decision = evaluateFintechIntent(hostileEnvelope, ctx);
+
+expect(decision.valid).toBe(false);
+expect(decision.requiredComponent).toBe("SecureWireDialog"); // or null for a reject
+expect(decision.violations.map((v) => v.code)).toContain("AMOUNT_REQUIRES_APPROVAL");
+```
+
+<Callout variant="enforced" title="Make it a required check">
+  Wire these tests into CI as a required check. Then a change that quietly weakens a
+  rule fails the build instead of shipping — the guarantee can't rot.
+</Callout>
+
+Related: [Add a schema](/docs/guides/add-a-schema) ·
+[Escalation & enforcement](/docs/concepts/escalation-and-enforcement).

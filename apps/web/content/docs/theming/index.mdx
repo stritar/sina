@@ -1,0 +1,58 @@
+---
+title: Theming
+description: A theme in SINA is just the semantic tokens with different values. Rebrand at the token layer, get dark mode for free, and never touch a component.
+---
+
+Theming SINA is simpler than it sounds, because of one idea: **a theme is the same
+tokens with different values**. You never edit a component to rebrand it — you
+reassign the semantic color roles, and every component that points at them updates.
+
+## The mechanism
+
+Redefine the `--sina-color-*` roles under a selector, and everything downstream
+follows:
+
+```css
+:root {
+  --sina-color-primary: #3b5bdb;      /* your brand */
+  --sina-color-primary-fg: #ffffff;
+}
+```
+
+That's it. No rebuild, no component changes. The typed helpers `createTheme()` and
+`themeVars()` in `@sina-design-system/theme` emit these blocks for you, with type
+safety over which roles you're allowed to touch.
+
+## Dark mode is the same trick
+
+Dark mode is proof the model works: it's just another block of the same tokens,
+under a `[data-theme="dark"]` selector.
+
+```css
+[data-theme="dark"] {
+  --sina-color-bg: /* dark value */;
+  --sina-color-text: /* light value */;
+  /* …the same roles, re-valued */
+}
+```
+
+Flip `data-theme` on `<html>` and the whole UI — including these docs — recolors.
+Support a light / dark / system toggle by writing that attribute and remembering
+the choice in `localStorage`.
+
+## Four ways to override
+
+| Mode | When |
+|---|---|
+| **Extend** — add a new token | You need a brand accent that doesn't exist yet |
+| **Override** — re-value an existing role | The common case: make `primary` your brand |
+| **Replace** — swap a whole family | You're redoing all of color, or all of radius |
+| **From scratch** — define every role | You're building a fully custom theme |
+
+<Callout variant="tip" title="Start with override">
+  Most brands only need to override a handful of roles — `primary`, the surfaces,
+  maybe the radius scale — and inherit the rest. Reach for the heavier modes only
+  when you actually need them.
+</Callout>
+
+Next: [Brand & the locked boundary](/docs/theming/brand-and-the-locked-boundary).

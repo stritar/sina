@@ -1,0 +1,32 @@
+---
+title: Badge
+description: A compact status chip — a small, vivid label for state like "Pending", "Blocked", or "Verified".
+---
+
+`Badge` is a small chip that labels the status of something inline — a row, a
+card, a heading.
+
+```tsx
+import { Badge } from "@sina-design-system/core";
+
+<Badge intent="success">Verified</Badge>
+<Badge intent="danger" dot>Blocked</Badge>
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "intent", type: '"neutral" | "info" | "success" | "warning" | "danger"', default: '"neutral"', description: "Color and meaning." },
+    { prop: "size", type: '"sm" | "md"', default: '"md"', description: "Chip size." },
+    { prop: "icon", type: "ReactNode", description: "A leading glyph (inherits the label color)." },
+    { prop: "dot", type: "boolean", default: "false", description: "A leading status dot." },
+  ]}
+/>
+
+<Callout variant="note" title="Status rules apply">
+  A `danger` or `warning` Badge renders a bold glyph automatically. And a Badge is a
+  status element — never render it inside an Alert or Toast; place it as a sibling.
+</Callout>
+
+See all [primitives](/docs/primitives).

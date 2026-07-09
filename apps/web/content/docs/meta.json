@@ -4,9 +4,12 @@
     "index",
     "getting-started",
     "concepts",
-    "architecture",
+    "ai",
+    "governance",
+    "primitives",
+    "tokens",
+    "theming",
     "guides",
-    "reference",
-    "components"
+    "reference"
   ]
 }

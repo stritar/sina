@@ -1,0 +1,30 @@
+---
+title: Icon
+description: Render a glyph — labelled when it carries meaning, decorative when it's just decoration.
+---
+
+`Icon` wraps a Phosphor glyph and forces you to answer one question: does this icon
+*mean* something, or is it decoration? Getting that right is the difference between
+an accessible icon and a confusing one.
+
+```tsx
+import { Icon } from "@sina-design-system/core";
+import { ShieldCheck } from "@phosphor-icons/react";
+
+<Icon glyph={ShieldCheck} label="Governed by SINA" />   {/* announced */}
+<Icon glyph={ShieldCheck} decorative />                 {/* silent */}
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "Announced to screen readers — use when the icon conveys meaning." },
+    { prop: "decorative", type: "boolean", description: "Hides the icon from assistive tech (aria-hidden)." },
+  ]}
+/>
+
+Provide exactly one of `label` or `decorative`. A meaningful icon without a label
+is invisible to screen-reader users; a decorative one with a label is noise.
+
+See all [primitives](/docs/primitives).

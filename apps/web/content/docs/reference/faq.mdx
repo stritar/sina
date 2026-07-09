@@ -1,0 +1,44 @@
+---
+title: FAQ
+description: The quick answers evaluators ask most.
+---
+
+**Do I need an AI or an LLM key to use SINA?**
+No. You can call the gate with a plain object, and the docs run it live with no
+key. And if you only want the components, you can [use the primitives
+alone](/docs/guides/primitives-without-governance).
+
+**Is SINA only for fintech?**
+Today, yes — the shipped Constitution is fintech (money, accounts, cards,
+disclosures). The [governance seam](/docs/reference/governance) is
+domain-agnostic, so another domain is [additive](/docs/guides/add-a-governed-domain),
+not a rewrite — but none is built yet.
+
+**Can I use the primitives without the governance?**
+Yes. Install just `theme` and `core` and render the accessible components. See
+[Use the primitives without governance](/docs/guides/primitives-without-governance).
+
+**Does it work outside Next.js?**
+The gate needs somewhere to run a server-side check. Next.js App Router (server
+actions / route handlers) is the smoothest fit, and the examples assume it — but
+any server that can run the check works. The components are plain React.
+
+**Is it production-ready?**
+The packages are published at **0.1.0** — early. The gate and the primitives are
+tested (including an adversarial suite and automated accessibility checks). The
+audit trail is a defined contract with a no-op sink; wiring it to durable storage
+is planned. Evaluate accordingly, and see [stability &
+versioning](/docs/reference/changelog).
+
+**What's the license, and how is it free?**
+MIT-licensed and free. SINA exists so startups and individuals can adopt a
+governed design system without building the governance layer themselves.
+
+**Does the gate add latency?**
+It's a synchronous server-side check — a schema parse plus policy — measured in
+milliseconds. There's no model call in the gate itself; the AI runs before it, on
+your side.
+
+**Does SINA run the AI?**
+No. You run your agent; SINA governs its output. The model proposes intent, and
+SINA decides what renders.

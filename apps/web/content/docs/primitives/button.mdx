@@ -1,0 +1,41 @@
+---
+title: Button
+description: Triggers an action. Four variants, four sizes, optional icons and a loading state — all keyboard- and screen-reader-ready.
+---
+
+`Button` triggers an action — submit a form, open a dialog, confirm a step. Use a
+Button for actions and a link for navigation.
+
+```tsx
+import { Button } from "@sina-design-system/core";
+
+<Button variant="primary" onClick={submit}>Continue</Button>
+<Button variant="secondary" iconLeft={<Icon …/>}>Back</Button>
+<Button variant="danger" loading>Deleting…</Button>
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "variant", type: '"primary" | "secondary" | "danger" | "ghost"', default: '"primary"', description: "Visual weight and intent." },
+    { prop: "size", type: '"sm" | "md" | "lg" | "xl"', default: '"md"', description: "Control height." },
+    { prop: "iconLeft / iconRight", type: "ReactNode", description: "A leading or trailing glyph." },
+    { prop: "loading", type: "boolean", default: "false", description: "Shows a spinner and disables the button." },
+    { prop: "asChild", type: "boolean", default: "false", description: "Render as the child element (e.g. a link) while keeping button styling." },
+  ]}
+/>
+
+## Do & don't
+
+<DoDont
+  do={["Lead with a strong verb — “Send”, “Approve”", "Reserve danger for destructive or irreversible actions", "Keep one primary button per view"]}
+  dont={["Use a button for plain navigation — use a link", "Stack several primary buttons together", "Remove the label from an icon-only button — give it an aria-label"]}
+/>
+
+## Accessibility
+
+Native `<button>` semantics — focusable, `Enter`/`Space` activate, `disabled` is
+announced. An icon-only button needs an `aria-label`.
+
+See all [primitives](/docs/primitives).

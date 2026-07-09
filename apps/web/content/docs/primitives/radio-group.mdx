@@ -1,0 +1,23 @@
+---
+title: RadioGroup
+description: Choose exactly one option from a small set, with roving keyboard focus.
+---
+
+`RadioGroup` is for a single, exclusive choice among a few options. For more than a
+handful, prefer [Select](/docs/primitives/select).
+
+```tsx
+import { RadioGroup, RadioGroupItem } from "@sina-design-system/core";
+
+<RadioGroup value={plan} onValueChange={setPlan}>
+  <RadioGroupItem value="standard" label="Standard" />
+  <RadioGroupItem value="priority" label="Priority" />
+</RadioGroup>
+```
+
+## Accessibility
+
+Follows the ARIA radiogroup pattern: `Tab` enters the group, arrow keys move
+between options (roving focus), and only the selected option is a tab stop.
+
+See all [primitives](/docs/primitives).

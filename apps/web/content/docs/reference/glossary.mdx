@@ -1,0 +1,34 @@
+---
+title: Glossary
+description: Every SINA term, defined once, in one line.
+---
+
+The words that come up across the docs, defined plainly. Terms are also defined
+where they first appear — this is the quick lookup.
+
+| Term | Meaning |
+|---|---|
+| **Intent** | The AI's request to show UI — a verb plus props, never a component. |
+| **Constitution** | The full set of rules (schemas) that decide what's allowed. |
+| **Gate** | The server-side check every intent passes through. |
+| **Interception** | The act of running an intent through the gate before anything mounts. |
+| **Validate, then mount** | SINA's core rule: check on the server first, render second. |
+| **Interception contract** | The uniform result shape: `{ valid, violations, requiredComponent }`. |
+| **Violation** | One thing the gate found wrong, with a message, severity, and cited standard. |
+| **Severity** | How hard a violation acts: `flag`, `escalate`, or `reject`. |
+| **Flag** | Informational — recorded, not blocking. |
+| **Escalate** | Blocks the standard render and forces a stricter governed component. |
+| **Reject** | A hard block — nothing mounts. |
+| **Governed** | A rule for an action, with policy and possible escalation. |
+| **Display / ungoverned** | A rule for a read — shape-checked and masked, never escalated. |
+| **requiredComponent** | The stricter component a decision forces, or `null`. |
+| **Escalation** | Redirecting a blocked request to a stricter component instead of refusing. |
+| **Redaction** | Stripping/masking sensitive data before it's stored in the audit log. |
+| **Audit event** | The record every decision emits. |
+| **Four-eyes** | The rule that an approver must differ from the initiator. |
+| **Payload binding** | Tying an approval to the exact terms, recomputed on the server. |
+| **Minor units** | Money as whole integers (cents), per ISO 4217 — no floats. |
+| **Primitive** | A headless, accessible core component (Button, Dialog, …). |
+| **Token** | A named design value (color, size, font) as a `--sina-*` variable. |
+| **Brand-open / governance-locked** | Token roles you may re-theme vs. ones reserved for safety. |
+| **Manifest** | The list of intent verbs the AI may emit. |

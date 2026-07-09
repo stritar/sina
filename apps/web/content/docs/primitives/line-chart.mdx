@@ -1,0 +1,35 @@
+---
+title: LineChart
+description: An interactive line or area chart (Chart.js) with a themed tooltip and a value formatter.
+---
+
+`LineChart` plots one or more series over time, with hover tooltips styled from
+tokens. Pass `fill` for an area chart.
+
+```tsx
+import { LineChart } from "@sina-design-system/core";
+
+<LineChart
+  label="Balance over time"
+  data={/* Chart.js data */}
+  valueFormatter={(n) => `$${n.toLocaleString()}`}
+  fill
+/>
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "Required accessible name for the chart." },
+    { prop: "data", type: "ChartData", description: "Series and points (Chart.js shape)." },
+    { prop: "valueFormatter", type: "(n: number) => string", description: "Formats tooltip and axis values — keeps the chart domain-agnostic." },
+    { prop: "fill", type: "boolean", default: "false", description: "Render as an area chart." },
+  ]}
+/>
+
+A `"use client"` component (canvas). The wrapper is `role="img"` with your
+`label`; keep a text summary nearby as the non-visual path. Animation is disabled
+under reduced motion.
+
+See all [primitives](/docs/primitives).

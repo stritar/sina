@@ -1,0 +1,23 @@
+---
+title: VisuallyHidden
+description: Text that's invisible on screen but read by screen readers — for labels and context sighted users don't need.
+---
+
+`VisuallyHidden` hides content visually while keeping it available to assistive
+technology. Use it to give an icon button a name, or to add context a screen
+reader needs but the layout already implies.
+
+```tsx
+import { VisuallyHidden } from "@sina-design-system/core";
+
+<button>
+  <Icon glyph={X} decorative />
+  <VisuallyHidden>Close dialog</VisuallyHidden>
+</button>
+```
+
+This is the accessible way to hide text — unlike `display: none` (which removes it
+for everyone) or off-screen hacks (which can misbehave). Reach for it whenever the
+visual design omits a label that a screen reader still needs.
+
+See all [primitives](/docs/primitives).

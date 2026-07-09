@@ -1,0 +1,30 @@
+---
+title: KpiStat
+description: A headline number with an optional trend — the stat tile for dashboards and summaries.
+---
+
+`KpiStat` shows one important number, big, with an optional comparison that
+renders as a trend badge (up is good by default).
+
+```tsx
+import { KpiStat } from "@sina-design-system/core";
+
+<KpiStat label="Balance" value="$12,480" comparisonValue="$11,900" size="lg" />
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "value", type: "ReactNode", description: "The headline figure." },
+    { prop: "label", type: "ReactNode", description: "What the number measures." },
+    { prop: "comparisonValue", type: "ReactNode", description: "A prior value — renders a trend badge." },
+    { prop: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Tile scale." },
+    { prop: "invertChangeColors", type: "boolean", default: "false", description: "When down is good (e.g. spending)." },
+  ]}
+/>
+
+A falling trend uses a danger badge with a bold down-glyph — meaning never rests on
+color alone. It's server-mountable (no client JS).
+
+See all [primitives](/docs/primitives).

@@ -1,0 +1,37 @@
+---
+title: Combobox
+description: A searchable single-select — type to filter a long list of options.
+---
+
+`Combobox` is a select you can type into. Use it when the option list is long
+enough that scanning a dropdown is painful.
+
+```tsx
+import { Combobox } from "@sina-design-system/core";
+
+<Combobox
+  options={[
+    { value: "usd", label: "US Dollar" },
+    { value: "eur", label: "Euro" },
+  ]}
+  value={currency}
+  onValueChange={setCurrency}
+  placeholder="Search currencies"
+/>
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "options", type: "ComboboxOption[]", description: "The { value, label } items to choose from." },
+    { prop: "value", type: "string", description: "The selected value (controlled)." },
+    { prop: "onValueChange", type: "(value: string) => void", description: "Fires on selection." },
+    { prop: "placeholder", type: "string", description: "Empty-state text in the input." },
+  ]}
+/>
+
+Built on a Popover with a native input — arrow keys move through matches, `Enter`
+selects, and the listbox is announced to screen readers.
+
+See all [primitives](/docs/primitives).

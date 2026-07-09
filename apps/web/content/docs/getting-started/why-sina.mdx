@@ -1,0 +1,66 @@
+---
+title: Why SINA
+description: AI can render anything, and some of it is unsafe. A style guide can't stop that — it only advises. SINA is a gate that enforces the rules.
+---
+
+Letting an AI build UI is like giving a very fast intern write access to your
+product. Most of the time it's great. But it doesn't know your limits, your
+compliance rules, or your accessibility standards — and it will confidently ship
+something that breaks them.
+
+## Three ways AI-built UI goes wrong
+
+- **Hallucinated logic.** The AI renders a "Confirm" button for a $60,000
+  transfer that no one approved, because it "looks like" what should be there.
+- **Broken accessibility.** It ships a custom dropdown with no keyboard support
+  and no labels — invisible to a screen reader.
+- **Unauthorized actions & data.** It shows a full card number, or lets a user
+  trigger an action they don't have permission for.
+
+A design system full of beautiful components doesn't prevent any of this. The AI
+can still assemble those parts into something wrong.
+
+## A style guide advises. SINA enforces.
+
+This is the core difference. A style guide (or a component library, or a page of
+rules in a wiki) *describes* good UI and hopes people follow it. SINA *refuses to
+render* bad UI. One is a document; the other is a gate.
+
+<BeforeAfter>
+  <Before title="Guidance only">
+    "Transfers over $50,000 need a second approver." Written in a doc. The AI
+    never read it. The confirm button renders anyway.
+  </Before>
+  <After title="Enforced by SINA">
+    The rule is a schema on the server. The over-limit transfer is blocked and a
+    second-approver dialog is forced instead. The button *cannot* render.
+  </After>
+</BeforeAfter>
+
+## How SINA compares
+
+| | What it is | Stops unsafe UI? |
+|---|---|---|
+| **A style guide / wiki** | Advice humans (and AIs) may ignore | No — advisory only |
+| **A component library** (Radix, shadcn) | Great accessible parts | No — parts can still be misused |
+| **Governance-by-PDF** | A policy nobody enforces at runtime | No — it's a document |
+| **SINA** | Accessible parts **+** a server-side gate | **Yes — enforced by code** |
+
+SINA isn't a competitor to a component library — it *includes* one (accessible
+primitives on Radix) and adds the gate on top.
+
+## When not to use SINA
+
+Be honest about fit. SINA is probably **not** for you if:
+
+- You don't generate UI with AI and don't plan to — you may just want the
+  [primitives on their own](/docs/guides/primitives-without-governance).
+- You can't run a check on the server. The gate must run server-side; a purely
+  static site with no server has nowhere to enforce it.
+- You need a domain SINA doesn't cover yet. Today it ships for **fintech**; other
+  domains are possible but not built.
+
+If you generate interfaces with AI and can run a server-side check, SINA gives you
+governance you'd otherwise have to build yourself.
+
+Next: [How SINA works](/docs/getting-started/how-sina-works).

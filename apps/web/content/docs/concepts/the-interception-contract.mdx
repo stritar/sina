@@ -1,0 +1,64 @@
+---
+title: The interception contract
+description: Every rule in SINA returns the exact same shape — valid, violations, requiredComponent. Learn to read it and you can read any decision.
+---
+
+Every rule in the Constitution answers with the **same three fields**. Learn this
+shape once and you can read any decision SINA makes.
+
+```ts
+type InterceptionResult = {
+  valid: boolean;              // did everything pass?
+  violations: Violation[];     // what went wrong (empty if clean)
+  requiredComponent: string | null; // a stricter component you must render instead
+};
+```
+
+## The three fields
+
+- **`valid`** — `true` only when nothing blocks. A single blocking problem makes it
+  `false`.
+- **`violations`** — a list of what the gate found. Each violation has a `message`,
+  a `severity`, and often a `standard` — the regulation or policy it comes from,
+  so a block is explainable, not a mystery.
+- **`requiredComponent`** — when a rule demands a stricter component (like a
+  second-approver dialog), its name goes here. Otherwise it's `null`.
+
+## Pass vs. fail
+
+A clean request:
+
+```ts
+{ valid: true, violations: [], requiredComponent: null }
+```
+
+An over-limit wire:
+
+```ts
+{
+  valid: false,
+  violations: [
+    { code: "AMOUNT_REQUIRES_APPROVAL", severity: "escalate",
+      message: "wire above $50,000 requires secondary managerial approval",
+      standard: "SINA dual-control policy" },
+  ],
+  requiredComponent: "SecureWireDialog",
+}
+```
+
+You read that decision and know exactly what to do: don't render the raw confirm —
+render `SecureWireDialog`.
+
+## Governed vs. ungoverned
+
+Both kinds of rule return this same shape:
+
+- A **governed** rule (an action) can set `requiredComponent` to force a stricter
+  component when a policy trips.
+- An **ungoverned** rule (a read-only display) only checks the *shape* — it never
+  escalates, so `requiredComponent` stays `null`. It still runs the same gate.
+
+Because the shape never changes, the code that renders a decision is the same
+everywhere.
+
+Next: [Validation](/docs/concepts/validation).

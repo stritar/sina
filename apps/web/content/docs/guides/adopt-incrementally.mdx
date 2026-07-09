@@ -1,0 +1,44 @@
+---
+title: Adopt SINA incrementally
+description: You don't have to govern everything on day one. Start with one intent, prove it, and expand — no big rewrite.
+---
+
+The most common worry about adopting governance is "this will slow my team down."
+It won't, if you roll it out the way it's designed: one intent at a time.
+
+<Steps>
+  <Step title="Pick one high-value intent">
+
+Choose the flow where a mistake is most expensive — usually money movement. Route
+just that one through the gate. Everything else in your app stays exactly as it is.
+
+  </Step>
+  <Step title="Watch what it blocks">
+
+Run real (or recorded) requests through it and read the decisions. You'll see which
+requests escalate and why. Tune the [policy thresholds](/docs/governance/standards)
+— the SINA-policy ones — to match your product's risk appetite.
+
+  </Step>
+  <Step title="Expand to the next flow">
+
+Once the first intent is solid, add the next. Because every rule returns the same
+[contract](/docs/concepts/the-interception-contract), the render code you wrote the
+first time works for the second.
+
+  </Step>
+</Steps>
+
+<Callout variant="note" title="No governance tax">
+  SINA adds one server-side check per governed intent. Reads and ungoverned flows
+  are untouched. You pay for governance only where you asked for it — and you can
+  stop at one flow if that's all you need.
+</Callout>
+
+<Callout variant="tip" title="For the skeptical reviewer">
+  Every threshold is a named, cited constant. When someone asks "why did this
+  block," the answer is a specific rule with a specific source — reviewable in a
+  pull request, not buried in a prompt.
+</Callout>
+
+Next: [Theme the primitives](/docs/guides/theme-the-primitives).

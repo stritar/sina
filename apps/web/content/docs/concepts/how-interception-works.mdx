@@ -1,0 +1,48 @@
+---
+title: How interception works
+description: The gate runs an intent through two checks — structure, then policy — and returns a decision. Here's each step, in order.
+---
+
+<YouWillLearn>
+- The two checks every intent passes through
+- How the gate turns "failed a rule" into "render this component instead"
+- Where the audit record comes from
+</YouWillLearn>
+
+When an intent reaches the server, SINA runs it through **the gate**. The gate
+does the same four things every time, in order:
+
+1. **Structure check.** Does the payload have the right shape? Correct fields,
+   correct types, nothing extra? This is a strict schema parse. A fabricated
+   "Confirm" button or a smuggled card number is an *extra field* — and it's
+   rejected here.
+2. **Policy check.** If the shape is valid, do the values obey the rules? Is the
+   amount within limits? Is a second approver required? These are the cited
+   thresholds — the business and regulatory logic.
+3. **Decision.** The gate collects any problems (called *violations*) and decides:
+   is this valid, and if a stricter component is required, which one?
+4. **Audit.** Every decision emits a record — what was asked, what was decided,
+   which rules fired — with sensitive data redacted.
+
+<FlowDiagram />
+
+## The two exits
+
+A decision always ends one of two ways:
+
+- **It mounts.** The request passed. SINA mounts the component the rules chose — an
+  accessible primitive for a clean read, or a governed component for an action.
+- **It's blocked.** The request failed a rule. The unsafe version never mounts.
+  Depending on how it failed, SINA either refuses outright or **escalates** to a
+  stricter component (like a second-approver dialog).
+
+<Callout variant="note" title="Not just yes/no">
+  The gate doesn't return a bare "allowed / denied." It returns a *component* — or
+  refuses. That's what makes SINA a design system and not just a policy engine.
+</Callout>
+
+<Recap>
+Intent in → structure check → policy check → decision → audit. Pass mounts a
+component; fail is blocked or escalated. The exact shape of that decision is the
+[interception contract](/docs/concepts/the-interception-contract).
+</Recap>

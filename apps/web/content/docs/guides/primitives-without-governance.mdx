@@ -1,0 +1,50 @@
+---
+title: Use the primitives without governance
+description: Only want the accessible components? Use SINA's primitives on their own — no gate, no fintech, no server check.
+---
+
+SINA's governance is optional. If you just want a set of accessible, themeable
+React components — Radix-quality, without wiring one yourself — you can use the
+primitives alone.
+
+<Steps>
+  <Step title="Install just two packages">
+
+```bash
+pnpm add @sina-design-system/theme @sina-design-system/core
+```
+
+No `fintech`, no `governance`, no server action.
+
+  </Step>
+  <Step title="Import the styles">
+
+```ts
+// app/layout.tsx
+import "@sina-design-system/theme/reset.css";
+import "@sina-design-system/theme/css";
+import "@sina-design-system/core/styles.css";
+```
+
+  </Step>
+  <Step title="Use the components">
+
+```tsx
+import { Button, Dialog, DialogContent, DialogTitle } from "@sina-design-system/core";
+
+<Button variant="primary">Save</Button>
+```
+
+That's it — accessible primitives, styled by [tokens](/docs/tokens), rebrandable
+with [theming](/docs/theming).
+
+  </Step>
+</Steps>
+
+<Callout variant="note" title="What you're skipping">
+  Without the gate, nothing validates AI intent — that's fine if you're not
+  generating UI with AI. If you add that later, keep these components and layer the
+  [governance](/docs/governance) on top; you won't have to replace anything.
+</Callout>
+
+Browse the full set in the [Primitives gallery](/docs/primitives).

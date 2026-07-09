@@ -1,0 +1,30 @@
+---
+title: Grid
+description: A wrapped, multi-column layout with token-based gaps.
+---
+
+`Grid` arranges children into columns that wrap, with a `gap` from the spacing
+scale. Use it for card grids and dashboards; use [Stack](/docs/primitives/stack)
+for a single row or column.
+
+<GridDemo />
+
+```tsx
+import { Grid } from "@sina-design-system/core";
+
+<Grid cols={3} gap={4}>
+  {items.map((i) => <Card key={i.id} {...i} />)}
+</Grid>
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "cols", type: "GridCols", description: "Number of columns." },
+    { prop: "gap", type: "GapStep", description: "Spacing between cells (from the 8pt scale)." },
+    { prop: "as", type: "ElementType", description: "Render as a different element (polymorphic)." },
+  ]}
+/>
+
+See all [primitives](/docs/primitives).

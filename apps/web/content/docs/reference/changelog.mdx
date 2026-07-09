@@ -1,0 +1,39 @@
+---
+title: Releases & stability
+description: Where SINA is in its life — current versions, what's stable, and what's still moving.
+---
+
+## Current versions
+
+All five public packages are published at **0.1.0**:
+
+`@sina-design-system/theme` · `core` · `governance` · `fintech` ·
+`fintech-react`.
+
+```bash
+pnpm add @sina-design-system/core@0.1.0
+```
+
+## Stability & versioning
+
+SINA is early. Versions follow semver, released via Changesets.
+
+- **Stable enough to build on** — the token system, the primitives (accessible,
+  tested), the interception contract, and the fintech gate. These have shape and
+  test coverage you can rely on.
+- **Still evolving** — the audit trail is a defined contract with a no-op sink (a
+  durable sink is planned), and the theming-contract guards are being hardened.
+- **Not built yet** — a second governance domain, a CLI, and a hosted docs
+  assistant. The architecture leaves room for them; they aren't here.
+
+<Callout variant="note" title="0.x means expect change">
+  Below 1.0, minor versions may carry breaking changes. Pin your versions and read
+  the release notes before upgrading.
+</Callout>
+
+## 0.1.0 — first public release
+
+The initial published surface: design tokens + the typed theming API, 28+
+accessible primitives (including charts), the shared governance seam, the full
+fintech Constitution (governed flows + display reads, every threshold cited), and
+the three governed components.

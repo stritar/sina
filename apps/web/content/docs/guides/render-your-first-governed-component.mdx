@@ -1,0 +1,66 @@
+---
+title: Render your first governed component
+description: A complete, end-to-end walkthrough — from install to a working over-limit block — in one small project.
+---
+
+The [Quickstart](/docs/getting-started/quickstart) gets you moving fast. This guide
+does the same thing more slowly and completely, as one project you can keep.
+
+<Steps>
+  <Step title="Install and wire styles">
+
+Add the packages and import the four stylesheets in your root layout — see the
+[Quickstart install step](/docs/getting-started/quickstart).
+
+  </Step>
+  <Step title="Add a server action that gates intent">
+
+```ts
+// app/actions.ts
+"use server";
+import { evaluateFintechIntent } from "@sina-design-system/fintech";
+
+export async function gate(envelope: { intent: string; props: unknown }) {
+  return evaluateFintechIntent(envelope); // { valid, violations, requiredComponent }
+}
+```
+
+  </Step>
+  <Step title="Render the decision, not the request">
+
+```tsx
+// app/transfer.tsx
+import { SecureWireDialog } from "@sina-design-system/fintech-react";
+
+export async function Transfer({ envelope }) {
+  const decision = await gate(envelope);
+
+  if (decision.requiredComponent === "SecureWireDialog") {
+    return (
+      <SecureWireDialog
+        intent={envelope.props}
+        violations={decision.violations}
+        onSubmitApproval={submitApproval}   // re-gates on the server
+        onApproved={onApproved}
+      />
+    );
+  }
+  return <TransferSummary {...envelope.props} />; // clean pass
+}
+```
+
+  </Step>
+  <Step title="Try both outcomes">
+
+Send a $500 transfer — the summary mounts. Send $60,000 — the raw confirm never
+appears; you get the second-approver dialog.
+
+<Callout variant="tip">
+  You've now got the whole guarantee running: the component you render is the one
+  the *server* chose, not the one the request asked for.
+</Callout>
+
+  </Step>
+</Steps>
+
+Next: [Block an over-limit action](/docs/guides/block-an-over-limit-action).

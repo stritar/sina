@@ -1,0 +1,51 @@
+---
+title: Writing a rule
+description: Every SINA rule answers the same eight questions. Fill them in and you have a governed intent — here's the template and the wire rule as a worked example.
+---
+
+A rule is just a schema plus some policy. But a *good* rule — one that's clear,
+testable, and defensible — answers the same eight questions every time. Use this as
+your template; the [Add a schema guide](/docs/guides/add-a-schema) has the code.
+
+## The template
+
+- **What it is** — one plain sentence.
+- **Why it exists** — the risk it removes.
+- **What it blocks** — a concrete bad request.
+- **What passes** — a concrete good request.
+- **What happens on trigger** — refuse, or escalate to which component?
+- **Severity** — `flag`, `escalate`, or `reject`.
+- **How to author it** — the shape (fields, types) and the policy check.
+- **How to observe it** — what shows up in the audit record.
+
+## The wire rule, filled in
+
+- **What it is** — governs money moved by wire.
+- **Why it exists** — large or under-documented wires carry regulatory and fraud
+  risk.
+- **What it blocks** — a $60,000 transfer with no second approver; a smuggled
+  confirm button; a self-approval.
+- **What passes** — a $500 transfer; or a $60,000 one with a valid second approval
+  bound to the exact terms.
+- **What happens on trigger** — over the limit → escalate to `SecureWireDialog`;
+  fabricated fields or self-approval → reject.
+- **Severity** — over-limit is `escalate`; reporting thresholds are `flag`; strict
+  and four-eyes failures are `reject`.
+- **How to author it** — a strict payload (amount in minor units, valid currency,
+  IBAN/BIC or routing/account) plus a policy that checks the cited thresholds.
+- **How to observe it** — each violation records its code, message, and cited
+  `standard`; the audit event names the decided component.
+
+<Callout variant="tip" title="Cite your thresholds">
+  Give every number a named constant with its source beside it — like SINA's
+  `thresholds.ts`. It makes the rule reviewable, and it distinguishes a legal
+  requirement from a product default you can tune.
+</Callout>
+
+<Callout variant="note" title="Test it like an attacker">
+  A rule isn't done when it compiles — it's done when a hostile request can't get
+  past it. Pair every rule with adversarial fixtures. See [Write an adversarial
+  test](/docs/guides/write-an-adversarial-test).
+</Callout>
+
+Next: [Foundations → Primitives](/docs/primitives).

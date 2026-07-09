@@ -1,0 +1,28 @@
+---
+title: TextField
+description: A single- or multi-line text input, wrapped in a Field for label, description, and error.
+---
+
+`TextField` is a text input with all the Field wiring built in. Set `multiline`
+for a textarea.
+
+```tsx
+import { TextField } from "@sina-design-system/core";
+
+<TextField label="Name" placeholder="Ada Lovelace" />
+<TextField label="Notes" multiline />
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "multiline", type: "boolean", default: "false", description: "Render a textarea instead of an input." },
+    { prop: "label / description / error", type: "ReactNode", description: "Passed through to the wrapping Field." },
+  ]}
+/>
+
+It accepts the usual native input/textarea attributes (`placeholder`, `value`,
+`onChange`, and so on).
+
+See all [primitives](/docs/primitives).

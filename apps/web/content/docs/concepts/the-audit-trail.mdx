@@ -1,0 +1,51 @@
+---
+title: The audit trail
+description: Every decision leaves a record — what was asked, what was decided, which rules fired — with sensitive data redacted before it's ever stored.
+---
+
+Every decision the gate makes emits an **audit event**. This is what turns "the AI
+built a screen" into "here's exactly what it asked for, what we decided, and why."
+It matters for three reasons: compliance can review it, you can debug with it, and
+users can trust that nothing happened off the record.
+
+## The shape
+
+```ts
+type AuditEvent = {
+  timestamp: string;
+  decisionId: string;
+  version: string;
+  payload: unknown;        // redacted (see below)
+  result: InterceptionResult;
+  violations: Violation[]; // each with its cited standard
+  decidedComponent: string | null;
+};
+```
+
+Because every violation carries its `standard`, the record doesn't just say "we
+blocked it" — it says *which rule* blocked it and *where that rule comes from*.
+That's the difference between an auditable decision and a shrug.
+
+## Redaction happens first
+
+The payload is **redacted before it's ever stored** — SINA never writes sensitive
+data to the log, even by accident:
+
+- **Dropped** entirely: card security codes (CVV) and PINs. They're never stored.
+- **Masked** to the last four digits: card numbers (PAN).
+- **Hashed** to a fingerprint: account and IBAN numbers — enough to correlate two
+  events, never enough to reconstruct the number.
+
+<Callout variant="governance" title="Safe by construction">
+  Redaction isn't a setting you can forget to turn on. It runs as part of emitting
+  the event, so a hostile stream can't get sensitive data into the audit log by
+  smuggling it into a payload.
+</Callout>
+
+<Callout variant="note" title="Where it goes">
+  Today the audit event is a defined contract with a no-op sink — the shape is
+  fixed and every decision emits one. Wiring it to a real, durable sink is planned
+  release-hardening work.
+</Callout>
+
+Next: [How AI agents use SINA](/docs/ai).

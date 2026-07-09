@@ -1,0 +1,32 @@
+---
+title: CurrencyField
+description: A money input that groups digits on blur. Display formatting only — the limits live server-side in the Constitution.
+---
+
+`CurrencyField` formats a monetary amount as you'd expect — grouping thousands on
+blur — while keeping a clean numeric value underneath.
+
+<CurrencyFieldDemo />
+
+```tsx
+import { CurrencyField } from "@sina-design-system/core";
+
+<CurrencyField label="Amount" currencySymbol="$" defaultValue="25000" />
+```
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "currencySymbol", type: "string", default: '"$"', description: "The symbol shown before the amount." },
+    { prop: "label / description / error", type: "ReactNode", description: "Passed through to the wrapping Field." },
+  ]}
+/>
+
+<Callout variant="governance" title="Formatting, not enforcement">
+  This is display only. It won't stop an over-limit amount — that's the gate's job,
+  on the server. A client-side input can always be bypassed, so SINA never trusts
+  one for a limit.
+</Callout>
+
+See all [primitives](/docs/primitives).

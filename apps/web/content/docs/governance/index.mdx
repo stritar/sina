@@ -1,0 +1,48 @@
+---
+title: Governance in practice
+description: The Constitution isn't abstract — it's a catalog of real fintech rules. Here's how it's organized and how to read it.
+---
+
+The concepts pages explain *how* SINA governs. This section is the *what*: the
+real rules that ship today, for fintech.
+
+The Constitution splits into two kinds of rule, and every intent is one or the
+other:
+
+- **Governed** rules cover **actions** — moving money, opening accounts, issuing
+  cards. They carry policy (limits, approvals, disclosures) and can escalate to a
+  stricter component.
+- **Display** rules cover **reads** — balances, transactions, holdings. They only
+  check the *shape* of the data (and mask sensitive fields), then mount a
+  presentational component. They never escalate.
+
+## The catalog, by family
+
+A representative slice — the [fintech reference](/docs/reference/fintech) has the
+full list of intents.
+
+| Family | Example intent | Kind | Mounts / escalates to |
+|---|---|---|---|
+| Money movement | `wire_transfer`, `ach_transfer`, `p2p_payment` | Governed | `SecureWireDialog` · `GovernedActionDialog` |
+| Accounts & onboarding | `add_payee`, `kyc`, `change_limit` | Governed | `GovernedActionDialog` |
+| Cards | `issue_card`, `card_control` | Governed | `GovernedActionDialog` |
+| Investing | `place_trade`, `enable_margin` | Governed | `GovernedActionDialog` · `MandatoryDisclosure` |
+| Disclosures | `disclosure`, `credit_request` | Governed | `MandatoryDisclosure` |
+| Reads | `list_transactions`, `account_balance`, `portfolio_holdings` | Display | a presentational component |
+
+<Callout variant="note" title="Many rules, three dialogs">
+  Dozens of governed flows all escalate to just **three** real components —
+  `SecureWireDialog`, `GovernedActionDialog`, and `MandatoryDisclosure`. The rules
+  differ; the safe destinations are shared. See
+  [Governed components](/docs/governance/governed-components).
+</Callout>
+
+## Where to go next
+
+- [The standards behind the Constitution](/docs/governance/standards) — why the
+  rules aren't arbitrary.
+- [Wire transfer, end to end](/docs/governance/wire-transfer) — the flagship flow,
+  start to finish.
+- [Security & the threat model](/docs/governance/security) — every attack, and how
+  it's stopped.
+- [Writing a rule](/docs/governance/writing-a-rule) — author your own.
