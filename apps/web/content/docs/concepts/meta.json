@@ -1,12 +1,4 @@
 {
-  "title": "Core concepts",
-  "pages": [
-    "the-one-invariant",
-    "intent-and-the-constitution",
-    "how-interception-works",
-    "the-interception-contract",
-    "validation",
-    "escalation-and-enforcement",
-    "the-audit-trail"
-  ]
+  "title": "Concepts",
+  "pages": ["the-contract", "escalation", "audit-trail"]
 }

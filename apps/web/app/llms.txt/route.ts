@@ -21,8 +21,9 @@ export function GET() {
       const title = page.data.title ?? page.url;
       const description = page.data.description ? `: ${page.data.description}` : "";
       // Raw markdown for each page is emitted as a static asset at
-      // `/llms<url>.md` (see scripts/generate-llms.mjs).
-      const raw = page.url === "/docs" ? page.url : `/llms${page.url}.md`;
+      // `/llms<url>.md` (see scripts/generate-llms.mjs); the root index lands
+      // at `/llms/docs/index.md`.
+      const raw = page.url === "/docs" ? "/llms/docs/index.md" : `/llms${page.url}.md`;
       return `- [${title}](${page.url})${description} — raw: ${raw}`;
     }),
     "",

@@ -3,8 +3,14 @@ title: Progress
 description: A progress bar for known-duration tasks — determinate or indeterminate.
 ---
 
+import { ProgressHero, ProgressExamples } from "@/app/components/docs/demos/primitives/progress";
+
+<ProgressHero />
+
 `Progress` shows how far along a task is. Pass a `value` for determinate progress;
 omit it for an indeterminate bar.
+
+## Usage
 
 ```tsx
 import { Progress } from "@sina-design-system/core";
@@ -12,6 +18,10 @@ import { Progress } from "@sina-design-system/core";
 <Progress value={62} />      {/* 62% */}
 <Progress />                 {/* indeterminate */}
 ```
+
+## Examples
+
+<ProgressExamples />
 
 ## Props
 
@@ -22,7 +32,7 @@ import { Progress } from "@sina-design-system/core";
   ]}
 />
 
+## Accessibility
+
 Built on Radix Progress with `role="progressbar"` and the correct `aria-valuenow`
 / `aria-valuemin` / `aria-valuemax`.
-
-See all [primitives](/docs/primitives).

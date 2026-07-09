@@ -3,9 +3,15 @@ title: Tooltip
 description: A short hint shown on hover or focus. For supplementary text only — never essential information.
 ---
 
+import { TooltipHero, TooltipExamples } from "@/app/components/docs/demos/primitives/tooltip";
+
+<TooltipHero />
+
 `Tooltip` shows a small hint when the user hovers or focuses a control. Use it to
 clarify an icon button or add a detail — never for information the user *needs* to
 complete a task, since it's hidden by default and unavailable on touch.
+
+## Usage
 
 ```tsx
 import {
@@ -22,7 +28,11 @@ import {
 </TooltipProvider>
 ```
 
+## Examples
+
+<TooltipExamples />
+
+## Accessibility
+
 Opens on hover **and** keyboard focus, dismisses on `Esc`, and is announced via
 `aria-describedby`. The trigger still needs its own accessible label.
-
-See all [primitives](/docs/primitives).

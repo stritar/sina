@@ -36,7 +36,9 @@ import {
   Recap,
   ComplianceNote,
   A11yBar,
+  Term,
 } from "./visuals";
+import { CopyMarkdown } from "./CopyMarkdown";
 
 // A nested tree (folders + pages) mirrors the real six-section IA so the recursive
 // TreeNode rendering is exercised, not just a flat list.
@@ -46,18 +48,18 @@ const tree: Root = {
     { type: "page", name: "Introduction", url: "/docs" },
     {
       type: "folder",
-      name: "Getting Started",
-      index: { type: "page", name: "The One Invariant", url: "/docs/getting-started/the-one-invariant" },
+      name: "Governance",
+      index: { type: "page", name: "Governance in practice", url: "/docs/governance" },
       children: [
-        { type: "page", name: "Quickstart", url: "/docs/getting-started/quickstart" },
+        { type: "page", name: "Worked example: the $60k wire", url: "/docs/governance/wire-transfer" },
       ],
     },
     {
       type: "folder",
       name: "Concepts",
       children: [
-        { type: "page", name: "Threat Model", url: "/docs/concepts/threat-model" },
-        { type: "page", name: "The Interception Contract", url: "/docs/concepts/interception-contract" },
+        { type: "page", name: "Escalation & enforcement", url: "/docs/concepts/escalation" },
+        { type: "page", name: "The interception contract", url: "/docs/concepts/the-contract" },
       ],
     },
   ],
@@ -90,6 +92,12 @@ describe("docs chrome a11y", () => {
   it("DocsTOC renders nothing for an empty toc", () => {
     const { container } = render(<DocsTOC items={[]} />);
     expect(container.innerHTML).toBe("");
+  });
+
+  it("CopyMarkdown has no axe violations and links the raw file", async () => {
+    const { container, getByRole } = render(<CopyMarkdown rawPath="/llms/docs/index.md" />);
+    expect(getByRole("link").getAttribute("href")).toBe("/llms/docs/index.md");
+    expect(await axe(container)).toHaveNoViolations();
   });
 
   it("ThemeToggle has no axe violations and exposes a labelled pressed state", async () => {
@@ -177,6 +185,9 @@ describe("docs visual kit a11y", () => {
         <Recap>
           <p>The model proposes; the server decides.</p>
         </Recap>
+        <p>
+          The AI sends an <Term term="intent">intent</Term> to the gate.
+        </p>
       </main>,
     );
     expect(await axe(container)).toHaveNoViolations();

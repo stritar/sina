@@ -30,13 +30,14 @@ async function walk(dir) {
 
 // `architecture/three-layers.mdx` -> `architecture/three-layers`
 // `components/index.mdx`           -> `components` (folder index)
-// `index.mdx`                      -> "" (the docs index; no raw export)
+// `index.mdx`                      -> `index` (the docs index — the in-page
+//                                     "Copy for LLM" button needs a raw file
+//                                     for every page, the root included)
 function toSlug(file) {
   return relative(CONTENT_ROOT, file)
     .replace(/\\/g, "/")
     .replace(/\.mdx$/, "")
-    .replace(/\/index$/, "")
-    .replace(/^index$/, "");
+    .replace(/\/index$/, "");
 }
 
 async function main() {
@@ -45,7 +46,6 @@ async function main() {
   let count = 0;
   for (const file of files) {
     const slug = toSlug(file);
-    if (!slug) continue; // skip the docs index — mirrors the old route
     const raw = await readFile(file, "utf8");
     const out = join(OUT_ROOT, `${slug}.md`);
     await mkdir(dirname(out), { recursive: true });

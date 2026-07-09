@@ -1,0 +1,98 @@
+---
+title: Tokens
+description: Design tokens are the named values behind every color, size, and font in SINA — one grammar, three tiers, and a hex-only color rule.
+---
+
+A **design token** is a named value — a color, a spacing step, a font size —
+that components reference instead of hard-coding. Change the value once and
+everything pointing at it updates. In SINA, tokens are CSS custom properties,
+all prefixed `--sina-`.
+
+## Three tiers
+
+<TokenTree />
+
+- **Primitive** — a raw value in `theme.css`, like a specific green.
+- **Semantic** — a *role* that gives the value meaning: `--sina-color-primary`
+  means "the primary action color," whatever that happens to be.
+- **Component** — a token scoped to one component, like `--sina-button-bg`,
+  which points at a semantic role.
+
+You almost always reach for the **semantic** tier. It answers "what does this
+color *mean*," not "what hex is it" — which is why a [theme](/docs/theming) can
+re-value a role and every component follows.
+
+## The naming grammar
+
+One rule, so you can read a name and know what it does:
+
+- A single dash joins the **identity** — category, role, property:
+  `--sina-color-text-muted`, `--sina-button-bg`.
+- A double dash marks a **leaf modifier** — a scale step, variant, or state —
+  and it always comes last: `--sina-space--4`, `--sina-color-primary--hover`,
+  `--sina-button-bg--primary--hover`.
+
+<Callout variant="tip" title="Read it like a sentence">
+  `--sina-button-bg--primary--hover` = the button's background, primary
+  variant, hover state. Identity first, modifiers last.
+</Callout>
+
+## Color
+
+Pick colors by **role** ("the primary action color"), never by hue ("the green
+one"). Click a swatch to copy its variable.
+
+<TokenSwatchGrid>
+  <TokenSwatch name="--sina-color-bg" note="Page background" />
+  <TokenSwatch name="--sina-color-surface" note="Card / panel" />
+  <TokenSwatch name="--sina-color-text" note="Body text" />
+  <TokenSwatch name="--sina-color-text-muted" note="Secondary text" />
+  <TokenSwatch name="--sina-color-border" note="Borders" />
+  <TokenSwatch name="--sina-color-primary" note="Primary action" />
+  <TokenSwatch name="--sina-color-primary-fg" note="Text on primary" />
+  <TokenSwatch name="--sina-color-secondary" note="Secondary action" />
+</TokenSwatchGrid>
+
+Every surface role has a `-fg` partner — the color guaranteed readable on it.
+Use `primary` for a button's background and `primary-fg` for its label, and
+contrast takes care of itself. The status roles work the same way:
+
+<TokenSwatchGrid>
+  <TokenSwatch name="--sina-color-danger" note="Error / destructive" />
+  <TokenSwatch name="--sina-color-warning" note="Warning" />
+  <TokenSwatch name="--sina-color-success" note="Success" />
+  <TokenSwatch name="--sina-color-info" note="Info" />
+</TokenSwatchGrid>
+
+Two rules are enforced by build guards: colors are authored **hex-only** in
+`theme.css` (`#rrggbb`, never `rgb()` / `hsl()` / named colors), and component
+CSS never writes a raw color — only `var(--sina-*)`. Status colors like
+`danger`, plus the focus ring and secure-surface tint, are
+**governance-locked** — see [the locked boundary](/docs/theming).
+
+## The scales
+
+Everything that isn't color is a small, fixed set of steps. Sticking to the
+steps keeps a UI rhythmic instead of arbitrary.
+
+| Family | Tokens |
+|---|---|
+| Space | `--sina-space--0` … `--24` on a 4px base, half-steps `--0_5` · `--1_5` · `--2_5` |
+| Text size | `--sina-text--xs` · `ui` · `sm` · `base` · `lg` · `xl` · `2xl` … `5xl` |
+| Weight / leading | `--sina-font-weight--regular…bold` · `--sina-leading--none…relaxed` |
+| Radius | `--sina-radius--none` · `xs` · `sm` · `md` · `lg` · `xl` · `2xl` · `full` |
+| Shadow | `--sina-shadow--xs…xl` · `focus` · `focus-ring` |
+| Motion | `--sina-duration--instant…slow` · `--sina-ease--standard` · `out` |
+| Z-index | `--sina-z--base` · `dropdown` · `overlay` · `modal` · `toast` |
+
+<Callout variant="tip" title="Reduced motion is automatic">
+  Durations collapse to zero under `prefers-reduced-motion` at the token layer,
+  so every component respects the setting with no per-component code.
+</Callout>
+
+## How tokens reach components
+
+Each component declares its own token layer — `--sina-button-bg--primary`
+aliases `--sina-color-primary` — and its CSS consumes only that layer. So a
+theme re-values a semantic role once, and every component slot pointing at it
+updates. That indirection is the whole theming mechanism.

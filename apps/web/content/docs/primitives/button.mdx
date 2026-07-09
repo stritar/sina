@@ -3,16 +3,24 @@ title: Button
 description: Triggers an action. Four variants, four sizes, optional icons and a loading state — all keyboard- and screen-reader-ready.
 ---
 
+import { ButtonHero, ButtonExamples } from "@/app/components/docs/demos/primitives/button";
+
+<ButtonHero />
+
 `Button` triggers an action — submit a form, open a dialog, confirm a step. Use a
 Button for actions and a link for navigation.
+
+## Usage
 
 ```tsx
 import { Button } from "@sina-design-system/core";
 
 <Button variant="primary" onClick={submit}>Continue</Button>
-<Button variant="secondary" iconLeft={<Icon …/>}>Back</Button>
-<Button variant="danger" loading>Deleting…</Button>
 ```
+
+## Examples
+
+<ButtonExamples />
 
 ## Props
 
@@ -37,5 +45,3 @@ import { Button } from "@sina-design-system/core";
 
 Native `<button>` semantics — focusable, `Enter`/`Space` activate, `disabled` is
 announced. An icon-only button needs an `aria-label`.
-
-See all [primitives](/docs/primitives).

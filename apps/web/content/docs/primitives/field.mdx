@@ -3,10 +3,16 @@ title: Field
 description: Wraps any form control with a label, description, and error message — and wires up the accessibility for you.
 ---
 
+import { FieldHero, FieldExamples } from "@/app/components/docs/demos/primitives/field";
+
+<FieldHero />
+
 `Field` is the wrapper every input uses. It renders a label, an optional
 description and error, and clones its child to connect them with the right `id`,
 `aria-describedby`, and `aria-invalid`. You get correct form accessibility without
 threading IDs by hand.
+
+## Usage
 
 ```tsx
 import { Field } from "@sina-design-system/core";
@@ -15,6 +21,10 @@ import { Field } from "@sina-design-system/core";
   <input type="email" name="email" />
 </Field>
 ```
+
+## Examples
+
+<FieldExamples />
 
 ## Props
 
@@ -31,5 +41,3 @@ import { Field } from "@sina-design-system/core";
   message — never color alone. That's a SINA-wide rule for error and warning
   states.
 </Callout>
-
-See all [primitives](/docs/primitives).

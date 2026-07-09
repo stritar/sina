@@ -3,8 +3,14 @@ title: Toast
 description: A transient notification that appears, announces itself, and dismisses — built on Radix Toast.
 ---
 
+import { ToastHero, ToastExamples } from "@/app/components/docs/demos/primitives/toast";
+
+<ToastHero />
+
 `Toast` is a brief, non-blocking notification — "Saved", "Transfer sent", "Copy
 failed". Mount a provider and viewport once, then push toasts as needed.
+
+## Usage
 
 ```tsx
 import {
@@ -20,14 +26,18 @@ import {
 </ToastProvider>
 ```
 
-## Parts & props
+## Examples
+
+<ToastExamples />
+
+## Props
 
 `ToastProvider` · `ToastViewport` · `Toast` · `ToastTitle` · `ToastDescription` ·
 `ToastAction` · `ToastClose`. `Toast` takes a `variant` of `success`, `danger`, or
 `info` (danger renders a bold glyph).
 
+## Accessibility
+
 Toasts are announced politely to screen readers, pause on hover, and are
 keyboard-dismissible. Don't put essential, un-repeatable information in a toast —
 it disappears.
-
-See all [primitives](/docs/primitives).

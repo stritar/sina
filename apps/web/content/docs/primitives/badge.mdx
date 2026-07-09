@@ -3,8 +3,14 @@ title: Badge
 description: A compact status chip — a small, vivid label for state like "Pending", "Blocked", or "Verified".
 ---
 
+import { BadgeHero, BadgeExamples } from "@/app/components/docs/demos/primitives/badge";
+
+<BadgeHero />
+
 `Badge` is a small chip that labels the status of something inline — a row, a
 card, a heading.
+
+## Usage
 
 ```tsx
 import { Badge } from "@sina-design-system/core";
@@ -12,6 +18,10 @@ import { Badge } from "@sina-design-system/core";
 <Badge intent="success">Verified</Badge>
 <Badge intent="danger" dot>Blocked</Badge>
 ```
+
+## Examples
+
+<BadgeExamples />
 
 ## Props
 
@@ -29,4 +39,8 @@ import { Badge } from "@sina-design-system/core";
   status element — never render it inside an Alert or Toast; place it as a sibling.
 </Callout>
 
-See all [primitives](/docs/primitives).
+## Accessibility
+
+Meaning is never carried by color alone — a severity Badge always pairs its tint
+with a glyph or dot plus a text label. A dismissible Badge's close button takes
+an explicit `closeLabel`.

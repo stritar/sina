@@ -7,62 +7,65 @@ SINA is a **design system with a gate**. When an AI builds part of your app's
 interface, SINA checks that request on your server first — and only lets safe,
 accessible, on-brand components through.
 
-A normal design system is a box of parts and a rulebook. It hopes everyone
-follows the rules. SINA is different: the rules are **enforced by code**, so an
-AI can't ship a broken or unsafe screen even if it tries.
-
 <FlowDiagram />
 
 ## The problem it solves
 
-AI agents can now build UI on the fly. That's powerful — and risky. An agent can
-invent a "Confirm" button for a payment that was never approved, render a form
-that a screen reader can't use, or show account data it shouldn't. Left alone, it
-will eventually do all three.
+Letting an AI build UI is like giving a very fast intern write access to your
+product. It doesn't know your limits, your compliance rules, or your
+accessibility standards — and it will confidently ship something that breaks
+them: a "Confirm" button for a $60,000 transfer no one approved, a dropdown a
+screen reader can't use, data a user shouldn't see.
 
-SINA closes that gap. The AI never picks the component. It sends an **intent** — a
-plain description of what it wants to show — and your server decides what actually
-renders. Safe requests become real, accessible components. Unsafe ones are blocked
-or redirected to a stricter, governed component. Nothing skips the check.
+A style guide can't stop that — it *describes* good UI and hopes everyone
+follows. SINA *refuses to render* bad UI. The AI never picks the component. It
+sends an <Term term="intent">intent</Term> — a plain description of what it
+wants to show — and your server checks it against the
+<Term term="constitution">Constitution</Term>, your rules written as code. Safe
+requests become real, accessible components. Unsafe ones are blocked or
+redirected to a stricter, governed component. Nothing skips the check.
 
 <Callout variant="governance" title="The one idea">
-  The model proposes; the server decides; the screen only shows what passed. SINA
-  calls this **validate, then mount** — check first, render second, never the
-  other way around.
+  The model proposes; the server decides; the screen only shows what passed.
+  SINA calls this **validate, then mount** — check first, render second, never
+  the other way around.
 </Callout>
+
+## How it compares
+
+| | What it is | Stops unsafe UI? |
+|---|---|---|
+| **A style guide / wiki** | Advice humans (and AIs) may ignore | No — advisory only |
+| **A component library** (Radix, shadcn) | Great accessible parts | No — parts can still be misused |
+| **SINA** | Accessible parts **+** a server-side gate | **Yes — enforced by code** |
+
+SINA isn't a competitor to a component library — it *includes* one (accessible
+primitives on Radix) and adds the gate on top.
 
 ## Who it's for
 
-SINA is **free**, and built for startups and individual builders who want a
+SINA is **free** (MIT), built for startups and individual builders who want a
 governed design system without building the governance themselves. It ships
 today for **fintech** — money movement, accounts, cards, disclosures — because
 that's where getting it wrong is most expensive.
 
-You don't need an AI agent, an LLM key, or a policy of your own to try it. The
-docs run the real gate live, right in the page.
-
-<Callout variant="note" title="Is SINA for you?">
-  SINA fits if you generate UI with AI (or plan to) and can run a check on the
-  server (a Next.js server action, a route handler). If you just want beautiful,
-  accessible React components without the governance, you can use SINA's
-  [primitives on their own](/docs/guides/primitives-without-governance) — no gate
-  required.
-</Callout>
+It's probably *not* for you if you don't generate UI with AI (though you can
+still [use the primitives on their own](/docs/guides/adopt-incrementally)), or
+if you can't run a check on a server — the gate must run server-side.
 
 ## Start here
 
 <CardGrid columns={2}>
-  <Card href="/docs/getting-started/why-sina" eyebrow="5 min" title="Why SINA">
-    The problem in plain terms, and how SINA differs from a style guide, a
-    component library, and governance-by-PDF.
+  <Card href="/docs/how-it-works" eyebrow="5 min" title="How SINA works">
+    The whole mechanism on one page — no code required to follow it.
   </Card>
-  <Card href="/docs/getting-started/how-sina-works" eyebrow="5 min" title="How SINA works">
-    The whole mechanism, walked once through a real $60,000 wire transfer.
-  </Card>
-  <Card href="/docs/getting-started/quickstart" eyebrow="10 min" title="Quickstart">
+  <Card href="/docs/quickstart" eyebrow="10 min" title="Quickstart">
     Install the packages and render your first governed decision.
   </Card>
-  <Card href="/docs/getting-started/choose-your-path" eyebrow="Pick a lane" title="Choose your path">
-    A tailored route for developers, designers, and product & engineering leads.
+  <Card href="/docs/governance/wire-transfer" eyebrow="Live demo" title="The $60k wire, end to end">
+    Watch the real gate pass a safe transfer and block an unsafe one.
+  </Card>
+  <Card href="/docs/primitives" eyebrow="Gallery" title="Primitives">
+    28 accessible components, live on every page.
   </Card>
 </CardGrid>

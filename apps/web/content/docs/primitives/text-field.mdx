@@ -3,8 +3,14 @@ title: TextField
 description: A single- or multi-line text input, wrapped in a Field for label, description, and error.
 ---
 
+import { TextFieldHero, TextFieldExamples } from "@/app/components/docs/demos/primitives/text-field";
+
+<TextFieldHero />
+
 `TextField` is a text input with all the Field wiring built in. Set `multiline`
 for a textarea.
+
+## Usage
 
 ```tsx
 import { TextField } from "@sina-design-system/core";
@@ -12,6 +18,10 @@ import { TextField } from "@sina-design-system/core";
 <TextField label="Name" placeholder="Ada Lovelace" />
 <TextField label="Notes" multiline />
 ```
+
+## Examples
+
+<TextFieldExamples />
 
 ## Props
 
@@ -24,5 +34,3 @@ import { TextField } from "@sina-design-system/core";
 
 It accepts the usual native input/textarea attributes (`placeholder`, `value`,
 `onChange`, and so on).
-
-See all [primitives](/docs/primitives).

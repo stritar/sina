@@ -3,8 +3,14 @@ title: Alert
 description: An inline status banner. Four severities, each with a bold status glyph so meaning never rests on color alone.
 ---
 
+import { AlertHero, AlertExamples } from "@/app/components/docs/demos/primitives/alert";
+
+<AlertHero />
+
 `Alert` communicates a persistent, inline status — a warning above a form, a
 success confirmation, an error explanation.
+
+## Usage
 
 ```tsx
 import { Alert } from "@sina-design-system/core";
@@ -13,6 +19,10 @@ import { Alert } from "@sina-design-system/core";
   This transfer needs a second approver before it can proceed.
 </Alert>
 ```
+
+## Examples
+
+<AlertExamples />
 
 ## Props
 
@@ -30,4 +40,8 @@ import { Alert } from "@sina-design-system/core";
   *beside* an Alert, not inside it.
 </Callout>
 
-See all [primitives](/docs/primitives).
+## Accessibility
+
+Danger alerts use `role="alert"` (announced assertively); the rest use
+`role="status"` (polite). Meaning is carried by icon + title + text, never by
+color alone.

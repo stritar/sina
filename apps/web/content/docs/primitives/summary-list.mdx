@@ -3,8 +3,14 @@ title: SummaryList
 description: Key/value review rows on a semantic description list — for confirming details before an action.
 ---
 
+import { SummaryListHero, SummaryListExamples } from "@/app/components/docs/demos/primitives/summary-list";
+
+<SummaryListHero />
+
 `SummaryList` renders labelled values as a proper `<dl>`. It's what a governed
 dialog uses to show the exact terms you're approving.
+
+## Usage
 
 ```tsx
 import { SummaryList } from "@sina-design-system/core";
@@ -18,6 +24,10 @@ import { SummaryList } from "@sina-design-system/core";
 />
 ```
 
+## Examples
+
+<SummaryListExamples />
+
 ## Props
 
 <PropsTable
@@ -27,7 +37,7 @@ import { SummaryList } from "@sina-design-system/core";
   ]}
 />
 
+## Accessibility
+
 Rendered as `<dl>`/`<dt>`/`<dd>`, so the label–value relationship is exposed to
 assistive tech.
-
-See all [primitives](/docs/primitives).

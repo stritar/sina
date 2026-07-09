@@ -1,0 +1,58 @@
+---
+title: Packages & exports
+description: The five published packages, what each may and may not contain, and their key exports.
+---
+
+> Hand-maintained reference. TSDoc→MDX auto-generation is deferred.
+
+SINA is five small packages with hard boundaries — each layer may only know
+about the ones below it:
+
+| Package | What it is | Never contains |
+|---|---|---|
+| `@sina-design-system/theme` | Design tokens (`--sina-*`) + the CSS reset | React, UI |
+| `@sina-design-system/core` | Headless, accessible primitives on Radix | Zod, domain vocabulary |
+| `@sina-design-system/governance` | The shared interception seam | React, UI, domain vocabulary |
+| `@sina-design-system/fintech` | The fintech Constitution — pure Zod rules | React, UI of any kind |
+| `@sina-design-system/fintech-react` | Governed components composing `core` + `fintech` | Zod (it composes schemas, never authors them) |
+
+## `theme`
+
+Ships `./reset.css` (layered, so your styles always win) and `./css` — the
+`--sina-*` custom properties. The token grammar, tiers, and scales live in
+[Tokens](/docs/theming/tokens); what you may override lives in
+[Theming](/docs/theming).
+
+## `core`
+
+The primitive library — every export is listed with live examples in the
+[Primitives gallery](/docs/primitives). Named exports only; per-primitive
+prop types (`ButtonProps`, `GapStep`, `SummaryItem`, …) ship alongside.
+
+## `governance`
+
+The domain-agnostic seam every constitution builds on:
+
+| Export | Purpose |
+|---|---|
+| `InterceptionResult`, `Violation`, `Severity` | The uniform contract — see [the interception contract](/docs/concepts/the-contract). |
+| `intercept`, `ConstitutionRule` | Runs a Zod schema + policy server-side, returns the contract. |
+| `dispatch`, `dispatchAll`, `createRouter`, `pattern` | The intent router: `{ intent, props }` envelope → decision + mount. |
+| `UNKNOWN_INTENT`, `SCHEMA_INVALID` | Sentinels for an unrecognized verb / a failed parse. |
+| `emitAudit`, `redact`, `setAuditSink`, `AuditEvent` | The audit emit point — see [the audit trail](/docs/concepts/audit-trail). |
+
+The router resolves the mount **outside** the contract, so governance stays an
+optional escalation layer on a universal validate-then-mount.
+
+## `fintech` and `fintech-react`
+
+`fintech` is the shipped Constitution: every intent verb, schema, threshold,
+and cited standard. `fintech-react` renders the decisions it makes — the
+governed components. Both are cataloged in [Governed components & display
+patterns](/docs/governance/components-and-patterns); write your own rule in
+[Write a governance rule](/docs/governance/writing-a-rule).
+
+## Versions
+
+All five are published at **0.1.0** — see [Releases &
+stability](/docs/reference/changelog).

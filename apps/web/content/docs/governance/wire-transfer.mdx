@@ -1,30 +1,40 @@
 ---
-title: Wire transfer, end to end
-description: Follow one real request — a $60,000 wire — all the way through the gate, the forced approval dialog, the server re-check, and the audit record.
+title: "Worked example: the $60k wire"
+description: One $60,000 wire followed end to end — intent, structure check, policy check, forced approval dialog, second approver, and the audit event.
 ---
 
 <YouWillLearn>
 - What the gate finds in an over-limit wire, and which standard each finding cites
 - How the forced approval dialog works, and why it can't be faked
-- How an approved transfer clears the gate on the second pass
+- What the audit trail records at each step
 </YouWillLearn>
 
-This is SINA's flagship flow. We'll follow a single $60,000 wire from request to
-resolution. Every other governed flow is a variation on this one.
+This is SINA's flagship flow, and the canonical walkthrough the rest of the docs
+point at. We'll follow a single $60,000 wire from request to resolution. Every
+other governed flow is a variation on this one.
 
 ## The request
 
-The AI proposes a transfer. Just data — no component:
+The AI proposes a transfer. Just data — an intent and props, never a component
+(see [How it works](/docs/how-it-works)):
 
 ```ts
 { intent: "wire_transfer",
   props: { amount: 6000000 /* $60,000 in cents */, currency: "USD", /* … */ } }
 ```
 
-## The gate finds three things
+## The structure check
 
-The shape is valid, so the policy check runs. It trips **three** violations — and
-each cites where it comes from:
+First, the strict parse. Every field is checked against the schema: amount is an
+integer in minor units, the currency code is real, the account identifiers pass
+their checksums, and any field the schema doesn't know — a smuggled
+`confirmButton`, a stray `cvv` — rejects the whole payload. This request is
+well-formed, so it moves on.
+
+## The policy check finds three things
+
+The shape is valid, so policy runs. It trips **three** violations — and each
+cites where it comes from:
 
 | Finding | Severity | Standard |
 |---|---|---|
@@ -33,16 +43,18 @@ each cites where it comes from:
 | Over the $50,000 approval limit | `escalate` | SINA dual-control policy |
 
 The two flags are informational — recorded, not blocking. The **escalate** is the
-one that acts: it refuses the plain confirm and forces a governed component.
-
-<FlowDiagram highlight="block" />
+one that acts: it refuses the plain confirm and names
+`requiredComponent: "SecureWireDialog"`. (Severities are covered in
+[Escalation](/docs/concepts/escalation).) An audit event fires here too:
+timestamp, payload, all three violations, and the decided component — the block
+is on the record before anything renders.
 
 ## The forced dialog
 
-Because the decision names `requiredComponent: "SecureWireDialog"`, SINA mounts
-that instead of a confirm button. The dialog walks a second person through:
+SINA mounts `SecureWireDialog` instead of a confirm button. The dialog walks a
+second person through:
 
-1. **Review** the exact terms (amount, recipient) — shown as a read-only summary.
+1. **Review** the exact terms (amount, recipient) — a read-only summary.
 2. **Identify** as the approver — an ID and name that must differ from the initiator.
 3. **Confirm** with a one-time code.
 
@@ -52,27 +64,33 @@ runs again. The dialog itself validates nothing — it just collects the approva
 <Callout variant="enforced" title="Two checks make it un-bypassable">
   On the second pass the server enforces two things a hostile stream can't fake:
   **four-eyes** (the approver must differ from the server-known initiator — you
-  can't approve your own wire) and **payload binding** (the approval is tied to the
-  exact terms, recomputed on the server — you can't approve $5,000 and execute
-  $60,000).
+  can't approve your own wire) and **payload binding** (the approval is tied to
+  the exact terms, recomputed on the server — you can't approve $5,000 and
+  execute $60,000).
 </Callout>
+
+Watch the four-eyes check catch a self-approval — a hard block, no recovery:
+
+<GovernanceDemo scenario="self-approval" />
 
 ## The happy ending
 
 Governance escalates; it doesn't just refuse. A *valid* approval — a different
-manager, bound to the exact $60,000 terms — clears the gate on the second pass, and
-the transfer mounts as a completed, governed action. A fresh audit event records
-the approval.
+manager, bound to the exact $60,000 terms — clears the gate on the second pass,
+and the transfer mounts as a completed, governed action. A second
+[audit event](/docs/concepts/audit-trail) records the approval: who approved,
+what exact terms, and that the gate passed. The whole story — block, approval,
+pass — is reconstructible later.
 
-Try it: toggle the governed vs. un-gated views, and picture the second-approver
-loop turning this block into a pass.
+Try it — toggle the governed vs. un-gated views:
 
 <GovernanceDemo scenario="over-limit" comparison />
 
 <Recap>
-Over-limit wire → three violations (two flags, one escalate) → `SecureWireDialog`
-→ a *different* approver + one-time code → server re-checks four-eyes and payload
-binding → approved and mounted, or refused. The raw confirm is never an option.
+Over-limit wire → strict parse passes → three violations (two flags, one
+escalate) → `SecureWireDialog` → a *different* approver + one-time code → server
+re-checks four-eyes and payload binding → approved and mounted, or refused — with
+an audit event at each decision. The raw confirm is never an option.
 </Recap>
 
-Next: [Governed components](/docs/governance/governed-components).
+Next: [write a governance rule](/docs/governance/writing-a-rule) of your own.

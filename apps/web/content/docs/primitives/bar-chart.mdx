@@ -3,19 +3,29 @@ title: BarChart
 description: An interactive bar chart (Chart.js) — vertical or horizontal, grouped or stacked.
 ---
 
+import { BarChartHero, BarChartExamples } from "@/app/components/docs/demos/primitives/bar-chart";
+
+<BarChartHero />
+
 `BarChart` compares values across categories. Flip `horizontal` for long labels,
 and `stacked` to show composition.
+
+## Usage
 
 ```tsx
 import { BarChart } from "@sina-design-system/core";
 
 <BarChart
   label="Spending by category"
-  data={/* Chart.js data */}
+  data={{ labels, datasets }}
   horizontal
   valueFormatter={(n) => `$${n}`}
 />
 ```
+
+## Examples
+
+<BarChartExamples />
 
 ## Props
 
@@ -29,7 +39,7 @@ import { BarChart } from "@sina-design-system/core";
   ]}
 />
 
+## Accessibility
+
 Like all canvas charts, it's `"use client"`, `role="img"`, and pairs with a text
 summary as the accessible path.
-
-See all [primitives](/docs/primitives).

@@ -3,16 +3,24 @@ title: CurrencyField
 description: A money input that groups digits on blur. Display formatting only — the limits live server-side in the Constitution.
 ---
 
+import { CurrencyFieldHero, CurrencyFieldExamples } from "@/app/components/docs/demos/primitives/currency-field";
+
+<CurrencyFieldHero />
+
 `CurrencyField` formats a monetary amount as you'd expect — grouping thousands on
 blur — while keeping a clean numeric value underneath.
 
-<CurrencyFieldDemo />
+## Usage
 
 ```tsx
 import { CurrencyField } from "@sina-design-system/core";
 
 <CurrencyField label="Amount" currencySymbol="$" defaultValue="25000" />
 ```
+
+## Examples
+
+<CurrencyFieldExamples />
 
 ## Props
 
@@ -28,5 +36,3 @@ import { CurrencyField } from "@sina-design-system/core";
   on the server. A client-side input can always be bypassed, so SINA never trusts
   one for a limit.
 </Callout>
-
-See all [primitives](/docs/primitives).

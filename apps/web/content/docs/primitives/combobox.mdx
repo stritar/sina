@@ -3,8 +3,14 @@ title: Combobox
 description: A searchable single-select — type to filter a long list of options.
 ---
 
+import { ComboboxHero, ComboboxExamples } from "@/app/components/docs/demos/primitives/combobox";
+
+<ComboboxHero />
+
 `Combobox` is a select you can type into. Use it when the option list is long
 enough that scanning a dropdown is painful.
+
+## Usage
 
 ```tsx
 import { Combobox } from "@sina-design-system/core";
@@ -20,6 +26,10 @@ import { Combobox } from "@sina-design-system/core";
 />
 ```
 
+## Examples
+
+<ComboboxExamples />
+
 ## Props
 
 <PropsTable
@@ -31,7 +41,7 @@ import { Combobox } from "@sina-design-system/core";
   ]}
 />
 
+## Accessibility
+
 Built on a Popover with a native input — arrow keys move through matches, `Enter`
 selects, and the listbox is announced to screen readers.
-
-See all [primitives](/docs/primitives).

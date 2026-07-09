@@ -3,8 +3,14 @@ title: RadioGroup
 description: Choose exactly one option from a small set, with roving keyboard focus.
 ---
 
+import { RadioGroupHero, RadioGroupExamples } from "@/app/components/docs/demos/primitives/radio-group";
+
+<RadioGroupHero />
+
 `RadioGroup` is for a single, exclusive choice among a few options. For more than a
 handful, prefer [Select](/docs/primitives/select).
+
+## Usage
 
 ```tsx
 import { RadioGroup, RadioGroupItem } from "@sina-design-system/core";
@@ -15,9 +21,11 @@ import { RadioGroup, RadioGroupItem } from "@sina-design-system/core";
 </RadioGroup>
 ```
 
+## Examples
+
+<RadioGroupExamples />
+
 ## Accessibility
 
 Follows the ARIA radiogroup pattern: `Tab` enters the group, arrow keys move
 between options (roving focus), and only the selected option is a tab stop.
-
-See all [primitives](/docs/primitives).

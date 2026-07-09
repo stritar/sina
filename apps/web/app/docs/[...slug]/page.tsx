@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { source } from "@/lib/source";
 import { getMDXComponents } from "@/app/components/docs/mdx-components";
 import { DocsTOC } from "@/app/components/docs/DocsTOC";
+import { DocsPager } from "@/app/components/docs/DocsPager";
+import { CopyMarkdown } from "@/app/components/docs/CopyMarkdown";
 import styles from "../page.module.css";
 
 // Fully static: only the generated slugs render; anything else 404s at build.
@@ -43,7 +45,9 @@ export default async function DocsPage({
       <article className={styles.prose}>
         <h1 className={styles.title}>{page.data.title}</h1>
         {page.data.description ? <p className={styles.lead}>{page.data.description}</p> : null}
+        <CopyMarkdown rawPath={`/llms/docs/${slug.join("/")}.md`} />
         <MDX components={getMDXComponents()} />
+        <DocsPager url={page.url} />
       </article>
       <DocsTOC items={page.data.toc} />
     </div>

@@ -1,12 +1,4 @@
 {
-  "title": "Governance in practice",
-  "pages": [
-    "index",
-    "standards",
-    "security",
-    "wire-transfer",
-    "governed-components",
-    "display-patterns",
-    "writing-a-rule"
-  ]
+  "title": "Governance",
+  "pages": ["index", "wire-transfer", "writing-a-rule", "components-and-patterns"]
 }

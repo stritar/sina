@@ -3,14 +3,25 @@ title: PieChart
 description: A part-to-whole chart (Chart.js). Slices use the color-blind-safe dataviz palette.
 ---
 
+import { PieChartHero, PieChartExamples } from "@/app/components/docs/demos/primitives/pie-chart";
+
+<PieChartHero />
+
 `PieChart` shows how a whole splits into parts. Slices draw from the
-`--sina-color-chart--1…8` palette, ordered for color-blind safety.
+`--sina-color-chart--1…8` palette, ordered for color-blind safety. For a
+centered summary figure, use [DonutChart](/docs/primitives/donut-chart).
+
+## Usage
 
 ```tsx
 import { PieChart } from "@sina-design-system/core";
 
-<PieChart label="Portfolio allocation" data={/* Chart.js data */} />
+<PieChart label="Portfolio allocation" data={{ labels, datasets }} />
 ```
+
+## Examples
+
+<PieChartExamples />
 
 ## Props
 
@@ -22,7 +33,6 @@ import { PieChart } from "@sina-design-system/core";
   ]}
 />
 
-For a centered summary figure, use [DonutChart](/docs/primitives/donut-chart).
-`"use client"`, `role="img"`, with a text legend as the accessible path.
+## Accessibility
 
-See all [primitives](/docs/primitives).
+`"use client"`, `role="img"`, with a text legend as the accessible path.

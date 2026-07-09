@@ -1,28 +1,23 @@
 ---
-title: Glossary
-description: Every SINA term, defined once, in one line.
+title: Glossary & FAQ
+description: Every SINA term defined in one line, plus the quick answers evaluators ask most.
 ---
 
-The words that come up across the docs, defined plainly. Terms are also defined
-where they first appear — this is the quick lookup.
+## Glossary
 
 | Term | Meaning |
 |---|---|
 | **Intent** | The AI's request to show UI — a verb plus props, never a component. |
 | **Constitution** | The full set of rules (schemas) that decide what's allowed. |
 | **Gate** | The server-side check every intent passes through. |
-| **Interception** | The act of running an intent through the gate before anything mounts. |
+| **Interception** | Running an intent through the gate before anything mounts. |
 | **Validate, then mount** | SINA's core rule: check on the server first, render second. |
 | **Interception contract** | The uniform result shape: `{ valid, violations, requiredComponent }`. |
-| **Violation** | One thing the gate found wrong, with a message, severity, and cited standard. |
+| **Violation** | One thing the gate found wrong — message, severity, cited standard. |
 | **Severity** | How hard a violation acts: `flag`, `escalate`, or `reject`. |
-| **Flag** | Informational — recorded, not blocking. |
-| **Escalate** | Blocks the standard render and forces a stricter governed component. |
-| **Reject** | A hard block — nothing mounts. |
+| **Escalation** | Redirecting a blocked request to a stricter component instead of refusing. |
 | **Governed** | A rule for an action, with policy and possible escalation. |
 | **Display / ungoverned** | A rule for a read — shape-checked and masked, never escalated. |
-| **requiredComponent** | The stricter component a decision forces, or `null`. |
-| **Escalation** | Redirecting a blocked request to a stricter component instead of refusing. |
 | **Redaction** | Stripping/masking sensitive data before it's stored in the audit log. |
 | **Audit event** | The record every decision emits. |
 | **Four-eyes** | The rule that an approver must differ from the initiator. |
@@ -32,3 +27,38 @@ where they first appear — this is the quick lookup.
 | **Token** | A named design value (color, size, font) as a `--sina-*` variable. |
 | **Brand-open / governance-locked** | Token roles you may re-theme vs. ones reserved for safety. |
 | **Manifest** | The list of intent verbs the AI may emit. |
+
+## FAQ
+
+**Do I need an AI or an LLM key to use SINA?**
+No. You can call the gate with a plain object, and the docs run it live with no
+key. If you only want the components, [use the primitives
+alone](/docs/guides/adopt-incrementally).
+
+**Is SINA only for fintech?**
+Today, yes. The [governance seam](/docs/reference/packages) is domain-agnostic,
+so another domain is [additive](/docs/guides/extend-sina), not a rewrite — but
+none is built yet.
+
+**Does it work outside Next.js?**
+The gate needs somewhere to run a server-side check. Next.js App Router is the
+smoothest fit, but any server that can run the check works. The components are
+plain React.
+
+**Is it production-ready?**
+Published at **0.1.0** — early. The gate and primitives are tested (including
+an adversarial suite and automated accessibility checks); the audit trail is a
+defined contract with a no-op sink. Evaluate accordingly — see [Releases &
+stability](/docs/reference/changelog).
+
+**What's the license?**
+MIT, free. SINA exists so startups and individuals can adopt a governed design
+system without building the governance layer themselves.
+
+**Does the gate add latency?**
+It's a synchronous server-side check — a schema parse plus policy — measured in
+milliseconds. There's no model call in the gate itself.
+
+**Does SINA run the AI?**
+No. You run your agent; SINA governs its output. The model proposes intent, and
+SINA decides what renders.

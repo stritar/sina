@@ -19,6 +19,7 @@
     "pages:preview": "wrangler pages dev .vercel/output/static --compatibility-flags=nodejs_compat"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.7",
     "@sina-design-system/core": "workspace:*",
     "@sina-design-system/governance-demo": "workspace:*",
     "@sina-design-system/theme": "workspace:*",

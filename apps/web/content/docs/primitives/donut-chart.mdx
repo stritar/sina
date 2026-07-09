@@ -3,14 +3,24 @@ title: DonutChart
 description: A pie chart with a hole — room for a total or headline figure in the center.
 ---
 
+import { DonutChartHero, DonutChartExamples } from "@/app/components/docs/demos/primitives/donut-chart";
+
+<DonutChartHero />
+
 `DonutChart` is a [PieChart](/docs/primitives/pie-chart) with a cutout, so you can
 place a total or label in the middle.
+
+## Usage
 
 ```tsx
 import { DonutChart } from "@sina-design-system/core";
 
-<DonutChart label="Holdings" data={/* Chart.js data */} centerLabel="$48k" />
+<DonutChart label="Holdings" data={{ labels, datasets }} centerLabel="$48k" />
 ```
+
+## Examples
+
+<DonutChartExamples />
 
 ## Props
 
@@ -22,7 +32,7 @@ import { DonutChart } from "@sina-design-system/core";
   ]}
 />
 
+## Accessibility
+
 Shares the color-blind-safe palette and the `role="img"` + text-legend accessibility
 of PieChart.
-
-See all [primitives](/docs/primitives).

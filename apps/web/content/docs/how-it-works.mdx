@@ -1,0 +1,82 @@
+---
+title: How SINA works
+description: The model proposes, the server decides, the screen only shows what passed — the whole mechanism on one page.
+---
+
+SINA has one moving part, and it's easy to picture. There are three actors:
+
+1. **The model proposes.** The AI sends an <Term term="intent">intent</Term> — a
+   verb plus some data, like `"wire_transfer"` with an amount and a recipient.
+   It never names a component.
+2. **The server decides.** Your server runs the intent through the
+   <Term term="constitution">Constitution</Term> — your rules, written as
+   schemas. They answer one question: is this allowed, and if so, what should
+   render?
+3. **The screen shows what passed.** SINA mounts the component the server chose.
+   If the request failed, nothing unsafe renders.
+
+## The one rule everything rests on
+
+> **The model sends an intent and props — never a component. Validation runs on
+> the server only. We validate, _then_ mount. We never mount, then check.**
+
+Why not check in the browser? Modern React streams UI to the browser as it's
+built, and once a piece has streamed there's no "un-render." So the check must
+happen **before** anything mounts, and the only place you control is your
+server. Any client-side check is untrusted convenience; the real gate is
+server-side. The model can be wrong, jailbroken, or adversarial — the guarantee
+still holds, because the model was never allowed to choose what renders.
+
+## What an intent looks like
+
+```ts
+const intent = {
+  intent: "wire_transfer",
+  props: { amount: 6000000, currency: "USD", recipient: /* … */ },
+};
+```
+
+Notice what's *not* there: no button, no dialog, no layout. The AI describes
+*what* it wants ("move this money"), never *how* it should look.
+
+## What the gate checks
+
+Every intent goes through the same four steps, in order:
+
+1. **Structure.** Is the payload exactly the right shape? Schemas are strict — a
+   fabricated "Confirm" button or a smuggled card number is an *extra field*,
+   rejected before any value is read.
+2. **Policy.** Do the values obey the rules? Is the amount within limits? Is a
+   second approver required? Every threshold is cited to a real standard.
+3. **Decision.** Problems become *violations*, and the gate decides: valid or
+   not — and if a stricter component is required, which one.
+4. **Audit.** Every decision emits a record — what was asked, what was decided,
+   which rules fired — with sensitive data redacted first.
+
+A decision always ends one of two ways: **it mounts** (the request passed, SINA
+mounts the component the rules chose), or **it's blocked** (the unsafe version
+never mounts — refused outright, or <Term term="escalation">escalated</Term> to
+a stricter component like a second-approver dialog).
+
+<Callout variant="note" title="Not just yes / no">
+  The gate doesn't return a bare "allowed / denied." It returns a *component* —
+  or refuses. That's what makes SINA a design system, not just a policy engine.
+</Callout>
+
+## Three layers, one flow
+
+Under the hood SINA is three layers — tokens and primitives, the governance
+seam, and the domain constitution. You mostly think about the flow above; the
+layers are just how it's packaged.
+
+<ArchitectureDiagram />
+
+<Recap>
+The model proposes an intent; the server checks it against the Constitution;
+the screen mounts only what passed. Safe requests become real components;
+unsafe ones are blocked or escalated to a governed component.
+</Recap>
+
+See it run for real in [the $60k wire, end to
+end](/docs/governance/wire-transfer), or read the exact decision shape in [the
+interception contract](/docs/concepts/the-contract).

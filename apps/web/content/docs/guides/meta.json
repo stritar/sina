@@ -1,14 +1,4 @@
 {
   "title": "Guides",
-  "pages": [
-    "render-your-first-governed-component",
-    "block-an-over-limit-action",
-    "adopt-incrementally",
-    "primitives-without-governance",
-    "theme-the-primitives",
-    "add-a-governed-domain",
-    "add-a-primitive",
-    "add-a-schema",
-    "write-an-adversarial-test"
-  ]
+  "pages": ["adopt-incrementally", "extend-sina"]
 }

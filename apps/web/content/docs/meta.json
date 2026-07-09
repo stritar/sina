@@ -2,12 +2,12 @@
   "title": "Documentation",
   "pages": [
     "index",
-    "getting-started",
+    "how-it-works",
+    "quickstart",
     "concepts",
-    "ai",
     "governance",
+    "agents",
     "primitives",
-    "tokens",
     "theming",
     "guides",
     "reference"

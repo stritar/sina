@@ -33,15 +33,15 @@ export function FlowDiagram({ highlight }: { highlight?: "block" | "mount" }) {
     <figure className={styles.figure}>
       <div className={styles.flow}>
         <div className={styles.node}>
-          <span className={styles.nodeKicker}>Model proposes</span>
-          <span className={styles.nodeTitle}>Intent</span>
-          <span className={styles.nodeSub}>a verb + props</span>
+          <span className={styles.nodeKicker}>The AI asks</span>
+          <span className={styles.nodeTitle}>&ldquo;Show a transfer&rdquo;</span>
+          <span className={styles.nodeSub}>a goal + data — never UI code</span>
         </div>
         <Arrow />
         <div className={cx(styles.node, styles.gate)}>
-          <span className={styles.nodeKicker}>Server decides</span>
-          <span className={styles.nodeTitle}>The gate</span>
-          <span className={styles.nodeSub}>schema → policy → decision</span>
+          <span className={styles.nodeKicker}>Your server checks</span>
+          <span className={styles.nodeTitle}>The rules run</span>
+          <span className={styles.nodeSub}>right shape? within your limits?</span>
         </div>
         <Arrow />
         <div className={styles.branch}>
@@ -52,7 +52,7 @@ export function FlowDiagram({ highlight }: { highlight?: "block" | "mount" }) {
               highlight && highlight !== "block" && styles.dim,
             )}
           >
-            Blocked — nothing unsafe mounts
+            $60,000 — over your limit: blocked, a second-approver dialog renders instead
           </div>
           <div
             className={cx(
@@ -61,12 +61,12 @@ export function FlowDiagram({ highlight }: { highlight?: "block" | "mount" }) {
               highlight && highlight !== "mount" && styles.dim,
             )}
           >
-            Mounts a governed primitive
+            $500 — passes every rule: the real, accessible component renders
           </div>
         </div>
       </div>
       <figcaption className={styles.caption}>
-        The model proposes; the server decides; the client only renders what passed.
+        The AI proposes; your server decides; the screen only shows what passed.
       </figcaption>
     </figure>
   );
@@ -75,9 +75,9 @@ export function FlowDiagram({ highlight }: { highlight?: "block" | "mount" }) {
 /** The three layers, stacked, with the one-directional import rule. */
 export function ArchitectureDiagram() {
   const layers = [
-    { name: "theme", role: "Design tokens — the --sina-* variables. No React." },
-    { name: "core", role: "Accessible primitives on Radix. Domain-agnostic." },
-    { name: "fintech · fintech-react", role: "The Constitution + the governed components." },
+    { name: "theme", role: "The look — colors, spacing, type, as design tokens. No React." },
+    { name: "core", role: "The parts — accessible buttons, dialogs, forms. No domain rules." },
+    { name: "fintech · fintech-react", role: "The rules — and the stricter components they can force." },
   ];
   return (
     <figure className={styles.figure}>
@@ -100,9 +100,9 @@ export function ArchitectureDiagram() {
 /** The three severities as a ladder: what a failure does at each level. */
 export function EnforcementLadder() {
   const rungs = [
-    { key: "flag", label: "flag", what: "Informational. Logged on the decision; nothing is blocked." },
-    { key: "escalate", label: "escalate", what: "The standard render is blocked; a stricter governed component is forced instead." },
-    { key: "reject", label: "reject", what: "Hard block. Nothing mounts — the request is refused outright." },
+    { key: "flag", label: "flag", what: "Noted, not blocked — a $5,000 transfer is logged for review and still goes through." },
+    { key: "escalate", label: "escalate", what: "Redirected to a safer path — a $60,000 wire gets a second-approver dialog instead of a confirm button." },
+    { key: "reject", label: "reject", what: "Refused outright — a fabricated “Confirm” button simply never renders." },
   ];
   return (
     <figure className={styles.figure}>

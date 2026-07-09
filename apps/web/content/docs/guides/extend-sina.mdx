@@ -1,0 +1,84 @@
+---
+title: Extend SINA
+description: Three recipes for growing the system — add a primitive to core, add a governed domain beside fintech, and prove a rule holds with an adversarial test.
+---
+
+SINA grows in three directions: new primitives in `core`, new governed domains
+beside `fintech`, and new tests that prove the rules hold. Each recipe below
+mirrors a repo skill (`/new-primitive`, `/new-schema`, `/adversarial-test`).
+
+### Add a primitive to core
+
+A `core` primitive is headless, accessible, and strictly domain-agnostic. The
+boundary is hard: no `zod`, no domain package, no domain vocabulary (no
+"$50,000", no "limit", no "approval"), no Tailwind.
+
+1. **Confirm design sign-off** — it gates implementation. Build to the
+   signed-off anatomy; don't invent UX.
+2. **Build on Radix** in `packages/core/src/<Name>/<Name>.tsx`, styled by a
+   co-located `<Name>.module.css`: flat class names, real pseudo-classes for
+   state, a per-component `--sina-<name>-*` token layer aliasing the semantic
+   [tokens](/docs/theming/tokens). Never write a raw color.
+3. **Meet the a11y bar — all four, non-negotiable:** focus-trap where a surface
+   traps focus, correct ARIA, full keyboard operability, and an automated `axe`
+   (jest-axe) pass. Error and warning states render the matching bold status
+   glyph beside the text — never color alone.
+4. **Test and demo:** `<Name>.test.tsx` with
+   `expect(await axe(container)).toHaveNoViolations()` plus keyboard/focus
+   assertions, then a playground story.
+
+### Add a governed domain
+
+SINA ships one domain today — `fintech` — but a second is additive, not a
+rewrite. The shared `@sina-design-system/governance` seam owns the
+[contract](/docs/concepts/the-contract), the audit emit point, and the
+`intercept` engine, and knows nothing about wire transfers. A new domain is two
+packages mirroring `fintech` and `fintech-react`:
+
+1. **A pure Zod constitution** (`packages/<domain>`, depends only on
+   `governance`): format primitives, cited thresholds (`// 31 CFR …` — never an
+   invented number), rules returning
+   `{ valid, violations, requiredComponent }`, and a verb → rule registry with
+   one evaluate entry point. No React, no `core`, no `theme`, no UI. To author
+   the rules themselves, follow
+   [Writing a rule](/docs/governance/writing-a-rule).
+2. **A `*-react` layer** (`packages/<domain>-react`) that composes a `core`
+   primitive with a domain schema and renders the decision the gate already
+   made. It never authors schemas and never validates a payload — the gate
+   stays server-side (see [How it works](/docs/how-it-works)).
+
+Because the contract is uniform, the new domain's rules drop into the same
+gate, emit the same audit events, and are exercised by the same adversarial
+harness. Governance doesn't fork per domain.
+
+### Write an adversarial test
+
+A rule isn't done when it compiles — it's done when a hostile request can't
+get past it. Don't test that a *valid* request passes; test that an *invalid*
+one can't sneak through. Cover the classics:
+
+- **A smuggled field** — a fabricated `confirmButton` or a `cvv`; the strict
+  parse must reject it.
+- **An over-limit value** — just past a threshold; it must escalate to the
+  right component.
+- **A bypass attempt** — approve small, execute big, or self-approve; the
+  server-side binding must reject it.
+- **A flood** — an oversized array; the bound must reject it.
+
+Assert the decision, not just that something threw:
+
+```ts
+const decision = evaluateFintechIntent(hostileEnvelope, ctx);
+
+expect(decision.valid).toBe(false);
+expect(decision.requiredComponent).toBe("SecureWireDialog"); // or null for a reject
+expect(decision.violations.map((v) => v.code)).toContain("AMOUNT_REQUIRES_APPROVAL");
+```
+
+<Callout variant="enforced" title="Make it a required check">
+  Wire these tests into CI as a required check, so a change that quietly
+  weakens a rule fails the build instead of shipping.
+</Callout>
+
+Related: [Escalation](/docs/concepts/escalation) ·
+[Governance](/docs/governance).

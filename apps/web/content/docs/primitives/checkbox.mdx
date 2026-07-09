@@ -3,28 +3,37 @@ title: Checkbox
 description: A boolean toggle with an indeterminate state, built on Radix.
 ---
 
+import { CheckboxHero, CheckboxExamples } from "@/app/components/docs/demos/primitives/checkbox";
+
+<CheckboxHero />
+
 `Checkbox` toggles a single boolean. It also supports an **indeterminate** state
 for "some but not all" — like a parent controlling a group.
+
+## Usage
 
 ```tsx
 import { Checkbox } from "@sina-design-system/core";
 
 <Checkbox checked={agreed} onCheckedChange={setAgreed} label="I agree" />
-<Checkbox indeterminate label="Select all" />
+<Checkbox checked="indeterminate" label="Select all" />
 ```
+
+## Examples
+
+<CheckboxExamples />
 
 ## Props
 
 <PropsTable
   rows={[
-    { prop: "checked", type: "boolean", description: "Controlled checked state." },
-    { prop: "onCheckedChange", type: "(checked: boolean) => void", description: "Fires on toggle." },
-    { prop: "indeterminate", type: "boolean", default: "false", description: "The mixed state." },
+    { prop: "checked", type: 'boolean | "indeterminate"', description: "Controlled checked state — pass \"indeterminate\" for the mixed state." },
+    { prop: "onCheckedChange", type: '(checked: boolean | "indeterminate") => void', description: "Fires on toggle." },
     { prop: "label", type: "ReactNode", description: "Associated label." },
   ]}
 />
 
+## Accessibility
+
 `Space` toggles; the label is clickable; the state is announced as checked,
 unchecked, or mixed.
-
-See all [primitives](/docs/primitives).

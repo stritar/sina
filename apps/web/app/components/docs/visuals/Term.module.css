@@ -1,0 +1,22 @@
+/* Inline jargon tooltip trigger — reads as prose, not as a control. */
+
+.term {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: help;
+  text-decoration: underline dotted;
+  text-decoration-color: var(--sina-color-text-subtle);
+  text-underline-offset: 3px;
+}
+
+.term:hover {
+  text-decoration-color: var(--sina-color-text);
+}
+
+.content {
+  max-width: 20rem;
+}

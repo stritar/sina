@@ -3,8 +3,14 @@ title: ScrollArea
 description: A styled, cross-browser scroll region with an overlay scrollbar — keeps overflow tidy without breaking keyboard access.
 ---
 
+import { ScrollAreaHero, ScrollAreaExamples } from "@/app/components/docs/demos/primitives/scroll-area";
+
+<ScrollAreaHero />
+
 `ScrollArea` gives a scrollable region a consistent, styled scrollbar across
 browsers, without disabling native keyboard scrolling.
+
+## Usage
 
 ```tsx
 import { ScrollArea } from "@sina-design-system/core";
@@ -14,7 +20,11 @@ import { ScrollArea } from "@sina-design-system/core";
 </ScrollArea>
 ```
 
+## Examples
+
+<ScrollAreaExamples />
+
+## Accessibility
+
 Use it for a bounded list or panel that would otherwise overflow. Content stays
 keyboard-scrollable and the scrollbar doesn't shift layout.
-
-See all [primitives](/docs/primitives).

@@ -3,8 +3,14 @@ title: Separator
 description: A thin divider between content or controls — decorative by default, semantic when you need it.
 ---
 
+import { SeparatorHero, SeparatorExamples } from "@/app/components/docs/demos/primitives/separator";
+
+<SeparatorHero />
+
 `Separator` draws a hairline between sections. By default it's decorative (hidden
 from screen readers); mark it non-decorative when the divide carries meaning.
+
+## Usage
 
 ```tsx
 import { Separator } from "@sina-design-system/core";
@@ -12,6 +18,10 @@ import { Separator } from "@sina-design-system/core";
 <Separator />
 <Separator orientation="vertical" />
 ```
+
+## Examples
+
+<SeparatorExamples />
 
 ## Props
 
@@ -22,4 +32,7 @@ import { Separator } from "@sina-design-system/core";
   ]}
 />
 
-See all [primitives](/docs/primitives).
+## Accessibility
+
+Decorative separators are hidden from assistive tech. With `decorative={false}`
+the divider exposes `role="separator"` as a real section boundary.

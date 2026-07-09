@@ -3,9 +3,15 @@ title: Stack
 description: One-axis flex layout — line things up in a row or a column with consistent spacing from the token scale.
 ---
 
+import { StackHero, StackExamples } from "@/app/components/docs/demos/primitives/stack";
+
+<StackHero />
+
 `Stack` lays out its children along a single axis with a `gap` drawn from the
 spacing scale. It's the everyday layout primitive; reach for
 [Grid](/docs/primitives/grid) when you need wrapping columns.
+
+## Usage
 
 ```tsx
 import { Stack } from "@sina-design-system/core";
@@ -15,6 +21,10 @@ import { Stack } from "@sina-design-system/core";
   <span>Invoice #204</span>
 </Stack>
 ```
+
+## Examples
+
+<StackExamples />
 
 ## Props
 
@@ -27,4 +37,8 @@ import { Stack } from "@sina-design-system/core";
   ]}
 />
 
-See all [primitives](/docs/primitives).
+## Accessibility
+
+Purely presentational — renders a plain `div` with no added semantics. When the
+children form a real structure, pass `as` to keep it (e.g. `as="ul"` with `li`
+children keeps a list a list).

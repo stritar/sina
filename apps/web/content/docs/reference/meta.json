@@ -1,14 +1,4 @@
 {
   "title": "Reference",
-  "pages": [
-    "theme",
-    "core",
-    "fintech",
-    "governance",
-    "intent-registry",
-    "docs-for-agents",
-    "glossary",
-    "faq",
-    "changelog"
-  ]
+  "pages": ["packages", "glossary", "changelog"]
 }

@@ -1,0 +1,83 @@
+---
+title: The interception contract
+description: Every rule returns the same three fields — valid, violations, requiredComponent — produced by two checks, shape then values.
+---
+
+Every rule in the Constitution answers with the **same three fields**. Learn
+this shape once and you can read any decision SINA makes.
+
+```ts
+type InterceptionResult = {
+  valid: boolean;                   // did everything pass?
+  violations: Violation[];          // what went wrong (empty if clean)
+  requiredComponent: string | null; // a stricter component you must render instead
+};
+```
+
+- **`valid`** — `true` only when nothing blocks. One blocking problem makes it
+  `false`.
+- **`violations`** — what the gate found. Each has a `message`, a `severity`,
+  and a `standard` — the regulation or policy it comes from, so a block is
+  explainable, not a mystery.
+- **`requiredComponent`** — when a rule demands a stricter component (like a
+  second-approver dialog), its name goes here. Otherwise `null`.
+
+## How the result is produced: shape, then values
+
+**Layer 1 — structure.** Is the payload exactly the right shape? Schemas are
+**strict** — any field that isn't supposed to be there is rejected. If an AI
+tries to smuggle in a fabricated `confirmButton`, a `cvv`, or a full card
+number, those are *extra fields*, thrown out before any value is looked at.
+
+<BeforeAfter>
+  <Before title="What a hostile stream sends">
+    <code>{`{ amount: 500, confirmButton: true, cvv: "123" }`}</code> — a real
+    amount, plus a fake button and smuggled card data.
+  </Before>
+  <After title="What the schema accepts">
+    <code>{`{ amount: 500 }`}</code> — the extra fields are rejected. The fake
+    button can't render; the card data never reaches the log.
+  </After>
+</BeforeAfter>
+
+**Layer 2 — policy.** If the shape is valid, do the values obey the rules?
+These are the cited limits:
+
+```ts
+// From the wire-transfer rule (simplified):
+if (amount > WIRE_SECONDARY_APPROVAL_MINOR /* $50,000 */) {
+  violation("AMOUNT_REQUIRES_APPROVAL", "escalate"); // → force SecureWireDialog
+}
+```
+
+One subtlety worth knowing: SINA counts money in **integer minor units** —
+cents, not dollars — per ISO 4217. No floating point, no rounding drift;
+amounts either match exactly or they don't.
+
+## Pass vs. fail
+
+```ts
+// A clean request:
+{ valid: true, violations: [], requiredComponent: null }
+
+// An over-limit wire:
+{
+  valid: false,
+  violations: [
+    { code: "AMOUNT_REQUIRES_APPROVAL", severity: "escalate",
+      message: "wire above $50,000 requires secondary managerial approval",
+      standard: "SINA dual-control policy" },
+  ],
+  requiredComponent: "SecureWireDialog",
+}
+```
+
+You read that and know exactly what to do: don't render the raw confirm —
+render `SecureWireDialog`.
+
+Both **governed** rules (actions, which can escalate) and **ungoverned** rules
+(read-only displays, which only check shape and never set `requiredComponent`)
+return this same contract — so the code that renders a decision is the same
+everywhere.
+
+Next: [Escalation & enforcement](/docs/concepts/escalation).

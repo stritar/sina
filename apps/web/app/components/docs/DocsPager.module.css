@@ -1,0 +1,46 @@
+/* Previous / Next pagination at the bottom of a docs page. */
+
+.pager {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sina-space--4);
+  margin-top: var(--sina-space--10);
+  padding-top: var(--sina-space--6);
+  border-top: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--1);
+  max-width: 45%;
+  border-radius: var(--sina-radius--lg);
+  border: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+  background: var(--sina-color-surface);
+  padding: var(--sina-space--3) var(--sina-space--4);
+  text-decoration: none;
+}
+
+.link:hover {
+  border-color: var(--sina-color-border);
+  background: var(--sina-color-surface-raised);
+}
+
+.next {
+  margin-left: auto;
+  text-align: right;
+}
+
+.eyebrow {
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  text-transform: uppercase;
+  letter-spacing: var(--sina-tracking--wide);
+  color: var(--sina-color-text-subtle);
+}
+
+.name {
+  font-size: var(--sina-text--sm);
+  font-weight: var(--sina-font-weight--medium);
+  color: var(--sina-color-text);
+}

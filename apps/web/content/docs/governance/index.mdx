@@ -1,10 +1,11 @@
 ---
 title: Governance in practice
-description: The Constitution isn't abstract — it's a catalog of real fintech rules. Here's how it's organized and how to read it.
+description: The Constitution is a catalog of real fintech rules — every threshold cited to a standard, every attack mapped to a defense.
 ---
 
-The concepts pages explain *how* SINA governs. This section is the *what*: the
-real rules that ship today, for fintech.
+[How it works](/docs/how-it-works) explains *how* SINA decides. This section is
+the *what*: the real rules that ship today, for fintech, and why you can trust
+them.
 
 The Constitution splits into two kinds of rule, and every intent is one or the
 other:
@@ -12,37 +13,72 @@ other:
 - **Governed** rules cover **actions** — moving money, opening accounts, issuing
   cards. They carry policy (limits, approvals, disclosures) and can escalate to a
   stricter component.
-- **Display** rules cover **reads** — balances, transactions, holdings. They only
-  check the *shape* of the data (and mask sensitive fields), then mount a
-  presentational component. They never escalate.
+- **Display** rules cover **reads** — balances, transactions, holdings. They check
+  the *shape* of the data (and mask sensitive fields), then mount a presentational
+  component. They never escalate.
 
-## The catalog, by family
+The full catalog — which intents exist and what each one mounts — is
+[Governed components & display patterns](/docs/governance/components-and-patterns).
 
-A representative slice — the [fintech reference](/docs/reference/fintech) has the
-full list of intents.
+<BeforeAfter>
+<Before title="Prompt-based rules">
+"Never move more than $10,000 without approval" lives in a system prompt. It
+holds until the model is confused, jailbroken, or just wrong.
+</Before>
+<After title="Constitution rules">
+The $10,000 limit is a Zod check that runs server-side on every request. The
+model can't talk its way past a parser.
+</After>
+</BeforeAfter>
 
-| Family | Example intent | Kind | Mounts / escalates to |
-|---|---|---|---|
-| Money movement | `wire_transfer`, `ach_transfer`, `p2p_payment` | Governed | `SecureWireDialog` · `GovernedActionDialog` |
-| Accounts & onboarding | `add_payee`, `kyc`, `change_limit` | Governed | `GovernedActionDialog` |
-| Cards | `issue_card`, `card_control` | Governed | `GovernedActionDialog` |
-| Investing | `place_trade`, `enable_margin` | Governed | `GovernedActionDialog` · `MandatoryDisclosure` |
-| Disclosures | `disclosure`, `credit_request` | Governed | `MandatoryDisclosure` |
-| Reads | `list_transactions`, `account_balance`, `portfolio_holdings` | Display | a presentational component |
+## Every threshold has a source
 
-<Callout variant="note" title="Many rules, three dialogs">
-  Dozens of governed flows all escalate to just **three** real components —
-  `SecureWireDialog`, `GovernedActionDialog`, and `MandatoryDisclosure`. The rules
-  differ; the safe destinations are shared. See
-  [Governed components](/docs/governance/governed-components).
+A governance system is only trustworthy if its rules are *defensible*. So every
+rule carries its source: when the gate blocks something, the violation includes a
+`standard` — the regulation or policy it comes from — and that citation lands in
+the [audit record](/docs/concepts/audit-trail). A block is never a mystery.
+
+There are two kinds of threshold, and the code always keeps them apart.
+**Regulatory** thresholds come from real financial regulations — not yours to
+loosen casually:
+
+| Rule | Threshold | Source |
+|---|---|---|
+| Currency Transaction Report (CTR) | $10,000 | FinCEN — 31 CFR 1010.311 |
+| Suspicious Activity Report (SAR) review | $5,000 | FinCEN — 31 CFR Ch. X |
+| Travel Rule (originator/beneficiary info) | $3,000 | FinCEN — 31 CFR 1010.410(e) |
+| Same Day ACH ceiling | $1,000,000 | Nacha |
+
+**SINA policy** thresholds are tunable product defaults — the wire dual-control
+limit ($50,000), per-rail authorization caps, maker-checker sign-off. These are
+the ones you're expected to tune to your own risk appetite. Format rules (ISO 4217
+currencies, IBAN/BIC, ABA routing, Luhn card checks, PCI-aligned masking) round
+out the set.
+
+<ComplianceNote />
+
+## The threat model
+
+SINA assumes the AI producing intents might be wrong, jailbroken, or actively
+hostile. The design question is never "will the model behave?" — it's "what
+happens when it doesn't?"
+
+| The attack | What it tries | Why it fails |
+|---|---|---|
+| **Fabricated control** | Smuggle a `confirmButton` into the payload | Strict schema — unknown fields are rejected before any value is read |
+| **Smuggled card data** | Include a `cvv` or full PAN | Same strict parse; redaction masks it before it can hit a log |
+| **Over-limit action** | A $60,000 wire with no approval | Policy escalates to a second-approver dialog; the raw confirm can't mount |
+| **Self-approval** | Approve your own transfer | Four-eyes check — approver must differ from the server-known initiator |
+| **Bait-and-switch** | Approve $5,000, then execute $60,000 | Approval is bound to the exact terms, recomputed on the server |
+| **Fabricated data** | Invent a balance or transaction | For reads, the server supplies the values — the model only picks *what* to show |
+| **Data exfiltration** | Return an unmasked account number | Display schemas require masked identifiers |
+| **Flooding** | Send 10,000 rows to freeze the client | Arrays are bounded |
+
+<Callout variant="enforced" title="These aren't hypotheticals">
+  Every row above is a real payload in SINA's test suite. The build fails if any
+  of them stops being blocked — the guarantees can't quietly rot.
 </Callout>
 
-## Where to go next
-
-- [The standards behind the Constitution](/docs/governance/standards) — why the
-  rules aren't arbitrary.
-- [Wire transfer, end to end](/docs/governance/wire-transfer) — the flagship flow,
-  start to finish.
-- [Security & the threat model](/docs/governance/security) — every attack, and how
-  it's stopped.
-- [Writing a rule](/docs/governance/writing-a-rule) — author your own.
+See several of these attacks play out on one real request:
+[the $60k wire, end to end](/docs/governance/wire-transfer). Then
+[write a rule of your own](/docs/governance/writing-a-rule).

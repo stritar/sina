@@ -3,7 +3,6 @@ import type { AnchorHTMLAttributes } from "react";
 import Link from "next/link";
 import { GovernanceDemo } from "@sina-design-system/governance-demo";
 import { CodePre } from "./CodePre";
-import { DialogDemo, CurrencyFieldDemo, GridDemo } from "./demos/PrimitiveDemos";
 import * as visuals from "./visuals";
 
 /**
@@ -17,11 +16,10 @@ export function getMDXComponents(extra?: MDXComponents): MDXComponents {
   return {
     // The reusable docs visual kit (Callout, Steps, Card, Tabs, diagrams, …).
     ...visuals,
-    // Custom MDX components usable directly in `.mdx` content.
+    // Custom MDX components usable directly in `.mdx` content. Per-primitive
+    // live demos are NOT registered here — each primitives/*.mdx imports its
+    // own demo module directly, so demo code stays code-split per page.
     GovernanceDemo,
-    DialogDemo,
-    CurrencyFieldDemo,
-    GridDemo,
     pre: (props) => <CodePre {...props} />,
     a: ({ href = "", children, ...rest }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
       const isExternal = /^https?:\/\//.test(href) || href.startsWith("//");

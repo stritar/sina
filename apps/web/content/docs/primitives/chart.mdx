@@ -3,16 +3,26 @@ title: Chart
 description: A tiny, server-safe sparkline — line, area, or bar — drawn as SVG with currentColor. No client JS.
 ---
 
+import { ChartHero, ChartExamples } from "@/app/components/docs/demos/primitives/chart";
+
+<ChartHero />
+
 `Chart` is a compact sparkline for inline trends. It's pure SVG driven by
 `currentColor`, so it renders on the server and inherits the surrounding text
 color. For full, interactive charts, use
 [LineChart](/docs/primitives/line-chart) and friends.
 
+## Usage
+
 ```tsx
 import { Chart } from "@sina-design-system/core";
 
-<Chart variant="area" data={[3, 5, 4, 8, 7, 11]} />
+<Chart variant="area" data={[3, 5, 4, 8, 7, 11]} label="Balance trend, up" />
 ```
+
+## Examples
+
+<ChartExamples />
 
 ## Props
 
@@ -23,7 +33,7 @@ import { Chart } from "@sina-design-system/core";
   ]}
 />
 
+## Accessibility
+
 Renders as `role="img"` with a required label. Degrades to a flat baseline for a
 single point.
-
-See all [primitives](/docs/primitives).
