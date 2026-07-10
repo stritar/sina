@@ -11,7 +11,8 @@
   border-color: color-mix(in srgb, var(--sina-color-primary) 25%, var(--sina-color-border-subtle));
 }
 
-.head {
+/* Root-scoped so it outranks `.prose p` (0,1,1) inside the docs article. */
+.box .head {
   display: flex;
   align-items: center;
   gap: var(--sina-space--2);

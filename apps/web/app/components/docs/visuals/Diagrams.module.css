@@ -221,13 +221,14 @@
   }
 }
 
-.parts {
+/* Root-scoped (`.anatomy …`) so they outrank the docs' `.prose ol/li` (0,1,1). */
+.anatomy .parts {
   margin: 0;
   padding-left: var(--sina-space--6);
   list-style: decimal;
 }
 
-.part {
+.anatomy .part {
   margin: 0 0 var(--sina-space--2);
 }
 
@@ -275,7 +276,8 @@
   --ba-accent: var(--sina-color-success);
 }
 
-.baTitle {
+/* Root-scoped (`.ba …`) so it outranks the docs' `.prose p` (0,1,1). */
+.ba .baTitle {
   display: flex;
   align-items: center;
   gap: var(--sina-space--2);

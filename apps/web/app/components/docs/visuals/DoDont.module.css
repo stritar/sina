@@ -25,7 +25,8 @@
   --dd-accent: var(--sina-color-danger);
 }
 
-.head {
+/* Root-scoped (`.col …`) so they outrank the docs' `.prose p/ul/li` (0,1,1). */
+.col .head {
   display: flex;
   align-items: center;
   gap: var(--sina-space--2);
@@ -35,7 +36,7 @@
   color: var(--dd-accent);
 }
 
-.list {
+.col .list {
   margin: 0;
   padding-left: var(--sina-space--5);
   list-style: disc;
@@ -43,6 +44,6 @@
   color: var(--sina-color-text-muted);
 }
 
-.list li {
+.col .list li {
   margin: var(--sina-space--1) 0;
 }

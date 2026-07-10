@@ -45,7 +45,8 @@
   padding-top: var(--sina-space--0_5);
 }
 
-.title {
+/* Root-scoped so it outranks `.prose p` (0,1,1) inside the docs article. */
+.step .title {
   margin: 0 0 var(--sina-space--2);
   font-size: var(--sina-text--lg);
   font-weight: var(--sina-font-weight--semibold);

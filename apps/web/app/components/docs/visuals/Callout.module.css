@@ -22,7 +22,8 @@
   min-width: 0;
 }
 
-.title {
+/* Root-scoped so it outranks `.prose p` (specificity 0,1,1) inside the docs article. */
+.callout .title {
   margin: 0 0 var(--sina-space--1);
   font-size: var(--sina-text--sm);
   font-weight: var(--sina-font-weight--semibold);
