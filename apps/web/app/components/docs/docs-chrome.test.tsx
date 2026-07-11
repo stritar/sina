@@ -1,5 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
+import { beforeAll, describe, it, expect, vi } from "vitest";
 import { render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import type { Root } from "fumadocs-core/page-tree";
 import type { TOCItemType } from "fumadocs-core/toc";
@@ -7,9 +8,23 @@ import type { TOCItemType } from "fumadocs-core/toc";
 // Sidebar reads the active route via usePathname; mock it (no Next router in vitest).
 vi.mock("next/navigation", () => ({ usePathname: () => "/docs" }));
 
+beforeAll(() => {
+  // Radix's floating content measures + captures pointers; jsdom implements neither.
+  Element.prototype.scrollIntoView = vi.fn();
+  Element.prototype.hasPointerCapture = vi.fn(() => false);
+  Element.prototype.setPointerCapture = vi.fn();
+  Element.prototype.releasePointerCapture = vi.fn();
+  globalThis.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+});
+
 import { Sidebar } from "./Sidebar";
 import { DocsTOC } from "./DocsTOC";
 import { ThemeToggle } from "./ThemeToggle";
+import { CopyPageMenu } from "./CopyPageMenu";
 import {
   Callout,
   Card,
@@ -100,6 +115,39 @@ describe("docs chrome a11y", () => {
     expect(button.getAttribute("aria-label")).toBeTruthy();
     expect(button.getAttribute("aria-pressed")).not.toBeNull();
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("CopyPageMenu has no axe violations and copies the page's raw markdown", async () => {
+    const user = userEvent.setup();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("# Quickstart\n")));
+    vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText } });
+
+    const { container, getByRole } = render(
+      <CopyPageMenu markdownUrl="/llms/docs/quickstart.md" />,
+    );
+    expect(await axe(container)).toHaveNoViolations();
+
+    // The left segment fetches the pre-generated .md asset — it never re-derives
+    // the markdown, which is what keeps the site free of a Node-runtime route.
+    await user.click(getByRole("button", { name: /copy page/i }));
+    expect(fetch).toHaveBeenCalledWith("/llms/docs/quickstart.md");
+    expect(writeText).toHaveBeenCalledWith("# Quickstart\n");
+
+    vi.unstubAllGlobals();
+  });
+
+  it("CopyPageMenu's caret opens a menu with the markdown + agent hand-off items", async () => {
+    const user = userEvent.setup();
+    const { getByRole, getAllByRole } = render(
+      <CopyPageMenu markdownUrl="/llms/docs/quickstart.md" />,
+    );
+
+    await user.click(getByRole("button", { name: "More page actions" }));
+    const items = getAllByRole("menuitem");
+    expect(items.map((i) => i.textContent)).toEqual(["View as Markdown", "Open in Claude"]);
+    // "View as Markdown" is a real link to the static asset, not a JS handler.
+    expect(items[0]!.getAttribute("href")).toBe("/llms/docs/quickstart.md");
   });
 });
 

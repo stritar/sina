@@ -32,6 +32,13 @@ const EXCLUDE = new Set([
   "TooltipProvider",
   "TooltipTrigger",
   "TooltipContent",
+  // DropdownMenu subcomponents
+  "DropdownMenuTrigger",
+  "DropdownMenuContent",
+  "DropdownMenuItem",
+  "DropdownMenuGroup",
+  "DropdownMenuLabel",
+  "DropdownMenuSeparator",
   // Toast subcomponents
   "ToastProvider",
   "ToastViewport",

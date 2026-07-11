@@ -22,7 +22,7 @@ const CANON: Array<{ marker: RegExp; name: string; allowed: string[] }> = [
   {
     marker: /<GovernanceDemo/,
     name: "GovernanceDemo",
-    allowed: ["quickstart.mdx", "agents.mdx", "governance/wire-transfer.mdx"],
+    allowed: ["agents.mdx", "governance/wire-transfer.mdx"],
   },
 ];
 

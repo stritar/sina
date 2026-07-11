@@ -1,0 +1,49 @@
+---
+title: DropdownMenu
+---
+
+import { DropdownMenuHero, DropdownMenuExamples } from "@/app/components/docs/demos/primitives/dropdown-menu";
+
+<DropdownMenuHero />
+
+`DropdownMenu` is a compound menu of *commands* fired from a trigger. Use it when
+each entry **does** something; when the entries are **values** the control holds
+onto, reach for [Select](/docs/primitives/select) instead. The Copy Page button on
+this page is a `DropdownMenu`.
+
+## Usage
+
+```tsx
+import {
+  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem,
+} from "@sina-design-system/core";
+
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="secondary">Page actions</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem onSelect={openInClaude}>Open in Claude</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+## Examples
+
+<DropdownMenuExamples />
+
+## Parts
+
+`DropdownMenu` · `DropdownMenuTrigger` · `DropdownMenuContent` ·
+`DropdownMenuItem` · `DropdownMenuGroup` · `DropdownMenuLabel` ·
+`DropdownMenuSeparator`.
+
+`DropdownMenuContent` defaults to `align="end"` and `sideOffset={4}`; both, and
+every other Radix content prop, are forwarded. An item becomes a link with
+`asChild`.
+
+## Accessibility
+
+Adheres to the ARIA menu pattern: `Enter` or `Space` opens and focuses the first
+item, arrow keys rove, typeahead jumps, `Esc` closes and returns focus to the
+trigger. All handled for you.

@@ -82,6 +82,15 @@ export {
   TooltipTrigger,
   TooltipContent,
 } from "./Tooltip/Tooltip.js";
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "./DropdownMenu/DropdownMenu.js";
 export { ScrollArea } from "./ScrollArea/ScrollArea.js";
 export {
   ToastProvider,

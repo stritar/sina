@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { source } from "@/lib/source";
-import { getMDXComponents } from "@/app/components/docs/mdx-components";
-import { DocsTOC } from "@/app/components/docs/DocsTOC";
-import { DocsPager } from "@/app/components/docs/DocsPager";
-import styles from "../page.module.css";
+import { DocsArticle } from "@/app/components/docs/DocsArticle";
 
 // Fully static: only the generated slugs render; anything else 404s at build.
 // A *required* catch-all (not `[[...slug]]`) — the index `/docs` is served by the
@@ -37,17 +34,5 @@ export default async function DocsPage({
   const page = source.getPage(slug);
   if (!page) notFound();
 
-  const MDX = page.data.body;
-
-  return (
-    <div className={styles.page}>
-      <article className={styles.prose}>
-        <h1 className={styles.title}>{page.data.title}</h1>
-        {page.data.description ? <p className={styles.lead}>{page.data.description}</p> : null}
-        <MDX components={getMDXComponents()} />
-        <DocsPager url={page.url} />
-      </article>
-      <DocsTOC items={page.data.toc} />
-    </div>
-  );
+  return <DocsArticle page={page} />;
 }

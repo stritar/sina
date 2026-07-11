@@ -11,6 +11,10 @@ import {
   Combobox,
   CredentialField,
   CurrencyField,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
   Field,
   Grid,
   Icon,
@@ -149,6 +153,24 @@ const SECTIONS: GallerySection[] = [
             aria-label="Currency"
             placeholder="Search currencies…"
           />
+        ),
+      },
+      {
+        href: "/docs/primitives/dropdown-menu",
+        name: "DropdownMenu",
+        blurb: "A menu of commands from a trigger.",
+        preview: (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" size="sm">
+                Page actions
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>View as Markdown</DropdownMenuItem>
+              <DropdownMenuItem>Open in Claude</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ),
       },
       {

@@ -1,13 +1,25 @@
+/* The centered content column, sitting to the right of the flush-left sidebar.
+   The cap is border-box (see theme/reset.css), so it has to cover the gutters
+   too: 5rem padding + 15rem TOC + 2.5rem gap + 46rem prose = 68.5rem. That
+   leaves the prose track at 46rem (736px) — the shadcn measure. */
 .page {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 15rem;
   gap: var(--sina-space--10);
-  max-width: 68rem;
+  max-width: 68.5rem;
+  margin-inline: auto;
+  padding: var(--sina-space--8) var(--sina-space--10) var(--sina-space--24);
 }
 
 @media (max-width: 76rem) {
   .page {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 60rem) {
+  .page {
+    padding: var(--sina-space--6) var(--sina-space--5) var(--sina-space--20);
   }
 }
 

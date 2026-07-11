@@ -18,18 +18,14 @@ validates it, and only then does a component render.
 
 ## The problem it solves
 
-An AI asked to render a transfer confirmation will render one — including for
-$60,000 that no one approved. The same gap produces dropdowns a screen reader
-can't operate and views of data the user shouldn't have. The output looks
-correct, which is why it ships.
+Ask an AI to render a transfer confirmation and it will render one — including
+for $60,000 that no one approved, or a dropdown a screen reader can't operate.
+The output looks correct, which is why it ships.
 
-A style guide can't prevent any of this, because nothing consults it at runtime.
-SINA sits in the render path instead. The AI emits an
-<Term term="intent">intent</Term> — a plain description of what it wants to show
-— rather than a component. Your server validates that intent against the
-<Term term="constitution">Constitution</Term>, your rules written as code, and
-only then mounts something: the requested component if it passed, a stricter one
-if it didn't, or nothing at all.
+SINA sits in the render path instead: the model sends an
+<Term term="intent">intent</Term>, your server checks it against the
+<Term term="constitution">Constitution</Term> — your rules, written as code —
+and only what passes renders.
 
 <Callout variant="governance" title="The rule">
   The model proposes; the server decides; the screen shows only what passed. SINA calls this **validate, then mount**.
@@ -48,14 +44,14 @@ primitives on Radix) and adds the check on top.
 
 ## Who it's for
 
-SINA is **free** (MIT), built for startups and individual builders who want a
-governed design system without building the governance themselves. It ships
-today for **fintech** — money movement, accounts, cards, disclosures — because
-that's where getting it wrong is most expensive.
+SINA is **free** (MIT), built for startups and individual builders who want
+governance without writing it themselves. The rules it ships with cover
+**fintech** today — money movement, accounts, cards.
 
-It's probably *not* for you if you don't generate UI with AI (though you can
-still [use the primitives on their own](/docs/guides/adopt-incrementally)), or
-if you can't run a check on a server — validation must happen server-side.
+The governance needs two things from you: an AI that generates your UI, and a
+server to run the check on. If you don't have both, SINA's accessible components
+[still work on their own](/docs/guides/adopt-incrementally) — you just don't get
+the governance.
 
 ## Start here
 

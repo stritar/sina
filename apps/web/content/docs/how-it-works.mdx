@@ -1,9 +1,8 @@
 ---
 title: How SINA works
-description: The model proposes, the server decides, the screen only shows what passed — the whole mechanism on one page.
 ---
 
-SINA has one moving part, and it's easy to picture. There are three actors:
+Every AI-generated screen in SINA goes through the same three steps:
 
 1. **The model proposes.** The AI sends an <Term term="intent">intent</Term> — a
    verb plus some data, like `"wire_transfer"` with an amount and a recipient.
@@ -20,12 +19,17 @@ SINA has one moving part, and it's easy to picture. There are three actors:
 > **The model sends an intent and props — never a component. Validation runs on
 > the server only. We validate, _then_ mount. We never mount, then check.**
 
-Why not check in the browser? Modern React streams UI to the browser as it's
-built, and once a piece has streamed there's no "un-render." So the check must
-happen **before** anything mounts, and the only place you control is your
-server. Any client-side check is untrusted convenience; the real gate is
-server-side. The model can be wrong, jailbroken, or adversarial — the guarantee
-still holds, because the model was never allowed to choose what renders.
+Why your server, and not the browser? Because **once UI reaches the screen, you
+can't take it back.** React streams it down piece by piece. There is no
+"un-render."
+
+So the check has to run **before anything mounts**. The last place you fully
+control is your own **server**. An attacker can edit or skip whatever runs in
+the browser, so a check there stops honest mistakes — **it does not stop an
+attack**.
+
+That's the payoff. It doesn't matter whether the model is wrong, jailbroken, or
+hostile: **it never decides what renders.**
 
 ## What an intent looks like
 

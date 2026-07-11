@@ -31,6 +31,7 @@ const PRIMITIVES = [
   { slug: "toast", name: "Toast", tier: "Tier 3" },
   { slug: "scroll-area", name: "ScrollArea", tier: "Tier 3" },
   { slug: "combobox", name: "Combobox", tier: "Tier 3" },
+  { slug: "dropdown-menu", name: "DropdownMenu", tier: "Tier 3" },
   { slug: "secure-wire-dialog", name: "SecureWireDialog", tier: "Governed" },
 ];
 
