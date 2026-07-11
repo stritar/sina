@@ -38,7 +38,6 @@ import {
   A11yBar,
   Term,
 } from "./visuals";
-import { CopyMarkdown } from "./CopyMarkdown";
 
 // A nested tree (folders + pages) mirrors the real six-section IA so the recursive
 // TreeNode rendering is exercised, not just a flat list.
@@ -92,12 +91,6 @@ describe("docs chrome a11y", () => {
   it("DocsTOC renders nothing for an empty toc", () => {
     const { container } = render(<DocsTOC items={[]} />);
     expect(container.innerHTML).toBe("");
-  });
-
-  it("CopyMarkdown has no axe violations and links the raw file", async () => {
-    const { container, getByRole } = render(<CopyMarkdown rawPath="/llms/docs/index.md" />);
-    expect(getByRole("link").getAttribute("href")).toBe("/llms/docs/index.md");
-    expect(await axe(container)).toHaveNoViolations();
   });
 
   it("ThemeToggle has no axe violations and exposes a labelled pressed state", async () => {

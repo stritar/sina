@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) 15rem;
   gap: var(--sina-space--10);
-  max-width: 56rem;
+  max-width: 68rem;
 }
 
 @media (max-width: 76rem) {

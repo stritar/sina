@@ -30,9 +30,9 @@ async function walk(dir) {
 
 // `architecture/three-layers.mdx` -> `architecture/three-layers`
 // `components/index.mdx`           -> `components` (folder index)
-// `index.mdx`                      -> `index` (the docs index — the in-page
-//                                     "Copy for LLM" button needs a raw file
-//                                     for every page, the root included)
+// `index.mdx`                      -> `index` (the docs index — `llms.txt` links
+//                                     a raw file for every page, the root
+//                                     included, so it must not collapse to "")
 function toSlug(file) {
   return relative(CONTENT_ROOT, file)
     .replace(/\\/g, "/")

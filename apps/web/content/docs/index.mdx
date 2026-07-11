@@ -1,34 +1,38 @@
 ---
 title: Introduction
-description: SINA is a design system with a gate. When an AI builds part of your interface, SINA checks the request on your server and only lets safe, accessible, on-brand components through.
 ---
 
-SINA is a **design system with a gate**. When an AI builds part of your app's
-interface, SINA checks that request on your server first — and only lets safe,
-accessible, on-brand components through.
+SINA is a **design system with governance built in**, for applications where an
+AI generates part of the interface.
+
+It stops a model from rendering UI that breaks your **policy limits, 
+your compliance rules, or your accessibility standards**.
+
+
+You write those rules as code; the model sends an intent; your server 
+validates it, and only then does a component render.
+
+
 
 <FlowDiagram />
 
 ## The problem it solves
 
-Letting an AI build UI is like giving a very fast intern write access to your
-product. It doesn't know your limits, your compliance rules, or your
-accessibility standards — and it will confidently ship something that breaks
-them: a "Confirm" button for a $60,000 transfer no one approved, a dropdown a
-screen reader can't use, data a user shouldn't see.
+An AI asked to render a transfer confirmation will render one — including for
+$60,000 that no one approved. The same gap produces dropdowns a screen reader
+can't operate and views of data the user shouldn't have. The output looks
+correct, which is why it ships.
 
-A style guide can't stop that — it *describes* good UI and hopes everyone
-follows. SINA *refuses to render* bad UI. The AI never picks the component. It
-sends an <Term term="intent">intent</Term> — a plain description of what it
-wants to show — and your server checks it against the
-<Term term="constitution">Constitution</Term>, your rules written as code. Safe
-requests become real, accessible components. Unsafe ones are blocked or
-redirected to a stricter, governed component. Nothing skips the check.
+A style guide can't prevent any of this, because nothing consults it at runtime.
+SINA sits in the render path instead. The AI emits an
+<Term term="intent">intent</Term> — a plain description of what it wants to show
+— rather than a component. Your server validates that intent against the
+<Term term="constitution">Constitution</Term>, your rules written as code, and
+only then mounts something: the requested component if it passed, a stricter one
+if it didn't, or nothing at all.
 
-<Callout variant="governance" title="The one idea">
-  The model proposes; the server decides; the screen only shows what passed.
-  SINA calls this **validate, then mount** — check first, render second, never
-  the other way around.
+<Callout variant="governance" title="The rule">
+  The model proposes; the server decides; the screen shows only what passed. SINA calls this **validate, then mount**.
 </Callout>
 
 ## How it compares
@@ -37,10 +41,10 @@ redirected to a stricter, governed component. Nothing skips the check.
 |---|---|---|
 | **A style guide / wiki** | Advice humans (and AIs) may ignore | No — advisory only |
 | **A component library** (Radix, shadcn) | Great accessible parts | No — parts can still be misused |
-| **SINA** | Accessible parts **+** a server-side gate | **Yes — enforced by code** |
+| **SINA** | Accessible parts **+** a server-side check | **Yes — enforced by code** |
 
 SINA isn't a competitor to a component library — it *includes* one (accessible
-primitives on Radix) and adds the gate on top.
+primitives on Radix) and adds the check on top.
 
 ## Who it's for
 
@@ -51,7 +55,7 @@ that's where getting it wrong is most expensive.
 
 It's probably *not* for you if you don't generate UI with AI (though you can
 still [use the primitives on their own](/docs/guides/adopt-incrementally)), or
-if you can't run a check on a server — the gate must run server-side.
+if you can't run a check on a server — validation must happen server-side.
 
 ## Start here
 
@@ -63,7 +67,7 @@ if you can't run a check on a server — the gate must run server-side.
     Install the packages and render your first governed decision.
   </Card>
   <Card href="/docs/governance/wire-transfer" eyebrow="Live demo" title="The $60k wire, end to end">
-    Watch the real gate pass a safe transfer and block an unsafe one.
+    Watch the real check pass a safe transfer and block an unsafe one.
   </Card>
   <Card href="/docs/primitives" eyebrow="Gallery" title="Primitives">
     28 accessible components, live on every page.
