@@ -38,12 +38,21 @@
   color: var(--sina-color-text-muted);
 }
 
-/* Prose: style MDX-rendered elements as descendants (no per-element mapping). */
-.prose {
+/* The article column: base typography, plus the grid child's min-width guard
+   (without it the track can't shrink below its content). Chrome — toolbar,
+   title, pager — lives here, OUTSIDE `.prose`. */
+.column {
   min-width: 0;
   font-size: var(--sina-text--base);
   line-height: var(--sina-leading--relaxed);
   color: var(--sina-color-text);
+}
+
+/* Prose: style MDX-rendered elements as descendants (no per-element mapping).
+   These are element selectors (0,1,1), so they outrank a component's own
+   single-class rules — only ever wrap the MDX body in this, never chrome. */
+.prose {
+  min-width: 0;
 }
 
 .prose h2 {

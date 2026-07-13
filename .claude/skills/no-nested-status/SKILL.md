@@ -5,7 +5,7 @@ description: De-nest a status element (Alert/Toast/Badge) rendered inside anothe
 
 > **The invariant:** a status element — `Alert`, `Toast`, or `Badge` (`@sina-design-system/core`) — communicates one self-contained intent and must **never** be rendered **inside** another status element. No `Badge` in an `Alert`, no `Alert` or `Badge` in a `Toast`. Nesting double-encodes intent, muddies a11y roles (`Alert` and `Toast` both render `role="status"`), and reads as a design bug. Compose them as **siblings**: a **text-only** `Alert` with any severity `Badge`s in a sibling row **beneath** it. This is the "Never nest status elements inside one another" rule in `CLAUDE.md`.
 
-The reference implementation already lives in the codebase: **`BlockedState`** (`apps/playground/app/(emulator)/_components/BlockedState.tsx`) renders a text-only `<Alert variant="danger">` and puts the per-violation severity `Badge`s in a **sibling** `styles.violations` block — never inside the Alert. Mirror that shape. Each core status root carries a `data-sina-status` marker (`alert`/`toast`/`badge`) so the guard can detect nesting.
+The reference implementation already lives in the codebase: **`BlockedState`** (`packages/governance-demo/src/BlockedState.tsx`) renders a text-only `<Alert variant="danger">` and puts the per-violation severity `Badge`s in a **sibling** `styles.violations` block — never inside the Alert. Mirror that shape. Each core status root carries a `data-sina-status` marker (`alert`/`toast`/`badge`) so the guard can detect nesting.
 
 ## The shape (fixed)
 
@@ -36,7 +36,7 @@ The `data-sina-status` markers live on the roots of `Alert.tsx`, `Toast.tsx`, `B
 
 ## Reuses
 
-- `apps/playground/app/(emulator)/_components/BlockedState.tsx` — the canonical text-Alert + sibling-Badge layout.
+- `packages/governance-demo/src/BlockedState.tsx` — the canonical text-Alert + sibling-Badge layout.
 - `packages/fintech-react/src/GovernedActionDialog/GovernedActionDialog.tsx` — the fixed governed-dialog review block (`styles.violations` sibling list).
 - `packages/fintech-react/src/status-nesting.test.tsx` — the guard; add a case per new surface.
 - `packages/core/src/{Alert,Toast,Badge}/*.tsx` — the `data-sina-status` markers the guard keys off.

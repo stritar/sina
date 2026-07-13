@@ -23,14 +23,14 @@
   gap: var(--sina-space--2);
   margin-block: var(--sina-space--4);
 }
-.demoLabel {
+/* Root-scoped: the docs' `.prose h3` (0,1,1) outranks a bare `.demoLabel` class
+   and would otherwise force 20px/semibold/heading-margins onto every demo label. */
+.section .demoLabel {
   margin: 0;
-  font-family: var(--sina-font--mono);
-  font-size: var(--sina-text--xs);
+  font-family: var(--sina-font--sans);
+  font-size: 11px;
   font-weight: var(--sina-font-weight--medium);
-  text-transform: uppercase;
-  letter-spacing: var(--sina-tracking--wide);
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
 }
 
 /* Demo */

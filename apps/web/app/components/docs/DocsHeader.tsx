@@ -57,14 +57,6 @@ export function DocsHeader({ tree }: { tree: Root }) {
       <div className={styles.right}>
         <Search />
         <ThemeToggle />
-        <Link
-          href="https://github.com"
-          className={styles.ghostLink}
-          target="_blank"
-          rel="noreferrer"
-        >
-          GitHub
-        </Link>
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>

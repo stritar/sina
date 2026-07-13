@@ -1,40 +1,27 @@
 "use server";
 
 /**
- * Secondary-approval re-gate (server-side, §1b). Takes the original escalated
- * intent plus the approver's evidence, rebuilds the approval-bearing payload —
- * computing the binding hash HERE, on the server, over the intent's core terms —
- * and re-runs the exact same constitution via `runGate`.
+ * Secondary-approval re-gate, exposed to the client as a server action (§1b).
  *
- * Because the hash is recomputed server-side and never taken from the client, an
- * approval can only ever bind to the terms actually submitted: approving $5k and
- * executing $60k produces a mismatch and is rejected.
+ * The body lives in `@sina-design-system/governance-demo/server` (`regateWireApproval`)
+ * so the playground and the docs re-gate through the SAME code — the binding hash is
+ * computed there, server-side, over the terms actually submitted, and is never taken
+ * from the client. Approve $5k, execute $60k → the hashes disagree → rejected.
+ *
+ * This file is only the transport: it is the `"use server"` boundary the playground's
+ * `GateTransport` calls across. The docs cross the same seam through an Edge Route
+ * Handler instead.
  */
 
-import { coreTerms, payloadHash, INTENTS } from "@sina-design-system/fintech";
-
-import { runGate } from "@sina-design-system/governance-demo";
-import type { ConsoleView } from "@sina-design-system/governance-demo";
-
-interface ApprovalEvidence {
-  approverId: string;
-  approverName: string;
-  secondFactor?: string;
-}
+import { regateWireApproval } from "@sina-design-system/governance-demo/server";
+import type {
+  ConsoleView,
+  WireApprovalEvidence,
+} from "@sina-design-system/governance-demo/server";
 
 export async function regateWithApproval(
   intent: unknown,
-  evidence: ApprovalEvidence,
+  evidence: WireApprovalEvidence,
 ): Promise<ConsoleView> {
-  const approved = {
-    ...(intent as object),
-    approval: {
-      approverId: evidence.approverId,
-      approverName: evidence.approverName,
-      ...(evidence.secondFactor ? { secondFactor: evidence.secondFactor } : {}),
-      // Server-computed — the client's evidence never carries a hash.
-      payloadHash: payloadHash(coreTerms(intent)),
-    },
-  };
-  return { kind: "gate", trace: runGate({ intent: INTENTS.WIRE_TRANSFER, props: approved }) };
+  return regateWireApproval(intent, evidence);
 }

@@ -68,7 +68,8 @@ runs again. The dialog itself validates nothing — it just collects the approva
   execute $60,000).
 </Callout>
 
-Watch the four-eyes check catch a self-approval — a hard block, no recovery:
+In the demo below, the initiator tries to approve their own wire. Four-eyes
+refuses it outright, and there is no way to proceed from there.
 
 <GovernanceDemo scenario="self-approval" />
 
@@ -81,9 +82,14 @@ and the transfer mounts as a completed, governed action. A second
 what exact terms, and that the gate passed. The whole story — block, approval,
 pass — is reconstructible later.
 
-Try it — toggle the governed vs. un-gated views:
+Try it: open the forced dialog and approve as a *different* manager — the server
+re-checks and the decision flips. Approve as the initiator and it refuses.
 
-<GovernanceDemo scenario="over-limit" comparison />
+<GovernanceDemo
+  scenario="over-limit"
+  scenarios={["over-limit", "small", "self-approval", "fabricated-confirm"]}
+  comparison
+/>
 
 <Recap>
 Over-limit wire → strict parse passes → three violations (two flags, one

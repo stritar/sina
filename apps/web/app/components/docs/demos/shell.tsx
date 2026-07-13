@@ -162,13 +162,15 @@ export function Example({
 }
 
 /**
- * Link to the primitive's playground story. The playground is not publicly
- * deployed yet, so this points at the story source on GitHub — flip
- * `STORY_BASE` to the live playground URL in this one place when it ships.
+ * Link to the primitive's playground story. Neither the playground nor the
+ * repo is public yet, so this renders nothing — set `STORY_BASE` to the live
+ * playground URL in this one place when it ships and the link reappears on
+ * every primitive page.
  */
-const STORY_BASE = "https://github.com/stritar/sina/tree/main/apps/playground/app/primitives";
+const STORY_BASE = "";
 
 export function StorySource({ slug }: { slug: string }) {
+  if (!STORY_BASE) return null;
   return (
     <p className={styles.storySource}>
       <a href={`${STORY_BASE}/${slug}`} target="_blank" rel="noreferrer">

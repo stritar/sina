@@ -63,8 +63,9 @@ never mounts — refused outright, or <Term term="escalation">escalated</Term> t
 a stricter component like a second-approver dialog).
 
 <Callout variant="note" title="Not just yes / no">
-  The gate doesn't return a bare "allowed / denied." It returns a *component* —
-  or refuses. That's what makes SINA a design system, not just a policy engine.
+  The gate doesn't return "allowed / denied." It names *one specific* component —
+  `requiredComponent: "SecureWireDialog"` — or refuses. That component, and
+  nothing else, is what mounts. A design system, not just a policy engine.
 </Callout>
 
 ## Three layers, one flow

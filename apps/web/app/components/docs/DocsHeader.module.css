@@ -39,16 +39,6 @@
   color: var(--sina-color-text-muted);
 }
 
-.ghostLink {
-  font-size: var(--sina-text--sm);
-  color: var(--sina-color-text-muted);
-  text-decoration: none;
-}
-
-.ghostLink:hover {
-  color: var(--sina-color-text);
-}
-
 .menuButton {
   display: none;
 }

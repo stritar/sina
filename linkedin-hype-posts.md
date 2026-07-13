@@ -1,3 +1,5 @@
+> **⚠️ SUPERSEDED (2026-07-12).** These are *no-name* teaser drafts, and the name went public on 10 July (post #4 fired, SINA revealed). The live playbook — named-SINA post drafts, profile copy, calendar — is `~/Repos/random/job-search/linkedin.md`.
+
 # LinkedIn "what I'm working on" — 10 drafts
 
 Vague-teaser hype posts. No product name, no internals. Pick one, mix lines between them, or use as a starting point. Each is ready to paste.

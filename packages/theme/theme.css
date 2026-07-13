@@ -22,6 +22,11 @@
  */
 
 :root {
+  /* Tell the UA which palette its own chrome should wear. Without this, native
+     scrollbars, form-control internals, autofill, the caret and date pickers
+     stay LIGHT on a dark page. Flipped in the dark block below. */
+  color-scheme: light;
+
   /* ===================================================================== */
   /* Color primitives — hex                                                */
   /* ===================================================================== */
@@ -227,6 +232,15 @@
     var(--sina-color-primary) 12%,
     transparent
   );
+  /* Modal scrim. Unlike the three above, this one must NOT track a semantic role:
+     a scrim always DARKENS, so tracking `text` would invert it into a white wash
+     the moment the theme flips. Anchored on the neutral ramp (theme-constant),
+     and taken to true black in dark — where the page is already neutral--950. */
+  --sina-overlay--scrim: color-mix(
+    in srgb,
+    var(--sina-color-neutral--950) 40%,
+    transparent
+  );
 
   /* ===================================================================== */
   /* Typography                                                            */
@@ -370,12 +384,16 @@
 }
 
 /* ======================================================================= */
-/* Dark theme hook — scaffolded. Overrides SEMANTIC ROLES only (ramps are  */
-/* constant). Values mirror light for now; real dark palette is a later    */
-/* value-only change, no refactor.                                         */
+/* Dark theme. Overrides SEMANTIC ROLES only (ramps are constant). Every    */
+/* role declared in `:root` must be redefined here, alias a role that is,   */
+/* or be listed as theme-invariant — a role that silently keeps its light   */
+/* value in dark is a bug. Guarded by the light/dark parity + dark-contrast */
+/* suites in `src/tokens.test.ts`.                                          */
 /* ======================================================================= */
 .dark,
 [data-theme="dark"] {
+  color-scheme: dark;
+
   --sina-color-bg: #21251e; /* neutral--950 */
   --sina-color-surface: #353b31; /* neutral--900 */
   --sina-color-surface-raised: #434841; /* neutral--800 */
@@ -397,6 +415,21 @@
   --sina-color-secondary--hover: #52564e;
   --sina-color-secondary-fg: #f5f6f4;
 
+  /* Status — the light values are ink-on-WHITE (dark coral, forest green, deep
+     azure), and these roles are consumed as foreground and border color, not as
+     fills: Field's error text, the invalid TextField/CurrencyField/
+     CredentialField border, TransactionList's credit amount. Left at their light
+     values they land at ~2:1 on the dark surface. Lifted to the light steps of
+     the same ramps, and the paired `-fg` inks flip to dark to match. */
+  --sina-color-danger: #f9b091; /* danger--200 — 6.4:1 on surface */
+  --sina-color-danger-fg: #21251e;
+  --sina-color-success: #66d091; /* success--300 — 6.0:1 */
+  --sina-color-success-fg: #21251e;
+  --sina-color-warning: #fcb737; /* warning--300 */
+  --sina-color-warning-fg: #21251e;
+  --sina-color-info: #88baf1; /* info--300 — 5.7:1 */
+  --sina-color-info-fg: #21251e;
+
   --sina-color-danger-bg: #5b1c02; /* danger--900 */
   --sina-color-success-bg: #164228; /* success--900 */
   --sina-color-warning-bg: #543803; /* warning--900 */
@@ -406,6 +439,30 @@
 
   --sina-color-focus-ring: #94a389; /* brand--300 */
   --sina-color-surface-secure: #2b3028; /* brand--800 */
+
+  /* Elevation. The light shadow color is a dark sage at 6–15% alpha — over a
+     neutral--950 page that is a no-op, so every floating surface (Dialog,
+     Select, DropdownMenu, Combobox, Toast, Tooltip) loses its lift. A shadow has
+     to be darker than the darkest surface: true black, at ~4–5x the alpha. */
+  --sina-shadow-color: #000000;
+  --sina-shadow--xs: 0 1px 2px
+    color-mix(in srgb, var(--sina-shadow-color) 40%, transparent);
+  --sina-shadow--sm:
+    0 1px 3px color-mix(in srgb, var(--sina-shadow-color) 48%, transparent),
+    0 1px 2px color-mix(in srgb, var(--sina-shadow-color) 40%, transparent);
+  --sina-shadow--md:
+    0 4px 8px color-mix(in srgb, var(--sina-shadow-color) 48%, transparent),
+    0 2px 4px color-mix(in srgb, var(--sina-shadow-color) 40%, transparent);
+  --sina-shadow--lg:
+    0 12px 24px color-mix(in srgb, var(--sina-shadow-color) 56%, transparent),
+    0 4px 8px color-mix(in srgb, var(--sina-shadow-color) 40%, transparent);
+  --sina-shadow--xl:
+    0 30px 60px color-mix(in srgb, var(--sina-shadow-color) 64%, transparent),
+    0 50px 100px color-mix(in srgb, var(--sina-shadow-color) 56%, transparent);
+
+  /* The page is already neutral--950, so a scrim mixed from it would not dim at
+     all — dark needs true black, and more of it. */
+  --sina-overlay--scrim: color-mix(in srgb, #000000 60%, transparent);
 
   /* Dataviz — same hues stepped lighter for the dark surface; same fixed
      order (validated as a set against dark surface #353b31). */

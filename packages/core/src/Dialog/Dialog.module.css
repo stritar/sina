@@ -1,7 +1,7 @@
 /* @sina-design-system/core — Dialog */
 
 :root {
-  --sina-dialog-overlay: color-mix(in srgb, var(--sina-color-text, #353b31) 40%, transparent);
+  --sina-dialog-overlay: var(--sina-overlay--scrim, color-mix(in srgb, #21251e 40%, transparent));
   --sina-dialog-surface: var(--sina-color-surface-raised, #ffffff);
   --sina-dialog-border: var(--sina-color-border-subtle, #e9ece8);
   --sina-dialog-title: var(--sina-color-text, #353b31);
@@ -12,7 +12,7 @@
   position: fixed;
   inset: 0;
   z-index: var(--sina-z--overlay, 1300);
-  background: var(--sina-dialog-overlay, color-mix(in srgb, #353b31 40%, transparent));
+  background: var(--sina-dialog-overlay, color-mix(in srgb, #21251e 40%, transparent));
 }
 .overlay[data-state="open"] {
   animation: sinaDialogOverlayIn var(--sina-duration--base, 200ms) var(--sina-ease--out, cubic-bezier(0.16, 1, 0.3, 1));

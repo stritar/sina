@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
 // Docs chrome is composed from core primitives — jsdom + jest-axe so the docs
@@ -6,6 +7,11 @@ export default defineConfig({
   // apps/web's tsconfig uses `jsx: "preserve"` for Next; force the automatic
   // runtime for vitest so test files need no React import.
   esbuild: { jsx: "automatic" },
+  // Mirror the tsconfig `@/*` path alias — Next resolves it, vite does not, and
+  // a test that mocks an aliased module still has to resolve the id.
+  resolve: {
+    alias: { "@": fileURLToPath(new URL(".", import.meta.url)) },
+  },
   test: {
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],

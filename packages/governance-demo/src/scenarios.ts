@@ -431,3 +431,18 @@ export const SCENARIOS: Scenario[] = [
 export function getScenario(id: string): Scenario | undefined {
   return SCENARIOS.find((scenario) => scenario.id === id);
 }
+
+/**
+ * Resolve a list of picker ids to scenarios, dropping any the catalog doesn't have.
+ *
+ * Lives here, not in `InteractiveDemo`, because `GovernanceDemo` is a Server Component
+ * and calls it directly: a function exported from a `"use client"` module can only be
+ * rendered, never invoked, from the server.
+ */
+export function resolveScenarios(ids: string[] | undefined): Scenario[] | undefined {
+  if (!ids || ids.length === 0) return undefined;
+  const found = ids
+    .map(getScenario)
+    .filter((scenario): scenario is Scenario => scenario !== undefined);
+  return found.length > 0 ? found : undefined;
+}

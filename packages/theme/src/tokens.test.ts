@@ -95,12 +95,83 @@ describe("token naming grammar — states use a double dash", () => {
 });
 
 /* ----------------------------------------------------------------------- */
+/* Theme blocks — every semantic role is declared in `:root` (light); the    */
+/* dark block redeclares the ones that must flip. A role ABSENT from the     */
+/* dark block silently keeps its light value in dark mode, which is the bug  */
+/* class the parity + dark-contrast suites below exist to catch.             */
+/* ----------------------------------------------------------------------- */
+
+function themeBlock(label: string, selector: RegExp): string {
+  const m = themeCss.match(selector);
+  if (!m) throw new Error(`theme.css: no ${label} block`);
+  return m[1];
+}
+
+const LIGHT = themeBlock("light (:root)", /:root\s*\{([\s\S]*?)\n\}/);
+const DARK = themeBlock(
+  "dark",
+  /\.dark,\s*\[data-theme="dark"\]\s*\{([\s\S]*?)\n\}/,
+);
+
+/* ----------------------------------------------------------------------- */
+/* Light/dark parity — a semantic role must flip, alias, or be declared     */
+/* theme-invariant. No silent third option.                                  */
+/* ----------------------------------------------------------------------- */
+
+/** Raw ramp steps are constant across themes by design (`chart--N` is not a ramp). */
+const RAMP_STEP = /^--sina-color-(brand|neutral|danger|success|warning|info)--\d+$/;
+
+/**
+ * Roles that are deliberately identical in both themes. Each vivid `-fill`
+ * carries its own surface (so its black `status-fg--*` ink holds in light AND
+ * dark — see the AAA assertions above), and the `*-border--*` tokens are
+ * transparent placeholders a themer opts into. Everything else must flip.
+ */
+const STATUSES = ["neutral", "info", "success", "warning", "danger"];
+const THEME_INVARIANT = new Set([
+  ...STATUSES.map((s) => `--sina-color-${s}-fill`),
+  ...STATUSES.map((s) => `--sina-color-status-fg--${s}`),
+  ...STATUSES.map((s) => `--sina-color-status-border--${s}`),
+  "--sina-color-button-border--primary",
+  "--sina-color-button-border--danger",
+]);
+
+describe("light/dark parity", () => {
+  const darkNames = new Set(definedNames(DARK));
+
+  /** Light-block color roles that carry a literal value (aliases follow their target). */
+  const lightRoles = [
+    ...LIGHT.matchAll(/(--sina-color-[\w-]+)\s*:\s*([^;]+);/g),
+  ]
+    .filter(([, , value]) => !value.trim().startsWith("var(")) // aliases auto-follow
+    .map(([, name]) => name)
+    .filter((name) => !RAMP_STEP.test(name));
+
+  it.each(lightRoles.filter((n) => !THEME_INVARIANT.has(n)))(
+    "%s is redefined in the dark block",
+    (name) => {
+      expect(darkNames).toContain(name);
+    },
+  );
+
+  // Elevation and the modal scrim are the two non-`--sina-color-*` roles that
+  // must also flip: a shadow tuned for light is invisible on a dark page, and a
+  // scrim that tracks a semantic role inverts into a white wash.
+  it.each(["--sina-shadow-color", "--sina-overlay--scrim"])(
+    "%s is redefined in the dark block",
+    (name) => {
+      expect(darkNames).toContain(name);
+    },
+  );
+});
+
+/* ----------------------------------------------------------------------- */
 /* WCAG 2.2 contrast — honoring the "Enforcing: WCAG-2.2" promise.         */
 /* ----------------------------------------------------------------------- */
 
-/** Read a semantic color role's RGB channels from theme.css (`#rrggbb`). */
-function channels(role: string): [number, number, number] {
-  const m = themeCss.match(
+/** Read a semantic color role's RGB channels from one theme block (`#rrggbb`). */
+function channels(role: string, scope: string): [number, number, number] {
+  const m = scope.match(
     new RegExp(`--sina-color-${role}:\\s*#([0-9a-fA-F]{6})\\b`),
   );
   if (!m) throw new Error(`no literal hex for --sina-color-${role}`);
@@ -121,9 +192,18 @@ function luminance([r, g, b]: [number, number, number]): number {
   return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
 }
 
-function contrast(a: string, b: string): number {
-  const la = luminance(channels(a));
-  const lb = luminance(channels(b));
+/**
+ * Resolve a role against a theme the way the cascade does: in dark, a role the
+ * dark block overrides takes the dark value — one it does NOT override falls
+ * through to its light value. So this measures what a user actually sees, not
+ * what the dark block happens to declare.
+ */
+const scopeFor = (role: string, dark: boolean) =>
+  dark && new RegExp(`--sina-color-${role}:`).test(DARK) ? DARK : LIGHT;
+
+function contrast(a: string, b: string, dark = false): number {
+  const la = luminance(channels(a, scopeFor(a, dark)));
+  const lb = luminance(channels(b, scopeFor(b, dark)));
   const [hi, lo] = la > lb ? [la, lb] : [lb, la];
   return (hi + 0.05) / (lo + 0.05);
 }
@@ -155,12 +235,47 @@ describe("WCAG 2.2 AA contrast (light theme)", () => {
 
   // Chart marks are non-text graphics (WCAG 1.4.11) — every categorical series
   // color must clear 3:1 against the card surface charts render on.
-  // (`channels()` matches the first — light — occurrence; the dark set is
-  // validated out-of-band against the dark surface.)
   it.each([1, 2, 3, 4, 5, 6, 7, 8])(
     "chart--%i meets non-text contrast on surface (3:1)",
     (slot) => {
       expect(contrast(`chart--${slot}`, "surface")).toBeGreaterThanOrEqual(3);
+    },
+  );
+});
+
+describe("WCAG 2.2 AA contrast (dark theme)", () => {
+  // Normal text ≥ 4.5:1. The status roles are the ones that bite: they are
+  // consumed as FOREGROUND and BORDER color (Field's error text, the invalid
+  // TextField/CurrencyField/CredentialField border, TransactionList's credit
+  // amount), so a light-tuned "ink on white" value is unreadable on a dark card.
+  it.each([
+    ["text", "bg"],
+    ["text", "surface"],
+    ["text-muted", "bg"],
+    ["text-muted", "surface"],
+    ["primary-fg", "primary"],
+    ["danger-fg", "danger"],
+    ["danger", "surface"],
+    ["success", "surface"],
+    ["warning", "surface"],
+    ["info", "surface"],
+    ["warning-text", "warning-bg"],
+  ])("%s on %s meets AA (4.5:1)", (fg, bg) => {
+    expect(contrast(fg, bg, true)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("focus-ring meets non-text contrast on bg (3:1)", () => {
+    expect(contrast("focus-ring", "bg", true)).toBeGreaterThanOrEqual(3);
+  });
+
+  // The dark chart ramp is a distinct, lifted set — validated here against the
+  // dark surface rather than the "out-of-band" process that never existed.
+  it.each([1, 2, 3, 4, 5, 6, 7, 8])(
+    "chart--%i meets non-text contrast on surface (3:1)",
+    (slot) => {
+      expect(contrast(`chart--${slot}`, "surface", true)).toBeGreaterThanOrEqual(
+        3,
+      );
     },
   );
 });

@@ -3,6 +3,7 @@ import { getMDXComponents } from "./mdx-components";
 import { DocsToolbar } from "./DocsToolbar";
 import { DocsTOC } from "./DocsTOC";
 import { DocsPager } from "./DocsPager";
+import { GateTransportBoundary } from "./GateTransportBoundary";
 import styles from "../../docs/page.module.css";
 
 /**
@@ -26,11 +27,20 @@ export function DocsArticle({ page }: { page: DocsPage }) {
 
   return (
     <div className={styles.page}>
-      <article className={styles.prose}>
+      <article className={styles.column}>
         <DocsToolbar url={page.url} />
         <h1 className={styles.title}>{page.data.title}</h1>
         {page.data.description ? <p className={styles.lead}>{page.data.description}</p> : null}
-        <MDX components={getMDXComponents()} />
+        {/* `.prose` styles MDX by element selector, so it wraps the body alone —
+            chrome inside it would inherit list/link styling meant for content. */}
+        <div className={styles.prose}>
+          {/* A client provider around a server-rendered slot: the MDX still renders on
+              the server, and context reaches any <GovernanceDemo> inside it — so the
+              demos get their server gate without a single call site knowing. */}
+          <GateTransportBoundary>
+            <MDX components={getMDXComponents()} />
+          </GateTransportBoundary>
+        </div>
         <DocsPager url={page.url} />
       </article>
       <DocsTOC items={page.data.toc} />

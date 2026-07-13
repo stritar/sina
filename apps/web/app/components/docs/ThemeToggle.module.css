@@ -3,3 +3,8 @@
   font-size: var(--sina-text--base);
   line-height: 1;
 }
+
+.icon {
+  width: var(--sina-size--xs);
+  height: var(--sina-size--xs);
+}

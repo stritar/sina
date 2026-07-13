@@ -16,12 +16,6 @@
   color: var(--sina-color-text);
 }
 
-.desc {
-  margin: 0;
-  font-size: var(--sina-text--sm);
-  color: var(--sina-color-text-muted);
-}
-
 .missing {
   margin: var(--sina-space--4) 0;
   padding: var(--sina-space--4);

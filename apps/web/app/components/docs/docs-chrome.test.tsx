@@ -8,6 +8,20 @@ import type { TOCItemType } from "fumadocs-core/toc";
 // Sidebar reads the active route via usePathname; mock it (no Next router in vitest).
 vi.mock("next/navigation", () => ({ usePathname: () => "/docs" }));
 
+// The toolbar + pager derive breadcrumb/neighbours from the real page tree; a
+// two-page stub keeps the generated `.source` output out of the test run.
+vi.mock("@/lib/source", () => ({
+  source: {
+    pageTree: {
+      name: "Documentation",
+      children: [
+        { type: "page", name: "Quickstart", url: "/docs/quickstart" },
+        { type: "page", name: "For AI agents", url: "/docs/for-ai-agents" },
+      ],
+    },
+  },
+}));
+
 beforeAll(() => {
   // Radix's floating content measures + captures pointers; jsdom implements neither.
   Element.prototype.scrollIntoView = vi.fn();
@@ -25,6 +39,7 @@ import { Sidebar } from "./Sidebar";
 import { DocsTOC } from "./DocsTOC";
 import { ThemeToggle } from "./ThemeToggle";
 import { CopyPageMenu } from "./CopyPageMenu";
+import { DocsArticle } from "./DocsArticle";
 import {
   Callout,
   Card,
@@ -108,13 +123,35 @@ describe("docs chrome a11y", () => {
     expect(container.innerHTML).toBe("");
   });
 
-  it("ThemeToggle has no axe violations and exposes a labelled pressed state", async () => {
+  it("ThemeToggle has no axe violations and cycles system → light → dark", async () => {
+    const user = userEvent.setup();
+    // This env exposes no localStorage (the component tolerates that via try/catch,
+    // but the test needs a real store to assert the choice is persisted).
+    const store = new Map<string, string>();
+    vi.stubGlobal("localStorage", {
+      getItem: (k: string) => store.get(k) ?? null,
+      setItem: (k: string, v: string) => void store.set(k, v),
+      removeItem: (k: string) => void store.delete(k),
+    });
+
     const { container, getByRole } = render(<ThemeToggle />);
     const button = getByRole("button");
-    // Labelled for screen readers and carries a pressed state (toggle semantics).
-    expect(button.getAttribute("aria-label")).toBeTruthy();
-    expect(button.getAttribute("aria-pressed")).not.toBeNull();
+
+    // A three-state CYCLE button, not a binary toggle — so it carries no
+    // `aria-pressed` (which can only say on/off, and would mis-announce "system").
+    // The current state rides on the label instead.
+    expect(button.getAttribute("aria-pressed")).toBeNull();
+    expect(button.getAttribute("aria-label")).toBe("Theme: follow system");
     expect(await axe(container)).toHaveNoViolations();
+
+    // Cycling all the way round is what lets a user hand control back to the OS.
+    for (const expected of ["Theme: light", "Theme: dark", "Theme: follow system"]) {
+      await user.click(button);
+      expect(button.getAttribute("aria-label")).toBe(expected);
+    }
+    expect(store.get("sina-docs-theme")).toBe("system");
+    expect(document.documentElement.getAttribute("data-theme")).toBeTruthy();
+    vi.unstubAllGlobals();
   });
 
   it("CopyPageMenu has no axe violations and copies the page's raw markdown", async () => {
@@ -249,5 +286,40 @@ describe("docs visual kit a11y", () => {
     expect(tabs).toHaveLength(2);
     expect(tabs[0]!.getAttribute("aria-selected")).toBe("true");
     expect(tabs[1]!.getAttribute("aria-selected")).toBe("false");
+  });
+});
+
+describe("docs article structure", () => {
+  // `.prose` styles MDX by element selector (`.prose ol`, `.prose a`, …), which
+  // outranks a chrome component's own single-class rules. Chrome rendered inside
+  // it silently inherits content styling — that is what indented the breadcrumb
+  // by the `.prose ol/li` padding and underlined its link via `.prose a`.
+  const page = {
+    url: "/docs/for-ai-agents",
+    data: {
+      title: "For AI agents",
+      description: "An AI can read your style guide and ignore it.",
+      body: () => <p>Body copy.</p>,
+      toc: [],
+    },
+  } as unknown as Parameters<typeof DocsArticle>[0]["page"];
+
+  it("keeps the toolbar and pager outside the .prose scope", () => {
+    const { container } = render(<DocsArticle page={page} />);
+
+    const prose = container.querySelector(".prose");
+    expect(prose).not.toBeNull();
+    expect(prose!.querySelector('nav[aria-label="Breadcrumb"]')).toBeNull();
+    expect(prose!.querySelector('nav[aria-label="Docs pagination"]')).toBeNull();
+
+    // Still rendered — as siblings of the prose body, not descendants of it.
+    expect(container.querySelector('nav[aria-label="Breadcrumb"]')).not.toBeNull();
+    expect(container.querySelector('nav[aria-label="Docs pagination"]')).not.toBeNull();
+  });
+
+  it("wraps the MDX body in .prose so authored content keeps its typography", () => {
+    const { container } = render(<DocsArticle page={page} />);
+
+    expect(container.querySelector(".prose p")?.textContent).toBe("Body copy.");
   });
 });

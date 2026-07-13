@@ -3,98 +3,59 @@
 /**
  * ChatThread — the product-facing conversation. User turns are plain bubbles;
  * assistant turns are the generative UI SINA mounted, headed by a "governed by
- * SINA" mark. Wire outcomes get the ComparisonToggle (the money shot); transport
- * failures render distinctly.
+ * SINA" mark. Transport failures render distinctly.
+ *
+ * The reply itself is `GateReply` from `@sina-design-system/governance-demo` — the one
+ * implementation shared with the docs embed, so both render the decision the gate
+ * actually made rather than each re-deriving it.
  */
 
 import { Badge, Spinner } from "@sina-design-system/core";
 import { ShieldCheck } from "@phosphor-icons/react/dist/ssr";
-import { INTENTS } from "@sina-design-system/fintech";
 import type { GateTrace } from "@sina-design-system/governance-demo";
-import { resolvePresentational } from "../_lib/registry";
+import { GateReply, isReadReply } from "@sina-design-system/governance-demo";
 import type { ConsoleView, Turn } from "@sina-design-system/governance-demo";
-import { BlockedState } from "./BlockedState";
-import { ComparisonToggle } from "@sina-design-system/governance-demo";
-import { GovernedWireSummary } from "@sina-design-system/governance-demo";
 import { TransportState } from "@sina-design-system/governance-demo";
 import styles from "./ChatThread.module.css";
-
-/**
- * The gate's mounted reply. A clean ungoverned pass mounts the validated
- * presentational component directly (TransactionList, BalanceCard). Money-movement
- * (wire) keeps the ComparisonToggle "money shot" — SINA's governed render vs the
- * raw confirm an ungoverned app would have streamed — on both pass and block;
- * reads don't, since there's no dangerous action to contrast.
- */
-function GateReply({
-  trace,
-  turnId,
-  onApproved,
-}: {
-  trace: GateTrace;
-  turnId?: string;
-  onApproved?: (turnId: string, view: ConsoleView) => void;
-}) {
-  if (trace.result.valid) {
-    const Mounted = resolvePresentational(trace.mount);
-    if (Mounted) return <Mounted payload={trace.payload} />;
-  }
-
-  const inner = trace.result.valid ? (
-    <GovernedWireSummary payload={trace.payload} />
-  ) : (
-    <BlockedState trace={trace} turnId={turnId} onApproved={onApproved} />
-  );
-
-  return trace.intent === INTENTS.WIRE_TRANSFER ? (
-    <ComparisonToggle payload={trace.payload} governed={inner} />
-  ) : (
-    inner
-  );
-}
 
 /** A composed "experience" — several gated reads from one prompt, stacked. */
 function Surface({
   traces,
   turnId,
+  scenarioId,
   onApproved,
 }: {
   traces: GateTrace[];
   turnId?: string;
+  scenarioId?: string;
   onApproved?: (turnId: string, view: ConsoleView) => void;
 }) {
   return (
     <div className={styles.surface}>
       {traces.map((trace, i) => (
-        <GateReply key={i} trace={trace} turnId={turnId} onApproved={onApproved} />
+        <GateReply
+          key={i}
+          trace={trace}
+          turnId={turnId}
+          scenarioId={scenarioId}
+          onApproved={onApproved}
+        />
       ))}
     </div>
   );
-}
-
-/** True when the reply is a clean ungoverned read (validated + a presentational mount). */
-function isReadReply(view: ConsoleView): boolean {
-  if (view.kind === "gate") {
-    return view.trace.result.valid && resolvePresentational(view.trace.mount) !== null;
-  }
-  if (view.kind === "experience") {
-    return (
-      view.traces.length > 0 &&
-      view.traces.every((trace) => trace.result.valid && resolvePresentational(trace.mount) !== null)
-    );
-  }
-  return false;
 }
 
 function AssistantReply({
   view,
   onRetry,
   turnId,
+  scenarioId,
   onApproved,
 }: {
   view: ConsoleView;
   onRetry?: () => void;
   turnId?: string;
+  scenarioId?: string;
   onApproved?: (turnId: string, view: ConsoleView) => void;
 }) {
   if (view.kind === "idle") {
@@ -110,9 +71,19 @@ function AssistantReply({
     view.kind === "transport" ? (
       <TransportState error={view.error} onRetry={onRetry} />
     ) : view.kind === "experience" ? (
-      <Surface traces={view.traces} turnId={turnId} onApproved={onApproved} />
+      <Surface
+        traces={view.traces}
+        turnId={turnId}
+        scenarioId={scenarioId}
+        onApproved={onApproved}
+      />
     ) : (
-      <GateReply trace={view.trace} turnId={turnId} onApproved={onApproved} />
+      <GateReply
+        trace={view.trace}
+        turnId={turnId}
+        scenarioId={scenarioId}
+        onApproved={onApproved}
+      />
     );
   return <div className={styles.reply}>{reply}</div>;
 }
@@ -159,6 +130,7 @@ export function ChatThread({
                 view={turn.streaming ? { kind: "idle" } : turn.view}
                 onRetry={onRetry}
                 turnId={turn.id}
+                scenarioId={turn.scenarioId}
                 onApproved={onApproved}
               />
             </div>

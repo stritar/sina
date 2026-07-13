@@ -11,7 +11,7 @@
 // <canvas>; jsdom has no 2D context, so mock it before anything renders.
 import "vitest-canvas-mock";
 import { afterEach, describe, expect, it } from "vitest";
-import { cleanup, render } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 
 import { runGate, runExperience } from "@sina-design-system/governance-demo";
@@ -20,9 +20,22 @@ import { ChatThread } from "./ChatThread";
 import { Composer } from "./Composer";
 import { ConsoleTimeline } from "@sina-design-system/governance-demo";
 import { AuditLedger } from "@sina-design-system/governance-demo";
-import type { Turn } from "@sina-design-system/governance-demo";
+import { GateTransportProvider } from "@sina-design-system/governance-demo";
+import type { ConsoleView, GateTransport, Turn } from "@sina-design-system/governance-demo";
 
 expect.extend(toHaveNoViolations);
+
+/**
+ * The governed hosts re-gate through the transport, so rendering an escalated trace
+ * needs one in context — `useGateTransport()` throws otherwise, by design (a demo must
+ * never quietly fall back to gating in the browser). Nothing here submits an approval,
+ * so a never-resolving stub is enough.
+ */
+const stubTransport: GateTransport = {
+  runScenario: () => new Promise<ConsoleView>(() => {}),
+  regateWire: () => new Promise<ConsoleView>(() => {}),
+  regateAction: () => new Promise<ConsoleView>(() => {}),
+};
 
 // jsdom lacks these; Radix/components probe for them defensively.
 if (!window.matchMedia) {
@@ -78,11 +91,19 @@ describe("emulator a11y", () => {
 
   it("chat thread + audit ledger have no axe violations", async () => {
     const { container } = render(
-      <div>
+      <GateTransportProvider transport={stubTransport}>
         <ChatThread turns={turns} />
         <AuditLedger events={[blockedTrace.audit!, governedTrace.audit!]} />
-      </div>,
+      </GateTransportProvider>,
     );
+
+    // The registry mounts every component through React.lazy, so a bare render would
+    // axe the (empty) Suspense fallbacks and pass without ever seeing the real markup.
+    // Wait for both lazy branches — the forced governed dialog and a presentational
+    // read — to actually resolve first.
+    await screen.findByRole("button", { name: /Open SecureWireDialog/i });
+    await screen.findAllByText(/Everyday Checking/i);
+
     expect(await axe(container)).toHaveNoViolations();
   });
 

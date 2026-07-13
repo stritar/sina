@@ -25,8 +25,19 @@ export default defineConfig({
     sourcemap: true,
     // ONE extracted stylesheet for the package → dist/styles.css.
     cssCodeSplit: false,
+    // The registry mounts components through `React.lazy(() => import(…))`. By default
+    // Vite wraps every dynamic import in its `__vitePreload` helper, which reaches for
+    // `document.getElementsByTagName("link")` — unguarded. That is fine in an app that
+    // only ever runs in a browser, and fatal here: the consuming Next app evaluates the
+    // same code during SSR and prerender, and the docs build dies with "document is not
+    // defined". A library must emit a plain `import()` and let the host bundler decide
+    // how to preload it.
+    modulePreload: false,
     rollupOptions: {
-      input: ["src/index.ts"],
+      // Two entries: the full package (console UI), and the React-free `./server`
+      // half a server runtime imports — see src/server.ts for why that split is
+      // load-bearing for the Cloudflare worker.
+      input: ["src/index.ts", "src/server.ts"],
       external,
       preserveEntrySignatures: "strict",
       output: {

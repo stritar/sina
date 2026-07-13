@@ -1,6 +1,7 @@
 /* apps/web — marketing landing page (Phase 8 replaces this with the bespoke landing) */
 
 .main {
+  position: relative;
   display: flex;
   min-height: 100vh;
   flex-direction: column;
@@ -9,6 +10,15 @@
   gap: var(--sina-space--4);
   padding: var(--sina-space--12);
   text-align: center;
+}
+
+/* There is no header on the marketing surface (the layout is a passthrough), but
+   the root layout still stamps the OS theme here — so without this the page can
+   land in dark with no way out. */
+.themeSlot {
+  position: absolute;
+  top: var(--sina-space--6);
+  right: var(--sina-space--6);
 }
 
 .title {

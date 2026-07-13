@@ -2,7 +2,7 @@
   "name": "@sina-design-system/governance-demo",
   "version": "0.0.1",
   "private": true,
-  "description": "SINA governance demo substrate — the deterministic, LLM-free gate + read-only interception console. Shared by the playground, the docs, and the marketing landing.",
+  "description": "SINA governance demo substrate — the deterministic, LLM-free server gate, the interception console, the mount registry, and the interactive governed-component hosts. The gate always runs server-side, reached through an injected transport. Shared by the playground, the docs, and the marketing landing.",
   "license": "MIT",
   "type": "module",
   "sideEffects": [
@@ -12,6 +12,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "default": "./dist/server.js"
     },
     "./styles.css": "./dist/styles.css"
   },
@@ -32,6 +36,7 @@
     "@phosphor-icons/react": "^2.1.7",
     "@sina-design-system/core": "workspace:*",
     "@sina-design-system/fintech": "workspace:*",
+    "@sina-design-system/fintech-react": "workspace:*",
     "@sina-design-system/governance": "workspace:*",
     "@sina-design-system/theme": "workspace:*"
   },
@@ -42,6 +47,7 @@
   "devDependencies": {
     "@sina-design-system/config": "workspace:*",
     "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/jest-axe": "^3.5.9",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
