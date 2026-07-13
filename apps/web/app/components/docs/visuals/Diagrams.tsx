@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cx } from "./cx";
+import { Glyph } from "./Glyph";
 import styles from "./Diagrams.module.css";
 
 /**
@@ -25,48 +26,114 @@ function Arrow({ vertical = false }: { vertical?: boolean }) {
 }
 
 /**
- * The interception seam — intent → schema → policy → decision → block | mount.
- * The hero diagram. `highlight` emphasises one outcome (used on the wire page).
+ * A pipeline step — the arrow travels with the chip it points at, so a wrap in a
+ * narrow column never orphans an arrow at the end of a line.
  */
-export function FlowDiagram({ highlight }: { highlight?: "block" | "mount" }) {
+function Step({ arrow = false, children }: { arrow?: boolean; children: ReactNode }) {
+  return (
+    <span className={styles.pipeStep}>
+      {arrow ? (
+        <span className={styles.chipArrow} aria-hidden="true">
+          <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+            <path
+              d="M1 5h11M8.5 1.5 12.5 5l-4 3.5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+      ) : null}
+      {children}
+    </span>
+  );
+}
+
+/** The fake browser both panels render inside — chrome bar + a mock screen. */
+function Browser({ children }: { children: ReactNode }) {
+  return (
+    <div className={styles.browser}>
+      <div className={styles.browserBar}>
+        <span className={styles.dot} aria-hidden="true" />
+        <span className={styles.dot} aria-hidden="true" />
+        <span className={styles.dot} aria-hidden="true" />
+        <span className={styles.browserUrl}>yourapp.com</span>
+      </div>
+      <div className={styles.browserScreen}>{children}</div>
+    </div>
+  );
+}
+
+/**
+ * The hero diagram — the same model and the same request, with and without the
+ * gate. The left screen is whatever the model wrote; the right one is what the
+ * constitution allowed to render.
+ */
+export function SameModelDiagram() {
   return (
     <figure className={styles.figure}>
-      <div className={styles.flow}>
-        <div className={styles.node}>
-          <span className={styles.nodeKicker}>The AI asks</span>
-          <span className={styles.nodeTitle}>&ldquo;Show a transfer&rdquo;</span>
-          <span className={styles.nodeSub}>a goal + data — never UI code</span>
+      <div className={styles.compare}>
+        <div className={cx(styles.panel, styles.panelUngoverned)}>
+          <span className={styles.panelTitle}>
+            <Glyph name="warning" size={16} />
+            Without governance
+          </span>
+          <span className={styles.pipeline}>
+            <Step>
+              <span className={styles.chip}>model</span>
+            </Step>
+            <Step arrow>
+              <span className={cx(styles.chip, styles.chipMono)}>raw UI code</span>
+            </Step>
+          </span>
+          <Browser>
+            <span className={cx(styles.pushButton, styles.pushButtonDanger)}>Confirm $60,000</span>
+            <span className={styles.screenNote}>fabricated by the model — rendered as-is</span>
+          </Browser>
+          <span className={styles.panelFoot}>Whatever the model writes, the user sees.</span>
         </div>
-        <Arrow />
-        <div className={cx(styles.node, styles.gate)}>
-          <span className={styles.nodeKicker}>Your server checks</span>
-          <span className={styles.nodeTitle}>The rules run</span>
-          <span className={styles.nodeSub}>right shape? within your limits?</span>
-        </div>
-        <Arrow />
-        <div className={styles.branch}>
-          <div
-            className={cx(
-              styles.outcome,
-              styles.block,
-              highlight && highlight !== "block" && styles.dim,
-            )}
-          >
-            $60,000 — over your limit: blocked, a second-approver dialog renders instead
-          </div>
-          <div
-            className={cx(
-              styles.outcome,
-              styles.mount,
-              highlight && highlight !== "mount" && styles.dim,
-            )}
-          >
-            $500 — passes every rule: the real, accessible component renders
-          </div>
+
+        <div className={cx(styles.panel, styles.panelGoverned)}>
+          <span className={styles.panelTitle}>
+            <Glyph name="check" size={16} />
+            With SINA
+          </span>
+          <span className={styles.pipeline}>
+            <Step>
+              <span className={styles.chip}>model</span>
+            </Step>
+            <Step arrow>
+              <span className={cx(styles.chip, styles.chipMono)}>intent · data</span>
+            </Step>
+            <Step arrow>
+              <span className={cx(styles.chip, styles.chipGate)}>constitution</span>
+            </Step>
+          </span>
+          <Browser>
+            <div className={styles.dialog}>
+              <span className={styles.dialogTitle}>
+                <Glyph name="shield" size={15} />
+                Second approval required
+              </span>
+              <span className={styles.dialogTerms}>$60,000 wire · vendor payout</span>
+              <span className={styles.dialogViolation}>
+                <Glyph name="warning" size={13} />
+                over the $25,000 limit
+              </span>
+              <span className={styles.dialogActions}>
+                <span className={cx(styles.pushButton, styles.pushButtonPrimary)}>
+                  Request approval
+                </span>
+                <span className={cx(styles.pushButton, styles.pushButtonQuiet)}>Cancel</span>
+              </span>
+            </div>
+          </Browser>
+          <span className={styles.panelFoot}>Whatever passes your rules, the user sees.</span>
         </div>
       </div>
       <figcaption className={styles.caption}>
-        The AI proposes; your server decides; the screen only shows what passed.
+        Same model, same request — the difference is what&rsquo;s allowed to render.
       </figcaption>
     </figure>
   );

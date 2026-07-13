@@ -64,6 +64,9 @@ The slogan implies an antithesis. Say the other half where there's room.
 
 Already written, already true, already in voice. Reach for these before inventing.
 
+If the slot you need is empty, the candidates live in **`BRAND_LINES.md`** — 50 lines, grouped by job.
+That file is the bench; this one is the team. A line gets promoted here once it's earned it in the wild.
+
 | Line | Job |
 |---|---|
 | "It's refusing well." | the thesis |

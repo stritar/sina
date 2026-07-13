@@ -16,7 +16,7 @@ export { Tabs, Tab } from "./Tabs";
 export { TokenSwatch, TokenSwatchGrid } from "./TokenSwatch";
 export { Term } from "./Term";
 export {
-  FlowDiagram,
+  SameModelDiagram,
   ArchitectureDiagram,
   EnforcementLadder,
   TokenTree,

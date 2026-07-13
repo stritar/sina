@@ -15,7 +15,7 @@ import { walkDocs, CONTENT_ROOT } from "./docs-test-helpers";
  * a visible, reviewable change. Recipe: /new-doc-page.
  */
 const CANON: Array<{ marker: RegExp; name: string; allowed: string[] }> = [
-  { marker: /<FlowDiagram/, name: "FlowDiagram", allowed: ["index.mdx"] },
+  { marker: /<SameModelDiagram/, name: "SameModelDiagram", allowed: ["index.mdx"] },
   { marker: /<ArchitectureDiagram/, name: "ArchitectureDiagram", allowed: ["how-it-works.mdx"] },
   { marker: /<EnforcementLadder/, name: "EnforcementLadder", allowed: ["concepts/escalation.mdx"] },
   { marker: /<TokenTree/, name: "TokenTree", allowed: ["theming/tokens.mdx"] },

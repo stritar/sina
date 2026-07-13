@@ -54,7 +54,7 @@ import {
   KeyboardTable,
   TokenSwatch,
   TokenSwatchGrid,
-  FlowDiagram,
+  SameModelDiagram,
   ArchitectureDiagram,
   EnforcementLadder,
   TokenTree,
@@ -238,7 +238,7 @@ describe("docs visual kit a11y", () => {
         <TokenSwatchGrid>
           <TokenSwatch name="--sina-color-primary" note="Primary action" />
         </TokenSwatchGrid>
-        <FlowDiagram highlight="block" />
+        <SameModelDiagram />
         <ArchitectureDiagram />
         <EnforcementLadder />
         <TokenTree />
