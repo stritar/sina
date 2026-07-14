@@ -14,8 +14,8 @@ other governed flow is a variation on this one.
 
 ## The request
 
-The AI proposes a transfer. Just data — an intent and props, never a component
-(see [How it works](/docs/how-it-works)):
+The AI proposes a transfer. It sends data only: an intent and props, never a
+component (see [How it works](/docs/how-it-works)).
 
 ```ts
 { intent: "wire_transfer",
@@ -26,46 +26,46 @@ The AI proposes a transfer. Just data — an intent and props, never a component
 
 First, the strict parse. Every field is checked against the schema: amount is an
 integer in minor units, the currency code is real, the account identifiers pass
-their checksums, and any field the schema doesn't know — a smuggled
-`confirmButton`, a stray `cvv` — rejects the whole payload. This request is
+their checksums. Any field the schema doesn't know, like a smuggled
+`confirmButton` or a stray `cvv`, rejects the whole payload. This request is
 well-formed, so it moves on.
 
 ## The policy check finds three things
 
-The shape is valid, so policy runs. It trips **three** violations — and each
+The shape is valid, so policy runs. It trips **three** violations, and each one
 cites where it comes from:
 
 | Finding | Severity | Standard |
 |---|---|---|
-| Reportable transaction (CTR) | `flag` | FinCEN — 31 CFR 1010.311 |
-| Suspicious-activity review (SAR) | `flag` | FinCEN — 31 CFR Ch. X |
+| Reportable transaction (CTR) | `flag` | FinCEN, 31 CFR 1010.311 |
+| Suspicious-activity review (SAR) | `flag` | FinCEN, 31 CFR Ch. X |
 | Over the $50,000 approval limit | `escalate` | SINA dual-control policy |
 
-The two flags are informational — recorded, not blocking. The **escalate** is the
-one that acts: it refuses the plain confirm and names
+The two flags are informational: recorded, not blocking. The **escalate** is the
+one that acts. It refuses the plain confirm and names
 `requiredComponent: "SecureWireDialog"`. (Severities are covered in
-[Escalation](/docs/concepts/escalation).) An audit event fires here too:
-timestamp, payload, all three violations, and the decided component — the block
-is on the record before anything renders.
+[Escalation](/docs/concepts/escalation).) An audit event fires here too, carrying
+the timestamp, the payload, all three violations, and the decided component. The
+block is on the record before anything renders.
 
 ## The forced dialog
 
 SINA mounts `SecureWireDialog` instead of a confirm button. The dialog walks a
 second person through:
 
-1. **Review** the exact terms (amount, recipient) — a read-only summary.
-2. **Identify** as the approver — an ID and name that must differ from the initiator.
+1. **Review** the exact terms (amount, recipient) in a read-only summary.
+2. **Identify** as the approver, with an ID and name that must differ from the initiator.
 3. **Confirm** with a one-time code.
 
 When they submit, the evidence goes **back to the server** and the constitution
-runs again. The dialog itself validates nothing — it just collects the approval.
+runs again. The dialog itself validates nothing. It only collects the approval.
 
 <Callout variant="enforced" title="Two checks make it un-bypassable">
-  On the second pass the server enforces two things a hostile stream can't fake:
-  **four-eyes** (the approver must differ from the server-known initiator — you
-  can't approve your own wire) and **payload binding** (the approval is tied to
-  the exact terms, recomputed on the server — you can't approve $5,000 and
-  execute $60,000).
+  On the second pass the server enforces two things a hostile stream can't fake.
+  **Four-eyes**: the approver must differ from the server-known initiator, so you
+  can't approve your own wire. **Payload binding**: the approval is tied to the
+  exact terms, recomputed on the server, so you can't approve $5,000 and execute
+  $60,000.
 </Callout>
 
 In the demo below, the initiator tries to approve their own wire. Four-eyes
@@ -75,15 +75,15 @@ refuses it outright, and there is no way to proceed from there.
 
 ## The happy ending
 
-Governance escalates; it doesn't just refuse. A *valid* approval — a different
-manager, bound to the exact $60,000 terms — clears the gate on the second pass,
-and the transfer mounts as a completed, governed action. A second
-[audit event](/docs/concepts/audit-trail) records the approval: who approved,
-what exact terms, and that the gate passed. The whole story — block, approval,
-pass — is reconstructible later.
+Governance escalates; it doesn't just refuse. A *valid* approval clears the gate
+on the second pass: a different manager, bound to the exact $60,000 terms. The
+transfer then mounts as a completed, governed action. A second
+[audit event](/docs/concepts/audit-trail) records who approved, on what terms,
+and that the gate passed. The whole story stays reconstructible later: block,
+approval, pass.
 
-Try it: open the forced dialog and approve as a *different* manager — the server
-re-checks and the decision flips. Approve as the initiator and it refuses.
+Try it. Open the forced dialog and approve as a *different* manager, and the
+server re-checks and the decision flips. Approve as the initiator and it refuses.
 
 <GovernanceDemo
   scenario="over-limit"
@@ -94,7 +94,7 @@ re-checks and the decision flips. Approve as the initiator and it refuses.
 <Recap>
 Over-limit wire → strict parse passes → three violations (two flags, one
 escalate) → `SecureWireDialog` → a *different* approver + one-time code → server
-re-checks four-eyes and payload binding → approved and mounted, or refused — with
+re-checks four-eyes and payload binding → approved and mounted, or refused, with
 an audit event at each decision. The raw confirm is never an option.
 </Recap>
 

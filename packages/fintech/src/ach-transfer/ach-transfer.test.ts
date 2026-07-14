@@ -2,8 +2,15 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { resetAuditSink, setAuditSink } from "@sina-design-system/governance";
 
 import { evaluateAchTransfer } from "./ach-transfer.schema.js";
-import { ACTION_INITIATOR_ID } from "../formats/step-up.js";
-import { validSmall, overLimit, validAuthorized, fabricatedConfirm } from "./fixtures.js";
+import { usd } from "../formats/currency.js";
+import { ACTION_INITIATOR_ID, actionHash } from "../formats/step-up.js";
+import {
+  validSmall,
+  overLimit,
+  validAuthorized,
+  sameDayOverNachaLimit,
+  fabricatedConfirm,
+} from "./fixtures.js";
 
 afterEach(resetAuditSink);
 
@@ -47,6 +54,42 @@ describe("ach-transfer constitution", () => {
     const result = evaluateAchTransfer(mismatched);
     expect(result.valid).toBe(false);
     expect(result.violations.some((v) => v.code === "APPROVAL_PAYLOAD_MISMATCH")).toBe(true);
+  });
+
+  it("hard-rejects a same-day entry above the Nacha per-payment limit", () => {
+    const result = evaluateAchTransfer(sameDayOverNachaLimit);
+    expect(result.valid).toBe(false);
+    const violation = result.violations.find((v) => v.code === "ACH_SAMEDAY_LIMIT_EXCEEDED");
+    expect(violation?.severity).toBe("reject");
+    expect(violation?.standard).toContain("Nacha Operating Rules");
+  });
+
+  it("cannot approve its way past the Nacha limit (reject outranks authorization)", () => {
+    // The entry is also over the $25k authorization band, so it escalates too — but a
+    // `reject` keeps `valid` false no matter what approval a re-submission carries.
+    const counterparty = {
+      name: "Beta LLC",
+      routingNumber: "021000021",
+      accountNumber: "1234567890",
+    };
+    const terms = { amount: usd(1_500_000), currency: "USD" as const, counterparty, sameDay: true };
+    const result = evaluateAchTransfer({
+      ...terms,
+      stepUp: {
+        approverId: "mgr:dana",
+        approverName: "Dana Approver",
+        secondFactor: "246810",
+        payloadHash: actionHash(terms),
+      },
+    });
+    expect(result.valid).toBe(false);
+    expect(result.violations.some((v) => v.severity === "reject")).toBe(true);
+  });
+
+  it("leaves a same-day entry below the Nacha limit alone", () => {
+    const result = evaluateAchTransfer({ ...validSmall, sameDay: true });
+    expect(result.valid).toBe(true);
+    expect(result.violations).toEqual([]);
   });
 
   it("rejects a fabricated key via .strict()", () => {

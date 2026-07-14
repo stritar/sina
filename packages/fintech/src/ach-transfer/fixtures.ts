@@ -36,6 +36,14 @@ export const validAuthorized: AchTransferPayload = {
   },
 };
 
+/** $1.5M same-day entry — above the Nacha per-payment ceiling → hard reject. */
+export const sameDayOverNachaLimit: unknown = {
+  amount: usd(1_500_000),
+  currency: "USD",
+  counterparty,
+  sameDay: true,
+};
+
 /** A fabricated `confirmButton` key → `.strict()` reject. */
 export const fabricatedConfirm: unknown = {
   amount: usd(500),

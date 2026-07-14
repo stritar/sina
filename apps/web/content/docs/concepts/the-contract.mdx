@@ -13,33 +13,33 @@ type InterceptionResult = {
 };
 ```
 
-- **`valid`** — `true` only when nothing blocks. One blocking problem makes it
+- **`valid`**: `true` only when nothing blocks. One blocking problem makes it
   `false`.
-- **`violations`** — what the gate found. Each has a `message`, a `severity`,
-  and a `standard` — the regulation or policy it comes from, so a block is
+- **`violations`**: what the gate found. Each has a `message`, a `severity`,
+  and a `standard`, the regulation or policy it comes from, so a block is
   explainable, not a mystery.
-- **`requiredComponent`** — when a rule demands a stricter component (like a
+- **`requiredComponent`**: when a rule demands a stricter component (like a
   second-approver dialog), its name goes here. Otherwise `null`.
 
 ## How the result is produced: shape, then values
 
-**Layer 1 — structure.** Is the payload exactly the right shape? Schemas are
-**strict** — any field that isn't supposed to be there is rejected. If an AI
+**Layer 1: structure.** Is the payload exactly the right shape? Schemas are
+**strict**, so any field that isn't supposed to be there is rejected. If an AI
 tries to smuggle in a fabricated `confirmButton`, a `cvv`, or a full card
 number, those are *extra fields*, thrown out before any value is looked at.
 
 <BeforeAfter>
   <Before title="What a hostile stream sends">
-    <code>{`{ amount: 500, confirmButton: true, cvv: "123" }`}</code> — a real
+    <code>{`{ amount: 500, confirmButton: true, cvv: "123" }`}</code>: a real
     amount, plus a fake button and smuggled card data.
   </Before>
   <After title="What the schema accepts">
-    <code>{`{ amount: 500 }`}</code> — the extra fields are rejected. The fake
+    <code>{`{ amount: 500 }`}</code>: the extra fields are rejected. The fake
     button can't render; the card data never reaches the log.
   </After>
 </BeforeAfter>
 
-**Layer 2 — policy.** If the shape is valid, do the values obey the rules?
+**Layer 2: policy.** If the shape is valid, do the values obey the rules?
 These are the cited limits:
 
 ```ts
@@ -49,9 +49,9 @@ if (amount > WIRE_SECONDARY_APPROVAL_MINOR /* $50,000 */) {
 }
 ```
 
-One subtlety worth knowing: SINA counts money in **integer minor units** —
-cents, not dollars — per ISO 4217. No floating point, no rounding drift;
-amounts either match exactly or they don't.
+One subtlety worth knowing: SINA counts money in **integer minor units**, cents
+rather than dollars, per ISO 4217. No floating point, no rounding drift; amounts
+either match exactly or they don't.
 
 ## Pass vs. fail
 
@@ -71,12 +71,12 @@ amounts either match exactly or they don't.
 }
 ```
 
-You read that and know exactly what to do: don't render the raw confirm —
-render `SecureWireDialog`.
+You read that and know exactly what to do: don't render the raw confirm. Render
+`SecureWireDialog`.
 
 Both **governed** rules (actions, which can escalate) and **ungoverned** rules
 (read-only displays, which only check shape and never set `requiredComponent`)
-return this same contract — so the code that renders a decision is the same
+return this same contract, so the code that renders a decision is the same
 everywhere.
 
 Next: [Escalation & enforcement](/docs/concepts/escalation).

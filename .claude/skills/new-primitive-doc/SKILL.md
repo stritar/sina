@@ -33,6 +33,8 @@ per page).
    `@/app/components/docs/demos/primitives/<slug>` → `<Name>Hero />` → 1–2
    sentence intro → `## Usage` (tsx fence) → `## Examples` + `<Name>Examples />`
    → `## Props` (`<PropsTable>`) → optional `## Do & don't` → `## Accessibility`.
+   The intro, the `## Accessibility` note, **and the `PropsTable` `description`
+   strings** are reader-facing prose: no em-dashes, per `/human-prose`.
 3. Add the slug to `primitives/meta.json` and a card (with a tiny inert
    specimen) to the gallery
    (`apps/web/app/components/docs/demos/primitives/gallery.tsx`).

@@ -20,6 +20,11 @@ const CANON: Array<{ marker: RegExp; name: string; allowed: string[] }> = [
   { marker: /<EnforcementLadder/, name: "EnforcementLadder", allowed: ["concepts/escalation.mdx"] },
   { marker: /<TokenTree/, name: "TokenTree", allowed: ["theming/tokens.mdx"] },
   {
+    marker: /<StandardsTable/,
+    name: "StandardsTable",
+    allowed: ["governance/standards.mdx"],
+  },
+  {
     marker: /<GovernanceDemo/,
     name: "GovernanceDemo",
     allowed: ["agents.mdx", "governance/wire-transfer.mdx"],

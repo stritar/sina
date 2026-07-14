@@ -1,4 +1,4 @@
 {
   "title": "Governance",
-  "pages": ["index", "wire-transfer", "writing-a-rule", "components-and-patterns"]
+  "pages": ["index", "standards", "wire-transfer", "writing-a-rule", "components-and-patterns"]
 }

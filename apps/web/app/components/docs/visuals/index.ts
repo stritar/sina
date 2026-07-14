@@ -12,6 +12,7 @@ export { DeepDive } from "./DeepDive";
 export { YouWillLearn, Recap } from "./Bookends";
 export { ComplianceNote, A11yBar, Prereqs } from "./Partials";
 export { PropsTable, KeyboardTable, DataAttrTable } from "./Tables";
+export { StandardsTable } from "./StandardsTable";
 export { Tabs, Tab } from "./Tabs";
 export { TokenSwatch, TokenSwatchGrid } from "./TokenSwatch";
 export { Term } from "./Term";

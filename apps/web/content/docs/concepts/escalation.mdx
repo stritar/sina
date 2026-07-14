@@ -7,13 +7,12 @@ carries a **severity** that decides what happens next. There are three.
 
 <EnforcementLadder />
 
-- **`flag`** is informational. It's recorded on the decision — useful for
-  compliance and reporting — but blocks nothing. A $5,000 transfer is flagged
-  for review and still goes through.
+- **`flag`** is informational. It's recorded on the decision, which is useful
+  for compliance and reporting, but it blocks nothing. A $5,000 transfer is
+  flagged for review and still goes through.
 - **`escalate`** blocks the standard render and **forces a stricter component
   instead**. The over-limit wire escalates to a `SecureWireDialog` that demands
-  a second approver. The request isn't refused — it's redirected to a safer
-  path.
+  a second approver. The request is redirected to a safer path, not refused.
 - **`reject`** is a hard block. Nothing mounts. A fabricated button, smuggled
   card data, or a self-approved transfer is simply refused.
 
@@ -25,11 +24,11 @@ carries a **severity** that decides what happens next. There are three.
 
 <Callout variant="tip" title="Honest note">
   Severity is a property of each rule's logic, not a global on/off switch. To
-  "loosen" enforcement you change the rule (or which intents you route through
-  the gate) — deliberately, in code, where it's reviewable.
+  "loosen" enforcement you change the rule, or which intents you route through
+  the gate. That happens deliberately, in code, where it's reviewable.
 </Callout>
 
-You don't have to govern your whole app on day one — rules are independent, so
+You don't have to govern your whole app on day one. Rules are independent, so
 you can start with a single intent and expand from there. See [Adopt
 incrementally](/docs/guides/adopt-incrementally).
 

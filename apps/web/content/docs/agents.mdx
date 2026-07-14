@@ -6,12 +6,12 @@ An AI can read your style guide and ignore it. It cannot ignore a rule that
 runs as code between its request and the screen. That's the shift SINA makes:
 the rules aren't a document the AI consults, they're a gate it passes through.
 A design system an AI can *read* is a suggestion; one it must *pass through* is
-a guarantee. And unlike a careful prompt — which can be misread, forgotten, or
-overridden by a clever input — an enforced rule can't be talked out of the way.
+a guarantee. A careful prompt can still be misread, forgotten, or overridden by
+a clever input. An enforced rule can't be talked out of the way.
 
 ## What the agent sends
 
-SINA gives the model a menu of intent verbs — a manifest:
+SINA gives the model a menu of intent verbs, a manifest:
 
 ```ts
 [
@@ -27,7 +27,7 @@ building a screen.
 ## The two things it can never do
 
 - **It can't name the component.** The manifest has verbs, not components. SINA
-  maps the verb to a component *after* the gate runs — the model doesn't know
+  maps the verb to a component *after* the gate runs, so the model doesn't know
   the raw confirm button exists.
 - **It can't invent the data for a read.** When the model asks to *show* a
   balance or a transaction list, your server supplies the real values. The
@@ -41,13 +41,13 @@ the server recomputes).
 
 <Callout variant="enforced" title="Asking is not doing">
   The agent can *ask* for anything. It can't *do* anything the gate didn't
-  allow. That gap — between proposing and rendering — is where all of SINA's
-  safety lives.
+  allow. That gap between proposing and rendering is where all of SINA's safety
+  lives.
 </Callout>
 
 ## Try it
 
-This demo runs the **real gate** — the same code your server would run, on a
+This demo runs the **real gate**: the same code your server would run, on a
 server, when you press Run. A hostile stream tries to smuggle in a fabricated
 "Confirm" button; strict parsing throws out the extra field before any value is
 read. Swap the request to see where the boundary actually falls.
@@ -57,10 +57,10 @@ read. Swap the request to see where the boundary actually falls.
   scenarios={["fabricated-confirm", "small", "over-limit", "self-approval"]}
 />
 
-The emulator has three modes — mock (recorded request), direct (hand-written
-JSON), live (a real model) — and the decision is identical in all of them,
-because the gate doesn't care where a request came from. See the full walkthrough
-in [the $60k wire](/docs/governance/wire-transfer).
+The emulator has three modes: mock (a recorded request), direct (hand-written
+JSON), and live (a real model). The decision is identical in all of them,
+because the gate doesn't care where a request came from. See the full
+walkthrough in [the $60k wire](/docs/governance/wire-transfer).
 
 ## Docs your agent can read
 
@@ -72,6 +72,6 @@ Point a coding assistant here and it can consume the docs directly:
 | Per-page `.md` | Every page has a raw-Markdown twin under `/llms/docs/…`. |
 
 The index leads with an agent-facing preamble in SINA's own spirit: emit UI as
-**intent** — a verb and props — never a fabricated component; send it to the
+**intent**, a verb and props, never a fabricated component; send it to the
 server-side gate; prefer the registered intents, because anything else is
 denied.

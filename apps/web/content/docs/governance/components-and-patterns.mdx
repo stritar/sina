@@ -3,7 +3,7 @@ title: Governed components & display patterns
 ---
 
 The Constitution's rules resolve to two kinds of UI. **Governed components**
-render an escalation — the stricter flow a rule forces. **Display patterns**
+render an escalation, the stricter flow a rule forces. **Display patterns**
 render a clean read. Neither validates anything itself; each renders the decision
 the gate already made ([How it works](/docs/how-it-works)).
 
@@ -12,23 +12,23 @@ the gate already made ([How it works](/docs/how-it-works)).
 Dozens of governed rules escalate to just **three** components. The rules differ;
 the safe destinations are shared and battle-tested.
 
-- **`SecureWireDialog`** — forced when a wire needs a second approver. It runs
+- **`SecureWireDialog`**: forced when a wire needs a second approver. It runs
   the four-eyes loop: review the exact terms → collect a *different* approver's
   identity → confirm with a one-time code → re-check on the server. A denied
-  re-check keeps the dialog open — there's no way to "click past" it. See
+  re-check keeps the dialog open, so there's no way to "click past" it. See
   [the $60k wire](/docs/governance/wire-transfer).
-- **`GovernedActionDialog`** — forced when almost any other authorization-gated
+- **`GovernedActionDialog`**: forced when almost any other authorization-gated
   action escalates: ACH, P2P, bill pay, FX, card operations, limit changes,
-  account opening, trades. Same shape as the wire dialog with the terms derived
-  from the action — it's why SINA covers a whole banking app without a bespoke
+  account opening, trades. Same shape as the wire dialog, with the terms derived
+  from the action. That's how SINA covers a whole banking app without a bespoke
   dialog per flow.
-- **`MandatoryDisclosure`** — forced when the user must acknowledge required
+- **`MandatoryDisclosure`**: forced when the user must acknowledge required
   text: margin suitability, a lending (TILA) disclosure, an FX-spread notice. The
-  text comes from the rule, not the model — an AI can't soften, shorten, or skip
-  a legally required notice.
+  text comes from the rule, not the model, so an AI can't soften, shorten, or
+  skip a legally required notice.
 
 <Callout variant="note" title="The same phases every time">
-  All three share one state machine — review → collect → pending → resolved. One
+  All three share one state machine: review → collect → pending → resolved. One
   interaction pattern to learn, one set of states to test, one accessible
   experience across every governed flow.
 </Callout>
@@ -36,15 +36,15 @@ the safe destinations are shared and battle-tested.
 ## Display patterns
 
 A real app spends most of its time *showing* things. A display rule has no limits
-or approvals — but it still checks **shape** (strict parse), **bounds** (lists
+or approvals, but it still checks **shape** (strict parse), **bounds** (lists
 are capped), and **privacy** (identifiers must be masked). Pass all three and
-SINA mounts a presentational component — `TransactionList`, `BalanceCard`,
-`PortfolioHoldings`, and their siblings; about two dozen, one per kind of read.
+SINA mounts a presentational component: `TransactionList`, `BalanceCard`,
+`PortfolioHoldings`, and their siblings, about two dozen, one per kind of read.
 
-Two properties do the safety work. The model picks *what* to show; **your server
-supplies the values** — it can't invent a balance. And reads are **read-only**:
-no display component renders a raw action button. Acting from a list — dispute a
-charge, pay a bill — is a new intent that re-enters the gate.
+Two properties do the safety work. The model picks *what* to show, but **your
+server supplies the values**, so it can't invent a balance. And reads are
+**read-only**: no display component renders a raw action button. Acting from a
+list (dispute a charge, pay a bill) is a new intent that re-enters the gate.
 
 ## The intent registry
 
@@ -64,13 +64,13 @@ to its rule and its component. The model never names a component.
 | `spending_breakdown` · `budget_progress` · `list_cards` · `list_payees` · … | Display | presentational reads |
 
 <Callout variant="note" title="Unknown verbs are denied">
-  An intent that isn't in the registry is rejected as `UNKNOWN_INTENT` — and
+  An intent that isn't in the registry is rejected as `UNKNOWN_INTENT`, and
   still audited. The default is deny, not pass.
 </Callout>
 
 ## The `@sina-design-system/fintech` catalog
 
-The schemas live in `@sina-design-system/fintech` — pure Zod, no React, no UI.
+The schemas live in `@sina-design-system/fintech`: pure Zod, no React, no UI.
 One entry point routes everything:
 
 ```ts
@@ -87,7 +87,7 @@ const { valid, violations, requiredComponent } = evaluateFintechIntent({
 | Governed schemas | `wire-transfer`, `ach-transfer`, `p2p-payment`, `bill-pay`, `fx-convert`, `add-payee`, `kyc`, `issue-card`, `card-control`, `change-limit`, `place-trade`, `credit-request`, … |
 | Display schemas | `transaction-list`, `account-balance`, `portfolio-holdings`, `spending-breakdown`, … |
 | Format primitives | `currency` (ISO 4217), `amount` (integer minor units), `iban` (ISO 13616), `bic` (ISO 9362), `routing` (ABA), `card` (Luhn), `masked-account`, `step-up` |
-| Cited thresholds | `thresholds.ts` — every numeric limit as a named constant with its citation |
+| Cited thresholds | `thresholds.ts`: every numeric limit as a named constant with its citation |
 | Fixtures | each schema ships valid + adversarial payloads in `fixtures.ts` |
 
 The authoritative catalog is `packages/fintech/PATTERNS.md`. To add to it:

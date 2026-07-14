@@ -32,7 +32,7 @@ import { KpiStat } from "@sina-design-system/core";
   rows={[
     { prop: "value", type: "number | null", description: "The headline figure; null renders displayNullAs." },
     { prop: "valueFormatter", type: "(value: number) => string", description: "Formats the value and the delta (currency etc.)." },
-    { prop: "comparisonValue", type: "number", description: "A prior value — renders the trend pill." },
+    { prop: "comparisonValue", type: "number", description: "A prior value. Renders the trend pill." },
     { prop: "comparisonLabel", type: "string", description: "Context under the pill, e.g. “vs previous period”." },
     { prop: "showChangeAsPercentage", type: "boolean", default: "false", description: "Show the delta as a percentage." },
     { prop: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Tile scale." },
@@ -42,6 +42,6 @@ import { KpiStat } from "@sina-design-system/core";
 
 ## Accessibility
 
-A falling trend uses a danger badge with a bold down-glyph — meaning never rests on
-color alone. Everything is real text (no image, no canvas), and it's
+A falling trend uses a danger badge with a bold down-glyph, so meaning never rests
+on color alone. Everything is real text (no image, no canvas), and it's
 server-mountable (no client JS).

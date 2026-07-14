@@ -2,8 +2,8 @@
 title: Tokens
 ---
 
-A **design token** is a named value — a color, a spacing step, a font size —
-that components reference instead of hard-coding. Change the value once and
+A **design token** is a named value that components reference instead of
+hard-coding: a color, a spacing step, a font size. Change the value once and
 everything pointing at it updates. In SINA, tokens are CSS custom properties,
 all prefixed `--sina-`.
 
@@ -11,24 +11,24 @@ all prefixed `--sina-`.
 
 <TokenTree />
 
-- **Primitive** — a raw value in `theme.css`, like a specific green.
-- **Semantic** — a *role* that gives the value meaning: `--sina-color-primary`
+- **Primitive**: a raw value in `theme.css`, like a specific green.
+- **Semantic**: a *role* that gives the value meaning. `--sina-color-primary`
   means "the primary action color," whatever that happens to be.
-- **Component** — a token scoped to one component, like `--sina-button-bg`,
+- **Component**: a token scoped to one component, like `--sina-button-bg`,
   which points at a semantic role.
 
 You almost always reach for the **semantic** tier. It answers "what does this
-color *mean*," not "what hex is it" — which is why a [theme](/docs/theming) can
+color *mean*," not "what hex is it." That's why a [theme](/docs/theming) can
 re-value a role and every component follows.
 
 ## The naming grammar
 
 One rule, so you can read a name and know what it does:
 
-- A single dash joins the **identity** — category, role, property:
+- A single dash joins the **identity** (category, role, property):
   `--sina-color-text-muted`, `--sina-button-bg`.
-- A double dash marks a **leaf modifier** — a scale step, variant, or state —
-  and it always comes last: `--sina-space--4`, `--sina-color-primary--hover`,
+- A double dash marks a **leaf modifier** (a scale step, variant, or state), and
+  it always comes last: `--sina-space--4`, `--sina-color-primary--hover`,
   `--sina-button-bg--primary--hover`.
 
 <Callout variant="tip" title="Read it like a sentence">
@@ -52,7 +52,7 @@ one"). Click a swatch to copy its variable.
   <TokenSwatch name="--sina-color-secondary" note="Secondary action" />
 </TokenSwatchGrid>
 
-Every surface role has a `-fg` partner — the color guaranteed readable on it.
+Every surface role has a `-fg` partner: the color guaranteed readable on it.
 Use `primary` for a button's background and `primary-fg` for its label, and
 contrast takes care of itself. The status roles work the same way:
 
@@ -65,9 +65,9 @@ contrast takes care of itself. The status roles work the same way:
 
 Two rules are enforced by build guards: colors are authored **hex-only** in
 `theme.css` (`#rrggbb`, never `rgb()` / `hsl()` / named colors), and component
-CSS never writes a raw color — only `var(--sina-*)`. Status colors like
+CSS never writes a raw color, only `var(--sina-*)`. Status colors like
 `danger`, plus the focus ring and secure-surface tint, are
-**governance-locked** — see [the locked boundary](/docs/theming).
+**governance-locked**. See [the locked boundary](/docs/theming).
 
 ## The scales
 
@@ -91,7 +91,7 @@ steps keeps a UI rhythmic instead of arbitrary.
 
 ## How tokens reach components
 
-Each component declares its own token layer — `--sina-button-bg--primary`
-aliases `--sina-color-primary` — and its CSS consumes only that layer. So a
+Each component declares its own token layer, where `--sina-button-bg--primary`
+aliases `--sina-color-primary`, and its CSS consumes only that layer. So a
 theme re-values a semantic role once, and every component slot pointing at it
 updates. That indirection is the whole theming mechanism.

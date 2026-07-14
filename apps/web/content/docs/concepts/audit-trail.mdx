@@ -4,8 +4,8 @@ title: The audit trail
 
 Every decision the gate makes emits an <Term term="audit event">audit
 event</Term>. This is what turns "the AI built a screen" into "here's exactly
-what it asked for, what we decided, and why" — compliance can review it, you
-can debug with it, and users can trust nothing happened off the record.
+what it asked for, what we decided, and why." Compliance can review it, you can
+debug with it, and users can trust nothing happened off the record.
 
 ## The shape
 
@@ -22,7 +22,7 @@ type AuditEvent = {
 ```
 
 Because every violation carries its `standard`, the record doesn't just say "we
-blocked it" — it says *which rule* blocked it and *where that rule comes from*.
+blocked it." It says *which rule* blocked it and *where that rule comes from*.
 
 ## Redaction happens first
 
@@ -30,8 +30,8 @@ The payload is **redacted before it's ever stored**:
 
 - **Dropped** entirely: card security codes (CVV) and PINs.
 - **Masked** to the last four digits: card numbers (PAN).
-- **Hashed** to a fingerprint: account and IBAN numbers — enough to correlate
-  two events, never enough to reconstruct the number.
+- **Hashed** to a fingerprint: account and IBAN numbers, enough to correlate
+  two events and never enough to reconstruct the number.
 
 <Callout variant="governance" title="Safe by construction">
   Redaction isn't a setting you can forget to turn on. It runs as part of
@@ -40,7 +40,7 @@ The payload is **redacted before it's ever stored**:
 </Callout>
 
 <Callout variant="note" title="Where it goes">
-  Today the audit event is a defined contract with a no-op sink — the shape is
+  Today the audit event is a defined contract with a no-op sink. The shape is
   fixed and every decision emits one. Wiring it to a durable sink is planned
   release-hardening work.
 </Callout>

@@ -3,7 +3,7 @@ title: Theming
 ---
 
 A theme in SINA is **the same tokens with different values**. You never edit a
-component to rebrand it — you redefine the `--sina-*` custom properties and every
+component to rebrand it. You redefine the `--sina-*` custom properties, and every
 component pointing at them updates. The cascade makes overrides trivial: SINA's
 reset lives in `@layer reset`, while component and app CSS are unlayered, so your
 app's CSS wins by plain source order. Import your theme block after SINA's styles
@@ -45,15 +45,15 @@ const acme = createTheme(
   <Step title="Scope it">
 
 Put the block on `:root` for one brand, or under `[data-theme="acme"]` for
-several — scoped brands compose with dark mode. For a local override,
+several. Scoped brands compose with dark mode. For a local override,
 `themeVars()` returns the same tokens as an inline-style object for `style={}`.
 
   </Step>
 </Steps>
 
 <Callout variant="tip" title="Start small">
-  Most brands override a handful of roles — `primary`, the surfaces, maybe
-  radius — and inherit the rest.
+  Most brands override a handful of roles (`primary`, the surfaces, maybe
+  radius) and inherit the rest.
 </Callout>
 
 ## Dark mode is the same trick
@@ -65,7 +65,7 @@ system toggle is just writing that attribute and remembering the choice in
 
 ## The locked boundary
 
-Not every token is yours to change — and that boundary is itself a governance
+Not every token is yours to change, and that boundary is itself a governance
 decision.
 
 | | Roles | |
@@ -75,9 +75,9 @@ decision.
 
 <Callout variant="governance" title="Why lock anything?">
   A brand theme must never make an error look calm, hide the focus ring from
-  keyboard users, or disguise a secure-action affordance. Those aren't style —
+  keyboard users, or disguise a secure-action affordance. Those aren't style;
   they're safety and accessibility signals. `createTheme()` rejects a locked
-  role at compile time. (Raw CSS can still force a variable by specificity — the
+  role at compile time. (Raw CSS can still force a variable by specificity. The
   API simply won't help you do it.)
 </Callout>
 
@@ -88,10 +88,10 @@ decision.
     "Re-check contrast after a heavy rebrand",
   ]}
   dont={[
-    "Restyle danger to look friendly — errors must read as errors",
+    "Restyle danger to look friendly; errors must read as errors",
     "Remove or dim the focus ring",
     "Hard-code hex in a component to dodge the token system",
   ]}
 />
 
-Next: [Tokens](/docs/theming/tokens) — the vocabulary every theme re-values.
+Next: [Tokens](/docs/theming/tokens), the vocabulary every theme re-values.

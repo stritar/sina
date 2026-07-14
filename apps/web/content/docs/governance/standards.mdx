@@ -1,0 +1,42 @@
+---
+title: Standards & citations
+---
+
+SINA's golden rule is **never invent a limit**: every threshold, format, and required
+field traces to a standard or a regulator, with the citation in the code. This page is
+the receipt: every standard the Constitution encodes, and, for each, *what the code
+actually checks*.
+
+That last column is the point. A standards list is a compliance claim, and compliance
+claims are exactly where a governance system starts lying to you. So each row says the
+**mechanism**, not the aspiration: SINA computes an IBAN's mod-97 checksum for real, but
+it does not screen an address against a sanctions list, and it does not perform a PCI
+assessment. Where a rule is a thin stand-in for a deep obligation, the row says so.
+
+Rules fall into three tiers, and the code keeps them apart:
+
+- **Format**: checksums and code lists. Deterministic, so a payload satisfies them or it
+  doesn't.
+- **Regulatory**: real regulations. A `flag` records the finding in the
+  [audit trail](/docs/concepts/audit-trail); an `escalate` forces a governed component; a
+  `reject` refuses outright. Not yours to loosen casually.
+- **SINA policy**: tunable product defaults (dual control, step-up limits). **Not law.**
+  These are the ones you're expected to tune to your own risk appetite.
+
+When the gate blocks a request, the `standard` from the matching row travels with the
+violation into the audit record. A block is never a mystery, and an auditor can trace
+it back to the line that made it. See [the contract](/docs/concepts/the-contract) for the
+shape, and [write a rule](/docs/governance/writing-a-rule) to add one.
+
+<Callout variant="enforced" title="This table is generated from the schemas">
+  The catalog lives in the constitution package, not in this page, and a guard test binds
+  the two: a rule citing a standard the catalog omits fails the build, and so does a
+  catalog entry citing something no rule enforces. The docs cannot drift from the code,
+  and cannot claim a check that doesn't exist.
+</Callout>
+
+## Fintech
+
+<StandardsTable industry="fintech" />
+
+<ComplianceNote />

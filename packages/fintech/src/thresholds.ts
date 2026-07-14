@@ -23,6 +23,14 @@ export const WIRE_SECONDARY_APPROVAL_MINOR = usd(50_000); // SINA dual-control p
 /** Nacha Same Day ACH — per-payment dollar limit; a same-day entry above this is rejected. */
 export const ACH_SAMEDAY_MAX_MINOR = usd(1_000_000); // Nacha Operating Rules (Same Day ACH)
 
+/**
+ * SINA policy — sanity ceiling on a single ACH entry. Nacha sets no per-payment cap
+ * on *standard* ACH, so the card-rail {@link STRIPE_MAX_MINOR} ($999,999.99) is the
+ * wrong bound here: it sits *below* the Nacha same-day limit, which would make that
+ * limit unreachable. This ceiling sits above it, so the Nacha rule can actually bite.
+ */
+export const ACH_MAX_MINOR = usd(10_000_000); // SINA policy — sanity bound (no Nacha standard-ACH cap)
+
 /** SINA policy — ACH transfers *above* this require authorization (step-up). */
 export const ACH_AUTHORIZATION_MINOR = usd(25_000); // SINA dual-control policy
 

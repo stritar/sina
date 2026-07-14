@@ -18,14 +18,14 @@ validates it, and only then does a component render.
 
 ## The problem it solves
 
-Ask an AI to render a transfer confirmation and it will render one — including
+Ask an AI to render a transfer confirmation and it will render one, including
 for $60,000 that no one approved, or a dropdown a screen reader can't operate.
 The output looks correct, which is why it ships.
 
 SINA sits in the render path instead: the model sends an
 <Term term="intent">intent</Term>, your server checks it against the
-<Term term="constitution">Constitution</Term> — your rules, written as code —
-and only what passes renders.
+<Term term="constitution">Constitution</Term>, your rules written as code, and
+only what passes renders.
 
 <Callout variant="governance" title="The rule">
   The model proposes; the server decides; the screen shows only what passed. SINA calls this **validate, then mount**.
@@ -35,29 +35,29 @@ and only what passes renders.
 
 | | What it is | Stops unsafe UI? |
 |---|---|---|
-| **A style guide / wiki** | Advice humans (and AIs) may ignore | No — advisory only |
-| **A component library** (Radix, shadcn) | Great accessible parts | No — parts can still be misused |
-| **SINA** | Accessible parts **+** a server-side check | **Yes — enforced by code** |
+| **A style guide / wiki** | Advice humans (and AIs) may ignore | No, advisory only |
+| **A component library** (Radix, shadcn) | Great accessible parts | No, parts can still be misused |
+| **SINA** | Accessible parts **+** a server-side check | **Yes, enforced by code** |
 
-SINA isn't a competitor to a component library — it *includes* one (accessible
+SINA isn't a competitor to a component library. It *includes* one (accessible
 primitives on Radix) and adds the check on top.
 
 ## Who it's for
 
 SINA is **free** (MIT), built for startups and individual builders who want
 governance without writing it themselves. The rules it ships with cover
-**fintech** today — money movement, accounts, cards.
+**fintech** today: money movement, accounts, cards.
 
 The governance needs two things from you: an AI that generates your UI, and a
 server to run the check on. If you don't have both, SINA's accessible components
-[still work on their own](/docs/guides/adopt-incrementally) — you just don't get
+[still work on their own](/docs/guides/adopt-incrementally). You just don't get
 the governance.
 
 ## Start here
 
 <CardGrid columns={2}>
   <Card href="/docs/how-it-works" eyebrow="5 min" title="How SINA works">
-    The whole mechanism on one page — no code required to follow it.
+    The whole mechanism on one page, with no code required to follow it.
   </Card>
   <Card href="/docs/quickstart" eyebrow="10 min" title="Quickstart">
     Install the packages and render your first governed decision.

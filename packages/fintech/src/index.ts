@@ -21,6 +21,9 @@ export * from "./formats/step-up.js";
 // The cited numeric limits (the legible constitution).
 export * from "./thresholds.js";
 
+// The standards catalog: every standard the rules encode + what is really checked.
+export * from "./standards.js";
+
 // The flagship governed schema.
 export * from "./wire-transfer/wire-transfer.schema.js";
 

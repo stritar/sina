@@ -12,30 +12,30 @@ A `core` primitive is headless, accessible, and strictly domain-agnostic. The
 boundary is hard: no `zod`, no domain package, no domain vocabulary (no
 "$50,000", no "limit", no "approval"), no Tailwind.
 
-1. **Confirm design sign-off** — it gates implementation. Build to the
+1. **Confirm design sign-off.** It gates implementation. Build to the
    signed-off anatomy; don't invent UX.
 2. **Build on Radix** in `packages/core/src/<Name>/<Name>.tsx`, styled by a
    co-located `<Name>.module.css`: flat class names, real pseudo-classes for
    state, a per-component `--sina-<name>-*` token layer aliasing the semantic
    [tokens](/docs/theming/tokens). Never write a raw color.
-3. **Meet the a11y bar — all four, non-negotiable:** focus-trap where a surface
+3. **Meet the a11y bar. All four, non-negotiable:** focus-trap where a surface
    traps focus, correct ARIA, full keyboard operability, and an automated `axe`
    (jest-axe) pass. Error and warning states render the matching bold status
-   glyph beside the text — never color alone.
+   glyph beside the text, never color alone.
 4. **Test and demo:** `<Name>.test.tsx` with
    `expect(await axe(container)).toHaveNoViolations()` plus keyboard/focus
    assertions, then a playground story.
 
 ### Add a governed domain
 
-SINA ships one domain today — `fintech` — but a second is additive, not a
+SINA ships one domain today, `fintech`, but a second is additive, not a
 rewrite. The shared `@sina-design-system/governance` seam owns the
 [contract](/docs/concepts/the-contract), the audit emit point, and the
 `intercept` engine, and knows nothing about wire transfers. A new domain is two
 packages mirroring `fintech` and `fintech-react`:
 
 1. **A pure Zod constitution** (`packages/<domain>`, depends only on
-   `governance`): format primitives, cited thresholds (`// 31 CFR …` — never an
+   `governance`): format primitives, cited thresholds (`// 31 CFR …`, never an
    invented number), rules returning
    `{ valid, violations, requiredComponent }`, and a verb → rule registry with
    one evaluate entry point. No React, no `core`, no `theme`, no UI. To author
@@ -43,7 +43,7 @@ packages mirroring `fintech` and `fintech-react`:
    [Writing a rule](/docs/governance/writing-a-rule).
 2. **A `*-react` layer** (`packages/<domain>-react`) that composes a `core`
    primitive with a domain schema and renders the decision the gate already
-   made. It never authors schemas and never validates a payload — the gate
+   made. It never authors schemas and never validates a payload; the gate
    stays server-side (see [How it works](/docs/how-it-works)).
 
 Because the contract is uniform, the new domain's rules drop into the same
@@ -52,17 +52,17 @@ harness. Governance doesn't fork per domain.
 
 ### Write an adversarial test
 
-A rule isn't done when it compiles — it's done when a hostile request can't
-get past it. Don't test that a *valid* request passes; test that an *invalid*
-one can't sneak through. Cover the classics:
+A rule isn't done when it compiles. It's done when a hostile request can't get
+past it. Don't test that a *valid* request passes; test that an *invalid* one
+can't sneak through. Cover the classics:
 
-- **A smuggled field** — a fabricated `confirmButton` or a `cvv`; the strict
+- **A smuggled field**: a fabricated `confirmButton` or a `cvv`; the strict
   parse must reject it.
-- **An over-limit value** — just past a threshold; it must escalate to the
+- **An over-limit value**: just past a threshold; it must escalate to the
   right component.
-- **A bypass attempt** — approve small, execute big, or self-approve; the
+- **A bypass attempt**: approve small, execute big, or self-approve; the
   server-side binding must reject it.
-- **A flood** — an oversized array; the bound must reject it.
+- **A flood**: an oversized array; the bound must reject it.
 
 Assert the decision, not just that something threw:
 

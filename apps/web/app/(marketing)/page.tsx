@@ -10,7 +10,7 @@ export default function HomePage() {
       </div>
       <h1 className={styles.title}>SINA</h1>
       <p className={styles.tagline}>
-        The governed design system for AI agents. The model emits intent — SINA
+        The governed design system for AI agents. The model emits intent. SINA
         decides what renders.
       </p>
       <Link className={styles.cta} href="/docs">

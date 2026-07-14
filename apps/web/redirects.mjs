@@ -45,8 +45,7 @@ export const docsRedirects = [
   { source: "/docs/ai", destination: "/docs/agents" },
   { source: "/docs/ai/:path*", destination: "/docs/agents" },
 
-  // --- Governance (standards + security folded into the index) ---
-  { source: "/docs/governance/standards", destination: "/docs/governance" },
+  // --- Governance (security folded into the index; standards is a live page again) ---
   { source: "/docs/governance/security", destination: "/docs/governance" },
   { source: "/docs/governance/governed-components", destination: "/docs/governance/components-and-patterns" },
   { source: "/docs/governance/display-patterns", destination: "/docs/governance/components-and-patterns" },

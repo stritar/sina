@@ -31,8 +31,9 @@ import {
 } from "../formats/step-up.js";
 import {
   ACH_AUTHORIZATION_MINOR,
+  ACH_MAX_MINOR,
+  ACH_SAMEDAY_MAX_MINOR,
   CTR_MINOR,
-  STRIPE_MAX_MINOR,
   STRIPE_MIN_MINOR,
 } from "../thresholds.js";
 
@@ -49,9 +50,13 @@ const achTransferBase = z
   .object({
     amount: minorUnitAmount
       .min(STRIPE_MIN_MINOR, "amount below the minimum charge")
-      .max(STRIPE_MAX_MINOR, "amount exceeds the maximum charge"),
+      // Not the card ceiling: it sits below Nacha's same-day limit, which would
+      // make that limit unreachable. See ACH_MAX_MINOR.
+      .max(ACH_MAX_MINOR, "amount exceeds the maximum ACH entry"),
     currency: currencyCode,
     counterparty,
+    /** Same Day ACH settlement — carries the Nacha per-payment ceiling. */
+    sameDay: z.boolean().optional(),
     reference: z.string().max(140, "reference exceeds 140 chars").optional(),
   })
   .strict();
@@ -81,6 +86,17 @@ export function makeAchPolicy(ctx: ActionContext) {
     if (data.currency !== "USD") return violations;
 
     const { amount } = data;
+
+    // Nacha caps a Same Day ACH entry per payment; over it the rail cannot carry
+    // the entry at all, so this is a hard reject, not an escalation.
+    if (data.sameDay === true && amount > ACH_SAMEDAY_MAX_MINOR) {
+      violations.push({
+        code: "ACH_SAMEDAY_LIMIT_EXCEEDED",
+        message: "same-day ACH entry above the $1,000,000 Nacha per-payment limit",
+        standard: "Nacha Operating Rules — Same Day ACH per-payment limit",
+        severity: "reject",
+      });
+    }
 
     if (amount > CTR_MINOR) {
       violations.push({

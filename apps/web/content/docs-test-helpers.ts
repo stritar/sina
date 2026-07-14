@@ -24,6 +24,25 @@ export function frontmatter(source: string): string {
 }
 
 /**
+ * The reader-facing text of an .mdx source. Strips frontmatter, fenced code,
+ * inline code spans, and import lines, and keeps everything else — including
+ * JSX children and attribute strings, which are prose a reader sees (Callout
+ * titles, PropsTable descriptions). Deliberately wider than `proseWordCount`,
+ * which drops JSX lines because it only has to approximate a word budget.
+ *
+ * Stripped regions are blanked in place rather than removed, so line numbers
+ * still line up with the file and a guard can report `path:line`.
+ */
+export function narrativeText(source: string): string {
+  const blank = (match: string) => match.replace(/[^\n]/g, " ");
+  return source
+    .replace(/^---\n[\s\S]*?\n---/, blank)
+    .replace(/```[\s\S]*?```/g, blank)
+    .replace(/`[^`\n]*`/g, blank)
+    .replace(/^import .*$/gm, blank);
+}
+
+/**
  * Count the PROSE words of an .mdx source. Strips frontmatter, fenced code
  * blocks, import lines, and markup-ish lines (JSX tags, prop rows, attribute
  * lines, quoted array items), so budgets measure what a reader actually reads.

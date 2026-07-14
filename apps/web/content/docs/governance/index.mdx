@@ -9,14 +9,14 @@ them.
 The Constitution splits into two kinds of rule, and every intent is one or the
 other:
 
-- **Governed** rules cover **actions** — moving money, opening accounts, issuing
+- **Governed** rules cover **actions**: moving money, opening accounts, issuing
   cards. They carry policy (limits, approvals, disclosures) and can escalate to a
   stricter component.
-- **Display** rules cover **reads** — balances, transactions, holdings. They check
+- **Display** rules cover **reads**: balances, transactions, holdings. They check
   the *shape* of the data (and mask sensitive fields), then mount a presentational
   component. They never escalate.
 
-The full catalog — which intents exist and what each one mounts — is
+The full catalog of which intents exist and what each one mounts is
 [Governed components & display patterns](/docs/governance/components-and-patterns).
 
 <BeforeAfter>
@@ -33,49 +33,39 @@ model can't talk its way past a parser.
 ## Every threshold has a source
 
 A governance system is only trustworthy if its rules are *defensible*. So every
-rule carries its source: when the gate blocks something, the violation includes a
-`standard` — the regulation or policy it comes from — and that citation lands in
+rule carries its source. When the gate blocks something, the violation includes a
+`standard`, the regulation or policy it comes from, and that citation lands in
 the [audit record](/docs/concepts/audit-trail). A block is never a mystery.
 
-There are two kinds of threshold, and the code always keeps them apart.
-**Regulatory** thresholds come from real financial regulations — not yours to
-loosen casually:
+The code keeps three kinds of rule apart: **format** standards (ISO 4217, IBAN,
+Luhn), **regulatory** thresholds from real financial regulation (FinCEN's CTR, SAR
+and Travel Rule bands; FATF; Nacha), which aren't yours to loosen casually, and
+**SINA policy** defaults you're expected to tune to your own risk appetite (the
+$50,000 wire dual-control limit, per-rail authorization caps).
 
-| Rule | Threshold | Source |
-|---|---|---|
-| Currency Transaction Report (CTR) | $10,000 | FinCEN — 31 CFR 1010.311 |
-| Suspicious Activity Report (SAR) review | $5,000 | FinCEN — 31 CFR Ch. X |
-| Travel Rule (originator/beneficiary info) | $3,000 | FinCEN — 31 CFR 1010.410(e) |
-| Same Day ACH ceiling | $1,000,000 | Nacha |
-
-**SINA policy** thresholds are tunable product defaults — the wire dual-control
-limit ($50,000), per-rail authorization caps, maker-checker sign-off. These are
-the ones you're expected to tune to your own risk appetite. Format rules (ISO 4217
-currencies, IBAN/BIC, ABA routing, Luhn card checks, PCI-aligned masking) round
-out the set.
-
-<ComplianceNote />
+The full list, and what SINA *actually* checks for each, is
+[Standards & citations](/docs/governance/standards).
 
 ## The threat model
 
 SINA assumes the AI producing intents might be wrong, jailbroken, or actively
-hostile. The design question is never "will the model behave?" — it's "what
+hostile. The design question is never "will the model behave?" It's "what
 happens when it doesn't?"
 
 | The attack | What it tries | Why it fails |
 |---|---|---|
-| **Fabricated control** | Smuggle a `confirmButton` into the payload | Strict schema — unknown fields are rejected before any value is read |
+| **Fabricated control** | Smuggle a `confirmButton` into the payload | Strict schema; unknown fields are rejected before any value is read |
 | **Smuggled card data** | Include a `cvv` or full PAN | Same strict parse; redaction masks it before it can hit a log |
 | **Over-limit action** | A $60,000 wire with no approval | Policy escalates to a second-approver dialog; the raw confirm can't mount |
-| **Self-approval** | Approve your own transfer | Four-eyes check — approver must differ from the server-known initiator |
+| **Self-approval** | Approve your own transfer | Four-eyes check: the approver must differ from the server-known initiator |
 | **Bait-and-switch** | Approve $5,000, then execute $60,000 | Approval is bound to the exact terms, recomputed on the server |
-| **Fabricated data** | Invent a balance or transaction | For reads, the server supplies the values — the model only picks *what* to show |
+| **Fabricated data** | Invent a balance or transaction | For reads, the server supplies the values; the model only picks *what* to show |
 | **Data exfiltration** | Return an unmasked account number | Display schemas require masked identifiers |
 | **Flooding** | Send 10,000 rows to freeze the client | Arrays are bounded |
 
 <Callout variant="enforced" title="These aren't hypotheticals">
   Every row above is a real payload in SINA's test suite. The build fails if any
-  of them stops being blocked — the guarantees can't quietly rot.
+  of them stops being blocked, so the guarantees can't quietly rot.
 </Callout>
 
 See several of these attacks play out on one real request:

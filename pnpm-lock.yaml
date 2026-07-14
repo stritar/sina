@@ -126,9 +126,15 @@ importers:
       '@sina-design-system/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@sina-design-system/fintech':
+        specifier: workspace:*
+        version: link:../../packages/fintech
       '@sina-design-system/fintech-react':
         specifier: workspace:*
         version: link:../../packages/fintech-react
+      '@sina-design-system/governance':
+        specifier: workspace:*
+        version: link:../../packages/governance
       '@sina-design-system/governance-demo':
         specifier: workspace:*
         version: link:../../packages/governance-demo

@@ -2,13 +2,13 @@
 title: Adopt incrementally
 ---
 
-You don't have to govern everything on day one — or govern anything at all.
+You don't have to govern everything on day one, or govern anything at all.
 There are two ways in, and the first upgrades cleanly into the second.
 
 ## Path 1: primitives only
 
 SINA's governance is optional. If you just want accessible, themeable React
-components — Radix-quality, without wiring one yourself — use the primitives
+components with Radix quality, without wiring one yourself, use the primitives
 alone. No gate, no server check.
 
 <Steps>
@@ -45,9 +45,9 @@ with [theming](/docs/theming). Browse the set in the
 </Steps>
 
 <Callout variant="note" title="What you're skipping">
-  Without the gate, nothing validates AI intent — fine if you're not generating
-  UI with AI yet. Add [governance](/docs/governance) later and you keep every
-  component; nothing gets replaced.
+  Without the gate, nothing validates AI intent, which is fine if you're not
+  generating UI with AI yet. Add [governance](/docs/governance) later and you
+  keep every component; nothing gets replaced.
 </Callout>
 
 ## Path 2: govern one intent at a time
@@ -58,15 +58,15 @@ the way it's designed:
 <Steps>
   <Step title="Pick one high-value intent">
 
-Choose the flow where a mistake is most expensive — usually money movement.
+Choose the flow where a mistake is most expensive, usually money movement.
 Route just that one through the gate. Everything else stays exactly as it is.
 
   </Step>
   <Step title="Watch what it blocks">
 
 Run real (or recorded) requests through it and read the decisions. Tune the
-policy thresholds — see [Writing a rule](/docs/governance/writing-a-rule) — to
-match your product's risk appetite.
+policy thresholds to match your product's risk appetite; see
+[Writing a rule](/docs/governance/writing-a-rule).
 
   </Step>
   <Step title="Expand to the next flow">
@@ -80,7 +80,7 @@ time works for the second.
 
 <Callout variant="note" title="No governance tax">
   SINA adds one server-side check per governed intent. Reads and ungoverned
-  flows are untouched — you pay only where you asked for it, and you can stop
+  flows are untouched, so you pay only where you asked for it, and you can stop
   at one flow. And every threshold is a named, cited constant: when someone
   asks "why did this block," the answer is a specific rule with a specific
   source, reviewable in a pull request.

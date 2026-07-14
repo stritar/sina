@@ -4,13 +4,13 @@ title: Write a governance rule
 
 A rule is a strict Zod schema plus a cited policy check, living in
 `@sina-design-system/fintech`. The boundary is hard: **pure Zod, no React, no
-UI** — the shared contract comes from `@sina-design-system/governance`. This
+UI**, with the shared contract coming from `@sina-design-system/governance`. This
 guide mirrors the `/new-schema` skill; to see a finished rule at work, read
 [the $60k wire](/docs/governance/wire-transfer).
 
 <Callout variant="enforced" title="The golden rule: never invent a limit">
   Every threshold, format, and required field must trace to a standard or
-  regulator, with the citation **in the code** — a `// 31 CFR …` comment on the
+  regulator, with the citation **in the code**: a `// 31 CFR …` comment on the
   constant and `standard: "…"` on the violation. If you can't cite it, don't
   encode it. Citing also marks which numbers are law and which are tunable
   product defaults.
@@ -22,14 +22,14 @@ guide mirrors the `/new-schema` skill; to see a finished rule at work, read
 Create `packages/fintech/src/<name>/<name>.schema.ts`, modeled on the flagship
 `wire-transfer` schema. Use a `.strict()` Zod object so smuggled keys are
 rejected, not ignored, and build on the cited format primitives in
-`src/formats/*` — `currency` (ISO 4217), `amount`, `iban`, `bic`, `routing`,
+`src/formats/*`: `currency` (ISO 4217), `amount`, `iban`, `bic`, `routing`,
 `card`. Amounts are integer **minor units**, never floats.
 
   </Step>
   <Step title="Add the policy check">
 
 Each policy check (limits, velocity, dual control) produces a `Violation` with a
-`code`, `message`, cited `standard`, and a severity — `flag` (record it),
+`code`, a `message`, a cited `standard`, and a severity: `flag` (record it),
 `escalate` (force a governed component), or `reject` (refuse outright); see
 [Escalation](/docs/concepts/escalation). An escalation names the
 `requiredComponent`. The rule must return
@@ -42,25 +42,25 @@ Each policy check (limits, velocity, dual control) produces a `Violation` with a
 { valid: false, violations: [{ code, message, standard }], requiredComponent: "SecureWireDialog" }
 ```
 
-An **ungoverned** display rule is the same skeleton minus policy and escalation —
-shape-only (`.strict()`, bounded arrays, masked account numbers) mounting a
-presentational component. Use `/new-display-pattern` for that.
+An **ungoverned** display rule is the same skeleton minus policy and escalation.
+It is shape-only (`.strict()`, bounded arrays, masked account numbers) and mounts
+a presentational component. Use `/new-display-pattern` for that.
 
   </Step>
   <Step title="Register the intent">
 
 Add the verb to `src/registry.ts` (and `fintechIntentManifest()`) so
 `evaluateFintechIntent` can route to it. Unregistered verbs are denied as
-`UNKNOWN_INTENT` — a rule that isn't registered doesn't exist.
+`UNKNOWN_INTENT`. A rule that isn't registered doesn't exist.
 
   </Step>
   <Step title="Write the fixtures">
 
 Add `fixtures.ts` beside the schema: **valid** payloads that must pass and
-**adversarial** payloads that must be blocked — an over-limit amount, a smuggled
-extra field, an unmasked identifier. Both the unit tests and the playground
-consume them. A rule isn't done when it compiles; it's done when a hostile
-request can't get past it.
+**adversarial** payloads that must be blocked, like an over-limit amount, a
+smuggled extra field, or an unmasked identifier. Both the unit tests and the
+playground consume them. A rule isn't done when it compiles; it's done when a
+hostile request can't get past it.
 
   </Step>
   <Step title="Test and verify">
@@ -80,9 +80,9 @@ decision.violations;        // includes AMOUNT_REQUIRES_APPROVAL (escalate)
 ```
 
 Each violation carries a `message` and a `standard`, so you can show the user
-*why*, with a citation — not just "blocked." Lower the amount below the limit and
-re-run: `valid` flips to `true`, `requiredComponent` is `null`, and the normal
-summary mounts. Same code, safe outcome.
+*why*, with a citation, instead of just "blocked." Lower the amount below the
+limit and re-run: `valid` flips to `true`, `requiredComponent` is `null`, and the
+normal summary mounts. Same code, safe outcome.
 
   </Step>
 </Steps>
@@ -91,5 +91,5 @@ Before you ship, check the rule answers the basics in one sentence each: what it
 is, the risk it removes, a concrete request it blocks, one it passes, and what
 happens on trigger. If any answer is fuzzy, the rule is too.
 
-Next: [Governed components & display patterns](/docs/governance/components-and-patterns)
-— where your escalation lands.
+Next: [Governed components & display patterns](/docs/governance/components-and-patterns),
+where your escalation lands.

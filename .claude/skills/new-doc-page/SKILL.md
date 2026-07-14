@@ -19,12 +19,14 @@ instead of a review argument.
    ≤ 700 prose words per page (`apps/web/content/docs-budget.test.ts`). A new
    page usually means merging or deleting another. If a page legitimately needs
    more, declare `wordBudget: <n>` in its frontmatter — visible and reviewable.
-2. **One story, told once** — the canonical assets (`FlowDiagram`,
+2. **One story, told once** — the canonical assets (`SameModelDiagram`,
    `ArchitectureDiagram`, `EnforcementLadder`, `TokenTree`, `GovernanceDemo`)
    each have exactly one home, listed in the `CANON` table of
    `apps/web/content/docs-canon.test.ts`. Other pages **link**
    (`/docs/how-it-works`, `/docs/governance/wire-transfer`), never retell.
-3. **No dead ends** — every internal `/docs/...` link must resolve, and a
+3. **Prose reads human** — no em-dash/en-dash in the copy you write; follow
+   `/human-prose` (guard: `apps/web/content/docs-prose.test.ts`).
+4. **No dead ends** — every internal `/docs/...` link must resolve, and a
    removed/moved page gets a flat 301 in `apps/web/redirects.mjs` (imported by
    `next.config.mjs` `redirects()`). **Never use `public/_redirects`** — the
    next-on-pages worker handles every path and Cloudflare skips `_redirects`

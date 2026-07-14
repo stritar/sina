@@ -29,6 +29,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./standards": {
+      "types": "./dist/standards.d.ts",
+      "default": "./dist/standards.js"
     }
   },
   "main": "./dist/index.js",

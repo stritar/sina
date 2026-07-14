@@ -6,7 +6,7 @@ import { AlertHero, AlertExamples } from "@/app/components/docs/demos/primitives
 
 <AlertHero />
 
-`Alert` communicates a persistent, inline status — a warning above a form, a
+`Alert` communicates a persistent, inline status: a warning above a form, a
 success confirmation, an error explanation.
 
 ## Usage
@@ -27,14 +27,14 @@ import { Alert } from "@sina-design-system/core";
 
 <PropsTable
   rows={[
-    { prop: "variant", type: '"info" | "success" | "warning" | "danger"', default: '"info"', description: "Severity — also selects the status glyph." },
+    { prop: "variant", type: '"info" | "success" | "warning" | "danger"', default: '"info"', description: "Severity. Also selects the status glyph." },
     { prop: "title", type: "ReactNode", description: "Bold heading for the alert." },
     { prop: "icon", type: "ReactNode | false", description: "Swap the glyph, or hide it for info/success (never for warning/danger)." },
   ]}
 />
 
 <Callout variant="warning" title="Two rules for status">
-  Warning and danger alerts **always** render a bold glyph — you can swap it but
+  Warning and danger alerts **always** render a bold glyph. You can swap it but
   not remove it. And never nest one status element inside another: a Badge belongs
   *beside* an Alert, not inside it.
 </Callout>

@@ -31,12 +31,12 @@ import { Field } from "@sina-design-system/core";
   rows={[
     { prop: "label", type: "ReactNode", description: "The field label (associated with the control)." },
     { prop: "description", type: "ReactNode", description: "Helper text below the label." },
-    { prop: "error", type: "ReactNode", description: "An error message — sets aria-invalid and shows a bold warning glyph." },
+    { prop: "error", type: "ReactNode", description: "An error message. Sets aria-invalid and shows a bold warning glyph." },
   ]}
 />
 
 <Callout variant="note" title="Errors carry a glyph">
   When `error` is set, Field renders the mandatory bold warning glyph beside the
-  message — never color alone. That's a SINA-wide rule for error and warning
+  message, never color alone. That's a SINA-wide rule for error and warning
   states.
 </Callout>
