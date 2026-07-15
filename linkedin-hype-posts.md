@@ -156,7 +156,7 @@ One of those parts is export-controlled. The officer looking at the screen isn't
 
 An ungoverned model renders the row anyway. It complied — that's all models do.
 
-I'm building SINA, a constitutional design system for AI agents, and it doesn't. The clearance rule lives in a schema on the server, not in the prompt. The model can assemble the dashboard; it can't decide who's allowed to see what's on it. What mounts is the same dashboard minus the row the viewer was never cleared for, plus an audit line saying it was withheld.
+I'm building SINA, a constitutional design system for AI agents, so that it doesn't have to. The clearance rule lives in a schema on the server, not in the prompt. The model can assemble the dashboard; it can't decide who's allowed to see what's on it. What mounts is the same dashboard minus the row the viewer was never cleared for, plus an audit line saying it was withheld.
 
 Money was just the first place this obviously mattered. Classified logistics is the same shape: the model proposes, the constitution decides, and nothing reaches the screen until it does.
 
