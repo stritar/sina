@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SINA — the wire-transfer constitution</title>
+<style>
+  :root {
+    --ground: #14180f;
+    --ground-glow: #232a1c;
+    --card: #21251e;
+    --card-head: #2b3028;
+    --sunken: #191d15;
+    --border: #3c4237;
+    --border-soft: #333930;
+
+    --ink: #f5f6f4;
+    --ink-muted: #cbd0c5;
+    --ink-dim: #84897e;
+
+    --sage: #b9c4b1;   /* keywords            */
+    --gold: #fcb737;   /* strings             */
+    --green: #66d091;  /* function / success  */
+    --coral: #ff7e48;  /* the block / escalate*/
+    --coral-soft: #ff9d6e;
+
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, "JetBrains Mono", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--ground);
+    background-image:
+      radial-gradient(120% 90% at 18% -10%, var(--ground-glow) 0%, transparent 55%),
+      radial-gradient(90% 80% at 100% 110%, #1c2416 0%, transparent 50%);
+    color: var(--ink);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 64px 40px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  /* ── the code card ──────────────────────────────────────────── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 30px 60px -20px rgba(0,0,0,0.7),
+      0 8px 20px -10px rgba(0,0,0,0.5);
+  }
+
+  .card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--card-head);
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .dots { display: flex; gap: 7px; }
+  .dots i { width: 11px; height: 11px; border-radius: 50%; display: block; }
+  .dots i:nth-child(1) { background: #4a5142; }
+  .dots i:nth-child(2) { background: #4a5142; }
+  .dots i:nth-child(3) { background: #4a5142; }
+
+  .wordmark {
+    font-weight: 700;
+    letter-spacing: 0.26em;
+    font-size: 13px;
+    color: var(--sage);
+    padding-left: 4px;
+  }
+  .eyebrow {
+    font-size: 10.5px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  .file {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-muted);
+    background: var(--sunken);
+    border: 1px solid var(--border-soft);
+    padding: 5px 11px;
+    border-radius: 7px;
+    white-space: nowrap;
+  }
+
+  /* ── code body ──────────────────────────────────────────────── */
+  .code {
+    counter-reset: line;
+    font-family: var(--mono);
+    font-size: 14.5px;
+    line-height: 1.72;
+    padding: 22px 4px 24px 0;
+    overflow-x: auto;
+    background:
+      linear-gradient(90deg, var(--sunken) 0 46px, transparent 46px);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 46px 1fr;
+    align-items: baseline;
+    white-space: pre;
+  }
+  .row::before {
+    counter-increment: line;
+    content: counter(line);
+    color: #565c4e;
+    text-align: right;
+    padding-right: 16px;
+    font-size: 12px;
+    user-select: none;
+  }
+  .row > code { padding-left: 20px; }
+
+  /* the escalate line — the block moment */
+  .row.hit { background: rgba(255,126,72,0.07); }
+  .row.hit::before { color: var(--coral); }
+  .row.hit > code {
+    box-shadow: inset 3px 0 0 var(--coral);
+  }
+
+  /* token colors */
+  .k  { color: var(--sage); }
+  .s  { color: var(--gold); }
+  .fn { color: var(--green); }
+  .p  { color: var(--ink); }
+  .cn { color: var(--coral-soft); }
+  .c  { color: var(--ink-dim); font-style: italic; }
+  .pl { color: var(--ink-muted); }
+  .esc { color: var(--coral); font-weight: 600; }
+
+  /* ── decision strip ─────────────────────────────────────────── */
+  .decision {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 16px 20px;
+    background: var(--sunken);
+    border-top: 1px solid var(--border-soft);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  .decision .call {
+    color: var(--ink-muted);
+  }
+  .decision .arrow { color: var(--ink-dim); }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .chip.block {
+    color: var(--coral);
+    background: rgba(255,126,72,0.12);
+    border: 1px solid rgba(255,126,72,0.35);
+  }
+  .chip.block b { color: var(--coral); }
+  .chip.mount {
+    color: var(--sage);
+    background: rgba(185,196,177,0.10);
+    border: 1px solid rgba(185,196,177,0.28);
+  }
+  .chip.mount b { color: var(--green); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+  /* ── caption under the card ─────────────────────────────────── */
+  .caption {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 0 6px;
+    color: var(--ink-muted);
+  }
+  .caption .lead {
+    font-size: 16.5px;
+    line-height: 1.5;
+    max-width: 62ch;
+    text-wrap: balance;
+  }
+  .caption .lead b { color: var(--ink); font-weight: 600; }
+  .caption .lead .money { color: var(--coral-soft); font-weight: 600; }
+
+  .foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 6px 0;
+    color: var(--ink-dim);
+    font-size: 12.5px;
+    letter-spacing: 0.02em;
+  }
+  .foot .sig { color: var(--sage); font-weight: 600; letter-spacing: 0.22em; }
+</style>
+</head>
+<body>
+  <div class="stage">
+
+    <div class="card">
+      <div class="card__head">
+        <div class="brand">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="wordmark">SINA</span>
+          <span class="eyebrow">The&nbsp;Constitution</span>
+        </div>
+        <span class="file">fintech/wire-transfer.schema.ts</span>
+      </div>
+
+      <div class="code"><div class="row"><code><span class="c">// The model emits intent as JSON. This schema validates it,</span></code></div><div class="row"><code><span class="c">// server-side, before a single component mounts.</span></code></div><div class="row"><code> </code></div><div class="row"><code><span class="k">export const</span> <span class="p">wireTransferPayload</span> <span class="pl">=</span> <span class="p">z</span></code></div><div class="row"><code>  <span class="pl">.</span><span class="fn">object</span><span class="pl">({</span></code></div><div class="row"><code>    <span class="p">amount</span><span class="pl">:</span> <span class="cn">minorUnitAmount</span></code></div><div class="row"><code>      <span class="pl">.</span><span class="fn">min</span><span class="pl">(</span><span class="cn">STRIPE_MIN_MINOR</span><span class="pl">,</span> <span class="s">"amount below the minimum charge"</span><span class="pl">)</span></code></div><div class="row"><code>      <span class="pl">.</span><span class="fn">max</span><span class="pl">(</span><span class="cn">STRIPE_MAX_MINOR</span><span class="pl">,</span> <span class="s">"amount exceeds the maximum charge"</span><span class="pl">),</span></code></div><div class="row"><code>    <span class="p">currency</span><span class="pl">:</span> <span class="cn">currencyCode</span><span class="pl">,</span></code></div><div class="row"><code>    <span class="p">debtor</span><span class="pl">:</span> <span class="cn">party</span><span class="pl">,</span>  <span class="p">creditor</span><span class="pl">:</span> <span class="cn">party</span><span class="pl">,</span></code></div><div class="row"><code>  <span class="pl">})</span></code></div><div class="row"><code>  <span class="pl">.</span><span class="fn">strict</span><span class="pl">();</span>  <span class="c">// reject any key not in the schema — no fake "Confirm"</span></code></div><div class="row"><code> </code></div><div class="row"><code><span class="c">// Post-parse policy: the dual-control gate.</span></code></div><div class="row"><code><span class="k">function</span> <span class="fn">wirePolicy</span><span class="pl">(</span><span class="p">data</span><span class="pl">,</span> <span class="p">ctx</span><span class="pl">):</span> <span class="cn">Violation</span><span class="pl">[] {</span></code></div><div class="row hit"><code>  <span class="k">if</span> <span class="pl">(</span><span class="p">data</span><span class="pl">.</span><span class="p">amount</span> <span class="pl">&gt;</span> <span class="cn">WIRE_SECONDARY_APPROVAL_MINOR</span> <span class="pl">&amp;&amp; !</span><span class="p">data</span><span class="pl">.</span><span class="p">approval</span><span class="pl">) {</span></code></div><div class="row"><code>    <span class="k">return</span> <span class="pl">[{</span></code></div><div class="row"><code>      <span class="p">code</span><span class="pl">:</span> <span class="s">"AMOUNT_REQUIRES_APPROVAL"</span><span class="pl">,</span></code></div><div class="row"><code>      <span class="p">message</span><span class="pl">:</span> <span class="s">"wire above $50,000 requires secondary approval"</span><span class="pl">,</span></code></div><div class="row"><code>      <span class="p">standard</span><span class="pl">:</span> <span class="s">"SINA dual-control — secondary approval"</span><span class="pl">,</span></code></div><div class="row"><code>      <span class="p">severity</span><span class="pl">:</span> <span class="esc">"escalate"</span><span class="pl">,</span>  <span class="c">// ← block the render, force a governed component</span></code></div><div class="row"><code>    <span class="pl">}];</span></code></div><div class="row"><code>  <span class="pl">}</span></code></div><div class="row"><code>  <span class="k">return</span> <span class="pl">[];</span></code></div><div class="row"><code><span class="pl">}</span></code></div></div>
+
+      <div class="decision">
+        <span class="call"><span class="fn">intercept</span>(wireTransfer, intent)</span>
+        <span class="arrow">→</span>
+        <span class="chip block"><span class="dot"></span>valid: <b>false</b></span>
+        <span class="chip mount">requiredComponent: <b>"SecureWireDialog"</b></span>
+      </div>
+    </div>
+
+    <div class="caption">
+      <p class="lead">The model proposes the transfer. The constitution decides. Above <span class="money">$50,000</span> it can't just render, it forces secondary approval, and no prompt talks its way past a rule that lives on the server.</p>
+    </div>
+
+    <div class="foot">
+      <span class="sig">SINA</span>
+      <span>A governed design system for AI agents — validate, then mount.</span>
+    </div>
+
+  </div>
+</body>
+</html>
