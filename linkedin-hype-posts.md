@@ -145,3 +145,17 @@ Some nights it feels obvious. Some nights it feels impossible. Most nights it fe
 Building. Will surface when there's something worth showing.
 
 #buildinpublic #startups #ai
+
+---
+
+## 11 — The next domain (defense / vision)
+
+The rule that stops an AI from wiring $60,000 it wasn't cleared to move is the same rule that stops it from putting a classified line on a screen it should never reach.
+
+Different stakes, identical shape: the model proposes intent, a schema on the server decides, and nothing renders until that decision is made.
+
+Money was just the first place it obviously mattered. Classification, clearance, controlled data — same guardrail, next domain.
+
+That's the part I keep getting more excited about.
+
+#ai #buildinpublic #defensetech
