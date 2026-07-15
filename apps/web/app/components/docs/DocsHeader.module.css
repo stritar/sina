@@ -43,8 +43,18 @@
   display: none;
 }
 
-/* Drawer content: override core Dialog's centered modal into a left panel. */
+/* Drawer content: override core Dialog's centered modal into a full-height
+   left panel that scrolls when the page-tree exceeds the viewport. */
 .drawer {
+  left: 0;
+  top: 0;
+  transform: none;
+  height: 100dvh;
+  max-width: min(20rem, 85vw);
+  border-radius: 0;
+  border: 0;
+  border-right: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+  overflow-y: auto;
   padding: var(--sina-space--5) var(--sina-space--4);
 }
 
