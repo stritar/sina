@@ -148,13 +148,17 @@ Building. Will surface when there's something worth showing.
 
 ---
 
-## 11 — The next domain (defense / vision)
+## 11 — The classified dashboard (defense / vision)
 
-The rule that stops an AI from wiring $60,000 it wasn't cleared to move is the same rule that stops it from putting a classified line on a screen it should never reach.
+A logistics officer asks their AI to pull up the parts due for reorder. It builds the dashboard in seconds: part names, quantities, an order button on every row.
 
-Different stakes, identical shape: the model proposes intent, a schema on the server decides, and nothing renders until that decision is made.
+One of those parts is export-controlled. The officer looking at the screen isn't cleared to see it.
 
-Money was just the first place it obviously mattered. Classification, clearance, controlled data — same guardrail, next domain.
+An ungoverned model renders the row anyway. It complied — that's all models do.
+
+The version I'm building doesn't. The clearance rule lives in a schema on the server, not in the prompt. The model can assemble the dashboard; it can't decide who's allowed to see what's on it. What mounts is the same dashboard minus the row the viewer was never cleared for, plus an audit line saying it was withheld.
+
+Money was just the first place this obviously mattered. Classified logistics is the same shape: the model proposes, the constitution decides, and nothing reaches the screen until it does.
 
 That's the part I keep getting more excited about.
 
