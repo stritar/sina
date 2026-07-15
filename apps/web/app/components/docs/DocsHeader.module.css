@@ -21,11 +21,16 @@
 }
 
 .wordmark {
-  font-size: var(--sina-text--lg);
-  font-weight: var(--sina-font-weight--bold);
-  letter-spacing: var(--sina-tracking--tight);
+  display: inline-flex;
+  align-items: center;
   color: var(--sina-color-text);
   text-decoration: none;
+}
+
+.logo {
+  display: block;
+  height: var(--sina-space--6);
+  width: auto;
 }
 
 .divider {

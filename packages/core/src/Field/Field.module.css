@@ -38,6 +38,8 @@
 }
 
 .error {
+  /* Pull the error pill up so it sits snug under the input: 6px .root gap - 4px = ~2px seam. */
+  margin-top: calc(-1 * var(--sina-space--1, 0.25rem));
   display: flex;
   align-items: flex-start;
   gap: var(--sina-space--1_5, 0.375rem);

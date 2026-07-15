@@ -14,6 +14,7 @@ import {
 import { Sidebar } from "./Sidebar";
 import { Search } from "./Search";
 import { ThemeToggle } from "./ThemeToggle";
+import { SinaLogo } from "./visuals/SinaLogo";
 import styles from "./DocsHeader.module.css";
 
 /**
@@ -47,8 +48,8 @@ export function DocsHeader({ tree }: { tree: Root }) {
             />
           </svg>
         </Button>
-        <Link href="/" className={styles.wordmark}>
-          SINA
+        <Link href="/" className={styles.wordmark} aria-label="SINA home">
+          <SinaLogo className={styles.logo} />
         </Link>
         <span className={styles.divider} aria-hidden="true" />
         <span className={styles.section}>Docs</span>
