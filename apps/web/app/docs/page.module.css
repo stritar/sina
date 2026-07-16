@@ -101,7 +101,7 @@
 }
 
 .prose li::marker {
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
 }
 
 .prose a {

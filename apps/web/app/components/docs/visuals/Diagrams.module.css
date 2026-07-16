@@ -5,14 +5,14 @@
 .caption {
   margin-top: var(--sina-space--3);
   font-size: var(--sina-text--sm);
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
   text-align: center;
 }
 
 .arrow {
   display: inline-flex;
   flex-shrink: 0;
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
 }
 
 /* ---- SameModelDiagram ---- */
@@ -98,7 +98,7 @@
 .chipArrow {
   display: inline-flex;
   flex-shrink: 0;
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
 }
 
 /* ---- the fake browser ---- */
@@ -130,7 +130,7 @@
   margin-left: var(--sina-space--2);
   font-family: var(--sina-font--mono);
   font-size: var(--sina-text--xs);
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
 }
 
 .browserScreen {
@@ -143,7 +143,7 @@
 
 .screenNote {
   font-size: var(--sina-text--xs);
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
   text-align: center;
 }
 
@@ -339,7 +339,7 @@
   font-size: var(--sina-text--ui);
   letter-spacing: var(--sina-tracking--wide);
   text-transform: uppercase;
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
 }
 
 .tierValue {

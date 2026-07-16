@@ -233,6 +233,16 @@ describe("WCAG 2.2 AA contrast (light theme)", () => {
     expect(contrast("focus-ring", "bg")).toBeGreaterThanOrEqual(3);
   });
 
+  // text-subtle is reserved for decorative / large / icon use (never normal body
+  // text — that's text-muted, guarded at 4.5:1 above). It must still clear the
+  // WCAG non-text / large-text floor (3:1) on both the page bg and cards.
+  it.each([
+    ["text-subtle", "bg"],
+    ["text-subtle", "surface"],
+  ])("%s meets non-text/large contrast on %s (3:1)", (fg, bg) => {
+    expect(contrast(fg, bg)).toBeGreaterThanOrEqual(3);
+  });
+
   // Chart marks are non-text graphics (WCAG 1.4.11) — every categorical series
   // color must clear 3:1 against the card surface charts render on.
   it.each([1, 2, 3, 4, 5, 6, 7, 8])(
@@ -266,6 +276,14 @@ describe("WCAG 2.2 AA contrast (dark theme)", () => {
 
   it("focus-ring meets non-text contrast on bg (3:1)", () => {
     expect(contrast("focus-ring", "bg", true)).toBeGreaterThanOrEqual(3);
+  });
+
+  // text-subtle: decorative / large / icon only — must clear the 3:1 floor here too.
+  it.each([
+    ["text-subtle", "bg"],
+    ["text-subtle", "surface"],
+  ])("%s meets non-text/large contrast on %s (3:1)", (fg, bg) => {
+    expect(contrast(fg, bg, true)).toBeGreaterThanOrEqual(3);
   });
 
   // The dark chart ramp is a distinct, lifted set — validated here against the

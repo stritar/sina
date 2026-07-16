@@ -48,7 +48,7 @@
   font-weight: var(--sina-font-weight--semibold);
   letter-spacing: var(--sina-tracking--wide);
   text-transform: uppercase;
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
 }
 
 .separator {
@@ -58,5 +58,5 @@
   font-weight: var(--sina-font-weight--semibold);
   letter-spacing: var(--sina-tracking--wide);
   text-transform: uppercase;
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
 }

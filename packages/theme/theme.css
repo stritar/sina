@@ -122,7 +122,7 @@
   /* Text */
   --sina-color-text: #353b31; /* neutral--900 — headings & body           */
   --sina-color-text-muted: #52564e; /* neutral--700 — secondary text      */
-  --sina-color-text-subtle: #a7ada0; /* neutral--400 — placeholders       */
+  --sina-color-text-subtle: #84897e; /* neutral--500 — decorative/large; ≥3:1 */
   --sina-color-text-inverse: #ffffff; /* text on dark surfaces            */
 
   /* Borders */

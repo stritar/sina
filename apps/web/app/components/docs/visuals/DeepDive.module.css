@@ -30,7 +30,7 @@
 
 .chevron {
   display: inline-flex;
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
   transition: transform var(--sina-duration--fast) var(--sina-ease--standard);
 }
 

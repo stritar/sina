@@ -55,11 +55,11 @@
 
 .note {
   font-size: var(--sina-text--ui);
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
 }
 
 .copy {
   flex-shrink: 0;
   font-size: var(--sina-text--ui);
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
 }

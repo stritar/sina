@@ -36,7 +36,7 @@
   font-size: var(--sina-text--xs);
   text-transform: uppercase;
   letter-spacing: var(--sina-tracking--wide);
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
 }
 
 .name {

@@ -163,5 +163,5 @@
 
 .specCaption {
   font-size: var(--sina-text--xs);
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
 }

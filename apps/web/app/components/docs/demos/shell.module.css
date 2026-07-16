@@ -54,7 +54,7 @@
 }
 .caption {
   font-size: 11px;
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
 }
 
 /* Matrix */

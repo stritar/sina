@@ -66,7 +66,7 @@
 
 .head svg {
   flex-shrink: 0;
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
   transition: transform var(--sina-duration--fast) var(--sina-ease--standard);
 }
 
