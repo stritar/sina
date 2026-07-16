@@ -1,0 +1,87 @@
+---
+title: Der Abfangvertrag
+sourceHash: 9015f1ca85a8
+---
+
+Jede Regel in der Verfassung antwortet mit **denselben drei Feldern**. Lernen
+Sie diese Form einmal, und Sie können jede Entscheidung lesen, die SINA trifft.
+
+```ts
+type InterceptionResult = {
+  valid: boolean;                   // did everything pass?
+  violations: Violation[];          // what went wrong (empty if clean)
+  requiredComponent: string | null; // a stricter component you must render instead
+};
+```
+
+- **`valid`**: `true` nur, wenn nichts blockiert. Ein einziges blockierendes
+  Problem macht es `false`.
+- **`violations`**: was der Kontrollpunkt gefunden hat. Jeder hat eine
+  `message`, eine `severity` und einen `standard`, die Vorschrift oder
+  Richtlinie, aus der er stammt, damit eine Blockade erklärbar ist und kein
+  Rätsel.
+- **`requiredComponent`**: Wenn eine Regel eine strengere Komponente verlangt
+  (etwa einen Dialog für einen zweiten Genehmiger), steht hier ihr Name.
+  Andernfalls `null`.
+
+## Wie das Ergebnis entsteht: erst die Form, dann die Werte
+
+**Ebene 1: Struktur.** Hat das Payload genau die richtige Form? Schemata sind
+**strikt**, daher wird jedes Feld, das nicht dort sein soll, abgelehnt. Wenn
+eine KI versucht, einen gefälschten `confirmButton`, einen `cvv` oder eine
+vollständige Kartennummer einzuschleusen, sind das *zusätzliche Felder*, die
+verworfen werden, bevor überhaupt ein Wert betrachtet wird.
+
+<BeforeAfter>
+  <Before title="Was ein feindlicher Stream sendet">
+    <code>{`{ amount: 500, confirmButton: true, cvv: "123" }`}</code>: ein echter
+    Betrag, dazu ein gefälschter Button und eingeschmuggelte Kartendaten.
+  </Before>
+  <After title="Was das Schema akzeptiert">
+    <code>{`{ amount: 500 }`}</code>: Die zusätzlichen Felder werden abgelehnt.
+    Der gefälschte Button kann nicht gerendert werden; die Kartendaten erreichen
+    niemals das Protokoll.
+  </After>
+</BeforeAfter>
+
+**Ebene 2: Richtlinie.** Wenn die Form gültig ist, befolgen die Werte die
+Regeln? Dies sind die zitierten Grenzwerte:
+
+```ts
+// From the wire-transfer rule (simplified):
+if (amount > WIRE_SECONDARY_APPROVAL_MINOR /* $50,000 */) {
+  violation("AMOUNT_REQUIRES_APPROVAL", "escalate"); // → force SecureWireDialog
+}
+```
+
+Eine erwähnenswerte Feinheit: SINA zählt Geld in **ganzzahligen kleineren
+Einheiten**, in Cent statt in Dollar, gemäß ISO 4217. Keine Fließkommazahlen,
+keine Rundungsabweichung; Beträge stimmen entweder exakt überein oder nicht.
+
+## Bestanden oder nicht bestanden
+
+```ts
+// A clean request:
+{ valid: true, violations: [], requiredComponent: null }
+
+// An over-limit wire:
+{
+  valid: false,
+  violations: [
+    { code: "AMOUNT_REQUIRES_APPROVAL", severity: "escalate",
+      message: "wire above $50,000 requires secondary managerial approval",
+      standard: "SINA dual-control policy" },
+  ],
+  requiredComponent: "SecureWireDialog",
+}
+```
+
+Sie lesen das und wissen genau, was zu tun ist: Rendern Sie nicht die rohe
+Bestätigung. Rendern Sie `SecureWireDialog`.
+
+Sowohl **geregelte** Regeln (Aktionen, die eskalieren können) als auch
+**ungeregelte** Regeln (schreibgeschützte Anzeigen, die nur die Form prüfen und
+niemals `requiredComponent` setzen) geben denselben Vertrag zurück, sodass der
+Code, der eine Entscheidung rendert, überall gleich ist.
+
+Weiter: [Eskalation und Durchsetzung](/docs/concepts/escalation).

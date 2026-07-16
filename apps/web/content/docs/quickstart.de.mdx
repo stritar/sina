@@ -1,0 +1,75 @@
+---
+title: Schnellstart
+sourceHash: c20976614b72
+---
+
+<Prereqs>
+- **Node 20+** und ein Paketmanager (pnpm, npm oder yarn).
+- Eine React-App, die Servercode ausführen kann (ein Next.js-App-Router-Projekt ist ideal).
+- Sie brauchen **keinen** KI-Agenten und keinen LLM-Schlüssel.
+</Prereqs>
+
+## Installation
+
+<Tabs>
+  <Tab label="pnpm">
+
+```bash
+pnpm add @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+  </Tab>
+  <Tab label="npm">
+
+```bash
+npm install @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+  </Tab>
+  <Tab label="yarn">
+
+```bash
+yarn add @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+  </Tab>
+</Tabs>
+
+## Stylesheets einbinden
+
+Importieren Sie die Token- und Komponentenstile einmalig, in dieser Reihenfolge.
+Das Reset liegt in einem eigenen Layer, sodass die eigenen Stile Ihrer App stets
+über ihm gewinnen.
+
+```ts
+// app/layout.tsx
+import "@sina-design-system/theme/reset.css";
+import "@sina-design-system/theme/css";
+import "@sina-design-system/core/styles.css";
+import "@sina-design-system/fintech-react/styles.css";
+```
+
+Das war die Einrichtung. Von hier an funktionieren die Primitives eigenständig; der Kontrollpunkt ist optional.
+
+## Nächste Schritte
+
+<CardGrid columns={2}>
+  <Card href="/docs/how-it-works" title="So funktioniert es">
+    Der Ablauf Absicht → Kontrollpunkt → Einbinden, und warum die Validierung serverseitig bleibt.
+  </Card>
+  <Card href="/docs/governance/wire-transfer" title="Die 60.000-$-Überweisung, von Anfang bis Ende">
+    Eine geregelte Absicht, blockiert, eskaliert und erneut durch den Kontrollpunkt geführt.
+  </Card>
+  <Card href="/docs/primitives" title="Primitives">
+    Die headless, barrierefreien Komponenten, ganz ohne Governance nutzbar.
+  </Card>
+  <Card href="/docs/guides/adopt-incrementally" title="Schrittweise einführen">
+    Regeln Sie zuerst eine Absicht, oder nutzen Sie die Primitives ganz ohne Kontrollpunkt.
+  </Card>
+</CardGrid>

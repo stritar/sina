@@ -1,0 +1,46 @@
+---
+title: LineChart
+sourceHash: 89173318aea6
+---
+
+import { LineChartHero, LineChartExamples } from "@/app/components/docs/demos/primitives/line-chart";
+
+<LineChartHero />
+
+`LineChart` stellt eine oder mehrere Datenreihen im Zeitverlauf dar, mit
+Hover-Tooltips, die aus Tokens gestylt werden. Übergeben Sie `fill` für ein
+Flächendiagramm.
+
+## Verwendung
+
+```tsx
+import { LineChart } from "@sina-design-system/core";
+
+<LineChart
+  label="Balance over time"
+  data={{ labels, datasets }}
+  valueFormatter={(n) => `$${n.toLocaleString()}`}
+  fill
+/>
+```
+
+## Beispiele
+
+<LineChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "Erforderlicher barrierefreier Name für das Diagramm." },
+    { prop: "data", type: "ChartData", description: "Datenreihen und Punkte (Chart.js-Format)." },
+    { prop: "valueFormatter", type: "(n: number) => string", description: "Formatiert Tooltip- und Achsenwerte. Hält das Diagramm domänenunabhängig." },
+    { prop: "fill", type: "boolean", default: "false", description: "Als Flächendiagramm rendern." },
+  ]}
+/>
+
+## Barrierefreiheit
+
+Eine `"use client"`-Komponente (Canvas). Der Wrapper ist `role="img"` mit Ihrem
+`label`; halten Sie eine Textzusammenfassung in der Nähe als nicht-visuellen Pfad
+bereit. Die Animation wird bei reduzierter Bewegung deaktiviert.

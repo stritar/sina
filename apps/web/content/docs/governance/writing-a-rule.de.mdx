@@ -1,0 +1,104 @@
+---
+title: Eine Governance-Regel schreiben
+sourceHash: b78fbff0d2ec
+---
+
+Eine Regel ist ein striktes Zod-Schema plus eine belegte Richtlinienprüfung,
+angesiedelt in `@sina-design-system/fintech`. Die Grenze ist hart: **reines Zod,
+kein React, keine UI**, wobei der gemeinsame Vertrag aus
+`@sina-design-system/governance` stammt. Dieser Leitfaden spiegelt die Skill
+`/new-schema` wider; um eine fertige Regel in Aktion zu sehen, lies
+[die 60.000-$-Überweisung](/docs/governance/wire-transfer).
+
+<Callout variant="enforced" title="Die goldene Regel: erfinde niemals ein Limit">
+  Jeder Schwellenwert, jedes Format und jedes Pflichtfeld muss auf einen Standard
+  oder Regulator zurückführbar sein, mit dem Zitat **im Code**: ein Kommentar
+  `// 31 CFR …` an der Konstante und `standard: "…"` am Verstoß. Wenn du es nicht
+  belegen kannst, kodiere es nicht. Das Zitieren markiert außerdem, welche Zahlen
+  Gesetz sind und welche einstellbare Produkt-Standardwerte.
+</Callout>
+
+<Steps>
+  <Step title="Das Schema definieren">
+
+Erstelle `packages/fintech/src/<name>/<name>.schema.ts`, nach dem Vorbild des
+Flaggschiff-Schemas `wire-transfer`. Verwende ein `.strict()`-Zod-Objekt, damit
+eingeschmuggelte Schlüssel abgelehnt und nicht ignoriert werden, und baue auf den
+belegten Format-Primitiven in `src/formats/*` auf: `currency` (ISO 4217),
+`amount`, `iban`, `bic`, `routing`, `card`. Beträge sind ganzzahlige
+**Untereinheiten**, niemals Fließkommazahlen.
+
+  </Step>
+  <Step title="Die Richtlinienprüfung hinzufügen">
+
+Jede Richtlinienprüfung (Limits, Velocity, Dual Control) erzeugt einen `Violation`
+mit einem `code`, einer `message`, einem belegten `standard` und einem
+Schweregrad: `flag` (aufzeichnen), `escalate` (eine geregelte Komponente
+erzwingen) oder `reject` (rundheraus ablehnen); siehe
+[Eskalation](/docs/concepts/escalation). Eine Eskalation benennt die
+`requiredComponent`. Die Regel muss [den Vertrag](/docs/concepts/the-contract)
+zurückgeben:
+
+```ts
+// pass
+{ valid: true, violations: [], requiredComponent: null }
+// fail
+{ valid: false, violations: [{ code, message, standard }], requiredComponent: "SecureWireDialog" }
+```
+
+Eine **ungeregelte** Anzeigeregel ist dasselbe Gerüst ohne Richtlinie und
+Eskalation. Sie ist rein formbezogen (`.strict()`, begrenzte Arrays, maskierte
+Kontonummern) und bindet eine präsentationale Komponente ein. Verwende dafür
+`/new-display-pattern`.
+
+  </Step>
+  <Step title="Die Absicht registrieren">
+
+Füge das Verb zu `src/registry.ts` (und `fintechIntentManifest()`) hinzu, damit
+`evaluateFintechIntent` es weiterleiten kann. Nicht registrierte Verben werden als
+`UNKNOWN_INTENT` abgelehnt. Eine Regel, die nicht registriert ist, existiert
+nicht.
+
+  </Step>
+  <Step title="Die Fixtures schreiben">
+
+Füge `fixtures.ts` neben dem Schema hinzu: **valide** Payloads, die passieren
+müssen, und **adversariale** Payloads, die blockiert werden müssen, etwa ein
+Betrag über dem Limit, ein eingeschmuggeltes Extrafeld oder ein unmaskierter
+Bezeichner. Sowohl die Unit-Tests als auch das Playground nutzen sie. Eine Regel
+ist nicht fertig, wenn sie kompiliert; sie ist fertig, wenn eine feindselige
+Anfrage nicht an ihr vorbeikommt.
+
+  </Step>
+  <Step title="Testen und verifizieren">
+
+Führe `pnpm --filter @sina-design-system/fintech test` aus, dann übe die Regel aus
+und lies die Entscheidung:
+
+```ts
+const decision = evaluateFintechIntent({
+  intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 */, currency: "USD", /* … */ },
+});
+
+decision.valid;             // false
+decision.requiredComponent; // "SecureWireDialog"
+decision.violations;        // includes AMOUNT_REQUIRES_APPROVAL (escalate)
+```
+
+Jeder Verstoß trägt eine `message` und einen `standard`, sodass du dem Nutzer
+*warum* zeigen kannst, mit einem Zitat, statt nur „blockiert“. Senke den Betrag
+unter das Limit und führe es erneut aus: `valid` kippt auf `true`,
+`requiredComponent` ist `null`, und die normale Zusammenfassung wird eingebunden.
+Derselbe Code, ein sicheres Ergebnis.
+
+  </Step>
+</Steps>
+
+Bevor du auslieferst, prüfe, ob die Regel die Grundfragen in je einem Satz
+beantwortet: was sie ist, das Risiko, das sie beseitigt, eine konkrete Anfrage,
+die sie blockiert, eine, die sie durchlässt, und was bei Auslösung passiert. Ist
+eine Antwort unscharf, ist es die Regel auch.
+
+Weiter: [Geregelte Komponenten & Anzeigemuster](/docs/governance/components-and-patterns),
+wo deine Eskalation landet.

@@ -1,0 +1,45 @@
+---
+title: KpiStat
+sourceHash: 435e274ef4a2
+---
+
+import { KpiStatHero, KpiStatExamples } from "@/app/components/docs/demos/primitives/kpi-stat";
+
+<KpiStatHero />
+
+`KpiStat` 以醒目的大字显示一个重要的数字，并可选地附带一个比较值，该比较值会渲染为趋势徽章（默认上升为好）。
+
+## 用法
+
+```tsx
+import { KpiStat } from "@sina-design-system/core";
+
+<KpiStat
+  value={12500}
+  comparisonValue={11800}
+  valueFormatter={(v) => `$${v.toLocaleString("en-US")}`}
+  comparisonLabel="vs last month"
+/>
+```
+
+## 示例
+
+<KpiStatExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "value", type: "number | null", description: "主要数字；null 会渲染 displayNullAs。" },
+    { prop: "valueFormatter", type: "(value: number) => string", description: "格式化数值和差值（货币等）。" },
+    { prop: "comparisonValue", type: "number", description: "先前的数值。渲染趋势胶囊标签。" },
+    { prop: "comparisonLabel", type: "string", description: "胶囊标签下方的上下文，例如“较上一周期”。" },
+    { prop: "showChangeAsPercentage", type: "boolean", default: "false", description: "以百分比形式显示差值。" },
+    { prop: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "卡片尺寸。" },
+    { prop: "invertChangeColors", type: "boolean", default: "false", description: "当下降为好时（例如支出）。" },
+  ]}
+/>
+
+## 无障碍
+
+下降趋势使用带有粗体向下字形的危险徽章，因此含义绝不会仅依赖颜色。所有内容都是真实文本（无图像、无 canvas），并且可以在服务器端挂载（无客户端 JS）。

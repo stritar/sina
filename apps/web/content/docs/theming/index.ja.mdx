@@ -1,0 +1,95 @@
+---
+title: テーマ設定
+sourceHash: c387f6cda2eb
+---
+
+SINA におけるテーマとは、**同じトークンに異なる値を与えたもの**です。リブランドのために
+コンポーネントを編集することは決してありません。`--sina-*` カスタムプロパティを再定義すれば、
+それらを参照するすべてのコンポーネントが更新されます。カスケードによって上書きは簡単になります。
+SINA の reset は `@layer reset` に置かれる一方、コンポーネントとアプリの CSS はレイヤー化されて
+いないため、アプリの CSS が単純なソース順で勝ちます。SINA のスタイルの後にテーマブロックを
+インポートすれば、それが有効になります。再ビルドも、フォークも不要です。
+
+## ブランドテーマを作る
+
+<Steps>
+  <Step title="ブランドを担う role を上書きする">
+
+通常は `primary`、その読みやすい前景色、hover、そしておそらく radius です。それ以外はすべて
+継承されます。
+
+```css
+:root {
+  --sina-color-primary: #6d28d9;
+  --sina-color-primary-fg: #ffffff;
+  --sina-color-primary--hover: #5b21b6;
+  --sina-radius--md: 0.5rem; /* softer corners, brand-wide */
+}
+```
+
+  </Step>
+  <Step title="または型付きヘルパーに生成させる">
+
+`@sina-design-system/theme` の `createTheme()` はブロックを生成し、あなたが触れてよい role を
+型でチェックします。
+
+```ts
+import { createTheme } from "@sina-design-system/theme";
+
+const acme = createTheme(
+  { colors: { primary: "#7c3aed" }, radius: { md: "0.5rem" } },
+  { selector: '[data-theme="acme"]' },
+);
+```
+
+  </Step>
+  <Step title="スコープを限定する">
+
+1 つのブランドにはブロックを `:root` に置き、複数なら `[data-theme="acme"]` の下に置きます。
+スコープを限定したブランドは暗色モードと組み合わせられます。ローカルな上書きには、
+`themeVars()` が同じトークンを `style={}` 用のインラインスタイルオブジェクトとして返します。
+
+  </Step>
+</Steps>
+
+<Callout variant="tip" title="小さく始める">
+  ほとんどのブランドはわずかな role（`primary`、各サーフェス、おそらく radius）だけを上書きし、
+  残りは継承します。
+</Callout>
+
+## 暗色モードも同じ仕掛け
+
+`theme.css` には `[data-theme="dark"]` ブロックが同梱されており、同じ role を再割り当てするだけです。
+`<html>` の `data-theme` を切り替えれば UI 全体が再着色されます。ライト / ダーク / システムの
+切り替えは、その属性を書き込み、選択を `localStorage` に覚えておくだけのことです。
+
+## ロックされた境界
+
+すべてのトークンをあなたが変更できるわけではなく、その境界自体が 1 つのガバナンスの決定です。
+
+| | Role | |
+|---|---|---|
+| **ブランド開放** | `bg` / `surface*` / `text*` / `border*`、`primary*` / `secondary*`、`success` / `warning` / `info`、チャートのシリーズ、`radius` / `space` / `text` / `font` | あなたのもの。自由にリブランドできます。 |
+| **ガバナンスでロック** | `danger*`、セキュアサーフェスの色味、フォーカスリング、`intent-*` エイリアス | 予約済み。型付き API はそれらを拒否します。 |
+
+<Callout variant="governance" title="なぜ何かをロックするのか？">
+  ブランドテーマは、エラーを穏やかに見せたり、キーボードユーザーからフォーカスリングを隠したり、
+  セキュアなアクションのアフォーダンスを偽装したりしては決してなりません。それらはスタイルでは
+  なく、安全性とアクセシビリティのシグナルです。`createTheme()` はロックされた role をコンパイル時に
+  拒否します。（生の CSS は依然として詳細度で変数を強制できます。API が単にそれを手助けしないだけです。）
+</Callout>
+
+<DoDont
+  do={[
+    "primary、各サーフェス、radius を上書きしてブランドに合わせる",
+    "createTheme() を使い、ロックされた role をコンパイル時に捕捉する",
+    "大幅なリブランドの後にコントラストを再チェックする",
+  ]}
+  dont={[
+    "danger を親しみやすく見えるよう再スタイルする。エラーはエラーとして読めなければならない",
+    "フォーカスリングを取り除いたり暗くしたりする",
+    "トークンシステムを回避するためにコンポーネントへ hex をハードコードする",
+  ]}
+/>
+
+次へ：[Tokens](/docs/theming/tokens)、あらゆるテーマが値を付け直す語彙です。

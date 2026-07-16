@@ -2,6 +2,7 @@
 
 import type { TOCItemType } from "fumadocs-core/toc";
 import { AnchorProvider, TOCItem } from "fumadocs-core/toc";
+import { useLocale } from "./LocaleContext";
 import styles from "./DocsTOC.module.css";
 
 /**
@@ -10,11 +11,12 @@ import styles from "./DocsTOC.module.css";
  * anchors; `TOCItem` flips `data-active`). Styled with `--sina-*`.
  */
 export function DocsTOC({ items }: { items: TOCItemType[] }) {
+  const { messages } = useLocale();
   if (!items || items.length === 0) return null;
 
   return (
-    <aside className={styles.toc} aria-label="On this page">
-      <p className={styles.heading}>On this page</p>
+    <aside className={styles.toc} aria-label={messages.toc.heading}>
+      <p className={styles.heading}>{messages.toc.heading}</p>
       <AnchorProvider toc={items}>
         <ul className={styles.list}>
           {items.map((item) => (

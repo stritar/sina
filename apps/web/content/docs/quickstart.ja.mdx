@@ -1,0 +1,73 @@
+---
+title: クイックスタート
+sourceHash: c20976614b72
+---
+
+<Prereqs>
+- **Node 20+** とパッケージマネージャー（pnpm、npm、または yarn）。
+- サーバーコードを実行できる React アプリ（Next.js App Router プロジェクトが理想的です）。
+- AI エージェントや LLM キーは**不要**です。
+</Prereqs>
+
+## インストール
+
+<Tabs>
+  <Tab label="pnpm">
+
+```bash
+pnpm add @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+  </Tab>
+  <Tab label="npm">
+
+```bash
+npm install @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+  </Tab>
+  <Tab label="yarn">
+
+```bash
+yarn add @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+  </Tab>
+</Tabs>
+
+## スタイルシートを接続する
+
+トークンとコンポーネントのスタイルを、この順序で一度だけインポートします。reset はレイヤー化されているため、アプリ自身のスタイルが常にそれに優先します。
+
+```ts
+// app/layout.tsx
+import "@sina-design-system/theme/reset.css";
+import "@sina-design-system/theme/css";
+import "@sina-design-system/core/styles.css";
+import "@sina-design-system/fintech-react/styles.css";
+```
+
+セットアップは以上です。ここからプリミティブは単体で動作します。ゲートはオプトインです。
+
+## 次のステップ
+
+<CardGrid columns={2}>
+  <Card href="/docs/how-it-works" title="仕組み">
+    インテント → ゲート → マウントの流れと、なぜ検証がサーバー側にとどまるのか。
+  </Card>
+  <Card href="/docs/governance/wire-transfer" title="6 万ドルの電信送金、端から端まで">
+    統制されたインテントがブロックされ、エスカレーションされ、再びゲートを通過します。
+  </Card>
+  <Card href="/docs/primitives" title="プリミティブ">
+    ヘッドレスでアクセシブルなコンポーネント。ガバナンスなしでも使えます。
+  </Card>
+  <Card href="/docs/guides/adopt-incrementally" title="段階的に導入">
+    まず 1 つのインテントを統制するか、ゲートなしでプリミティブを使います。
+  </Card>
+</CardGrid>

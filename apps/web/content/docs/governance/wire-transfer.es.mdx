@@ -1,0 +1,105 @@
+---
+title: "Ejemplo práctico: la transferencia de 60.000 $"
+sourceHash: 1ad48a792ac1
+---
+
+<YouWillLearn>
+- Qué encuentra el control en una transferencia por encima del límite, y qué estándar cita cada hallazgo
+- Cómo funciona el diálogo de aprobación forzado, y por qué no se puede falsificar
+- Qué registra el registro de auditoría en cada paso
+</YouWillLearn>
+
+Este es el flujo insignia de SINA, y el recorrido canónico al que apunta el resto
+de la documentación. Seguiremos una única transferencia de 60.000 $ desde la
+solicitud hasta su resolución. Cualquier otro flujo gobernado es una variación de
+este.
+
+## La solicitud
+
+La IA propone una transferencia. Envía solo datos: una intención y props, nunca un
+componente (consulta [Cómo funciona](/docs/how-it-works)).
+
+```ts
+{ intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 in cents */, currency: "USD", /* … */ } }
+```
+
+## La comprobación de estructura
+
+Primero, el análisis estricto. Cada campo se comprueba contra el esquema: el
+importe es un entero en unidades menores, el código de divisa es real, los
+identificadores de cuenta superan sus sumas de verificación. Cualquier campo que el
+esquema no conozca, como un `confirmButton` colado o un `cvv` perdido, rechaza toda
+la carga útil. Esta solicitud está bien formada, así que continúa.
+
+## La comprobación de política encuentra tres cosas
+
+La forma es válida, así que se ejecuta la política. Provoca **tres** infracciones, y
+cada una cita de dónde procede:
+
+| Hallazgo | Severidad | Estándar |
+|---|---|---|
+| Transacción declarable (CTR) | `flag` | FinCEN, 31 CFR 1010.311 |
+| Revisión de actividad sospechosa (SAR) | `flag` | FinCEN, 31 CFR Ch. X |
+| Por encima del límite de aprobación de 50.000 $ | `escalate` | Política de doble control de SINA |
+
+Los dos flags son informativos: se registran, no bloquean. El **escalate** es el
+que actúa. Rechaza la confirmación simple y nombra
+`requiredComponent: "SecureWireDialog"`. (Las severidades se explican en
+[Escalado](/docs/concepts/escalation).) Aquí también se dispara un evento de
+auditoría, que lleva la marca de tiempo, la carga útil, las tres infracciones y el
+componente decidido. El bloqueo queda registrado antes de que se renderice nada.
+
+## El diálogo forzado
+
+SINA monta `SecureWireDialog` en lugar de un botón de confirmación. El diálogo guía
+a una segunda persona por:
+
+1. **Revisar** los términos exactos (importe, destinatario) en un resumen de solo lectura.
+2. **Identificarse** como aprobador, con un ID y un nombre que deben diferir de los del iniciador.
+3. **Confirmar** con un código de un solo uso.
+
+Cuando envían, la evidencia vuelve **al servidor** y la constitución se ejecuta de
+nuevo. El diálogo en sí no valida nada. Solo recoge la aprobación.
+
+<Callout variant="enforced" title="Dos comprobaciones lo hacen imposible de eludir">
+  En la segunda pasada, el servidor impone dos cosas que un flujo hostil no puede
+  falsificar. **Doble control (cuatro ojos)**: el aprobador debe diferir del
+  iniciador conocido por el servidor, de modo que no puedes aprobar tu propia
+  transferencia. **Vinculación a la carga útil**: la aprobación queda atada a los
+  términos exactos, recalculados en el servidor, de modo que no puedes aprobar
+  5.000 $ y ejecutar 60.000 $.
+</Callout>
+
+En la demo de abajo, el iniciador intenta aprobar su propia transferencia. El doble
+control lo rechaza de plano, y desde ahí no hay forma de continuar.
+
+<GovernanceDemo scenario="self-approval" />
+
+## El final feliz
+
+La gobernanza escala; no se limita a rechazar. Una aprobación *válida* supera el
+control en la segunda pasada: un gerente distinto, atado a los términos exactos de
+60.000 $. La transferencia se monta entonces como una acción completada y gobernada.
+Un segundo [evento de auditoría](/docs/concepts/audit-trail) registra quién aprobó,
+en qué términos, y que el control se superó. Toda la historia sigue siendo
+reconstruible después: bloqueo, aprobación, paso.
+
+Pruébalo. Abre el diálogo forzado y aprueba como un gerente *distinto*: el servidor
+vuelve a comprobar y la decisión cambia. Aprueba como el iniciador y lo rechaza.
+
+<GovernanceDemo
+  scenario="over-limit"
+  scenarios={["over-limit", "small", "self-approval", "fabricated-confirm"]}
+  comparison
+/>
+
+<Recap>
+Transferencia por encima del límite → el análisis estricto pasa → tres infracciones
+(dos flags, un escalate) → `SecureWireDialog` → un aprobador *distinto* + código de
+un solo uso → el servidor vuelve a comprobar el doble control y la vinculación a la
+carga útil → aprobada y montada, o rechazada, con un evento de auditoría en cada
+decisión. La confirmación simple nunca es una opción.
+</Recap>
+
+Siguiente: [escribe una regla de gobernanza](/docs/governance/writing-a-rule) propia.

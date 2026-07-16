@@ -1,0 +1,32 @@
+---
+title: ScrollArea
+sourceHash: 017d8f7db069
+---
+
+import { ScrollAreaHero, ScrollAreaExamples } from "@/app/components/docs/demos/primitives/scroll-area";
+
+<ScrollAreaHero />
+
+`ScrollArea` dote une région défilable d'une barre de défilement cohérente et
+stylisée sur tous les navigateurs, sans désactiver le défilement natif au
+clavier.
+
+## Utilisation
+
+```tsx
+import { ScrollArea } from "@sina-design-system/core";
+
+<ScrollArea style={{ height: 240 }}>
+  {/* long content */}
+</ScrollArea>
+```
+
+## Exemples
+
+<ScrollAreaExamples />
+
+## Accessibilité
+
+Utilisez-le pour une liste ou un panneau borné qui déborderait autrement. Le
+contenu reste défilable au clavier et la barre de défilement ne décale pas la
+mise en page.

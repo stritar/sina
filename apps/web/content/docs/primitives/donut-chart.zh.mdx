@@ -1,0 +1,36 @@
+---
+title: DonutChart
+sourceHash: c6fcde610388
+---
+
+import { DonutChartHero, DonutChartExamples } from "@/app/components/docs/demos/primitives/donut-chart";
+
+<DonutChartHero />
+
+`DonutChart` 是带有中心镂空的 [PieChart](/docs/primitives/pie-chart)，因此你可以在中间放置总计或标签。
+
+## 用法
+
+```tsx
+import { DonutChart } from "@sina-design-system/core";
+
+<DonutChart label="Holdings" data={{ labels, datasets }} centerLabel="$48k" />
+```
+
+## 示例
+
+<DonutChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "必填的无障碍名称。" },
+    { prop: "data", type: "ChartData", description: "要绘制的各部分（Chart.js 格式）。" },
+    { prop: "centerLabel", type: "ReactNode", description: "显示在中心镂空处的内容。" },
+  ]}
+/>
+
+## 无障碍
+
+共享 PieChart 的色盲安全配色，以及 `role="img"` + 文本图例的无障碍能力。

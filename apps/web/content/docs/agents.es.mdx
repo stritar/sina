@@ -1,0 +1,83 @@
+---
+title: Para agentes de IA
+sourceHash: b4a9cbbe19d0
+---
+
+Una IA puede leer tu guía de estilo e ignorarla. No puede ignorar una regla que
+se ejecuta como código entre su petición y la pantalla. Ese es el cambio que
+introduce SINA: las reglas no son un documento que la IA consulta, son un
+control por el que pasa. Un sistema de diseño que una IA puede *leer* es una
+sugerencia; uno por el que debe *pasar* es una garantía. Un prompt cuidadoso
+todavía puede malinterpretarse, olvidarse o ser anulado por una entrada astuta.
+Una regla impuesta no se deja convencer para que se aparte.
+
+## Qué envía el agente
+
+SINA ofrece al modelo un menú de verbos de intención, un manifiesto:
+
+```ts
+[
+  { intent: "wire_transfer", kind: "governed", summary: "Move money by wire" },
+  { intent: "list_transactions", kind: "display", summary: "Show recent activity" },
+  // …
+]
+```
+
+El modelo elige un verbo y aporta sus props. Está describiendo un objetivo, no
+construyendo una pantalla.
+
+## Las dos cosas que nunca puede hacer
+
+- **No puede nombrar el componente.** El manifiesto tiene verbos, no
+  componentes. SINA asigna el verbo a un componente *después* de que se ejecuta
+  el control, así que el modelo no sabe que existe el botón de confirmación en
+  bruto.
+- **No puede inventar los datos de una lectura.** Cuando el modelo pide
+  *mostrar* un saldo o una lista de transacciones, tu servidor aporta los
+  valores reales. El modelo elige *qué* mostrar, nunca *cuáles son los números*.
+
+Junta esas dos cosas en la transferencia de 60.000 $: el modelo no puede
+renderizar el botón de confirmación (nunca eligió componentes), no puede aprobar
+la transferencia por sí mismo (la aprobación requiere a una persona *distinta*,
+comprobada en el servidor) ni puede aprobar un importe pequeño para luego
+cambiarlo por uno grande (la aprobación está ligada a los términos exactos, que
+el servidor recalcula).
+
+<Callout variant="enforced" title="Pedir no es hacer">
+  El agente puede *pedir* cualquier cosa. No puede *hacer* nada que el control
+  no haya permitido. Esa brecha entre proponer y renderizar es donde reside toda
+  la seguridad de SINA.
+</Callout>
+
+## Pruébalo
+
+Esta demo ejecuta el **control real**: el mismo código que ejecutaría tu
+servidor, en un servidor, cuando pulsas Ejecutar. Un flujo hostil intenta colar
+un botón «Confirmar» fabricado; el análisis estricto descarta el campo adicional
+antes de que se lea ningún valor. Cambia la petición para ver dónde cae
+realmente el límite.
+
+<GovernanceDemo
+  scenario="fabricated-confirm"
+  scenarios={["fabricated-confirm", "small", "over-limit", "self-approval"]}
+/>
+
+El emulador tiene tres modos: mock (una petición grabada), direct (JSON escrito
+a mano) y live (un modelo real). La decisión es idéntica en los tres, porque al
+control no le importa de dónde vino una petición. Consulta el recorrido completo
+en [la transferencia de 60.000 $](/docs/governance/wire-transfer).
+
+## Documentación que tu agente puede leer
+
+Apunta un asistente de programación aquí y podrá consumir la documentación
+directamente:
+
+| Recurso | Qué es |
+|---|---|
+| `/llms.txt` | Un índice curado de cada página, para que un LLM lo rastree. |
+| `.md` por página | Cada página tiene un gemelo en Markdown sin procesar bajo `/llms/docs/…`. |
+
+El índice comienza con un preámbulo orientado a agentes, en el propio espíritu de
+SINA: emite UI como **intención**, un verbo y props, nunca un componente
+fabricado; envíala al control del lado del servidor; prefiere las intenciones
+registradas, porque cualquier otra cosa se deniega.

@@ -1,0 +1,42 @@
+---
+title: Select
+sourceHash: 946bde858794
+---
+
+import { SelectHero, SelectExamples } from "@/app/components/docs/demos/primitives/select";
+
+<SelectHero />
+
+`Select` は、1 つの値を選ぶための複合的なリストボックスです。選択肢が既知で
+ドロップダウンに収まる場合に使用します。長くて検索可能なリストには、
+[Combobox](/docs/primitives/combobox)を使ってください。
+
+## 使い方
+
+```tsx
+import {
+  Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
+} from "@sina-design-system/core";
+
+<Select value={rail} onValueChange={setRail}>
+  <SelectTrigger><SelectValue placeholder="Payment rail" /></SelectTrigger>
+  <SelectContent>
+    <SelectItem value="ach">ACH</SelectItem>
+    <SelectItem value="wire">Wire</SelectItem>
+  </SelectContent>
+</Select>
+```
+
+## 例
+
+<SelectExamples />
+
+## 構成要素
+
+`Select` · `SelectTrigger` · `SelectValue` · `SelectContent` · `SelectItem` ·
+`SelectGroup` · `SelectLabel` · `SelectSeparator`.
+
+## アクセシビリティ
+
+ARIA の listbox パターンに準拠しています。矢印キーで移動し、先頭文字入力でジャンプし、
+`Enter` で選択し、`Esc` で閉じ、フォーカスはトリガーに戻ります。すべて自動で処理されます。

@@ -1,0 +1,45 @@
+---
+title: BarChart
+sourceHash: 81bb0ce7f3af
+---
+
+import { BarChartHero, BarChartExamples } from "@/app/components/docs/demos/primitives/bar-chart";
+
+<BarChartHero />
+
+`BarChart` compare des valeurs entre catégories. Activez `horizontal` pour les
+libellés longs et `stacked` pour montrer la composition.
+
+## Utilisation
+
+```tsx
+import { BarChart } from "@sina-design-system/core";
+
+<BarChart
+  label="Spending by category"
+  data={{ labels, datasets }}
+  horizontal
+  valueFormatter={(n) => `$${n}`}
+/>
+```
+
+## Exemples
+
+<BarChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "Nom accessible obligatoire." },
+    { prop: "data", type: "ChartData", description: "Catégories et séries (structure Chart.js)." },
+    { prop: "horizontal", type: "boolean", default: "false", description: "Les barres se déploient de gauche à droite." },
+    { prop: "stacked", type: "boolean", default: "false", description: "Empile les séries en une seule barre." },
+    { prop: "valueFormatter", type: "(n: number) => string", description: "Met en forme les valeurs de l'infobulle et de l'axe." },
+  ]}
+/>
+
+## Accessibilité
+
+Comme tous les graphiques canvas, c'est `"use client"`, `role="img"`, et il
+s'accompagne d'un résumé textuel comme voie accessible.

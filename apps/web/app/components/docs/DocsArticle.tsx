@@ -1,4 +1,6 @@
 import type { Page } from "fumadocs-core/source";
+import { DEFAULT_LOCALE } from "@/lib/i18n/locales";
+import { getMessages } from "@/lib/i18n/messages";
 import { getMDXComponents } from "./mdx-components";
 import { DocsToolbar } from "./DocsToolbar";
 import { DocsTOC } from "./DocsTOC";
@@ -22,15 +24,25 @@ type DocsPage = Page<{
   toc: Parameters<typeof DocsTOC>[0]["items"];
 }>;
 
-export function DocsArticle({ page }: { page: DocsPage }) {
+export function DocsArticle({
+  page,
+  locale = DEFAULT_LOCALE,
+}: {
+  page: DocsPage;
+  locale?: string;
+}) {
   const MDX = page.data.body;
+  const messages = getMessages(locale);
 
   return (
     <div className={styles.page}>
       <article className={styles.column}>
-        <DocsToolbar url={page.url} />
+        <DocsToolbar url={page.url} locale={locale} />
         <h1 className={styles.title}>{page.data.title}</h1>
         {page.data.description ? <p className={styles.lead}>{page.data.description}</p> : null}
+        {locale !== DEFAULT_LOCALE ? (
+          <p className={styles.machineNote}>{messages.notice.machineTranslated}</p>
+        ) : null}
         {/* `.prose` styles MDX by element selector, so it wraps the body alone —
             chrome inside it would inherit list/link styling meant for content. */}
         <div className={styles.prose}>
@@ -41,7 +53,7 @@ export function DocsArticle({ page }: { page: DocsPage }) {
             <MDX components={getMDXComponents()} />
           </GateTransportBoundary>
         </div>
-        <DocsPager url={page.url} />
+        <DocsPager url={page.url} locale={locale} />
       </article>
       <DocsTOC items={page.data.toc} />
     </div>

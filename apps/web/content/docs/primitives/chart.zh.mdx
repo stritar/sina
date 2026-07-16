@@ -1,0 +1,37 @@
+---
+title: Chart
+sourceHash: beb3dd64a19b
+---
+
+import { ChartHero, ChartExamples } from "@/app/components/docs/demos/primitives/chart";
+
+<ChartHero />
+
+`Chart` 是用于内联趋势的紧凑迷你图。它是由 `currentColor` 驱动的纯 SVG，因此可在服务器端
+渲染，并继承周围文本的颜色。若需要完整的交互式图表，请使用
+[LineChart](/docs/primitives/line-chart) 及其同类组件。
+
+## 用法
+
+```tsx
+import { Chart } from "@sina-design-system/core";
+
+<Chart variant="area" data={[3, 5, 4, 8, 7, 11]} label="Balance trend, up" />
+```
+
+## 示例
+
+<ChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "variant", type: '"line" | "area" | "bar"', default: '"line"', description: "迷你图样式。" },
+    { prop: "data", type: "number[]", description: "要绘制的数据系列。" },
+  ]}
+/>
+
+## 无障碍
+
+以 `role="img"` 渲染，并需要一个标签。对于单个数据点，会降级为一条平坦的基线。

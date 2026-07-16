@@ -1,0 +1,40 @@
+---
+title: Checkbox
+sourceHash: 897c9affa3b4
+---
+
+import { CheckboxHero, CheckboxExamples } from "@/app/components/docs/demos/primitives/checkbox";
+
+<CheckboxHero />
+
+`Checkbox` bascule une seule valeur booléenne. Il prend aussi en charge un état
+**indéterminé** pour « certains mais pas tous », comme un élément parent qui
+contrôle un groupe.
+
+## Utilisation
+
+```tsx
+import { Checkbox } from "@sina-design-system/core";
+
+<Checkbox checked={agreed} onCheckedChange={setAgreed} label="I agree" />
+<Checkbox checked="indeterminate" label="Select all" />
+```
+
+## Exemples
+
+<CheckboxExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "checked", type: 'boolean | "indeterminate"', description: "État coché contrôlé. Passez \"indeterminate\" pour l'état mixte." },
+    { prop: "onCheckedChange", type: '(checked: boolean | "indeterminate") => void', description: "Se déclenche au basculement." },
+    { prop: "label", type: "ReactNode", description: "Libellé associé." },
+  ]}
+/>
+
+## Accessibilité
+
+`Space` bascule ; le libellé est cliquable ; l'état est annoncé comme coché,
+décoché ou mixte.

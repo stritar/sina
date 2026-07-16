@@ -1,0 +1,44 @@
+---
+title: Field
+sourceHash: 3149887e8df2
+---
+
+import { FieldHero, FieldExamples } from "@/app/components/docs/demos/primitives/field";
+
+<FieldHero />
+
+`Field` ist der Wrapper, den jedes Eingabefeld verwendet. Es rendert ein Label,
+eine optionale Beschreibung und einen optionalen Fehler und klont sein Kind, um
+sie mit der richtigen `id`, dem richtigen `aria-describedby` und dem richtigen
+`aria-invalid` zu verbinden. Sie erhalten korrekte Formular-Barrierefreiheit, ohne
+IDs von Hand durchzureichen.
+
+## Verwendung
+
+```tsx
+import { Field } from "@sina-design-system/core";
+
+<Field label="Email" description="We'll never share it." error={errors.email}>
+  <input type="email" name="email" />
+</Field>
+```
+
+## Beispiele
+
+<FieldExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "ReactNode", description: "Das Label des Felds (mit dem Steuerelement verknüpft)." },
+    { prop: "description", type: "ReactNode", description: "Hilfetext unter dem Label." },
+    { prop: "error", type: "ReactNode", description: "Eine Fehlermeldung. Setzt aria-invalid und zeigt ein fettes Warnglyph an." },
+  ]}
+/>
+
+<Callout variant="note" title="Fehler tragen ein Glyph">
+  Wenn `error` gesetzt ist, rendert Field das obligatorische fette Warnglyph neben
+  der Meldung, niemals nur Farbe. Das ist eine SINA-weite Regel für Fehler- und
+  Warnzustände.
+</Callout>

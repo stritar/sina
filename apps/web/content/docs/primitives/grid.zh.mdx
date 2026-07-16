@@ -1,0 +1,38 @@
+---
+title: Grid
+sourceHash: 1699dd9105fc
+---
+
+import { GridHero, GridExamples } from "@/app/components/docs/demos/primitives/grid";
+
+<GridHero />
+
+`Grid` 将子元素排列成会自动换行的列，并使用来自间距刻度的 `gap`。将它用于卡片网格和仪表板；单行或单列则使用 [Stack](/docs/primitives/stack)。
+
+## 用法
+
+```tsx
+import { Grid } from "@sina-design-system/core";
+
+<Grid cols={3} gap={4}>
+  {items.map((i) => <Card key={i.id} {...i} />)}
+</Grid>
+```
+
+## 示例
+
+<GridExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "cols", type: "GridCols", description: "列的数量。" },
+    { prop: "gap", type: "GapStep", description: "单元格之间的间距（来自 8pt 刻度）。" },
+    { prop: "as", type: "ElementType", description: "渲染为不同的元素（多态）。" },
+  ]}
+/>
+
+## 无障碍
+
+纯粹用于呈现。它渲染一个普通的 `div`，不添加任何语义。当单元格是真正的集合时，传入 `as` 以保留有意义的结构（例如 `as="ul"`）。

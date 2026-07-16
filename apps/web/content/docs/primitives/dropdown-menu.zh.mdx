@@ -1,0 +1,46 @@
+---
+title: DropdownMenu
+sourceHash: 589f5b32ad6e
+---
+
+import { DropdownMenuHero, DropdownMenuExamples } from "@/app/components/docs/demos/primitives/dropdown-menu";
+
+<DropdownMenuHero />
+
+`DropdownMenu` 是一个由触发器触发的*命令*复合菜单。当每个条目都**执行**某个操作时使用它；当条目是控件所保留的**值**时，请改用
+[Select](/docs/primitives/select)。本页的“复制页面”按钮就是一个 `DropdownMenu`。
+
+## 用法
+
+```tsx
+import {
+  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem,
+} from "@sina-design-system/core";
+
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="secondary">Page actions</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem onSelect={openInClaude}>Open in Claude</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+## 示例
+
+<DropdownMenuExamples />
+
+## 组成部分
+
+`DropdownMenu` · `DropdownMenuTrigger` · `DropdownMenuContent` ·
+`DropdownMenuItem` · `DropdownMenuGroup` · `DropdownMenuLabel` ·
+`DropdownMenuSeparator`.
+
+`DropdownMenuContent` 默认为 `align="end"` 和 `sideOffset={4}`；这两者以及所有其他
+Radix 内容 props 都会被转发。使用 `asChild` 可将某个条目变为链接。
+
+## 无障碍
+
+遵循 ARIA 菜单模式：`Enter` 或 `Space` 打开菜单并聚焦第一个条目，方向键在条目间移动焦点，输入首字母可跳转，`Esc`
+关闭并将焦点返回触发器。这一切都已为你处理好。

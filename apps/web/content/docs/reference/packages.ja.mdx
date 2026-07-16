@@ -1,0 +1,46 @@
+---
+title: パッケージとエクスポート
+sourceHash: 2e1b381ebc4d
+---
+
+> 手動でメンテナンスされるリファレンスです。TSDoc→MDX の自動生成は保留中です。
+
+SINA は、厳格な境界を持つ 5 つの小さなパッケージです。各レイヤーは、その下にあるレイヤーのみを知ることができます。
+
+| パッケージ | 何か | 決して含まないもの |
+|---|---|---|
+| `@sina-design-system/theme` | デザイントークン（`--sina-*`）+ CSS リセット | React、UI |
+| `@sina-design-system/core` | Radix 上のヘッドレスでアクセシブルなプリミティブ | Zod、ドメイン語彙 |
+| `@sina-design-system/governance` | 共有されるインターセプトの継ぎ目 | React、UI、ドメイン語彙 |
+| `@sina-design-system/fintech` | fintech 憲章、純粋な Zod 規則 | React、あらゆる種類の UI |
+| `@sina-design-system/fintech-react` | `core` + `fintech` を組み合わせる統制されたコンポーネント | Zod（スキーマを組み合わせるが、自ら記述することはない） |
+
+## `theme`
+
+`./reset.css`（レイヤー化されているため、あなたのスタイルが常に勝ちます）と、`--sina-*` カスタムプロパティである `./css` を提供します。トークンの文法、階層、スケールは [Tokens](/docs/theming/tokens) にあります。上書きできる内容は [Theming](/docs/theming) にあります。
+
+## `core`
+
+プリミティブライブラリです。すべてのエクスポートは、[プリミティブギャラリー](/docs/primitives) にライブ例とともに掲載されています。名前付きエクスポートのみです。プリミティブごとの prop 型（`ButtonProps`、`GapStep`、`SummaryItem`、…）が併せて提供されます。
+
+## `governance`
+
+すべての憲章が構築の土台とする、ドメインに依存しない継ぎ目です。
+
+| エクスポート | 目的 |
+|---|---|
+| `InterceptionResult`、`Violation`、`Severity` | 統一された契約。[インターセプト契約](/docs/concepts/the-contract) を参照してください。 |
+| `intercept`、`ConstitutionRule` | Zod スキーマ + ポリシーをサーバー側で実行し、契約を返します。 |
+| `dispatch`、`dispatchAll`、`createRouter`、`pattern` | インテントルーター：`{ intent, props }` エンベロープ → 決定 + マウント。 |
+| `UNKNOWN_INTENT`、`SCHEMA_INVALID` | 認識されない動詞 / パース失敗を表すセンチネルです。 |
+| `emitAudit`、`redact`、`setAuditSink`、`AuditEvent` | 監査の発行ポイント。[監査証跡](/docs/concepts/audit-trail) を参照してください。 |
+
+ルーターは契約の**外**でマウントを解決するため、ガバナンスは普遍的な検証してからマウントの上に乗る、任意のエスカレーション層のままとなります。
+
+## `fintech` と `fintech-react`
+
+`fintech` は出荷される憲章です。各インテント動詞、スキーマ、しきい値、引用された標準を含みます。`fintech-react` はそれが下す決定、すなわち統制されたコンポーネントをレンダリングします。両者は [統制されたコンポーネントと表示パターン](/docs/governance/components-and-patterns) にカタログ化されています。独自の規則は [ガバナンス規則を書く](/docs/governance/writing-a-rule) で記述してください。
+
+## バージョン
+
+5 つすべてが **0.1.0** で公開されています。[リリースと安定性](/docs/reference/changelog) を参照してください。

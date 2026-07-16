@@ -1,0 +1,75 @@
+---
+title: 令牌
+sourceHash: 3ca63d5982d6
+---
+
+**设计令牌**是组件引用的具名值，而不是硬编码：一个颜色、一个间距步长、一个字号。改动这个值一次，所有指向它的地方都会更新。在 SINA 中，令牌是 CSS 自定义属性，全部以 `--sina-` 为前缀。
+
+## 三个层级
+
+<TokenTree />
+
+- **原始层**：`theme.css` 中的原始值，比如某个特定的绿色。
+- **语义层**：为值赋予含义的*角色*。`--sina-color-primary` 表示「主操作颜色」，无论其具体取值为何。
+- **组件层**：作用域限定于单个组件的令牌，比如 `--sina-button-bg`，它指向某个语义角色。
+
+你几乎总是会使用**语义**层。它回答的是「这个颜色*意味着*什么」，而不是「它是哪个十六进制值」。正因如此，[主题](/docs/theming)可以为一个角色重新赋值，所有组件随之更新。
+
+## 命名语法
+
+只有一条规则，让你读一个名字就知道它的作用：
+
+- 单短横线连接**标识**（类别、角色、属性）：`--sina-color-text-muted`、`--sina-button-bg`。
+- 双短横线标记**叶子修饰符**（一个刻度步长、变体或状态），且始终位于末尾：`--sina-space--4`、`--sina-color-primary--hover`、`--sina-button-bg--primary--hover`。
+
+<Callout variant="tip" title="像句子一样读它">
+  `--sina-button-bg--primary--hover` = 按钮的背景、primary 变体、hover 状态。标识在前，修饰符在后。
+</Callout>
+
+## 颜色
+
+按**角色**选择颜色（「主操作颜色」），绝不按色相（「那个绿色」）。点击一个色板即可复制其变量。
+
+<TokenSwatchGrid>
+  <TokenSwatch name="--sina-color-bg" note="页面背景" />
+  <TokenSwatch name="--sina-color-surface" note="卡片 / 面板" />
+  <TokenSwatch name="--sina-color-text" note="正文文本" />
+  <TokenSwatch name="--sina-color-text-muted" note="次要文本" />
+  <TokenSwatch name="--sina-color-border" note="边框" />
+  <TokenSwatch name="--sina-color-primary" note="主操作" />
+  <TokenSwatch name="--sina-color-primary-fg" note="primary 上的文本" />
+  <TokenSwatch name="--sina-color-secondary" note="次要操作" />
+</TokenSwatchGrid>
+
+每个表面角色都有一个 `-fg` 搭档：保证在其上可读的颜色。为按钮的背景使用 `primary`，为其标签使用 `primary-fg`，对比度便会自行处理。状态角色的工作方式相同：
+
+<TokenSwatchGrid>
+  <TokenSwatch name="--sina-color-danger" note="错误 / 破坏性" />
+  <TokenSwatch name="--sina-color-warning" note="警告" />
+  <TokenSwatch name="--sina-color-success" note="成功" />
+  <TokenSwatch name="--sina-color-info" note="信息" />
+</TokenSwatchGrid>
+
+有两条规则由构建守卫强制执行：颜色在 `theme.css` 中**仅以十六进制**书写（`#rrggbb`，绝不用 `rgb()` / `hsl()` / 具名颜色），而组件 CSS 从不书写原始颜色，只用 `var(--sina-*)`。诸如 `danger` 的状态颜色，加上焦点环和安全表面着色，都是**受治理锁定的**。参见[锁定的边界](/docs/theming)。
+
+## 各类刻度
+
+除颜色之外的一切，都是一小组固定的步长。坚持使用这些步长能让 UI 富有节奏感，而不是随意杂乱。
+
+| 族 | 令牌 |
+|---|---|
+| 间距 | `--sina-space--0` … `--24` 以 4px 为基准，半步 `--0_5` · `--1_5` · `--2_5` |
+| 字号 | `--sina-text--xs` · `ui` · `sm` · `base` · `lg` · `xl` · `2xl` … `5xl` |
+| 字重 / 行高 | `--sina-font-weight--regular…bold` · `--sina-leading--none…relaxed` |
+| 圆角 | `--sina-radius--none` · `xs` · `sm` · `md` · `lg` · `xl` · `2xl` · `full` |
+| 阴影 | `--sina-shadow--xs…xl` · `focus` · `focus-ring` |
+| 动效 | `--sina-duration--instant…slow` · `--sina-ease--standard` · `out` |
+| Z-index | `--sina-z--base` · `dropdown` · `overlay` · `modal` · `toast` |
+
+<Callout variant="tip" title="减少动效自动生效">
+  在令牌层，`prefers-reduced-motion` 下时长会坍缩为零，因此每个组件都会遵循该设置，无需任何逐组件代码。
+</Callout>
+
+## 令牌如何抵达组件
+
+每个组件都声明自己的令牌层，其中 `--sina-button-bg--primary` 是 `--sina-color-primary` 的别名，而其 CSS 只消费该层。于是，主题只需为一个语义角色重新赋值一次，每个指向它的组件槽位便会更新。那层间接正是整个主题机制。

@@ -1,0 +1,44 @@
+---
+title: Badge
+sourceHash: 4d4d24138038
+---
+
+import { BadgeHero, BadgeExamples } from "@/app/components/docs/demos/primitives/badge";
+
+<BadgeHero />
+
+`Badge` 是一个小型标签，用于在行内标注某物的状态：一行、一张卡片、一个标题。
+
+## 用法
+
+```tsx
+import { Badge } from "@sina-design-system/core";
+
+<Badge intent="success">Verified</Badge>
+<Badge intent="danger" dot>Blocked</Badge>
+```
+
+## 示例
+
+<BadgeExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "intent", type: '"neutral" | "info" | "success" | "warning" | "danger"', default: '"neutral"', description: "颜色与含义。" },
+    { prop: "size", type: '"sm" | "md"', default: '"md"', description: "标签尺寸。" },
+    { prop: "icon", type: "ReactNode", description: "前置字形（继承标签颜色）。" },
+    { prop: "dot", type: "boolean", default: "false", description: "前置状态圆点。" },
+  ]}
+/>
+
+<Callout variant="note" title="状态规则适用">
+  `danger` 或 `warning` 的 Badge 会自动渲染一个粗体字形。而且 Badge 是一个
+  状态元素，因此绝不要将它渲染在 Alert 或 Toast 内部。请将它作为同级元素放置。
+</Callout>
+
+## 无障碍
+
+含义绝不能仅由颜色来传达。严重级别的 Badge 总是将其色调与字形或圆点以及文本标签
+搭配使用。可关闭的 Badge 的关闭按钮需要一个显式的 `closeLabel`。

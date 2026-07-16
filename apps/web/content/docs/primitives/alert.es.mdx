@@ -1,0 +1,47 @@
+---
+title: Alert
+sourceHash: 4b6702614a41
+---
+
+import { AlertHero, AlertExamples } from "@/app/components/docs/demos/primitives/alert";
+
+<AlertHero />
+
+`Alert` comunica un estado persistente y en línea: una advertencia encima de un
+formulario, una confirmación de éxito, la explicación de un error.
+
+## Uso
+
+```tsx
+import { Alert } from "@sina-design-system/core";
+
+<Alert variant="warning" title="Approval required">
+  This transfer needs a second approver before it can proceed.
+</Alert>
+```
+
+## Ejemplos
+
+<AlertExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "variant", type: '"info" | "success" | "warning" | "danger"', default: '"info"', description: "Severidad. También selecciona el glifo de estado." },
+    { prop: "title", type: "ReactNode", description: "Encabezado en negrita de la alerta." },
+    { prop: "icon", type: "ReactNode | false", description: "Cambia el glifo, u ocúltalo para info/success (nunca para warning/danger)." },
+  ]}
+/>
+
+<Callout variant="warning" title="Dos reglas para el estado">
+  Las alertas warning y danger **siempre** renderizan un glifo en negrita. Puedes
+  cambiarlo pero no eliminarlo. Y nunca anides un elemento de estado dentro de
+  otro: un Badge va *junto a* una Alert, no dentro de ella.
+</Callout>
+
+## Accesibilidad
+
+Las alertas danger usan `role="alert"` (anunciado de forma asertiva); el resto usa
+`role="status"` (cortés). El significado lo transmiten el icono + el título + el
+texto, nunca solo el color.

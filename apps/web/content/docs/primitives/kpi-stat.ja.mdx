@@ -1,0 +1,45 @@
+---
+title: KpiStat
+sourceHash: 435e274ef4a2
+---
+
+import { KpiStatHero, KpiStatExamples } from "@/app/components/docs/demos/primitives/kpi-stat";
+
+<KpiStatHero />
+
+`KpiStat` は重要な数字を 1 つ大きく表示し、オプションで比較値を付けられます。比較値はトレンドバッジとしてレンダリングされます（デフォルトでは上昇が良い状態です）。
+
+## 使い方
+
+```tsx
+import { KpiStat } from "@sina-design-system/core";
+
+<KpiStat
+  value={12500}
+  comparisonValue={11800}
+  valueFormatter={(v) => `$${v.toLocaleString("en-US")}`}
+  comparisonLabel="vs last month"
+/>
+```
+
+## 例
+
+<KpiStatExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "value", type: "number | null", description: "主要な数字。null の場合は displayNullAs をレンダリングします。" },
+    { prop: "valueFormatter", type: "(value: number) => string", description: "値と差分（通貨など）をフォーマットします。" },
+    { prop: "comparisonValue", type: "number", description: "以前の値。トレンドのピルを表示します。" },
+    { prop: "comparisonLabel", type: "string", description: "ピルの下のコンテキスト。例：「前期比」。" },
+    { prop: "showChangeAsPercentage", type: "boolean", default: "false", description: "差分をパーセンテージで表示します。" },
+    { prop: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "タイルのスケール。" },
+    { prop: "invertChangeColors", type: "boolean", default: "false", description: "下降が良い場合（例：支出）。" },
+  ]}
+/>
+
+## アクセシビリティ
+
+下降トレンドは太字の下向きグリフを備えた危険バッジを使用するため、意味が色だけに依存することは決してありません。すべてが実際のテキストであり（画像なし、canvas なし）、サーバー側でマウント可能です（クライアント JS なし）。

@@ -1,0 +1,82 @@
+---
+title: インターセプト契約
+sourceHash: 9015f1ca85a8
+---
+
+憲章のすべての規則は、**同じ 3 つのフィールド**で応答します。この形を一度覚えれば、
+SINA が下すあらゆる決定を読み解けます。
+
+```ts
+type InterceptionResult = {
+  valid: boolean;                   // did everything pass?
+  violations: Violation[];          // what went wrong (empty if clean)
+  requiredComponent: string | null; // a stricter component you must render instead
+};
+```
+
+- **`valid`**：何もブロックしないときにのみ `true` になります。ブロックする問題が
+  1 つでもあれば `false` になります。
+- **`violations`**：ゲートが見つけたものです。それぞれに `message`、`severity`、
+  そして `standard`（それが由来する規制またはポリシー）があり、ブロックが謎ではなく
+  説明可能になります。
+- **`requiredComponent`**：規則がより厳格なコンポーネント（第二承認者ダイアログ
+  など）を要求するとき、その名前がここに入ります。そうでなければ `null` です。
+
+## 結果の生成方法：まず形、次に値
+
+**レイヤー 1：構造。** payload はまさに正しい形になっているか。スキーマは**厳格**
+なので、あってはならないフィールドはすべて拒否されます。AI が偽造した
+`confirmButton`、`cvv`、またはカード番号全体を紛れ込ませようとしても、それらは
+*余分なフィールド*であり、値が調べられる前に破棄されます。
+
+<BeforeAfter>
+  <Before title="敵対的なストリームが送るもの">
+    <code>{`{ amount: 500, confirmButton: true, cvv: "123" }`}</code>：本物の
+    金額に、偽のボタンと紛れ込ませたカードデータが加わっています。
+  </Before>
+  <After title="スキーマが受け入れるもの">
+    <code>{`{ amount: 500 }`}</code>：余分なフィールドは拒否されます。偽のボタンは
+    レンダリングできず、カードデータはログに届きません。
+  </After>
+</BeforeAfter>
+
+**レイヤー 2：ポリシー。** 形が有効な場合、値は規則に従っているか。これらが引用
+された上限です：
+
+```ts
+// From the wire-transfer rule (simplified):
+if (amount > WIRE_SECONDARY_APPROVAL_MINOR /* $50,000 */) {
+  violation("AMOUNT_REQUIRES_APPROVAL", "escalate"); // → force SecureWireDialog
+}
+```
+
+知っておく価値のある細かな点が 1 つあります。SINA は ISO 4217 に従い、金額を
+**整数の最小通貨単位**、つまりドルではなくセントで数えます。浮動小数点も丸め誤差
+もなく、金額は正確に一致するか、しないかのどちらかです。
+
+## 合格と不合格
+
+```ts
+// A clean request:
+{ valid: true, violations: [], requiredComponent: null }
+
+// An over-limit wire:
+{
+  valid: false,
+  violations: [
+    { code: "AMOUNT_REQUIRES_APPROVAL", severity: "escalate",
+      message: "wire above $50,000 requires secondary managerial approval",
+      standard: "SINA dual-control policy" },
+  ],
+  requiredComponent: "SecureWireDialog",
+}
+```
+
+それを読めば、何をすべきかが正確にわかります。生の確認をレンダリングしては
+いけません。`SecureWireDialog` をレンダリングします。
+
+**統制された**規則（エスカレーションし得るアクション）も、**統制されていない**規則
+（形だけをチェックし、`requiredComponent` を決して設定しない読み取り専用の表示）も、
+この同じ契約を返します。そのため、決定をレンダリングするコードはどこでも同じです。
+
+次へ：[エスカレーションと強制](/docs/concepts/escalation)。

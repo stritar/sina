@@ -1,0 +1,38 @@
+---
+title: PieChart
+sourceHash: 04cd69ecc19c
+---
+
+import { PieChartHero, PieChartExamples } from "@/app/components/docs/demos/primitives/pie-chart";
+
+<PieChartHero />
+
+`PieChart` 展示一个整体如何拆分为各个部分。切片取自
+`--sina-color-chart--1…8` 调色板，其顺序针对色盲安全进行了排序。若需要居中的
+汇总数字，请使用 [DonutChart](/docs/primitives/donut-chart)。
+
+## 用法
+
+```tsx
+import { PieChart } from "@sina-design-system/core";
+
+<PieChart label="Portfolio allocation" data={{ labels, datasets }} />
+```
+
+## 示例
+
+<PieChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "必需的无障碍名称。" },
+    { prop: "data", type: "ChartData", description: "要绘制的各个部分（Chart.js 格式）。" },
+    { prop: "valueFormatter", type: "(n: number) => string", description: "格式化工具提示的数值。" },
+  ]}
+/>
+
+## 无障碍
+
+`"use client"`、`role="img"`，并以文本图例作为无障碍路径。

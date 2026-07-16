@@ -1,0 +1,91 @@
+---
+title: 主题化
+sourceHash: c387f6cda2eb
+---
+
+SINA 中的主题就是**相同的 token,只是取值不同**。你从不为了重新品牌化而去编辑组件。
+你重新定义 `--sina-*` 自定义属性,所有指向它们的组件都会随之更新。级联让覆盖变得
+轻而易举:SINA 的 reset 位于 `@layer reset` 中,而组件和应用的 CSS 未分层,因此你
+应用的 CSS 会凭借纯粹的源代码顺序取胜。在 SINA 的样式之后导入你的主题块,它便会生效。
+无需重新构建,无需 fork。
+
+## 构建品牌主题
+
+<Steps>
+  <Step title="覆盖承载你品牌的角色">
+
+通常是 `primary`、它可读的前景色、hover,也许还有 radius。其余一切都会继承。
+
+```css
+:root {
+  --sina-color-primary: #6d28d9;
+  --sina-color-primary-fg: #ffffff;
+  --sina-color-primary--hover: #5b21b6;
+  --sina-radius--md: 0.5rem; /* softer corners, brand-wide */
+}
+```
+
+  </Step>
+  <Step title="或让类型化的辅助函数生成它">
+
+`@sina-design-system/theme` 中的 `createTheme()` 会生成该块,并对你被允许改动的角色
+进行类型检查:
+
+```ts
+import { createTheme } from "@sina-design-system/theme";
+
+const acme = createTheme(
+  { colors: { primary: "#7c3aed" }, radius: { md: "0.5rem" } },
+  { selector: '[data-theme="acme"]' },
+);
+```
+
+  </Step>
+  <Step title="限定其作用域">
+
+将该块放在 `:root` 上用于单个品牌,或放在 `[data-theme="acme"]` 下用于多个品牌。
+限定作用域的品牌可与暗色模式组合。对于局部覆盖,`themeVars()` 会返回相同的 token,
+作为可用于 `style={}` 的内联样式对象。
+
+  </Step>
+</Steps>
+
+<Callout variant="tip" title="从小处开始">
+  大多数品牌只覆盖少数几个角色(`primary`、各表面,也许还有 radius),其余的都继承。
+</Callout>
+
+## 暗色模式是同一个技巧
+
+`theme.css` 附带一个 `[data-theme="dark"]` 块,它只重新分配这些相同的角色。在
+`<html>` 上切换 `data-theme`,整个 UI 就会重新着色。一个 亮色 / 暗色 / 跟随系统
+切换器,不过就是写入该属性并在 `localStorage` 中记住这个选择。
+
+## 被锁定的边界
+
+并非每个 token 都可以由你更改,而这条边界本身就是一项治理决策。
+
+| | 角色 | |
+|---|---|---|
+| **品牌开放** | `bg` / `surface*` / `text*` / `border*`、`primary*` / `secondary*`、`success` / `warning` / `info`、图表系列、`radius` / `space` / `text` / `font` | 归你所有。尽情重新品牌化。 |
+| **治理锁定** | `danger*`、安全表面色调、焦点环、`intent-*` 别名 | 保留。类型化 API 会拒绝它们。 |
+
+<Callout variant="governance" title="为何要锁定?">
+  品牌主题绝不能让错误看起来风平浪静、把焦点环从键盘用户面前隐藏,或掩饰某个安全操作的
+  可供性提示。这些不是样式,而是安全与无障碍信号。`createTheme()` 会在编译期拒绝一个被
+  锁定的角色。(原始 CSS 仍可凭特异性强行覆盖某个变量。只是这套 API 不会帮你这么做。)
+</Callout>
+
+<DoDont
+  do={[
+    "覆盖 primary、各表面和 radius,使其与你的品牌相匹配",
+    "使用 createTheme(),让被锁定的角色在编译期被捕获",
+    "在一次大幅重新品牌化之后重新检查对比度",
+  ]}
+  dont={[
+    "把 danger 重新设计得看起来友好;错误必须读起来像错误",
+    "移除或调暗焦点环",
+    "在组件里硬编码 hex,以绕开 token 系统",
+  ]}
+/>
+
+下一步:[Tokens](/docs/theming/tokens),每个主题都要重新赋值的词汇表。

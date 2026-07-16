@@ -1,0 +1,44 @@
+---
+title: Stack
+sourceHash: 9856ac9abe5a
+---
+
+import { StackHero, StackExamples } from "@/app/components/docs/demos/primitives/stack";
+
+<StackHero />
+
+`Stack` dispose ses enfants le long d'un seul axe avec un `gap` tiré de l'échelle
+d'espacement. C'est la primitive de mise en page du quotidien ; utilisez
+[Grid](/docs/primitives/grid) lorsque vous avez besoin de colonnes qui passent à la ligne.
+
+## Utilisation
+
+```tsx
+import { Stack } from "@sina-design-system/core";
+
+<Stack direction="row" gap={3} align="center">
+  <Badge>Draft</Badge>
+  <span>Invoice #204</span>
+</Stack>
+```
+
+## Exemples
+
+<StackExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "direction", type: '"row" | "column"', default: '"column"', description: "Axe de mise en page." },
+    { prop: "gap", type: "GapStep", description: "Espacement entre les enfants (depuis l'échelle de 8 pt)." },
+    { prop: "align / justify", type: "string", description: "Alignement flex le long de chaque axe." },
+    { prop: "as", type: "ElementType", description: "Rend un élément différent (polymorphe)." },
+  ]}
+/>
+
+## Accessibilité
+
+Purement présentationnel. Il rend un simple `div` sans sémantique ajoutée. Lorsque
+les enfants forment une véritable structure, passez `as` pour la conserver (par
+exemple, `as="ul"` avec des enfants `li` garde une liste en tant que liste).

@@ -1,0 +1,39 @@
+---
+title: Chart
+sourceHash: beb3dd64a19b
+---
+
+import { ChartHero, ChartExamples } from "@/app/components/docs/demos/primitives/chart";
+
+<ChartHero />
+
+`Chart` est un sparkline compact pour les tendances en ligne. C'est du SVG pur
+piloté par `currentColor`, il est donc rendu sur le serveur et hérite de la
+couleur du texte environnant. Pour des graphiques complets et interactifs,
+utilisez [LineChart](/docs/primitives/line-chart) et consorts.
+
+## Utilisation
+
+```tsx
+import { Chart } from "@sina-design-system/core";
+
+<Chart variant="area" data={[3, 5, 4, 8, 7, 11]} label="Balance trend, up" />
+```
+
+## Exemples
+
+<ChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "variant", type: '"line" | "area" | "bar"', default: '"line"', description: "Style du sparkline." },
+    { prop: "data", type: "number[]", description: "La série à tracer." },
+  ]}
+/>
+
+## Accessibilité
+
+Rendu en tant que `role="img"` avec un libellé obligatoire. Se réduit à une ligne
+de base plate pour un point unique.

@@ -1,0 +1,40 @@
+/* Language picker: globe + native name + caret in a secondary Button, matching
+   the Search + Copy Page chrome. The menu shows a check on the active locale. */
+.trigger {
+  gap: var(--sina-space--2);
+}
+
+.globe {
+  width: var(--sina-size--icon-sm);
+  height: var(--sina-size--icon-sm);
+  color: var(--sina-color-text-muted);
+  flex-shrink: 0;
+}
+
+.current {
+  font-variant-numeric: tabular-nums;
+}
+
+.caretIcon {
+  width: var(--sina-size--icon-sm);
+  height: var(--sina-size--icon-sm);
+  color: var(--sina-color-text-muted);
+  flex-shrink: 0;
+}
+
+.item {
+  gap: var(--sina-space--2);
+}
+
+/* Reserve the check column so labels align whether or not a row is active. */
+.check {
+  width: var(--sina-size--icon-sm);
+  height: var(--sina-size--icon-sm);
+  flex-shrink: 0;
+  color: var(--sina-color-primary);
+  visibility: hidden;
+}
+
+.check[data-active] {
+  visibility: visible;
+}

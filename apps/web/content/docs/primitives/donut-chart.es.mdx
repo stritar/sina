@@ -1,0 +1,38 @@
+---
+title: DonutChart
+sourceHash: c6fcde610388
+---
+
+import { DonutChartHero, DonutChartExamples } from "@/app/components/docs/demos/primitives/donut-chart";
+
+<DonutChartHero />
+
+`DonutChart` es un [PieChart](/docs/primitives/pie-chart) con un recorte central,
+para que puedas colocar un total o una etiqueta en el medio.
+
+## Uso
+
+```tsx
+import { DonutChart } from "@sina-design-system/core";
+
+<DonutChart label="Holdings" data={{ labels, datasets }} centerLabel="$48k" />
+```
+
+## Ejemplos
+
+<DonutChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "Nombre accesible obligatorio." },
+    { prop: "data", type: "ChartData", description: "Las partes a representar (formato de Chart.js)." },
+    { prop: "centerLabel", type: "ReactNode", description: "Contenido mostrado en el recorte central." },
+  ]}
+/>
+
+## Accesibilidad
+
+Comparte la paleta segura para daltónicos y la accesibilidad de `role="img"` +
+leyenda de texto de PieChart.

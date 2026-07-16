@@ -1,0 +1,75 @@
+---
+title: トークン
+sourceHash: 3ca63d5982d6
+---
+
+**デザイントークン**とは、コンポーネントがハードコードする代わりに参照する名前付きの値です。色、間隔のステップ、フォントサイズなどです。値を一度変えれば、それを指し示すすべてが更新されます。SINA では、トークンは CSS カスタムプロパティであり、すべて `--sina-` を接頭辞に持ちます。
+
+## 3 つの階層
+
+<TokenTree />
+
+- **プリミティブ**：`theme.css` 内の生の値。たとえば特定の緑。
+- **セマンティック**：値に意味を与える*役割*。`--sina-color-primary` は「主要アクションの色」を意味し、それが実際に何であっても構いません。
+- **コンポーネント**：`--sina-button-bg` のように、1 つのコンポーネントに限定されたトークンで、セマンティックな役割を指します。
+
+ほとんどの場合、**セマンティック**階層に手を伸ばします。これは「この色は何を*意味する*か」に答えるものであり、「どの 16 進数か」ではありません。だからこそ[テーマ](/docs/theming)は役割を付け替えられ、すべてのコンポーネントがそれに従います。
+
+## 命名の文法
+
+1 つの規則だけで、名前を読めばそれが何をするかがわかります。
+
+- 単一のダッシュは**アイデンティティ**（カテゴリ、役割、プロパティ）をつなげます：`--sina-color-text-muted`、`--sina-button-bg`。
+- 二重のダッシュは**リーフ修飾子**（スケールのステップ、バリアント、または状態）を示し、常に最後に来ます：`--sina-space--4`、`--sina-color-primary--hover`、`--sina-button-bg--primary--hover`。
+
+<Callout variant="tip" title="文のように読む">
+  `--sina-button-bg--primary--hover` = ボタンの背景、primary バリアント、hover 状態。アイデンティティが先、修飾子が後。
+</Callout>
+
+## 色
+
+色は**役割**で選び（「主要アクションの色」）、色相では決して選びません（「あの緑」）。スウォッチをクリックすると、その変数をコピーできます。
+
+<TokenSwatchGrid>
+  <TokenSwatch name="--sina-color-bg" note="ページ背景" />
+  <TokenSwatch name="--sina-color-surface" note="カード / パネル" />
+  <TokenSwatch name="--sina-color-text" note="本文テキスト" />
+  <TokenSwatch name="--sina-color-text-muted" note="補助テキスト" />
+  <TokenSwatch name="--sina-color-border" note="境界線" />
+  <TokenSwatch name="--sina-color-primary" note="主要アクション" />
+  <TokenSwatch name="--sina-color-primary-fg" note="primary 上のテキスト" />
+  <TokenSwatch name="--sina-color-secondary" note="補助アクション" />
+</TokenSwatchGrid>
+
+どのサーフェス役割にも `-fg` の相棒があります。その上で読めることが保証された色です。ボタンの背景には `primary`、そのラベルには `primary-fg` を使えば、コントラストはひとりでに整います。ステータス役割も同じように機能します。
+
+<TokenSwatchGrid>
+  <TokenSwatch name="--sina-color-danger" note="エラー / 破壊的" />
+  <TokenSwatch name="--sina-color-warning" note="警告" />
+  <TokenSwatch name="--sina-color-success" note="成功" />
+  <TokenSwatch name="--sina-color-info" note="情報" />
+</TokenSwatchGrid>
+
+2 つの規則がビルドガードによって強制されます。色は `theme.css` 内で**16 進数のみ**で記述され（`#rrggbb` であり、`rgb()` / `hsl()` / 名前付きの色は決して使いません）、コンポーネント CSS は生の色を決して書かず、`var(--sina-*)` だけを使います。`danger` のようなステータス色に加え、フォーカスリングとセキュアサーフェスの色味は、**ガバナンスによってロックされています**。[ロックされた境界](/docs/theming)を参照してください。
+
+## スケール
+
+色以外のすべては、小さく固定されたステップの集合です。ステップを守ることで、UI は恣意的ではなくリズミカルに保たれます。
+
+| ファミリー | トークン |
+|---|---|
+| 間隔 | `--sina-space--0` … `--24` は 4px を基準とし、半ステップは `--0_5` · `--1_5` · `--2_5` |
+| 文字サイズ | `--sina-text--xs` · `ui` · `sm` · `base` · `lg` · `xl` · `2xl` … `5xl` |
+| ウェイト / 行送り | `--sina-font-weight--regular…bold` · `--sina-leading--none…relaxed` |
+| 角丸 | `--sina-radius--none` · `xs` · `sm` · `md` · `lg` · `xl` · `2xl` · `full` |
+| シャドウ | `--sina-shadow--xs…xl` · `focus` · `focus-ring` |
+| モーション | `--sina-duration--instant…slow` · `--sina-ease--standard` · `out` |
+| Z-index | `--sina-z--base` · `dropdown` · `overlay` · `modal` · `toast` |
+
+<Callout variant="tip" title="動きの抑制は自動">
+  トークン層では `prefers-reduced-motion` の下で継続時間がゼロに収束するため、すべてのコンポーネントがコンポーネントごとのコードなしにこの設定を尊重します。
+</Callout>
+
+## トークンはどのようにコンポーネントへ届くか
+
+各コンポーネントは独自のトークン層を宣言します。そこでは `--sina-button-bg--primary` が `--sina-color-primary` のエイリアスとなり、その CSS はその層だけを消費します。こうして、テーマはセマンティックな役割を一度だけ付け替えれば、それを指すすべてのコンポーネントスロットが更新されます。この間接参照こそがテーマ機構のすべてです。

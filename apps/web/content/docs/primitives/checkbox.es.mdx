@@ -1,0 +1,40 @@
+---
+title: Checkbox
+sourceHash: 897c9affa3b4
+---
+
+import { CheckboxHero, CheckboxExamples } from "@/app/components/docs/demos/primitives/checkbox";
+
+<CheckboxHero />
+
+`Checkbox` alterna un único valor booleano. También admite un estado
+**indeterminado** para "algunos pero no todos", como un elemento padre que
+controla un grupo.
+
+## Uso
+
+```tsx
+import { Checkbox } from "@sina-design-system/core";
+
+<Checkbox checked={agreed} onCheckedChange={setAgreed} label="I agree" />
+<Checkbox checked="indeterminate" label="Select all" />
+```
+
+## Ejemplos
+
+<CheckboxExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "checked", type: 'boolean | "indeterminate"', description: "Estado marcado controlado. Pasa \"indeterminate\" para el estado mixto." },
+    { prop: "onCheckedChange", type: '(checked: boolean | "indeterminate") => void', description: "Se dispara al alternar." },
+    { prop: "label", type: "ReactNode", description: "Etiqueta asociada." },
+  ]}
+/>
+
+## Accesibilidad
+
+`Space` alterna; la etiqueta es clicable; el estado se anuncia como marcado, no
+marcado o mixto.

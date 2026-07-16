@@ -1,0 +1,43 @@
+---
+title: BarChart
+sourceHash: 81bb0ce7f3af
+---
+
+import { BarChartHero, BarChartExamples } from "@/app/components/docs/demos/primitives/bar-chart";
+
+<BarChartHero />
+
+`BarChart` はカテゴリ間で値を比較します。長いラベルには `horizontal` を、構成を示すには `stacked` を切り替えます。
+
+## 使い方
+
+```tsx
+import { BarChart } from "@sina-design-system/core";
+
+<BarChart
+  label="Spending by category"
+  data={{ labels, datasets }}
+  horizontal
+  valueFormatter={(n) => `$${n}`}
+/>
+```
+
+## 例
+
+<BarChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "必須のアクセシブルな名前。" },
+    { prop: "data", type: "ChartData", description: "カテゴリとシリーズ（Chart.js の形式）。" },
+    { prop: "horizontal", type: "boolean", default: "false", description: "バーは左から右へ伸びます。" },
+    { prop: "stacked", type: "boolean", default: "false", description: "シリーズを 1 本のバーに積み重ねます。" },
+    { prop: "valueFormatter", type: "(n: number) => string", description: "ツールチップと軸の値を整形します。" },
+  ]}
+/>
+
+## アクセシビリティ
+
+すべての canvas チャートと同様に、これは `"use client"`、`role="img"` であり、アクセシブルな経路としてテキスト要約を伴います。

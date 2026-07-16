@@ -1,0 +1,41 @@
+---
+title: SummaryList
+sourceHash: 4b44c8a631e1
+---
+
+import { SummaryListHero, SummaryListExamples } from "@/app/components/docs/demos/primitives/summary-list";
+
+<SummaryListHero />
+
+`SummaryList` はラベル付きの値を適切な `<dl>` としてレンダリングします。統制されたダイアログが、あなたが承認しようとしている正確な条件を表示するために使うものです。
+
+## 使い方
+
+```tsx
+import { SummaryList } from "@sina-design-system/core";
+
+<SummaryList
+  items={[
+    { label: "Amount", value: "$60,000.00", emphasis: true },
+    { label: "To", value: "Beta LLC" },
+    { label: "Rail", value: "Wire" },
+  ]}
+/>
+```
+
+## 例
+
+<SummaryListExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "items", type: "SummaryItem[]", description: "{ label, value, emphasis? } の行。" },
+    { prop: "emphasis (per item)", type: "boolean", description: "金額のような重要な行を強調します。" },
+  ]}
+/>
+
+## アクセシビリティ
+
+`<dl>`/`<dt>`/`<dd>` としてレンダリングされるため、ラベルと値の関係が支援技術に公開されます。

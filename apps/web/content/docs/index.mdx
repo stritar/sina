@@ -12,7 +12,14 @@ your compliance rules, or your accessibility standards**.
 You write those rules as code; the model sends an intent; your server 
 validates it, and only then does a component render.
 
+This is ordinary conditional rendering, the same choice React makes when it
+shows a login box to a signed-out user. SINA moves that choice to your server
+and hands it a harder question: should an AI have rendered this at all?
 
+The difference is who decides. In plain React you write the `if` yourself.
+With SINA the model proposes the UI and a rule on your server decides whether
+it shows, so no one wrote that `if` by hand. React has no opinion on whether a
+model can be trusted. SINA exists because it can't be.
 
 <SameModelDiagram />
 
@@ -31,6 +38,9 @@ only what passes renders.
   The model proposes; the server decides; the screen shows only what passed. SINA calls this **validate, then mount**.
 </Callout>
 
+Because those rules are a versioned schema, every decision it makes is recorded
+as an [audit event](/docs/concepts/audit-trail), not buried in an `if`.
+
 ## How it compares
 
 | | What it is | Stops unsafe UI? |
@@ -44,9 +54,10 @@ primitives on Radix) and adds the check on top.
 
 ## Who it's for
 
-SINA is **free** (MIT), built for startups and individual builders who want
-governance without writing it themselves. The rules it ships with cover
-**fintech** today: money movement, accounts, cards.
+SINA is **free** (MIT), built for startups and individual builders who want the
+governance layer without hand-building it on top of an AI that can go off the
+rails. The rules it ships with cover **fintech** today: money movement,
+accounts, cards.
 
 The governance needs two things from you: an AI that generates your UI, and a
 server to run the check on. If you don't have both, SINA's accessible components

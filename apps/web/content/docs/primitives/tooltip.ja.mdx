@@ -1,0 +1,40 @@
+---
+title: Tooltip
+sourceHash: eebffdf933bd
+---
+
+import { TooltipHero, TooltipExamples } from "@/app/components/docs/demos/primitives/tooltip";
+
+<TooltipHero />
+
+`Tooltip` は、ユーザーがコントロールにカーソルを合わせたりフォーカスしたりしたときに、
+小さなヒントを表示します。アイコンボタンを分かりやすくしたり詳細を補足したりするために
+使い、ユーザーがタスクを完了するために*必要*な情報には決して使わないでください。既定では
+非表示で、タッチ環境では利用できないためです。
+
+## 使い方
+
+```tsx
+import {
+  TooltipProvider, Tooltip, TooltipTrigger, TooltipContent,
+} from "@sina-design-system/core";
+
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button variant="ghost" aria-label="Info"><Icon …/></Button>
+    </TooltipTrigger>
+    <TooltipContent>Groups digits on blur.</TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+```
+
+## 例
+
+<TooltipExamples />
+
+## アクセシビリティ
+
+カーソルを合わせたとき**および**キーボードフォーカス時に開き、`Esc` で閉じ、
+`aria-describedby` を通じて読み上げられます。トリガーには依然として独自のアクセシブルな
+ラベルが必要です。

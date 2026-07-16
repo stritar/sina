@@ -1,0 +1,39 @@
+---
+title: PieChart
+sourceHash: 04cd69ecc19c
+---
+
+import { PieChartHero, PieChartExamples } from "@/app/components/docs/demos/primitives/pie-chart";
+
+<PieChartHero />
+
+`PieChart` montre comment un tout se répartit en parties. Les parts sont tirées
+de la palette `--sina-color-chart--1…8`, ordonnée pour être sûre pour les
+daltoniens. Pour un chiffre de synthèse centré, utilisez
+[DonutChart](/docs/primitives/donut-chart).
+
+## Utilisation
+
+```tsx
+import { PieChart } from "@sina-design-system/core";
+
+<PieChart label="Portfolio allocation" data={{ labels, datasets }} />
+```
+
+## Exemples
+
+<PieChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "Nom accessible requis." },
+    { prop: "data", type: "ChartData", description: "Les parties à tracer (format Chart.js)." },
+    { prop: "valueFormatter", type: "(n: number) => string", description: "Formate les valeurs de l'infobulle." },
+  ]}
+/>
+
+## Accessibilité
+
+`"use client"`, `role="img"`, avec une légende textuelle comme chemin accessible.

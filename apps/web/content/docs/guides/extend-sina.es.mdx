@@ -1,0 +1,89 @@
+---
+title: Extender SINA
+sourceHash: 7dcc3685ebdf
+---
+
+SINA crece en tres direcciones: nuevas primitivas en `core`, nuevos dominios
+gobernados junto a `fintech`, y nuevas pruebas que demuestran que las reglas se
+cumplen. Cada receta a continuación refleja una skill del repositorio
+(`/new-primitive`, `/new-schema`, `/adversarial-test`).
+
+### Añadir una primitiva a core
+
+Una primitiva de `core` es headless, accesible y estrictamente agnóstica al
+dominio. El límite es estricto: sin `zod`, sin paquete de dominio, sin
+vocabulario de dominio (sin "$50,000", sin "límite", sin "aprobación"), sin
+Tailwind.
+
+1. **Confirma la aprobación del diseño.** Es lo que habilita la implementación.
+   Construye según la anatomía aprobada; no inventes UX.
+2. **Construye sobre Radix** en `packages/core/src/<Name>/<Name>.tsx`, con
+   estilos en un `<Name>.module.css` co-ubicado: nombres de clase planos,
+   pseudoclases reales para el estado, y una capa de tokens por componente
+   `--sina-<name>-*` que aliasa los [tokens](/docs/theming/tokens) semánticos.
+   Nunca escribas un color en crudo.
+3. **Cumple el estándar de accesibilidad. Los cuatro, innegociables:**
+   focus-trap donde una superficie atrapa el foco, ARIA correcto, operabilidad
+   completa por teclado, y un pase automatizado de `axe` (jest-axe). Los estados
+   de error y advertencia renderizan el glifo de estado en negrita
+   correspondiente junto al texto, nunca solo color.
+4. **Prueba y demo:** `<Name>.test.tsx` con
+   `expect(await axe(container)).toHaveNoViolations()` más aserciones de
+   teclado/foco, y luego una historia en el playground.
+
+### Añadir un dominio gobernado
+
+SINA incluye un dominio hoy, `fintech`, pero un segundo es aditivo, no una
+reescritura. La costura compartida `@sina-design-system/governance` es dueña del
+[contrato](/docs/concepts/the-contract), del punto de emisión de auditoría y del
+motor `intercept`, y no sabe nada sobre transferencias bancarias. Un nuevo
+dominio son dos paquetes que reflejan `fintech` y `fintech-react`:
+
+1. **Una constitución Zod pura** (`packages/<domain>`, depende solo de
+   `governance`): primitivas de formato, umbrales citados (`// 31 CFR …`, nunca
+   un número inventado), reglas que devuelven
+   `{ valid, violations, requiredComponent }`, y un registro verbo → regla con
+   un único punto de entrada de evaluación. Sin React, sin `core`, sin `theme`,
+   sin UI. Para escribir las reglas en sí, sigue
+   [Escribir una regla](/docs/governance/writing-a-rule).
+2. **Una capa `*-react`** (`packages/<domain>-react`) que compone una primitiva
+   de `core` con un esquema de dominio y renderiza la decisión que el control ya
+   tomó. Nunca escribe esquemas y nunca valida un payload; el control permanece
+   en el lado del servidor (ver [Cómo funciona](/docs/how-it-works)).
+
+Como el contrato es uniforme, las reglas del nuevo dominio encajan en el mismo
+control, emiten los mismos eventos de auditoría, y se ejercitan con el mismo
+arnés adversarial. La gobernanza no se bifurca por dominio.
+
+### Escribir una prueba adversarial
+
+Una regla no está terminada cuando compila. Está terminada cuando una solicitud
+hostil no puede superarla. No pruebes que una solicitud *válida* pasa; prueba
+que una *inválida* no puede colarse. Cubre los clásicos:
+
+- **Un campo de contrabando**: un `confirmButton` fabricado o un `cvv`; el
+  parseo estricto debe rechazarlo.
+- **Un valor por encima del límite**: justo pasado un umbral; debe escalar al
+  componente correcto.
+- **Un intento de elusión**: aprobar poco, ejecutar mucho, o autoaprobarse; la
+  vinculación del lado del servidor debe rechazarlo.
+- **Una inundación**: un array de tamaño excesivo; el límite debe rechazarlo.
+
+Afirma la decisión, no solo que algo lanzó una excepción:
+
+```ts
+const decision = evaluateFintechIntent(hostileEnvelope, ctx);
+
+expect(decision.valid).toBe(false);
+expect(decision.requiredComponent).toBe("SecureWireDialog"); // or null for a reject
+expect(decision.violations.map((v) => v.code)).toContain("AMOUNT_REQUIRES_APPROVAL");
+```
+
+<Callout variant="enforced" title="Conviértelo en una comprobación obligatoria">
+  Conecta estas pruebas a CI como una comprobación obligatoria, para que un
+  cambio que debilite silenciosamente una regla haga fallar la build en vez de
+  publicarse.
+</Callout>
+
+Relacionado: [Escalado](/docs/concepts/escalation) ·
+[Gobernanza](/docs/governance).

@@ -1,0 +1,35 @@
+---
+title: CurrencyField
+sourceHash: c10a09a690cc
+---
+
+import { CurrencyFieldHero, CurrencyFieldExamples } from "@/app/components/docs/demos/primitives/currency-field";
+
+<CurrencyFieldHero />
+
+`CurrencyField` 会按你的预期格式化货币金额，在失去焦点时对千位进行分组，同时在底层保留一个干净的数值。
+
+## 用法
+
+```tsx
+import { CurrencyField } from "@sina-design-system/core";
+
+<CurrencyField label="Amount" currencySymbol="$" defaultValue="25000" />
+```
+
+## 示例
+
+<CurrencyFieldExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "currencySymbol", type: "string", default: '"$"', description: "显示在金额前面的符号。" },
+    { prop: "label / description / error", type: "ReactNode", description: "透传给外层包裹的 Field。" },
+  ]}
+/>
+
+<Callout variant="governance" title="格式化，而非强制">
+  这仅用于显示。它不会阻止超过上限的金额；那是服务器上关卡的职责。客户端输入总是可以被绕过，因此 SINA 从不依赖它来执行上限。
+</Callout>

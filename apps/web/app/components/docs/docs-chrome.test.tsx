@@ -10,15 +10,16 @@ vi.mock("next/navigation", () => ({ usePathname: () => "/docs" }));
 
 // The toolbar + pager derive breadcrumb/neighbours from the real page tree; a
 // two-page stub keeps the generated `.source` output out of the test run.
+// `getPageTree(locale)` is the i18n-aware accessor (the tree is per-locale now).
 vi.mock("@/lib/source", () => ({
   source: {
-    pageTree: {
+    getPageTree: () => ({
       name: "Documentation",
       children: [
         { type: "page", name: "Quickstart", url: "/docs/quickstart" },
         { type: "page", name: "For AI agents", url: "/docs/for-ai-agents" },
       ],
-    },
+    }),
   },
 }));
 
@@ -123,7 +124,7 @@ describe("docs chrome a11y", () => {
     expect(container.innerHTML).toBe("");
   });
 
-  it("ThemeToggle has no axe violations and cycles system → light → dark", async () => {
+  it("ThemeToggle is a segmented radiogroup that sets and persists the theme", async () => {
     const user = userEvent.setup();
     // This env exposes no localStorage (the component tolerates that via try/catch,
     // but the test needs a real store to assert the choice is persisted).
@@ -135,22 +136,29 @@ describe("docs chrome a11y", () => {
     });
 
     const { container, getByRole } = render(<ThemeToggle />);
-    const button = getByRole("button");
 
-    // A three-state CYCLE button, not a binary toggle — so it carries no
-    // `aria-pressed` (which can only say on/off, and would mis-announce "system").
-    // The current state rides on the label instead.
-    expect(button.getAttribute("aria-pressed")).toBeNull();
-    expect(button.getAttribute("aria-label")).toBe("Theme: follow system");
+    // Three visible segments (system/light/dark), single-select — a radiogroup,
+    // not a cycle button. Showing all three at once is the point of the redesign.
+    getByRole("radiogroup", { name: "Theme" });
+    const system = getByRole("radio", { name: "Follow system" });
+    const light = getByRole("radio", { name: "Light" });
+    const dark = getByRole("radio", { name: "Dark" });
+
+    // Defaults to following the OS.
+    expect(system.getAttribute("aria-checked")).toBe("true");
     expect(await axe(container)).toHaveNoViolations();
 
-    // Cycling all the way round is what lets a user hand control back to the OS.
-    for (const expected of ["Theme: light", "Theme: dark", "Theme: follow system"]) {
-      await user.click(button);
-      expect(button.getAttribute("aria-label")).toBe(expected);
-    }
-    expect(store.get("sina-docs-theme")).toBe("system");
-    expect(document.documentElement.getAttribute("data-theme")).toBeTruthy();
+    // Clicking a segment sets it directly (no cycling), stamps <html>, and persists.
+    await user.click(dark);
+    expect(dark.getAttribute("aria-checked")).toBe("true");
+    expect(store.get("sina-docs-theme")).toBe("dark");
+    expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
+
+    await user.click(light);
+    expect(light.getAttribute("aria-checked")).toBe("true");
+    expect(store.get("sina-docs-theme")).toBe("light");
+    expect(document.documentElement.getAttribute("data-theme")).toBe("light");
+
     vi.unstubAllGlobals();
   });
 

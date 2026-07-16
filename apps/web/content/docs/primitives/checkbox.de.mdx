@@ -1,0 +1,40 @@
+---
+title: Checkbox
+sourceHash: 897c9affa3b4
+---
+
+import { CheckboxHero, CheckboxExamples } from "@/app/components/docs/demos/primitives/checkbox";
+
+<CheckboxHero />
+
+`Checkbox` schaltet einen einzelnen booleschen Wert um. Sie unterstützt außerdem
+einen **unbestimmten** Zustand für „einige, aber nicht alle", etwa ein
+übergeordnetes Element, das eine Gruppe steuert.
+
+## Verwendung
+
+```tsx
+import { Checkbox } from "@sina-design-system/core";
+
+<Checkbox checked={agreed} onCheckedChange={setAgreed} label="I agree" />
+<Checkbox checked="indeterminate" label="Select all" />
+```
+
+## Beispiele
+
+<CheckboxExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "checked", type: 'boolean | "indeterminate"', description: "Kontrollierter Checked-Zustand. Übergib \"indeterminate\" für den gemischten Zustand." },
+    { prop: "onCheckedChange", type: '(checked: boolean | "indeterminate") => void', description: "Wird beim Umschalten ausgelöst." },
+    { prop: "label", type: "ReactNode", description: "Zugehöriges Label." },
+  ]}
+/>
+
+## Barrierefreiheit
+
+`Space` schaltet um; das Label ist anklickbar; der Zustand wird als aktiviert,
+deaktiviert oder gemischt angesagt.

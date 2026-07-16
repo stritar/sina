@@ -1,0 +1,44 @@
+---
+title: SummaryList
+sourceHash: 4b44c8a631e1
+---
+
+import { SummaryListHero, SummaryListExamples } from "@/app/components/docs/demos/primitives/summary-list";
+
+<SummaryListHero />
+
+`SummaryList` rendert beschriftete Werte als ordnungsgemäße `<dl>`. Es ist das,
+was ein geregelter Dialog verwendet, um die genauen Bedingungen anzuzeigen, die du
+gerade genehmigst.
+
+## Verwendung
+
+```tsx
+import { SummaryList } from "@sina-design-system/core";
+
+<SummaryList
+  items={[
+    { label: "Amount", value: "$60,000.00", emphasis: true },
+    { label: "To", value: "Beta LLC" },
+    { label: "Rail", value: "Wire" },
+  ]}
+/>
+```
+
+## Beispiele
+
+<SummaryListExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "items", type: "SummaryItem[]", description: "Die Zeilen { label, value, emphasis? }." },
+    { prop: "emphasis (per item)", type: "boolean", description: "Hebt eine wichtige Zeile hervor, etwa den Betrag." },
+  ]}
+/>
+
+## Barrierefreiheit
+
+Wird als `<dl>`/`<dt>`/`<dd>` gerendert, sodass die Beziehung zwischen Beschriftung
+und Wert für assistive Technologien zugänglich ist.

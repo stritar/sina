@@ -17,13 +17,17 @@ const webRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CONTENT_ROOT = join(webRoot, "content", "docs");
 const OUT_ROOT = join(webRoot, "public", "llms", "docs");
 
+// `<page>.<locale>.mdx` are translations (es/zh/fr/de/ja) — the raw markdown
+// assets are the English source only, so skip them here.
+const LOCALE_SIBLING = /\.(es|zh|fr|de|ja)\.mdx$/;
+
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
   const files = [];
   for (const entry of entries) {
     const full = join(dir, entry.name);
     if (entry.isDirectory()) files.push(...(await walk(full)));
-    else if (entry.name.endsWith(".mdx")) files.push(full);
+    else if (entry.name.endsWith(".mdx") && !LOCALE_SIBLING.test(entry.name)) files.push(full);
   }
   return files;
 }

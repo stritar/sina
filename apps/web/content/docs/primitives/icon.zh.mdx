@@ -1,0 +1,41 @@
+---
+title: 图标
+sourceHash: dd59c4ec8596
+---
+
+import { IconHero, IconExamples } from "@/app/components/docs/demos/primitives/icon-demo";
+
+<IconHero />
+
+`Icon` 封装一个 Phosphor 字形，并迫使你回答一个问题：这个图标是
+*表达*了某种含义，还是仅仅是装饰？答对这一点，正是
+无障碍图标与令人困惑的图标之间的区别。
+
+## 用法
+
+```tsx
+import { Icon } from "@sina-design-system/core";
+import { ShieldCheck } from "@phosphor-icons/react";
+
+<Icon icon={ShieldCheck} label="Governed by SINA" />   {/* announced */}
+<Icon icon={ShieldCheck} decorative />                 {/* silent */}
+```
+
+## 示例
+
+<IconExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "向屏幕阅读器播报。当图标传达含义时使用。" },
+    { prop: "decorative", type: "boolean", description: "对辅助技术隐藏图标（aria-hidden）。" },
+  ]}
+/>
+
+## 无障碍
+
+在 `label` 和 `decorative` 中恰好提供一个。有含义的图标若缺少 `label`，
+对屏幕阅读器用户而言是不可见的；装饰性图标若带有 `label`，则是噪声。颜色
+跟随 `currentColor`，因此由周围的 `text-*` 令牌驱动。

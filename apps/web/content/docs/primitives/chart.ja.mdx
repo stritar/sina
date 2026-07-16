@@ -1,0 +1,37 @@
+---
+title: Chart
+sourceHash: beb3dd64a19b
+---
+
+import { ChartHero, ChartExamples } from "@/app/components/docs/demos/primitives/chart";
+
+<ChartHero />
+
+`Chart` は、インラインのトレンド向けのコンパクトなスパークラインです。`currentColor`
+で駆動される純粋な SVG なので、サーバー上でレンダリングされ、周囲のテキスト色を継承します。
+本格的なインタラクティブチャートには、[LineChart](/docs/primitives/line-chart) などを使用してください。
+
+## 使い方
+
+```tsx
+import { Chart } from "@sina-design-system/core";
+
+<Chart variant="area" data={[3, 5, 4, 8, 7, 11]} label="Balance trend, up" />
+```
+
+## 例
+
+<ChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "variant", type: '"line" | "area" | "bar"', default: '"line"', description: "スパークラインのスタイル。" },
+    { prop: "data", type: "number[]", description: "プロットする系列。" },
+  ]}
+/>
+
+## アクセシビリティ
+
+必須のラベルとともに `role="img"` としてレンダリングされます。単一の点の場合は、平坦なベースラインに縮退します。

@@ -1,0 +1,46 @@
+---
+title: 包与导出
+sourceHash: 2e1b381ebc4d
+---
+
+> 手工维护的参考。TSDoc→MDX 自动生成已推迟。
+
+SINA 由五个边界严格的小型包组成。每一层只能了解其下方的层：
+
+| 包 | 是什么 | 绝不包含 |
+|---|---|---|
+| `@sina-design-system/theme` | 设计令牌（`--sina-*`）+ CSS reset | React、UI |
+| `@sina-design-system/core` | 基于 Radix 的无头、可访问基础组件 | Zod、领域词汇 |
+| `@sina-design-system/governance` | 共享的拦截接缝 | React、UI、领域词汇 |
+| `@sina-design-system/fintech` | fintech 章程，纯 Zod 规则 | React、任何形式的 UI |
+| `@sina-design-system/fintech-react` | 组合 `core` + `fintech` 的受治理组件 | Zod（它组合 schema，从不编写它们） |
+
+## `theme`
+
+提供 `./reset.css`（分层，因此你的样式始终获胜）和 `./css`，即 `--sina-*` 自定义属性。令牌的语法、层级和刻度见 [Tokens](/docs/theming/tokens)；可覆盖的内容见 [Theming](/docs/theming)。
+
+## `core`
+
+基础组件库。每个导出都在 [基础组件画廊](/docs/primitives) 中列出并附实时示例。仅具名导出；各基础组件的 prop 类型（`ButtonProps`、`GapStep`、`SummaryItem`、…）随附一起提供。
+
+## `governance`
+
+每部章程所构建于其上的、与领域无关的接缝：
+
+| 导出 | 用途 |
+|---|---|
+| `InterceptionResult`、`Violation`、`Severity` | 统一契约；见 [拦截契约](/docs/concepts/the-contract)。 |
+| `intercept`、`ConstitutionRule` | 在服务器端运行 Zod schema + 策略，返回该契约。 |
+| `dispatch`、`dispatchAll`、`createRouter`、`pattern` | 意图路由器：以 `{ intent, props }` 信封 → 决策 + 挂载。 |
+| `UNKNOWN_INTENT`、`SCHEMA_INVALID` | 表示无法识别的动词 / 解析失败的哨兵值。 |
+| `emitAudit`、`redact`、`setAuditSink`、`AuditEvent` | 审计发出点；见 [审计追踪](/docs/concepts/audit-trail)。 |
+
+路由器在契约**之外**解析挂载，因此治理仍是普适的先校验再挂载之上的一个可选升级层。
+
+## `fintech` 与 `fintech-react`
+
+`fintech` 是随附发布的章程：每个意图动词、schema、阈值和所引用的标准。`fintech-react` 渲染它所做出的决策，即受治理组件。两者都在 [受治理组件与展示模式](/docs/governance/components-and-patterns) 中编目；在 [编写治理规则](/docs/governance/writing-a-rule) 中编写你自己的规则。
+
+## 版本
+
+五个包全部发布为 **0.1.0**；见 [发布与稳定性](/docs/reference/changelog)。

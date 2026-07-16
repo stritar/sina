@@ -1,0 +1,109 @@
+---
+title: "Exemple concret : le virement de 60 000 $"
+sourceHash: 1ad48a792ac1
+---
+
+<YouWillLearn>
+- Ce que le contrôle détecte dans un virement au-delà de la limite, et quelle norme cite chaque constatation
+- Comment fonctionne la boîte de dialogue d'approbation forcée, et pourquoi elle ne peut pas être truquée
+- Ce que la piste d'audit enregistre à chaque étape
+</YouWillLearn>
+
+C'est le flux phare de SINA, et la présentation canonique vers laquelle pointe le
+reste de la documentation. Nous allons suivre un unique virement de 60 000 $ depuis
+la demande jusqu'à sa résolution. Tout autre flux gouverné est une variation de
+celui-ci.
+
+## La demande
+
+L'IA propose un virement. Elle envoie uniquement des données : une intention et des
+props, jamais un composant (voir [Comment ça marche](/docs/how-it-works)).
+
+```ts
+{ intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 in cents */, currency: "USD", /* … */ } }
+```
+
+## La vérification de structure
+
+D'abord, l'analyse stricte. Chaque champ est vérifié par rapport au schéma : le
+montant est un entier en unités mineures, le code de devise est réel, les
+identifiants de compte passent leurs sommes de contrôle. Tout champ que le schéma ne
+connaît pas, comme un `confirmButton` glissé en douce ou un `cvv` égaré, rejette
+l'ensemble de la charge utile. Cette demande est bien formée, elle passe donc à la
+suite.
+
+## La vérification de politique trouve trois choses
+
+La forme est valide, la politique s'exécute donc. Elle déclenche **trois**
+violations, et chacune cite d'où elle provient :
+
+| Constatation | Sévérité | Norme |
+|---|---|---|
+| Transaction déclarable (CTR) | `flag` | FinCEN, 31 CFR 1010.311 |
+| Examen d'activité suspecte (SAR) | `flag` | FinCEN, 31 CFR Ch. X |
+| Au-delà de la limite d'approbation de 50 000 $ | `escalate` | Politique de double contrôle de SINA |
+
+Les deux flags sont informatifs : enregistrés, non bloquants. C'est l'**escalate**
+qui agit. Il refuse la confirmation simple et nomme
+`requiredComponent: "SecureWireDialog"`. (Les sévérités sont traitées dans
+[Escalade](/docs/concepts/escalation).) Un événement d'audit se déclenche ici aussi,
+portant l'horodatage, la charge utile, les trois violations et le composant décidé.
+Le blocage est inscrit au registre avant que quoi que ce soit ne s'affiche.
+
+## La boîte de dialogue forcée
+
+SINA monte `SecureWireDialog` à la place d'un bouton de confirmation. La boîte de
+dialogue guide une seconde personne à travers :
+
+1. **Examiner** les termes exacts (montant, destinataire) dans un récapitulatif en lecture seule.
+2. **S'identifier** en tant qu'approbateur, avec un identifiant et un nom qui doivent différer de ceux de l'initiateur.
+3. **Confirmer** avec un code à usage unique.
+
+Lorsqu'elle soumet, la preuve repart **vers le serveur** et la constitution
+s'exécute à nouveau. La boîte de dialogue elle-même ne valide rien. Elle ne fait que
+recueillir l'approbation.
+
+<Callout variant="enforced" title="Deux vérifications la rendent impossible à contourner">
+  Au second passage, le serveur impose deux choses qu'un flux hostile ne peut pas
+  truquer. **Double contrôle (quatre yeux)** : l'approbateur doit différer de
+  l'initiateur connu du serveur, vous ne pouvez donc pas approuver votre propre
+  virement. **Liaison à la charge utile** : l'approbation est liée aux termes
+  exacts, recalculés sur le serveur, vous ne pouvez donc pas approuver 5 000 $ et
+  exécuter 60 000 $.
+</Callout>
+
+Dans la démo ci-dessous, l'initiateur tente d'approuver son propre virement. Le
+double contrôle le refuse d'emblée, et il n'y a aucun moyen de poursuivre à partir
+de là.
+
+<GovernanceDemo scenario="self-approval" />
+
+## La fin heureuse
+
+La gouvernance escalade ; elle ne se contente pas de refuser. Une approbation
+*valide* franchit le contrôle au second passage : un autre responsable, lié aux
+termes exacts de 60 000 $. Le virement se monte alors comme une action achevée et
+gouvernée. Un second [événement d'audit](/docs/concepts/audit-trail) enregistre qui
+a approuvé, à quels termes, et que le contrôle est passé. Toute l'histoire reste
+reconstituable par la suite : blocage, approbation, passage.
+
+Essayez. Ouvrez la boîte de dialogue forcée et approuvez en tant qu'*autre*
+responsable : le serveur revérifie et la décision bascule. Approuvez en tant
+qu'initiateur et elle refuse.
+
+<GovernanceDemo
+  scenario="over-limit"
+  scenarios={["over-limit", "small", "self-approval", "fabricated-confirm"]}
+  comparison
+/>
+
+<Recap>
+Virement au-delà de la limite → l'analyse stricte passe → trois violations (deux
+flags, un escalate) → `SecureWireDialog` → un approbateur *différent* + code à usage
+unique → le serveur revérifie le double contrôle et la liaison à la charge utile →
+approuvé et monté, ou refusé, avec un événement d'audit à chaque décision. La
+confirmation brute n'est jamais une option.
+</Recap>
+
+Ensuite : [écrivez votre propre règle de gouvernance](/docs/governance/writing-a-rule).

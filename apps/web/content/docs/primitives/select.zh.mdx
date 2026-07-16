@@ -1,0 +1,41 @@
+---
+title: Select
+sourceHash: 946bde858794
+---
+
+import { SelectHero, SelectExamples } from "@/app/components/docs/demos/primitives/select";
+
+<SelectHero />
+
+`Select` 是一个用于选择单个值的复合列表框（listbox）。当选项已知且适合放入下拉菜单时使用它；
+对于较长的、可搜索的列表，请使用 [Combobox](/docs/primitives/combobox)。
+
+## 用法
+
+```tsx
+import {
+  Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
+} from "@sina-design-system/core";
+
+<Select value={rail} onValueChange={setRail}>
+  <SelectTrigger><SelectValue placeholder="Payment rail" /></SelectTrigger>
+  <SelectContent>
+    <SelectItem value="ach">ACH</SelectItem>
+    <SelectItem value="wire">Wire</SelectItem>
+  </SelectContent>
+</Select>
+```
+
+## 示例
+
+<SelectExamples />
+
+## 组成部分
+
+`Select` · `SelectTrigger` · `SelectValue` · `SelectContent` · `SelectItem` ·
+`SelectGroup` · `SelectLabel` · `SelectSeparator`.
+
+## 无障碍
+
+遵循 ARIA listbox 模式：方向键移动，输入首字母跳转，`Enter` 选择，`Esc` 关闭，焦点返回到触发器。
+这一切都已为你处理妥当。

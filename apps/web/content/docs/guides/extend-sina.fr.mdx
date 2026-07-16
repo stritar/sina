@@ -1,0 +1,90 @@
+---
+title: Étendre SINA
+sourceHash: 7dcc3685ebdf
+---
+
+SINA grandit dans trois directions : de nouvelles primitives dans `core`, de
+nouveaux domaines gouvernés à côté de `fintech`, et de nouveaux tests qui
+prouvent que les règles tiennent. Chaque recette ci-dessous reflète une skill du
+dépôt (`/new-primitive`, `/new-schema`, `/adversarial-test`).
+
+### Ajouter une primitive à core
+
+Une primitive `core` est headless, accessible et strictement agnostique au
+domaine. La frontière est stricte : pas de `zod`, pas de paquet de domaine, pas
+de vocabulaire de domaine (pas de "$50,000", pas de "limite", pas
+d'"approbation"), pas de Tailwind.
+
+1. **Confirmez la validation du design.** Elle conditionne l'implémentation.
+   Construisez selon l'anatomie validée ; n'inventez pas d'UX.
+2. **Construisez sur Radix** dans `packages/core/src/<Name>/<Name>.tsx`, stylé
+   par un `<Name>.module.css` co-localisé : noms de classe plats, vraies
+   pseudo-classes pour l'état, et une couche de tokens `--sina-<name>-*` par
+   composant qui fait alias sur les [tokens](/docs/theming/tokens) sémantiques.
+   N'écrivez jamais de couleur brute.
+3. **Atteignez le niveau d'accessibilité. Les quatre, non négociables :** piège
+   à focus là où une surface capture le focus, ARIA correct, pleine opérabilité
+   au clavier, et un passage automatisé d'`axe` (jest-axe). Les états d'erreur et
+   d'avertissement affichent le glyphe d'état en gras correspondant à côté du
+   texte, jamais la couleur seule.
+4. **Testez et faites une démo :** `<Name>.test.tsx` avec
+   `expect(await axe(container)).toHaveNoViolations()` plus des assertions
+   clavier/focus, puis une story dans le playground.
+
+### Ajouter un domaine gouverné
+
+SINA livre un seul domaine aujourd'hui, `fintech`, mais un second est additif,
+pas une réécriture. La couture partagée `@sina-design-system/governance` détient
+le [contrat](/docs/concepts/the-contract), le point d'émission d'audit et le
+moteur `intercept`, et ne sait rien des virements. Un nouveau domaine, ce sont
+deux paquets qui reflètent `fintech` et `fintech-react` :
+
+1. **Une constitution Zod pure** (`packages/<domain>`, dépend uniquement de
+   `governance`) : primitives de format, seuils cités (`// 31 CFR …`, jamais un
+   nombre inventé), règles renvoyant `{ valid, violations, requiredComponent }`,
+   et un registre verbe → règle avec un unique point d'entrée d'évaluation. Pas
+   de React, pas de `core`, pas de `theme`, pas d'UI. Pour écrire les règles
+   elles-mêmes, suivez [Écrire une règle](/docs/governance/writing-a-rule).
+2. **Une couche `*-react`** (`packages/<domain>-react`) qui compose une
+   primitive `core` avec un schéma de domaine et rend la décision que le
+   contrôle a déjà prise. Elle n'écrit jamais de schémas et ne valide jamais de
+   payload ; le contrôle reste côté serveur (voir
+   [Comment ça marche](/docs/how-it-works)).
+
+Parce que le contrat est uniforme, les règles du nouveau domaine s'insèrent dans
+le même contrôle, émettent les mêmes événements d'audit, et sont éprouvées par
+le même harnais adversarial. La gouvernance ne se ramifie pas par domaine.
+
+### Écrire un test adversarial
+
+Une règle n'est pas terminée quand elle compile. Elle est terminée quand une
+requête hostile ne peut pas la franchir. Ne testez pas qu'une requête *valide*
+passe ; testez qu'une requête *invalide* ne peut pas se faufiler. Couvrez les
+classiques :
+
+- **Un champ passé en contrebande** : un `confirmButton` fabriqué ou un `cvv` ;
+  le parsing strict doit le rejeter.
+- **Une valeur au-dessus de la limite** : juste au-delà d'un seuil ; elle doit
+  escalader vers le bon composant.
+- **Une tentative de contournement** : approuver petit, exécuter gros, ou
+  s'auto-approuver ; la liaison côté serveur doit la rejeter.
+- **Une inondation** : un tableau surdimensionné ; la borne doit le rejeter.
+
+Affirmez la décision, pas seulement que quelque chose a levé une exception :
+
+```ts
+const decision = evaluateFintechIntent(hostileEnvelope, ctx);
+
+expect(decision.valid).toBe(false);
+expect(decision.requiredComponent).toBe("SecureWireDialog"); // or null for a reject
+expect(decision.violations.map((v) => v.code)).toContain("AMOUNT_REQUIRES_APPROVAL");
+```
+
+<Callout variant="enforced" title="Faites-en une vérification obligatoire">
+  Branchez ces tests dans la CI comme une vérification obligatoire, pour qu'un
+  changement qui affaiblit discrètement une règle fasse échouer le build au lieu
+  d'être livré.
+</Callout>
+
+Connexe : [Escalade](/docs/concepts/escalation) ·
+[Gouvernance](/docs/governance).

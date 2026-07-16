@@ -1,0 +1,41 @@
+---
+title: Eskalation und Durchsetzung
+sourceHash: 66219ab514c7
+---
+
+Wenn der Kontrollpunkt ein Problem findet, schlägt er nicht immer die Tür zu.
+Jeder Verstoß trägt einen **Schweregrad**, der entscheidet, was als Nächstes
+geschieht. Es gibt drei.
+
+<EnforcementLadder />
+
+- **`flag`** ist informativ. Er wird auf der Entscheidung festgehalten, was für
+  Compliance und Reporting nützlich ist, blockiert aber nichts. Eine Überweisung
+  über 5.000 $ wird zur Prüfung markiert und geht trotzdem durch.
+- **`escalate`** blockiert das Standard-Rendering und **erzwingt stattdessen eine
+  strengere Komponente**. Die Überweisung über dem Limit eskaliert zu einem
+  `SecureWireDialog`, der einen zweiten Genehmiger verlangt. Die Anfrage wird auf
+  einen sichereren Pfad umgeleitet, nicht abgelehnt.
+- **`reject`** ist eine harte Sperre. Nichts wird eingebunden. Eine gefälschte
+  Schaltfläche, eingeschmuggelte Kartendaten oder eine selbst genehmigte
+  Überweisung werden schlicht abgelehnt.
+
+<Callout variant="note" title="Eine Entscheidung kann mehrere tragen">
+  Eine einzelne Absicht kann mehrere Verstöße gleichzeitig auslösen. Die nicht
+  genehmigte Überweisung über 60.000 $ wird zweimal markiert (meldepflichtig,
+  Prüfung) *und* eskaliert einmal. Die Markierungen werden festgehalten; die
+  Eskalation ist das, was den Dialog erzwingt.
+</Callout>
+
+<Callout variant="tip" title="Ehrliche Anmerkung">
+  Der Schweregrad ist eine Eigenschaft der Logik jeder Regel, kein globaler
+  Ein/Aus-Schalter. Um die Durchsetzung zu „lockern", änderst du die Regel oder
+  welche Absichten du durch den Kontrollpunkt leitest. Das geschieht bewusst, im
+  Code, wo es überprüfbar ist.
+</Callout>
+
+Du musst nicht deine ganze App am ersten Tag regeln. Regeln sind unabhängig, du
+kannst also mit einer einzelnen Absicht beginnen und von dort erweitern. Siehe
+[Schrittweise einführen](/docs/guides/adopt-incrementally).
+
+Weiter: [Der Audit-Trail](/docs/concepts/audit-trail).

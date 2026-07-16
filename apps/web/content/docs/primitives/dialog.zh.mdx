@@ -1,0 +1,41 @@
+---
+title: Dialog
+sourceHash: 5734a89bce50
+---
+
+import { DialogHero, DialogExamples } from "@/app/components/docs/demos/primitives/dialog";
+
+<DialogHero />
+
+`Dialog` 是一个模态框，它会捕获焦点、按 `Esc` 关闭，并在关闭后将焦点返回给触发元素。它是受治理的组件（如
+`SecureWireDialog`）所依赖的基础。
+
+## 用法
+
+```tsx
+import {
+  Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogClose,
+} from "@sina-design-system/core";
+
+<Dialog open={open} onOpenChange={setOpen}>
+  <DialogContent>
+    <DialogTitle>Confirm</DialogTitle>
+    <DialogDescription>This can't be undone.</DialogDescription>
+    <DialogClose asChild><Button variant="secondary">Cancel</Button></DialogClose>
+  </DialogContent>
+</Dialog>
+```
+
+## 示例
+
+<DialogExamples />
+
+## 组成部分
+
+`Dialog` · `DialogTrigger` · `DialogContent` · `DialogTitle` · `DialogDescription`
+· `DialogClose`.
+
+## 无障碍
+
+`role="dialog"` 搭配 `aria-modal`，标题通过 `aria-labelledby` 关联，包含焦点捕获、按 `Esc`
+关闭，以及关闭时的焦点恢复。`DialogTitle` 是必需的，它是无障碍名称。

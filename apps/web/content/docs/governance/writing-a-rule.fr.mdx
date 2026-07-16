@@ -1,0 +1,103 @@
+---
+title: Écrire une règle de gouvernance
+sourceHash: b78fbff0d2ec
+---
+
+Une règle est un schéma Zod strict associé à une vérification de politique citée,
+hébergée dans `@sina-design-system/fintech`. La frontière est stricte : **Zod pur,
+pas de React, pas d'UI**, le contrat partagé provenant de
+`@sina-design-system/governance`. Ce guide reflète la skill `/new-schema` ; pour
+voir une règle terminée à l'œuvre, lisez
+[le virement de 60 k$](/docs/governance/wire-transfer).
+
+<Callout variant="enforced" title="La règle d'or : n'inventez jamais une limite">
+  Chaque seuil, format et champ obligatoire doit remonter à un standard ou à un
+  régulateur, avec la citation **dans le code** : un commentaire `// 31 CFR …` sur
+  la constante et `standard: "…"` sur la violation. Si vous ne pouvez pas le
+  citer, ne l'encodez pas. Citer indique aussi quels nombres sont la loi et
+  lesquels sont des valeurs par défaut produit ajustables.
+</Callout>
+
+<Steps>
+  <Step title="Définir le schéma">
+
+Créez `packages/fintech/src/<name>/<name>.schema.ts`, sur le modèle du schéma
+phare `wire-transfer`. Utilisez un objet Zod `.strict()` pour que les clés
+introduites en fraude soient rejetées, pas ignorées, et appuyez-vous sur les
+primitives de format citées dans `src/formats/*` : `currency` (ISO 4217),
+`amount`, `iban`, `bic`, `routing`, `card`. Les montants sont des **unités
+mineures** entières, jamais des flottants.
+
+  </Step>
+  <Step title="Ajouter la vérification de politique">
+
+Chaque vérification de politique (limites, vélocité, double contrôle) produit un
+`Violation` avec un `code`, un `message`, un `standard` cité et une sévérité :
+`flag` (l'enregistrer), `escalate` (forcer un composant gouverné) ou `reject`
+(refuser d'emblée) ; voir [Escalade](/docs/concepts/escalation). Une escalade
+nomme le `requiredComponent`. La règle doit renvoyer
+[le contrat](/docs/concepts/the-contract) :
+
+```ts
+// pass
+{ valid: true, violations: [], requiredComponent: null }
+// fail
+{ valid: false, violations: [{ code, message, standard }], requiredComponent: "SecureWireDialog" }
+```
+
+Une règle d'affichage **non gouvernée** est le même squelette moins la politique
+et l'escalade. Elle porte uniquement sur la forme (`.strict()`, tableaux bornés,
+numéros de compte masqués) et monte un composant présentationnel. Utilisez
+`/new-display-pattern` pour cela.
+
+  </Step>
+  <Step title="Enregistrer l'intention">
+
+Ajoutez le verbe à `src/registry.ts` (et à `fintechIntentManifest()`) pour que
+`evaluateFintechIntent` puisse l'acheminer. Les verbes non enregistrés sont
+refusés en tant que `UNKNOWN_INTENT`. Une règle qui n'est pas enregistrée
+n'existe pas.
+
+  </Step>
+  <Step title="Écrire les fixtures">
+
+Ajoutez `fixtures.ts` à côté du schéma : des charges utiles **valides** qui
+doivent passer et des charges utiles **adverses** qui doivent être bloquées, comme
+un montant au-dessus de la limite, un champ supplémentaire introduit en fraude ou
+un identifiant non masqué. Les tests unitaires comme le playground les consomment.
+Une règle n'est pas terminée quand elle compile ; elle l'est quand une requête
+hostile ne peut pas passer.
+
+  </Step>
+  <Step title="Tester et vérifier">
+
+Lancez `pnpm --filter @sina-design-system/fintech test`, puis exercez la règle et
+lisez la décision :
+
+```ts
+const decision = evaluateFintechIntent({
+  intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 */, currency: "USD", /* … */ },
+});
+
+decision.valid;             // false
+decision.requiredComponent; // "SecureWireDialog"
+decision.violations;        // includes AMOUNT_REQUIRES_APPROVAL (escalate)
+```
+
+Chaque violation porte un `message` et un `standard`, ce qui vous permet de
+montrer à l'utilisateur *pourquoi*, avec une citation, au lieu d'un simple
+« bloqué ». Abaissez le montant sous la limite et relancez : `valid` bascule à
+`true`, `requiredComponent` vaut `null`, et le résumé normal se monte. Le même
+code, un résultat sûr.
+
+  </Step>
+</Steps>
+
+Avant de livrer, vérifiez que la règle répond aux bases en une phrase chacune : ce
+qu'elle est, le risque qu'elle supprime, une requête concrète qu'elle bloque, une
+qu'elle laisse passer, et ce qui se produit au déclenchement. Si une réponse est
+floue, la règle l'est aussi.
+
+Suite : [Composants gouvernés et patrons d'affichage](/docs/governance/components-and-patterns),
+où atterrit votre escalade.

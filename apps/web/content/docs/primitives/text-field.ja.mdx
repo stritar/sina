@@ -1,0 +1,35 @@
+---
+title: TextField
+sourceHash: bea988c70ac4
+---
+
+import { TextFieldHero, TextFieldExamples } from "@/app/components/docs/demos/primitives/text-field";
+
+<TextFieldHero />
+
+`TextField` は、Field の配線一式を組み込んだテキスト入力です。`multiline`
+を設定すると textarea になります。
+
+## 使い方
+
+```tsx
+import { TextField } from "@sina-design-system/core";
+
+<TextField label="Name" placeholder="Ada Lovelace" />
+<TextField label="Notes" multiline />
+```
+
+## 例
+
+<TextFieldExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "multiline", type: "boolean", default: "false", description: "input ではなく textarea をレンダリングします。" },
+    { prop: "label / description / error", type: "ReactNode", description: "ラップする Field にそのまま渡されます。" },
+  ]}
+/>
+
+通常のネイティブ input/textarea 属性（`placeholder`、`value`、`onChange` など）を受け付けます。

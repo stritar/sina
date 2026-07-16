@@ -1,0 +1,43 @@
+---
+title: Select
+sourceHash: 946bde858794
+---
+
+import { SelectHero, SelectExamples } from "@/app/components/docs/demos/primitives/select";
+
+<SelectHero />
+
+`Select` est un listbox composé pour choisir une seule valeur. Utilisez-le
+lorsque les options sont connues et tiennent dans un menu déroulant ; pour une
+liste longue et cherchable, tournez-vous vers [Combobox](/docs/primitives/combobox).
+
+## Utilisation
+
+```tsx
+import {
+  Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
+} from "@sina-design-system/core";
+
+<Select value={rail} onValueChange={setRail}>
+  <SelectTrigger><SelectValue placeholder="Payment rail" /></SelectTrigger>
+  <SelectContent>
+    <SelectItem value="ach">ACH</SelectItem>
+    <SelectItem value="wire">Wire</SelectItem>
+  </SelectContent>
+</Select>
+```
+
+## Exemples
+
+<SelectExamples />
+
+## Parties
+
+`Select` · `SelectTrigger` · `SelectValue` · `SelectContent` · `SelectItem` ·
+`SelectGroup` · `SelectLabel` · `SelectSeparator`.
+
+## Accessibilité
+
+Respecte le modèle listbox d'ARIA : les touches fléchées déplacent, la saisie au
+clavier saute, `Enter` sélectionne, `Esc` ferme, et le focus revient au
+déclencheur. Tout est géré pour vous.

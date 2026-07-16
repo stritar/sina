@@ -1,0 +1,41 @@
+---
+title: Icon
+sourceHash: dd59c4ec8596
+---
+
+import { IconHero, IconExamples } from "@/app/components/docs/demos/primitives/icon-demo";
+
+<IconHero />
+
+`Icon` umschließt ein Phosphor-Glyph und zwingt dich, eine Frage zu beantworten: *bedeutet* dieses
+Icon etwas, oder ist es Dekoration? Das richtig zu treffen, ist der Unterschied zwischen
+einem zugänglichen und einem verwirrenden Icon.
+
+## Verwendung
+
+```tsx
+import { Icon } from "@sina-design-system/core";
+import { ShieldCheck } from "@phosphor-icons/react";
+
+<Icon icon={ShieldCheck} label="Governed by SINA" />   {/* announced */}
+<Icon icon={ShieldCheck} decorative />                 {/* silent */}
+```
+
+## Beispiele
+
+<IconExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "Wird an Screenreader angesagt. Verwende es, wenn das Icon eine Bedeutung transportiert." },
+    { prop: "decorative", type: "boolean", description: "Blendet das Icon vor assistiven Technologien aus (aria-hidden)." },
+  ]}
+/>
+
+## Barrierefreiheit
+
+Gib genau eines von `label` oder `decorative` an. Ein bedeutungstragendes Icon ohne `label`
+ist für Screenreader-Nutzer unsichtbar; ein dekoratives mit `label` ist Rauschen. Die Farbe
+folgt `currentColor`, sodass das umgebende `text-*`-Token sie bestimmt.

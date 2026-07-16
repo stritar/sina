@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@sina-design-system/core";
+import { useLocale } from "./LocaleContext";
 import styles from "./Search.module.css";
 
 /**
@@ -20,28 +21,30 @@ import styles from "./Search.module.css";
  */
 export function Search() {
   const [open, setOpen] = useState(false);
-  const { search, setSearch, query } = useDocsSearch({ type: "static" });
+  const { locale, messages } = useLocale();
+  // Query this locale's index (Fumadocs builds one static Orama index per locale).
+  const { search, setSearch, query } = useDocsSearch({ type: "static", locale });
   const results = Array.isArray(query.data) ? query.data : [];
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="secondary" size="sm" className={styles.trigger}>
-          Search…
+          {messages.search.trigger}
         </Button>
       </DialogTrigger>
       <DialogContent className={styles.panel}>
-        <DialogTitle className={styles.title}>Search documentation</DialogTitle>
+        <DialogTitle className={styles.title}>{messages.search.title}</DialogTitle>
         <DialogDescription className={styles.srOnly}>
-          Search the SINA docs by keyword.
+          {messages.search.description}
         </DialogDescription>
         <input
           type="search"
           className={styles.input}
-          placeholder="Search docs…"
+          placeholder={messages.search.placeholder}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          aria-label="Search documentation"
+          aria-label={messages.search.title}
         />
         <ul className={styles.results}>
           {results.map((result) => (
@@ -53,7 +56,7 @@ export function Search() {
           ))}
         </ul>
         {search.length > 0 && results.length === 0 && (
-          <p className={styles.empty}>No results.</p>
+          <p className={styles.empty}>{messages.search.empty}</p>
         )}
       </DialogContent>
     </Dialog>

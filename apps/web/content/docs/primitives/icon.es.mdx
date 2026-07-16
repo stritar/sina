@@ -1,0 +1,41 @@
+---
+title: Icono
+sourceHash: dd59c4ec8596
+---
+
+import { IconHero, IconExamples } from "@/app/components/docs/demos/primitives/icon-demo";
+
+<IconHero />
+
+`Icon` envuelve un glifo de Phosphor y te obliga a responder una pregunta: ¿este icono
+*significa* algo, o es decoración? Acertar en eso marca la diferencia entre
+un icono accesible y uno confuso.
+
+## Uso
+
+```tsx
+import { Icon } from "@sina-design-system/core";
+import { ShieldCheck } from "@phosphor-icons/react";
+
+<Icon icon={ShieldCheck} label="Governed by SINA" />   {/* announced */}
+<Icon icon={ShieldCheck} decorative />                 {/* silent */}
+```
+
+## Ejemplos
+
+<IconExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "Se anuncia a los lectores de pantalla. Úsalo cuando el icono transmite significado." },
+    { prop: "decorative", type: "boolean", description: "Oculta el icono a la tecnología de asistencia (aria-hidden)." },
+  ]}
+/>
+
+## Accesibilidad
+
+Proporciona exactamente uno de `label` o `decorative`. Un icono con significado sin un `label`
+es invisible para los usuarios de lectores de pantalla; uno decorativo con un `label` es ruido. El color
+sigue a `currentColor`, así que el token `text-*` que lo rodea lo determina.

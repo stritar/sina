@@ -1,0 +1,43 @@
+---
+title: Dialog
+sourceHash: 5734a89bce50
+---
+
+import { DialogHero, DialogExamples } from "@/app/components/docs/demos/primitives/dialog";
+
+<DialogHero />
+
+`Dialog` est une fenêtre modale qui piège le focus, se ferme avec `Esc` et rend le
+focus au déclencheur. C'est la base sur laquelle s'appuient les composants gouvernés
+(comme `SecureWireDialog`).
+
+## Utilisation
+
+```tsx
+import {
+  Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogClose,
+} from "@sina-design-system/core";
+
+<Dialog open={open} onOpenChange={setOpen}>
+  <DialogContent>
+    <DialogTitle>Confirm</DialogTitle>
+    <DialogDescription>This can't be undone.</DialogDescription>
+    <DialogClose asChild><Button variant="secondary">Cancel</Button></DialogClose>
+  </DialogContent>
+</Dialog>
+```
+
+## Exemples
+
+<DialogExamples />
+
+## Éléments
+
+`Dialog` · `DialogTrigger` · `DialogContent` · `DialogTitle` · `DialogDescription`
+· `DialogClose`.
+
+## Accessibilité
+
+`role="dialog"` avec `aria-modal`, un titre relié via `aria-labelledby`, un piège à
+focus, `Esc` pour fermer et la restauration du focus à la fermeture. `DialogTitle`
+est obligatoire ; c'est le nom accessible.

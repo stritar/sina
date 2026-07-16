@@ -1,0 +1,32 @@
+---
+title: ScrollArea
+sourceHash: 017d8f7db069
+---
+
+import { ScrollAreaHero, ScrollAreaExamples } from "@/app/components/docs/demos/primitives/scroll-area";
+
+<ScrollAreaHero />
+
+`ScrollArea` da a una región desplazable una barra de desplazamiento coherente y
+estilizada en todos los navegadores, sin desactivar el desplazamiento nativo por
+teclado.
+
+## Uso
+
+```tsx
+import { ScrollArea } from "@sina-design-system/core";
+
+<ScrollArea style={{ height: 240 }}>
+  {/* long content */}
+</ScrollArea>
+```
+
+## Ejemplos
+
+<ScrollAreaExamples />
+
+## Accesibilidad
+
+Úsalo para una lista o panel acotado que de otro modo se desbordaría. El
+contenido sigue siendo desplazable por teclado y la barra de desplazamiento no
+desplaza el diseño.

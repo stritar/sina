@@ -1,13 +1,15 @@
 import { source } from "@/lib/source";
+import { DEFAULT_LOCALE } from "@/lib/i18n/locales";
 
 // Static `llms.txt` — an agent-consumable index of the docs. On-brand for a
 // product about governing AI agents. Emitted as a static asset (Cloudflare Pages
-// static export), like the search index.
+// static export), like the search index. English only: the raw markdown assets
+// under /llms/docs/** are the English source (translations live as MDX siblings).
 export const dynamic = "force-static";
 export const revalidate = false;
 
 export function GET() {
-  const pages = source.getPages();
+  const pages = source.getPages(DEFAULT_LOCALE);
 
   const lines = [
     "# SINA — The Design System for AI Agents",

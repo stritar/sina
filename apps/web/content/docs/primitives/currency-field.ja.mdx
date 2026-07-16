@@ -1,0 +1,35 @@
+---
+title: CurrencyField
+sourceHash: c10a09a690cc
+---
+
+import { CurrencyFieldHero, CurrencyFieldExamples } from "@/app/components/docs/demos/primitives/currency-field";
+
+<CurrencyFieldHero />
+
+`CurrencyField` は、金額を期待どおりに整形し、フォーカスが外れたときに千の位を区切りながら、その下にクリーンな数値を保持します。
+
+## 使い方
+
+```tsx
+import { CurrencyField } from "@sina-design-system/core";
+
+<CurrencyField label="Amount" currencySymbol="$" defaultValue="25000" />
+```
+
+## 例
+
+<CurrencyFieldExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "currencySymbol", type: "string", default: '"$"', description: "金額の前に表示される記号。" },
+    { prop: "label / description / error", type: "ReactNode", description: "外側の Field にそのまま渡されます。" },
+  ]}
+/>
+
+<Callout variant="governance" title="整形であって、強制ではありません">
+  これは表示専用です。上限を超える金額を止めることはありません。それはサーバー上のゲートの役割です。クライアント側の入力は常に回避され得るため、SINA は上限のためにそれを信頼することは決してありません。
+</Callout>

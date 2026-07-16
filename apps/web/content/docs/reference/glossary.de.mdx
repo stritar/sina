@@ -1,0 +1,65 @@
+---
+title: Glossar & FAQ
+sourceHash: 7221d733e112
+---
+
+## Glossar
+
+| Begriff | Bedeutung |
+|---|---|
+| **Absicht** | Die Anforderung der KI, UI anzuzeigen: ein Verb plus props, niemals eine Komponente. |
+| **Verfassung** | Der vollständige Satz von Regeln (Schemas), die entscheiden, was erlaubt ist. |
+| **Kontrollpunkt** | Die serverseitige Prüfung, die jede Absicht durchläuft. |
+| **Abfangen** | Eine Absicht durch den Kontrollpunkt laufen lassen, bevor irgendetwas eingebunden wird. |
+| **Erst validieren, dann einbinden** | SINAs Kernregel: zuerst auf dem Server prüfen, danach rendern. |
+| **Abfang-Vertrag** | Die einheitliche Ergebnisform: `{ valid, violations, requiredComponent }`. |
+| **Verstoß** | Eine Sache, die der Kontrollpunkt als falsch befunden hat, mit einer Meldung, einem Schweregrad und einem zitierten Standard. |
+| **Schweregrad** | Wie hart ein Verstoß wirkt: `flag`, `escalate` oder `reject`. |
+| **Eskalation** | Eine blockierte Anfrage auf eine strengere Komponente umleiten, statt sie abzulehnen. |
+| **Geregelt** | Eine Regel für eine Aktion, mit Richtlinie und möglicher Eskalation. |
+| **Anzeige / ungeregelt** | Eine Regel für einen Lesevorgang: formgeprüft und maskiert, niemals eskaliert. |
+| **Schwärzung** | Sensible Daten entfernen/maskieren, bevor sie im Audit-Log gespeichert werden. |
+| **Audit-Ereignis** | Der Datensatz, den jede Entscheidung ausgibt. |
+| **Vier-Augen-Prinzip** | Die Regel, dass sich ein Genehmiger vom Initiator unterscheiden muss. |
+| **Payload-Bindung** | Eine Genehmigung an die exakten Bedingungen binden, auf dem Server neu berechnet. |
+| **Kleinste Einheiten** | Geld als ganze Zahlen (Cent), gemäß ISO 4217. Keine Fließkommazahlen. |
+| **Primitive** | Eine headless, zugängliche core-Komponente (Button, Dialog, …). |
+| **Token** | Ein benannter Designwert (Farbe, Größe, Schrift) als `--sina-*`-Variable. |
+| **Marken-offen / Governance-gesperrt** | Token-Rollen, die du neu gestalten darfst, gegenüber solchen, die der Sicherheit vorbehalten sind. |
+| **Manifest** | Die Liste der Absichts-Verben, die die KI ausgeben darf. |
+
+## FAQ
+
+**Brauche ich eine KI oder einen LLM-Schlüssel, um SINA zu nutzen?**
+Nein. Du kannst den Kontrollpunkt mit einem einfachen Objekt aufrufen, und die
+Dokumentation führt ihn live ohne Schlüssel aus. Wenn du nur die Komponenten
+willst, [nutze die Primitiven allein](/docs/guides/adopt-incrementally).
+
+**Ist SINA nur für fintech?**
+Heute, ja. Die [Governance-Naht](/docs/reference/packages) ist domänenunabhängig,
+sodass eine weitere Domäne [additiv](/docs/guides/extend-sina) ist, keine
+Neufassung. Bislang ist keine gebaut.
+
+**Funktioniert es außerhalb von Next.js?**
+Der Kontrollpunkt braucht irgendwo einen Ort, um eine serverseitige Prüfung
+auszuführen. Next.js App Router ist die reibungsloseste Wahl, aber jeder Server,
+der die Prüfung ausführen kann, funktioniert. Die Komponenten sind reines React.
+
+**Ist es produktionsreif?**
+Veröffentlicht in **0.1.0**, also ist es früh. Der Kontrollpunkt und die
+Primitiven sind getestet (einschließlich einer adversarialen Suite und
+automatisierter Barrierefreiheitsprüfungen); der Audit-Trail ist ein definierter
+Vertrag mit einer No-Op-Senke. Bewerte entsprechend, und siehe [Releases &
+Stabilität](/docs/reference/changelog).
+
+**Was ist die Lizenz?**
+MIT, kostenlos. SINA existiert, damit Startups und Einzelpersonen ein geregeltes
+Designsystem übernehmen können, ohne die Governance-Schicht selbst zu bauen.
+
+**Fügt der Kontrollpunkt Latenz hinzu?**
+Es ist eine synchrone serverseitige Prüfung, ein Schema-Parse plus Richtlinie,
+gemessen in Millisekunden. Es gibt keinen Modellaufruf im Kontrollpunkt selbst.
+
+**Führt SINA die KI aus?**
+Nein. Du führst deinen Agenten aus; SINA regelt seine Ausgabe. Das Modell schlägt
+eine Absicht vor, und SINA entscheidet, was gerendert wird.

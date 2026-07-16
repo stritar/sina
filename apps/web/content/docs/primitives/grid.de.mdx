@@ -1,0 +1,42 @@
+---
+title: Grid
+sourceHash: 1699dd9105fc
+---
+
+import { GridHero, GridExamples } from "@/app/components/docs/demos/primitives/grid";
+
+<GridHero />
+
+`Grid` ordnet die untergeordneten Elemente in umbrechende Spalten an, mit einem `gap`
+aus der Abstandsskala. Verwende es für Kartenraster und Dashboards; verwende [Stack](/docs/primitives/stack)
+für eine einzelne Zeile oder Spalte.
+
+## Verwendung
+
+```tsx
+import { Grid } from "@sina-design-system/core";
+
+<Grid cols={3} gap={4}>
+  {items.map((i) => <Card key={i.id} {...i} />)}
+</Grid>
+```
+
+## Beispiele
+
+<GridExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "cols", type: "GridCols", description: "Anzahl der Spalten." },
+    { prop: "gap", type: "GapStep", description: "Abstand zwischen den Zellen (aus der 8pt-Skala)." },
+    { prop: "as", type: "ElementType", description: "Als anderes Element rendern (polymorph)." },
+  ]}
+/>
+
+## Barrierefreiheit
+
+Rein präsentationell. Es rendert ein einfaches `div` ohne zusätzliche Semantik. Übergib
+`as`, um eine sinnvolle Struktur zu erhalten, wenn die Zellen eine echte Sammlung
+bilden (z. B. `as="ul"`).

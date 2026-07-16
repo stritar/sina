@@ -1,0 +1,44 @@
+---
+title: 監査証跡
+sourceHash: 37daeb373c64
+---
+
+ゲートが下すすべての決定は<Term term="audit event">監査イベント</Term>を発行します。これこそが「AI
+が画面を作った」を「これがまさに AI
+の要求内容であり、私たちの決定であり、その理由である」に変えるものです。コンプライアンスはそれをレビューでき、あなたはそれでデバッグでき、ユーザーは記録外で何も起きていないと信頼できます。
+
+## その形
+
+```ts
+type AuditEvent = {
+  timestamp: string;
+  decisionId: string;
+  version: string;
+  payload: unknown;        // redacted (see below)
+  result: InterceptionResult;
+  violations: Violation[]; // each with its cited standard
+  decidedComponent: string | null;
+};
+```
+
+すべての違反がその `standard` を携えているため、記録は単に「ブロックした」と述べるだけではありません。*どの規則が*ブロックしたのか、そして*その規則がどこから来るのか*を述べます。
+
+## 秘匿化が最初に行われる
+
+ペイロードは**保存される前に必ず秘匿化されます**：
+
+- 完全に**破棄**：カードのセキュリティコード（CVV）と PIN。
+- 末尾 4 桁に**マスク**：カード番号（PAN）。
+- フィンガープリントに**ハッシュ化**：口座番号と IBAN 番号。2
+  つのイベントを関連付けるには十分で、番号を再構築するには決して十分ではありません。
+
+<Callout variant="governance" title="構造上安全">
+  秘匿化は、有効化を忘れうる設定ではありません。イベントの発行の一部として実行されるため、敵対的なストリームが機密データを監査ログに紛れ込ませることはできません。
+</Callout>
+
+<Callout variant="note" title="その行き先">
+  現在、監査イベントは、何もしないシンクを備えた定義済みの契約です。形は固定されており、すべての決定が
+  1 つを発行します。それを永続的なシンクに接続することは、計画済みのリリース堅牢化作業です。
+</Callout>
+
+次へ：[AI エージェント向け](/docs/agents)。

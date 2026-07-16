@@ -1,0 +1,90 @@
+---
+title: Adopta de forma incremental
+sourceHash: b9bef9982943
+---
+
+No tienes que gobernarlo todo desde el primer día, ni gobernar nada en absoluto.
+Hay dos maneras de empezar, y la primera evoluciona limpiamente hacia la segunda.
+
+## Ruta 1: solo primitivas
+
+La gobernanza de SINA es opcional. Si solo quieres componentes de React
+accesibles y personalizables con la calidad de Radix, sin cablear uno tú mismo,
+usa las primitivas por sí solas. Sin control, sin comprobación en el servidor.
+
+<Steps>
+  <Step title="Instala dos paquetes">
+
+```bash
+pnpm add @sina-design-system/theme @sina-design-system/core
+```
+
+  </Step>
+  <Step title="Importa los estilos">
+
+```ts
+// app/layout.tsx
+import "@sina-design-system/theme/reset.css";
+import "@sina-design-system/theme/css";
+import "@sina-design-system/core/styles.css";
+```
+
+  </Step>
+  <Step title="Usa los componentes">
+
+```tsx
+import { Button } from "@sina-design-system/core";
+
+<Button variant="primary">Save</Button>
+```
+
+Primitivas accesibles, con estilos definidos por [tokens](/docs/theming/tokens) y
+re-marcables mediante [temas](/docs/theming). Explora todo el conjunto en la
+[galería de primitivas](/docs/primitives).
+
+  </Step>
+</Steps>
+
+<Callout variant="note" title="Lo que te estás saltando">
+  Sin el control, nada valida la intención de la IA, lo cual está bien si todavía
+  no generas UI con IA. Añade [gobernanza](/docs/governance) más tarde y conservas
+  cada componente; nada se reemplaza.
+</Callout>
+
+## Ruta 2: gobierna una intención a la vez
+
+La preocupación habitual es "la gobernanza ralentizará a mi equipo". No lo hará,
+si se implanta tal como está diseñada:
+
+<Steps>
+  <Step title="Elige una intención de alto valor">
+
+Elige el flujo donde un error resulta más caro, normalmente el movimiento de
+dinero. Enruta solo ese a través del control. Todo lo demás permanece exactamente
+igual.
+
+  </Step>
+  <Step title="Observa qué bloquea">
+
+Haz pasar peticiones reales (o grabadas) por él y lee las decisiones. Ajusta los
+umbrales de política para que coincidan con el apetito de riesgo de tu producto;
+consulta [Escribir una regla](/docs/governance/writing-a-rule).
+
+  </Step>
+  <Step title="Amplía al siguiente flujo">
+
+Como cada regla devuelve el mismo
+[contrato](/docs/concepts/the-contract), el código de renderizado que escribiste
+la primera vez funciona para el segundo.
+
+  </Step>
+</Steps>
+
+<Callout variant="note" title="Sin impuesto de gobernanza">
+  SINA añade una comprobación del lado del servidor por cada intención gobernada.
+  Las lecturas y los flujos no gobernados quedan intactos, así que pagas solo
+  donde lo pediste, y puedes detenerte en un solo flujo. Y cada umbral es una
+  constante con nombre y citada: cuando alguien pregunta "por qué se bloqueó
+  esto", la respuesta es una regla específica con una fuente específica,
+  revisable en un pull request.
+</Callout>

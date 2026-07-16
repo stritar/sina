@@ -1,0 +1,72 @@
+---
+title: 段階的に導入する
+sourceHash: b9bef9982943
+---
+
+初日にすべてを統制する必要はありませんし、まったく統制しなくても構いません。入り口は 2 つあり、最初の入り口は 2 つめへときれいに移行できます。
+
+## 経路 1：プリミティブのみ
+
+SINA のガバナンスは任意です。自分で配線することなく、Radix 品質のアクセシブルでテーマ設定可能な React コンポーネントだけが欲しいなら、プリミティブ単体で使ってください。ゲートも、サーバーチェックもありません。
+
+<Steps>
+  <Step title="2 つのパッケージをインストールする">
+
+```bash
+pnpm add @sina-design-system/theme @sina-design-system/core
+```
+
+  </Step>
+  <Step title="スタイルをインポートする">
+
+```ts
+// app/layout.tsx
+import "@sina-design-system/theme/reset.css";
+import "@sina-design-system/theme/css";
+import "@sina-design-system/core/styles.css";
+```
+
+  </Step>
+  <Step title="コンポーネントを使う">
+
+```tsx
+import { Button } from "@sina-design-system/core";
+
+<Button variant="primary">Save</Button>
+```
+
+アクセシブルなプリミティブは [tokens](/docs/theming/tokens) でスタイルが与えられ、[テーマ設定](/docs/theming)で再ブランディングできます。一式は[プリミティブギャラリー](/docs/primitives)で閲覧できます。
+
+  </Step>
+</Steps>
+
+<Callout variant="note" title="省略しているもの">
+  ゲートがなければ、AI のインテントを検証するものは何もありませんが、まだ AI で UI を生成していないなら問題ありません。後から[ガバナンス](/docs/governance)を追加しても、すべてのコンポーネントはそのまま残ります。何も置き換えられません。
+</Callout>
+
+## 経路 2：一度に 1 つのインテントを統制する
+
+よくある心配は「ガバナンスはチームの速度を落とす」というものです。設計どおりに展開すれば、そうはなりません。
+
+<Steps>
+  <Step title="価値の高いインテントを 1 つ選ぶ">
+
+ミスが最も高くつくフロー、たいていは資金移動を選びます。その 1 つだけをゲートに通します。それ以外はすべてそのままです。
+
+  </Step>
+  <Step title="何がブロックされるかを観察する">
+
+実際の（または記録された）リクエストを通し、その決定を読みます。ポリシーのしきい値を製品のリスク許容度に合わせて調整してください。[ルールを書く](/docs/governance/writing-a-rule)を参照。
+
+  </Step>
+  <Step title="次のフローへ広げる">
+
+すべてのルールが同じ
+[契約](/docs/concepts/the-contract)を返すため、最初に書いたレンダリングコードは 2 つめでもそのまま機能します。
+
+  </Step>
+</Steps>
+
+<Callout variant="note" title="ガバナンス税はありません">
+  SINA は統制されたインテントごとにサーバー側チェックを 1 回追加します。読み取りと統制されていないフローは手つかずのままなので、求めた箇所だけにコストを払い、1 つのフローで止めておくこともできます。そして、あらゆるしきい値は名前が付いた、出典が引用された定数です。誰かが「なぜこれがブロックされたのか」と尋ねたとき、答えは具体的な出典を伴う具体的なルールであり、pull request でレビューできます。
+</Callout>

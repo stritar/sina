@@ -1,0 +1,86 @@
+---
+title: Introducción
+sourceHash: 5b59fa0820fc
+---
+
+SINA es un **sistema de diseño con gobernanza incorporada**, para aplicaciones
+donde una IA genera parte de la interfaz.
+
+Impide que un modelo renderice una interfaz que incumpla tus **límites de
+política, tus reglas de cumplimiento o tus estándares de accesibilidad**.
+
+
+Tú escribes esas reglas como código; el modelo envía una intención; tu servidor
+la valida, y solo entonces se renderiza un componente.
+
+Esto es renderizado condicional corriente, la misma decisión que toma React
+cuando muestra un cuadro de inicio de sesión a un usuario no autenticado. SINA
+traslada esa decisión a tu servidor y le plantea una pregunta más difícil:
+¿debería una IA haber renderizado esto siquiera?
+
+La diferencia está en quién decide. En React puro, tú mismo escribes el `if`.
+Con SINA el modelo propone la UI y una regla en tu servidor decide si se
+muestra, de modo que nadie escribió ese `if` a mano. React no tiene opinión
+sobre si se puede confiar en un modelo. SINA existe precisamente porque no se
+puede.
+
+<SameModelDiagram />
+
+## El problema que resuelve
+
+Pide a una IA que renderice una confirmación de transferencia y lo hará, incluso
+por 60.000 $ que nadie aprobó, o un desplegable que un lector de pantalla no
+puede operar. El resultado parece correcto, y por eso se publica.
+
+SINA se sitúa en la ruta de renderizado: el modelo envía una
+<Term term="intent">intención</Term>, tu servidor la comprueba contra la
+<Term term="constitution">Constitución</Term>, tus reglas escritas como código, y
+solo se renderiza lo que pasa.
+
+<Callout variant="governance" title="La regla">
+  El modelo propone; el servidor decide; la pantalla muestra solo lo que pasó. SINA lo llama **validar y luego montar**.
+</Callout>
+
+Como esas reglas son un esquema versionado, cada decisión que toma queda
+registrada como un [evento de auditoría](/docs/concepts/audit-trail), no
+enterrada en un `if`.
+
+## Cómo se compara
+
+| | Qué es | ¿Detiene la UI insegura? |
+|---|---|---|
+| **Una guía de estilo / wiki** | Consejos que los humanos (y las IA) pueden ignorar | No, solo consultivo |
+| **Una biblioteca de componentes** (Radix, shadcn) | Excelentes piezas accesibles | No, las piezas aún pueden usarse mal |
+| **SINA** | Piezas accesibles **+** una comprobación del lado del servidor | **Sí, impuesto por código** |
+
+SINA no compite con una biblioteca de componentes. La *incluye* (primitivas
+accesibles sobre Radix) y añade la comprobación encima.
+
+## Para quién es
+
+SINA es **gratis** (MIT), creado para startups y desarrolladores individuales que
+quieren la capa de gobernanza sin construirla ellos mismos sobre una IA que puede
+descontrolarse. Las reglas que incluye cubren **fintech** hoy: movimiento de
+dinero, cuentas, tarjetas.
+
+La gobernanza necesita dos cosas de ti: una IA que genere tu UI y un servidor
+donde ejecutar la comprobación. Si no tienes ambos, los componentes accesibles de
+SINA [siguen funcionando por sí solos](/docs/guides/adopt-incrementally). Solo que
+no obtienes la gobernanza.
+
+## Empieza aquí
+
+<CardGrid columns={2}>
+  <Card href="/docs/how-it-works" eyebrow="5 min" title="Cómo funciona SINA">
+    Todo el mecanismo en una página, sin código para seguirlo.
+  </Card>
+  <Card href="/docs/quickstart" eyebrow="10 min" title="Inicio rápido">
+    Instala los paquetes y renderiza tu primera decisión gobernada.
+  </Card>
+  <Card href="/docs/governance/wire-transfer" eyebrow="Demo en vivo" title="La transferencia de 60.000 $, de principio a fin">
+    Observa la comprobación real aprobar una transferencia segura y bloquear una insegura.
+  </Card>
+  <Card href="/docs/primitives" eyebrow="Galería" title="Primitivas">
+    28 componentes accesibles, en vivo en cada página.
+  </Card>
+</CardGrid>

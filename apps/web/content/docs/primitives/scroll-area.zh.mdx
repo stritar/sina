@@ -1,0 +1,28 @@
+---
+title: ScrollArea
+sourceHash: 017d8f7db069
+---
+
+import { ScrollAreaHero, ScrollAreaExamples } from "@/app/components/docs/demos/primitives/scroll-area";
+
+<ScrollAreaHero />
+
+`ScrollArea` 为可滚动区域提供跨浏览器一致的、带样式的滚动条，同时不禁用原生的键盘滚动。
+
+## 用法
+
+```tsx
+import { ScrollArea } from "@sina-design-system/core";
+
+<ScrollArea style={{ height: 240 }}>
+  {/* long content */}
+</ScrollArea>
+```
+
+## 示例
+
+<ScrollAreaExamples />
+
+## 无障碍
+
+将它用于原本会溢出的有界列表或面板。内容仍可通过键盘滚动，且滚动条不会移动布局。

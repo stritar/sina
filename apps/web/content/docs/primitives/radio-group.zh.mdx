@@ -1,0 +1,31 @@
+---
+title: RadioGroup
+sourceHash: f5e7592046d1
+---
+
+import { RadioGroupHero, RadioGroupExamples } from "@/app/components/docs/demos/primitives/radio-group";
+
+<RadioGroupHero />
+
+`RadioGroup` 用于在少数选项中做出单一、互斥的选择。若选项多于寥寥几个，
+请优先使用 [Select](/docs/primitives/select)。
+
+## 用法
+
+```tsx
+import { RadioGroup, RadioGroupItem } from "@sina-design-system/core";
+
+<RadioGroup value={plan} onValueChange={setPlan}>
+  <RadioGroupItem value="standard" label="Standard" />
+  <RadioGroupItem value="priority" label="Priority" />
+</RadioGroup>
+```
+
+## 示例
+
+<RadioGroupExamples />
+
+## 无障碍
+
+遵循 ARIA radiogroup 模式：`Tab` 进入分组，方向键在各选项之间移动（漫游焦点），
+且只有选中的选项才是制表位。

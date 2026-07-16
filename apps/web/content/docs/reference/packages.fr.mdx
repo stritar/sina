@@ -1,0 +1,59 @@
+---
+title: Paquets et exports
+sourceHash: 2e1b381ebc4d
+---
+
+> Référence maintenue à la main. La génération automatique TSDoc→MDX est reportée.
+
+SINA, ce sont cinq petits paquets aux frontières strictes. Chaque couche ne peut
+connaître que celles situées en dessous d'elle :
+
+| Paquet | Ce que c'est | Ne contient jamais |
+|---|---|---|
+| `@sina-design-system/theme` | Tokens de design (`--sina-*`) + le reset CSS | React, UI |
+| `@sina-design-system/core` | Primitives headless et accessibles sur Radix | Zod, vocabulaire métier |
+| `@sina-design-system/governance` | La couture d'interception partagée | React, UI, vocabulaire métier |
+| `@sina-design-system/fintech` | La Constitution fintech, règles Zod pures | React, UI en tout genre |
+| `@sina-design-system/fintech-react` | Composants gouvernés composant `core` + `fintech` | Zod (il compose des schémas, ne les écrit jamais) |
+
+## `theme`
+
+Fournit `./reset.css` (en couches, pour que vos styles l'emportent toujours) et
+`./css`, les propriétés personnalisées `--sina-*`. La grammaire, les paliers et les
+échelles des tokens se trouvent dans [Tokens](/docs/theming/tokens) ; ce que vous
+pouvez surcharger se trouve dans [Theming](/docs/theming).
+
+## `core`
+
+La bibliothèque de primitives. Chaque export est répertorié avec des exemples en
+direct dans la [galerie des primitives](/docs/primitives). Exports nommés
+uniquement ; les types de props par primitive (`ButtonProps`, `GapStep`,
+`SummaryItem`, …) sont livrés avec.
+
+## `governance`
+
+La couture agnostique au domaine sur laquelle chaque constitution se construit :
+
+| Export | Rôle |
+|---|---|
+| `InterceptionResult`, `Violation`, `Severity` | Le contrat uniforme ; voir [le contrat d'interception](/docs/concepts/the-contract). |
+| `intercept`, `ConstitutionRule` | Exécute un schéma Zod + une politique côté serveur et renvoie le contrat. |
+| `dispatch`, `dispatchAll`, `createRouter`, `pattern` | Le routeur d'intentions : enveloppe `{ intent, props }` → décision + montage. |
+| `UNKNOWN_INTENT`, `SCHEMA_INVALID` | Sentinelles pour un verbe non reconnu / une analyse échouée. |
+| `emitAudit`, `redact`, `setAuditSink`, `AuditEvent` | Le point d'émission de l'audit ; voir [la piste d'audit](/docs/concepts/audit-trail). |
+
+Le routeur résout le montage **en dehors** du contrat, de sorte que la gouvernance
+reste une couche d'escalade optionnelle sur un valider puis monter universel.
+
+## `fintech` et `fintech-react`
+
+`fintech` est la Constitution livrée : chaque verbe d'intention, schéma, seuil et
+standard cité. `fintech-react` rend les décisions qu'elle prend, les composants
+gouvernés. Les deux sont catalogués dans [Composants gouvernés et modèles
+d'affichage](/docs/governance/components-and-patterns) ; écrivez votre propre règle
+dans [Écrire une règle de gouvernance](/docs/governance/writing-a-rule).
+
+## Versions
+
+Les cinq sont publiés en **0.1.0** ; voir [Versions et
+stabilité](/docs/reference/changelog).

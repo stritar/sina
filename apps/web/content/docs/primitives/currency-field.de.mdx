@@ -1,0 +1,39 @@
+---
+title: CurrencyField
+sourceHash: c10a09a690cc
+---
+
+import { CurrencyFieldHero, CurrencyFieldExamples } from "@/app/components/docs/demos/primitives/currency-field";
+
+<CurrencyFieldHero />
+
+`CurrencyField` formatiert einen Geldbetrag wie erwartet, gruppiert beim
+Verlassen des Felds die Tausenderstellen und behält darunter einen sauberen
+numerischen Wert bei.
+
+## Verwendung
+
+```tsx
+import { CurrencyField } from "@sina-design-system/core";
+
+<CurrencyField label="Amount" currencySymbol="$" defaultValue="25000" />
+```
+
+## Beispiele
+
+<CurrencyFieldExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "currencySymbol", type: "string", default: '"$"', description: "Das vor dem Betrag angezeigte Symbol." },
+    { prop: "label / description / error", type: "ReactNode", description: "Wird an das umschließende Field durchgereicht." },
+  ]}
+/>
+
+<Callout variant="governance" title="Formatierung, keine Durchsetzung">
+  Dies dient nur der Anzeige. Es stoppt keinen Betrag über dem Limit; das ist
+  Aufgabe des Kontrollpunkts, auf dem Server. Eine clientseitige Eingabe lässt
+  sich immer umgehen, daher vertraut SINA ihr niemals für ein Limit.
+</Callout>

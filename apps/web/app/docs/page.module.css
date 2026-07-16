@@ -38,6 +38,17 @@
   color: var(--sina-color-text-muted);
 }
 
+/* Shown on machine-translated (non-English) pages: a quiet, bordered aside. */
+.machineNote {
+  margin: 0 0 var(--sina-space--6);
+  padding: var(--sina-space--2) var(--sina-space--3);
+  border-left: var(--sina-border-width--2) solid var(--sina-color-border);
+  background: var(--sina-color-surface-sunken);
+  border-radius: var(--sina-radius--sm);
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}
+
 /* The article column: base typography, plus the grid child's min-width guard
    (without it the track can't shrink below its content). Chrome — toolbar,
    title, pager — lives here, OUTSIDE `.prose`. */

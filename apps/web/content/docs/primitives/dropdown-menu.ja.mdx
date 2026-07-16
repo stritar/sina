@@ -1,0 +1,46 @@
+---
+title: DropdownMenu
+sourceHash: 589f5b32ad6e
+---
+
+import { DropdownMenuHero, DropdownMenuExamples } from "@/app/components/docs/demos/primitives/dropdown-menu";
+
+<DropdownMenuHero />
+
+`DropdownMenu` は、トリガーから発火される*コマンド*の複合メニューです。各項目が何かを**実行する**ときに使用します。項目がコントロールの保持する**値**である場合は、代わりに
+[Select](/docs/primitives/select) を使ってください。このページの「ページをコピー」ボタンは `DropdownMenu` です。
+
+## 使い方
+
+```tsx
+import {
+  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem,
+} from "@sina-design-system/core";
+
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="secondary">Page actions</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem onSelect={openInClaude}>Open in Claude</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+## 例
+
+<DropdownMenuExamples />
+
+## 構成要素
+
+`DropdownMenu` · `DropdownMenuTrigger` · `DropdownMenuContent` ·
+`DropdownMenuItem` · `DropdownMenuGroup` · `DropdownMenuLabel` ·
+`DropdownMenuSeparator`.
+
+`DropdownMenuContent` は既定で `align="end"` と `sideOffset={4}` を使用します。これら 2 つと、その他すべての
+Radix コンテンツ props は転送されます。項目は `asChild` でリンクになります。
+
+## アクセシビリティ
+
+ARIA メニューパターンに準拠します。`Enter` または `Space` でメニューを開き最初の項目にフォーカスし、方向キーで項目間を移動し、先頭文字入力でジャンプし、`Esc`
+で閉じてフォーカスをトリガーに戻します。すべて自動で処理されます。

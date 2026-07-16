@@ -1,0 +1,38 @@
+---
+title: Separator
+sourceHash: c0f3709a1e32
+---
+
+import { SeparatorHero, SeparatorExamples } from "@/app/components/docs/demos/primitives/separator";
+
+<SeparatorHero />
+
+`Separator` 在各区块之间绘制一条细线。默认情况下它是装饰性的（对屏幕阅读器隐藏）；
+当分隔本身带有含义时，将其标记为非装饰性。
+
+## 用法
+
+```tsx
+import { Separator } from "@sina-design-system/core";
+
+<Separator />
+<Separator orientation="vertical" />
+```
+
+## 示例
+
+<SeparatorExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "orientation", type: '"horizontal" | "vertical"', default: '"horizontal"', description: "分隔线方向。" },
+    { prop: "decorative", type: "boolean", default: "true", description: "当为 false 时，向辅助技术暴露 separator 角色。" },
+  ]}
+/>
+
+## 无障碍
+
+装饰性分隔线对辅助技术隐藏。设置 `decorative={false}` 后，分隔线会暴露
+`role="separator"`，作为真正的区块边界。

@@ -1,0 +1,41 @@
+---
+title: アイコン
+sourceHash: dd59c4ec8596
+---
+
+import { IconHero, IconExamples } from "@/app/components/docs/demos/primitives/icon-demo";
+
+<IconHero />
+
+`Icon` は Phosphor のグリフをラップし、1 つの問いに答えることを求めます。このアイコンは
+何かを*意味する*のか、それとも装飾なのか。それを正しく判断できるかどうかが、
+アクセシブルなアイコンと分かりにくいアイコンの違いになります。
+
+## 使い方
+
+```tsx
+import { Icon } from "@sina-design-system/core";
+import { ShieldCheck } from "@phosphor-icons/react";
+
+<Icon icon={ShieldCheck} label="Governed by SINA" />   {/* announced */}
+<Icon icon={ShieldCheck} decorative />                 {/* silent */}
+```
+
+## 例
+
+<IconExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "スクリーンリーダーに読み上げられます。アイコンが意味を伝えるときに使用します。" },
+    { prop: "decorative", type: "boolean", description: "支援技術からアイコンを隠します（aria-hidden）。" },
+  ]}
+/>
+
+## アクセシビリティ
+
+`label` または `decorative` のいずれか一方だけを指定してください。意味を持つアイコンに `label`
+がなければ、スクリーンリーダー利用者には見えません。装飾用のアイコンに `label` があればノイズになります。色は
+`currentColor` に従うため、周囲の `text-*` トークンがそれを決定します。

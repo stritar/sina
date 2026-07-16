@@ -1,0 +1,42 @@
+---
+title: LineChart
+sourceHash: 89173318aea6
+---
+
+import { LineChartHero, LineChartExamples } from "@/app/components/docs/demos/primitives/line-chart";
+
+<LineChartHero />
+
+`LineChart` は 1 つ以上の系列を時系列でプロットし、ホバー時のツールチップはトークンからスタイリングされます。エリアチャートにするには `fill` を渡します。
+
+## 使い方
+
+```tsx
+import { LineChart } from "@sina-design-system/core";
+
+<LineChart
+  label="Balance over time"
+  data={{ labels, datasets }}
+  valueFormatter={(n) => `$${n.toLocaleString()}`}
+  fill
+/>
+```
+
+## 例
+
+<LineChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "チャートに必須のアクセシブルな名前。" },
+    { prop: "data", type: "ChartData", description: "系列と点（Chart.js の形式）。" },
+    { prop: "valueFormatter", type: "(n: number) => string", description: "ツールチップと軸の値をフォーマットします。チャートをドメインに依存しないまま保ちます。" },
+    { prop: "fill", type: "boolean", default: "false", description: "エリアチャートとしてレンダリングします。" },
+  ]}
+/>
+
+## アクセシビリティ
+
+`"use client"` コンポーネント（canvas）です。ラッパーはあなたの `label` を持つ `role="img"` です。非視覚的な経路として、近くにテキスト要約を保ってください。視覚効果を減らす設定ではアニメーションが無効になります。

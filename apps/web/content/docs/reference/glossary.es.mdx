@@ -1,0 +1,66 @@
+---
+title: Glosario y preguntas frecuentes
+sourceHash: 7221d733e112
+---
+
+## Glosario
+
+| Término | Significado |
+|---|---|
+| **Intención** | La solicitud de la IA para mostrar UI: un verbo más props, nunca un componente. |
+| **Constitución** | El conjunto completo de reglas (esquemas) que deciden qué está permitido. |
+| **Control** | La comprobación del lado del servidor por la que pasa cada intención. |
+| **Intercepción** | Ejecutar una intención a través del control antes de que se monte nada. |
+| **Validar y luego montar** | La regla central de SINA: comprobar primero en el servidor, renderizar después. |
+| **Contrato de intercepción** | La forma de resultado uniforme: `{ valid, violations, requiredComponent }`. |
+| **Infracción** | Una cosa que el control encontró mal, con un mensaje, una severidad y un estándar citado. |
+| **Severidad** | Con qué dureza actúa una infracción: `flag`, `escalate` o `reject`. |
+| **Escalado** | Redirigir una solicitud bloqueada a un componente más estricto en lugar de rechazarla. |
+| **Gobernado** | Una regla para una acción, con política y posible escalado. |
+| **Visualización / no gobernado** | Una regla para una lectura: se comprueba su forma y se enmascara, nunca se escala. |
+| **Redacción** | Eliminar/enmascarar datos sensibles antes de que se almacenen en el registro de auditoría. |
+| **Evento de auditoría** | El registro que emite cada decisión. |
+| **Cuatro ojos** | La regla de que un aprobador debe ser distinto del iniciador. |
+| **Vinculación de la carga útil** | Atar una aprobación a los términos exactos, recalculados en el servidor. |
+| **Unidades menores** | Dinero como enteros completos (céntimos), según ISO 4217. Sin decimales. |
+| **Primitiva** | Un componente core headless y accesible (Button, Dialog, …). |
+| **Token** | Un valor de diseño con nombre (color, tamaño, fuente) como variable `--sina-*`. |
+| **Abierto a marca / bloqueado por gobernanza** | Roles de token que puedes re-tematizar frente a los reservados para la seguridad. |
+| **Manifiesto** | La lista de verbos de intención que la IA puede emitir. |
+
+## Preguntas frecuentes
+
+**¿Necesito una IA o una clave de LLM para usar SINA?**
+No. Puedes llamar al control con un objeto plano, y la documentación lo ejecuta en
+vivo sin ninguna clave. Si solo quieres los componentes, [usa las primitivas por
+separado](/docs/guides/adopt-incrementally).
+
+**¿SINA es solo para fintech?**
+Hoy, sí. La [costura de gobernanza](/docs/reference/packages) es agnóstica al
+dominio, así que otro dominio es [aditivo](/docs/guides/extend-sina), no una
+reescritura. Todavía no se ha construido ninguno.
+
+**¿Funciona fuera de Next.js?**
+El control necesita algún lugar donde ejecutar una comprobación del lado del
+servidor. Next.js App Router es el ajuste más fluido, pero sirve cualquier
+servidor que pueda ejecutar la comprobación. Los componentes son React puro.
+
+**¿Está listo para producción?**
+Publicado en **0.1.0**, así que es temprano. El control y las primitivas están
+probados (incluida una suite adversaria y comprobaciones de accesibilidad
+automatizadas); el registro de auditoría es un contrato definido con un sumidero
+sin operación. Evalúa en consecuencia, y consulta [Versiones y
+estabilidad](/docs/reference/changelog).
+
+**¿Cuál es la licencia?**
+MIT, gratis. SINA existe para que startups y particulares puedan adoptar un
+sistema de diseño gobernado sin construir ellos mismos la capa de gobernanza.
+
+**¿El control añade latencia?**
+Es una comprobación síncrona del lado del servidor, un análisis de esquema más
+política, medida en milisegundos. No hay ninguna llamada al modelo en el control
+mismo.
+
+**¿SINA ejecuta la IA?**
+No. Tú ejecutas tu agente; SINA gobierna su salida. El modelo propone una
+intención, y SINA decide qué se renderiza.

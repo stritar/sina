@@ -19,6 +19,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://sinahub.app"),
   title: "SINA — The Design System for AI Agents",
   description: "Governed UI for LLM-generated interfaces.",
 };

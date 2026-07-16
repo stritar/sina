@@ -1,0 +1,43 @@
+---
+title: Toast
+sourceHash: 9f523a8662a1
+---
+
+import { ToastHero, ToastExamples } from "@/app/components/docs/demos/primitives/toast";
+
+<ToastHero />
+
+`Toast` は、短い非ブロッキングの通知です。「保存しました」「送金しました」「コピーに
+失敗しました」など。provider と viewport を一度マウントし、あとは必要に応じて toast
+を表示します。
+
+## 使い方
+
+```tsx
+import {
+  ToastProvider, ToastViewport, Toast, ToastTitle, ToastDescription,
+} from "@sina-design-system/core";
+
+<ToastProvider>
+  <Toast variant="success" open={open} onOpenChange={setOpen}>
+    <ToastTitle>Transfer sent</ToastTitle>
+    <ToastDescription>$500 to Beta LLC.</ToastDescription>
+  </Toast>
+  <ToastViewport />
+</ToastProvider>
+```
+
+## 例
+
+<ToastExamples />
+
+## Props
+
+`ToastProvider` · `ToastViewport` · `Toast` · `ToastTitle` · `ToastDescription` ·
+`ToastAction` · `ToastClose`。`Toast` は `success`、`danger`、`info` のいずれかの
+`variant` を取ります（danger は太字のグリフをレンダリングします）。
+
+## アクセシビリティ
+
+Toast はスクリーンリーダーに丁寧に読み上げられ、ホバー中は一時停止し、キーボードで
+閉じられます。重要で繰り返せない情報を toast に入れないでください。消えてしまいます。

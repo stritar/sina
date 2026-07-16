@@ -1,0 +1,94 @@
+---
+title: Wie SINA funktioniert
+sourceHash: 07be9cbc0042
+---
+
+Jeder KI-generierte Screen in SINA durchläuft dieselben drei Schritte:
+
+1. **Das Modell schlägt vor.** Die KI sendet eine <Term term="intent">Absicht</Term>: ein
+   Verb plus einige Daten, etwa `"wire_transfer"` mit einem Betrag und einem Empfänger.
+   Es benennt nie eine Komponente.
+2. **Der Server entscheidet.** Dein Server lässt die Absicht durch die
+   <Term term="constitution">Verfassung</Term> laufen, deine als Schemas geschriebenen Regeln.
+   Sie beantworten eine einzige Frage: Ist das erlaubt, und wenn ja, was soll gerendert werden?
+3. **Der Screen zeigt, was durchgekommen ist.** SINA bindet die Komponente ein, die der Server gewählt hat.
+   Wenn die Anfrage gescheitert ist, wird nichts Unsicheres gerendert.
+
+## Die eine Regel, auf der alles ruht
+
+> **Das Modell sendet eine Absicht und Props, niemals eine Komponente. Die
+> Validierung läuft ausschließlich auf dem Server. Wir validieren, _dann_ binden
+> wir ein. Wir binden nie erst ein und prüfen dann.**
+
+Warum dein Server und nicht der Browser? Weil **du sie nicht mehr zurückholen
+kannst, sobald UI den Screen erreicht hat.** React streamt sie Stück für Stück
+herunter. Es gibt kein „Un-Rendern".
+
+Die Prüfung muss also **laufen, bevor irgendetwas eingebunden wird**. Der letzte
+Ort, den du vollständig kontrollierst, ist dein eigener **Server**. Ein Angreifer
+kann alles, was im Browser läuft, verändern oder überspringen. Eine Prüfung dort
+stoppt ehrliche Fehler; **sie stoppt keinen Angriff**.
+
+Das ist der Gewinn. Es spielt keine Rolle, ob das Modell falsch liegt,
+jailbreakt oder feindselig ist: **es entscheidet nie, was gerendert wird.**
+
+## Wie eine Absicht aussieht
+
+```ts
+const intent = {
+  intent: "wire_transfer",
+  props: { amount: 6000000, currency: "USD", recipient: /* … */ },
+};
+```
+
+Beachte, was *nicht* da ist: kein Button, kein Dialog, kein Layout. Die KI
+beschreibt, *was* sie will („dieses Geld bewegen"), niemals, *wie* es aussehen soll.
+
+## Was der Kontrollpunkt prüft
+
+Jede Absicht durchläuft dieselben vier Schritte, der Reihe nach:
+
+1. **Struktur.** Hat das Payload genau die richtige Form? Schemas sind streng,
+   also ist ein fabrizierter „Bestätigen"-Button oder eine eingeschmuggelte
+   Kartennummer ein *zusätzliches Feld*, das abgelehnt wird, bevor irgendein Wert
+   gelesen wird.
+2. **Policy.** Befolgen die Werte die Regeln? Liegt der Betrag innerhalb der
+   Grenzen? Ist ein zweiter Genehmiger erforderlich? Jeder Schwellenwert wird auf
+   einen echten Standard zurückgeführt.
+3. **Entscheidung.** Probleme werden zu *Verstößen*, und der Kontrollpunkt
+   entscheidet: gültig oder nicht, und falls eine strengere Komponente
+   erforderlich ist, welche.
+4. **Audit.** Jede Entscheidung gibt einen Datensatz aus, was gefragt, was
+   entschieden und welche Regeln ausgelöst wurden, wobei sensible Daten zuvor
+   geschwärzt werden.
+
+Eine Entscheidung endet immer auf eine von zwei Arten: **sie bindet ein** (die
+Anfrage ist durchgekommen, SINA bindet die von den Regeln gewählte Komponente
+ein) oder **sie wird blockiert** (die unsichere Version wird nie eingebunden; sie
+wird rundweg abgelehnt oder auf eine strengere Komponente wie einen
+Zweitgenehmiger-Dialog <Term term="escalation">eskaliert</Term>).
+
+<Callout variant="note" title="Der Kontrollpunkt benennt eine Komponente">
+  Der Kontrollpunkt gibt nicht „erlaubt / verweigert" zurück. Er benennt *eine
+  bestimmte* Komponente, als `requiredComponent: "SecureWireDialog"`, oder er
+  verweigert. Genau diese Komponente und keine andere wird eingebunden. Ein
+  Designsystem, nicht bloß eine Policy-Engine.
+</Callout>
+
+## Drei Schichten, ein Fluss
+
+Unter der Haube besteht SINA aus drei Schichten: Tokens und Primitives, die
+Governance-Naht und die Domänen-Verfassung. Meist denkst du an den Fluss oben.
+Die Schichten sind nur, wie es verpackt ist.
+
+<ArchitectureDiagram />
+
+<Recap>
+Das Modell schlägt eine Absicht vor; der Server prüft sie gegen die Verfassung;
+der Screen bindet nur ein, was durchgekommen ist. Sichere Anfragen werden zu
+echten Komponenten; unsichere werden blockiert oder auf eine geregelte Komponente eskaliert.
+</Recap>
+
+Sieh es echt in Aktion bei [der 60.000-$-Überweisung, von Anfang bis
+Ende](/docs/governance/wire-transfer), oder lies die exakte Form der Entscheidung
+im [Abfang-Vertrag](/docs/concepts/the-contract).

@@ -1,0 +1,41 @@
+---
+title: Escalado y aplicación
+sourceHash: 66219ab514c7
+---
+
+Cuando el control encuentra un problema, no siempre cierra la puerta de golpe.
+Cada infracción lleva una **severidad** que decide qué ocurre a continuación.
+Hay tres.
+
+<EnforcementLadder />
+
+- **`flag`** es informativo. Se registra en la decisión, lo que resulta útil
+  para el cumplimiento y los informes, pero no bloquea nada. Una transferencia
+  de 5.000 $ se marca para revisión y aun así se procesa.
+- **`escalate`** bloquea el renderizado estándar y **fuerza en su lugar un
+  componente más estricto**. La transferencia que supera el límite escala a un
+  `SecureWireDialog` que exige un segundo aprobador. La solicitud se redirige a
+  una ruta más segura, no se rechaza.
+- **`reject`** es un bloqueo total. No se monta nada. Un botón fabricado, datos
+  de tarjeta de contrabando o una transferencia autoaprobada simplemente se
+  rechazan.
+
+<Callout variant="note" title="Una decisión puede llevar varias">
+  Una sola intención puede activar varias infracciones a la vez. La
+  transferencia no aprobada de 60.000 $ se marca dos veces (reportable,
+  revisión) *y* escala una vez. Las marcas quedan registradas; el escalado es lo
+  que fuerza el diálogo.
+</Callout>
+
+<Callout variant="tip" title="Nota honesta">
+  La severidad es una propiedad de la lógica de cada regla, no un interruptor
+  global de encendido/apagado. Para "relajar" la aplicación cambias la regla, o
+  qué intenciones enrutas a través del control. Eso ocurre de forma deliberada,
+  en el código, donde es revisable.
+</Callout>
+
+No tienes que gobernar toda tu aplicación el primer día. Las reglas son
+independientes, así que puedes empezar con una sola intención y expandir desde
+ahí. Consulta [Adoptar de forma incremental](/docs/guides/adopt-incrementally).
+
+Siguiente: [El registro de auditoría](/docs/concepts/audit-trail).

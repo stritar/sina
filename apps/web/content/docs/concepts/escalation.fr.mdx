@@ -1,0 +1,41 @@
+---
+title: Escalade et application
+sourceHash: 66219ab514c7
+---
+
+Quand le contrôle trouve un problème, il ne claque pas toujours la porte. Chaque
+violation porte une **sévérité** qui décide de la suite. Il y en a trois.
+
+<EnforcementLadder />
+
+- **`flag`** est informatif. Il est enregistré sur la décision, ce qui est utile
+  pour la conformité et le reporting, mais ne bloque rien. Un virement de 5 000 $
+  est signalé pour examen et passe quand même.
+- **`escalate`** bloque le rendu standard et **force à la place un composant plus
+  strict**. Le virement au-dessus de la limite est escaladé vers un
+  `SecureWireDialog` qui exige un second approbateur. La demande est redirigée
+  vers un chemin plus sûr, pas refusée.
+- **`reject`** est un blocage net. Rien ne se monte. Un bouton fabriqué, des
+  données de carte passées en fraude ou un virement auto-approuvé sont simplement
+  refusés.
+
+<Callout variant="note" title="Une décision peut en porter plusieurs">
+  Une seule intention peut déclencher plusieurs violations à la fois. Le virement
+  non approuvé de 60 000 $ est signalé deux fois (à déclarer, à examiner) *et*
+  est escaladé une fois. Les signalements sont enregistrés ; l'escalade est ce
+  qui force la boîte de dialogue.
+</Callout>
+
+<Callout variant="tip" title="Note honnête">
+  La sévérité est une propriété de la logique de chaque règle, pas un
+  interrupteur global marche/arrêt. Pour « assouplir » l'application, vous
+  changez la règle, ou les intentions que vous routez à travers le contrôle.
+  Cela se fait délibérément, dans le code, où c'est vérifiable.
+</Callout>
+
+Vous n'avez pas à gouverner toute votre application dès le premier jour. Les
+règles sont indépendantes, vous pouvez donc commencer par une seule intention et
+étendre à partir de là. Voir [Adopter de façon
+incrémentale](/docs/guides/adopt-incrementally).
+
+Suivant : [La piste d'audit](/docs/concepts/audit-trail).

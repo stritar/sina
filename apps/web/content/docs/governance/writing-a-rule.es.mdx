@@ -1,0 +1,102 @@
+---
+title: Escribir una regla de gobernanza
+sourceHash: b78fbff0d2ec
+---
+
+Una regla es un esquema Zod estricto más una comprobación de política citada, que
+vive en `@sina-design-system/fintech`. El límite es estricto: **Zod puro, sin
+React, sin UI**, con el contrato compartido proveniente de
+`@sina-design-system/governance`. Esta guía refleja la skill `/new-schema`; para
+ver una regla terminada en acción, lee
+[la transferencia de 60 000 $](/docs/governance/wire-transfer).
+
+<Callout variant="enforced" title="La regla de oro: nunca inventes un límite">
+  Cada umbral, formato y campo obligatorio debe remontarse a un estándar o a un
+  regulador, con la cita **en el código**: un comentario `// 31 CFR …` en la
+  constante y `standard: "…"` en la infracción. Si no puedes citarlo, no lo
+  codifiques. Citar también marca qué números son ley y cuáles son valores por
+  defecto de producto ajustables.
+</Callout>
+
+<Steps>
+  <Step title="Definir el esquema">
+
+Crea `packages/fintech/src/<name>/<name>.schema.ts`, tomando como modelo el
+esquema insignia `wire-transfer`. Usa un objeto Zod `.strict()` para que las
+claves introducidas de contrabando se rechacen, no se ignoren, y apóyate en las
+primitivas de formato citadas en `src/formats/*`: `currency` (ISO 4217),
+`amount`, `iban`, `bic`, `routing`, `card`. Los importes son **unidades menores**
+enteras, nunca decimales.
+
+  </Step>
+  <Step title="Añadir la comprobación de política">
+
+Cada comprobación de política (límites, velocidad, control dual) produce un
+`Violation` con un `code`, un `message`, un `standard` citado y una severidad:
+`flag` (registrarla), `escalate` (forzar un componente gobernado) o `reject`
+(rechazar de plano); consulta [Escalado](/docs/concepts/escalation). Un escalado
+nombra el `requiredComponent`. La regla debe devolver
+[el contrato](/docs/concepts/the-contract):
+
+```ts
+// pass
+{ valid: true, violations: [], requiredComponent: null }
+// fail
+{ valid: false, violations: [{ code, message, standard }], requiredComponent: "SecureWireDialog" }
+```
+
+Una regla de visualización **no gobernada** es el mismo esqueleto menos política y
+escalado. Es solo de forma (`.strict()`, arreglos acotados, números de cuenta
+enmascarados) y monta un componente presentacional. Usa `/new-display-pattern`
+para eso.
+
+  </Step>
+  <Step title="Registrar la intención">
+
+Añade el verbo a `src/registry.ts` (y a `fintechIntentManifest()`) para que
+`evaluateFintechIntent` pueda enrutarlo. Los verbos no registrados se deniegan
+como `UNKNOWN_INTENT`. Una regla que no está registrada no existe.
+
+  </Step>
+  <Step title="Escribir los fixtures">
+
+Añade `fixtures.ts` junto al esquema: cargas útiles **válidas** que deben pasar y
+cargas útiles **adversarias** que deben bloquearse, como un importe que supera el
+límite, un campo extra introducido de contrabando o un identificador sin
+enmascarar. Tanto las pruebas unitarias como el playground las consumen. Una regla
+no está terminada cuando compila; está terminada cuando una solicitud hostil no
+puede superarla.
+
+  </Step>
+  <Step title="Probar y verificar">
+
+Ejecuta `pnpm --filter @sina-design-system/fintech test`, luego ejercita la regla
+y lee la decisión:
+
+```ts
+const decision = evaluateFintechIntent({
+  intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 */, currency: "USD", /* … */ },
+});
+
+decision.valid;             // false
+decision.requiredComponent; // "SecureWireDialog"
+decision.violations;        // includes AMOUNT_REQUIRES_APPROVAL (escalate)
+```
+
+Cada infracción lleva un `message` y un `standard`, así que puedes mostrar al
+usuario *por qué*, con una cita, en lugar de solo «bloqueado». Baja el importe por
+debajo del límite y vuelve a ejecutar: `valid` cambia a `true`,
+`requiredComponent` es `null` y se monta el resumen normal. El mismo código, un
+resultado seguro.
+
+  </Step>
+</Steps>
+
+Antes de publicar, comprueba que la regla responde a lo básico en una frase cada
+una: qué es, el riesgo que elimina, una solicitud concreta que bloquea, una que
+deja pasar y qué ocurre al dispararse. Si alguna respuesta es difusa, la regla
+también lo es.
+
+Siguiente: [Componentes gobernados y patrones de visualización](/docs/governance/components-and-patterns),
+donde aterriza tu escalado.

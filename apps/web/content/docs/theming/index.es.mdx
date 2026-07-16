@@ -1,0 +1,101 @@
+---
+title: Tematización
+sourceHash: c387f6cda2eb
+---
+
+Un tema en SINA son **los mismos tokens con valores diferentes**. Nunca editas un
+componente para rebrandizarlo. Redefines las propiedades personalizadas `--sina-*`
+y todos los componentes que apuntan a ellas se actualizan. La cascada hace que las
+anulaciones sean triviales: el reset de SINA vive en `@layer reset`, mientras que
+el CSS de los componentes y de la app no está en capas, así que el CSS de tu app
+gana por simple orden de origen. Importa tu bloque de tema después de los estilos
+de SINA y surtirá efecto. Sin recompilación, sin forks.
+
+## Crea un tema de marca
+
+<Steps>
+  <Step title="Anula los roles que llevan tu marca">
+
+Normalmente `primary`, su primer plano legible, hover y quizá radius. Todo lo
+demás se hereda.
+
+```css
+:root {
+  --sina-color-primary: #6d28d9;
+  --sina-color-primary-fg: #ffffff;
+  --sina-color-primary--hover: #5b21b6;
+  --sina-radius--md: 0.5rem; /* softer corners, brand-wide */
+}
+```
+
+  </Step>
+  <Step title="O deja que el helper tipado lo emita">
+
+`createTheme()` en `@sina-design-system/theme` genera el bloque y verifica por
+tipos qué roles tienes permitido tocar:
+
+```ts
+import { createTheme } from "@sina-design-system/theme";
+
+const acme = createTheme(
+  { colors: { primary: "#7c3aed" }, radius: { md: "0.5rem" } },
+  { selector: '[data-theme="acme"]' },
+);
+```
+
+  </Step>
+  <Step title="Delimita su alcance">
+
+Coloca el bloque en `:root` para una sola marca, o bajo `[data-theme="acme"]` para
+varias. Las marcas con alcance se combinan con el modo oscuro. Para una anulación
+local, `themeVars()` devuelve los mismos tokens como un objeto de estilo en línea
+para `style={}`.
+
+  </Step>
+</Steps>
+
+<Callout variant="tip" title="Empieza con poco">
+  La mayoría de las marcas anulan un puñado de roles (`primary`, las superficies,
+  quizá radius) y heredan el resto.
+</Callout>
+
+## El modo oscuro es el mismo truco
+
+`theme.css` incluye un bloque `[data-theme="dark"]` que solo reasigna los mismos
+roles. Cambia `data-theme` en `<html>` y toda la interfaz se recolorea. Un
+conmutador claro / oscuro / sistema no es más que escribir ese atributo y recordar
+la elección en `localStorage`.
+
+## El límite bloqueado
+
+No todos los tokens son tuyos para cambiar, y ese límite es en sí mismo una
+decisión de gobernanza.
+
+| | Roles | |
+|---|---|---|
+| **Abierto a la marca** | `bg` / `surface*` / `text*` / `border*`, `primary*` / `secondary*`, `success` / `warning` / `info`, series de gráficos, `radius` / `space` / `text` / `font` | Tuyos. Rebrandiza libremente. |
+| **Bloqueado por gobernanza** | `danger*`, el tinte de superficie segura, el anillo de foco, los alias `intent-*` | Reservados. La API tipada los rechaza. |
+
+<Callout variant="governance" title="¿Por qué bloquear algo?">
+  Un tema de marca nunca debe hacer que un error parezca tranquilo, ocultar el
+  anillo de foco a los usuarios de teclado ni disfrazar la señal de una acción
+  segura. Eso no es estilo; son señales de seguridad y accesibilidad.
+  `createTheme()` rechaza un rol bloqueado en tiempo de compilación. (El CSS puro
+  todavía puede forzar una variable por especificidad. La API simplemente no te
+  ayudará a hacerlo.)
+</Callout>
+
+<DoDont
+  do={[
+    "Anula primary, las superficies y radius para que coincidan con tu marca",
+    "Usa createTheme() para que los roles bloqueados se detecten en tiempo de compilación",
+    "Vuelve a comprobar el contraste tras un rebrand intenso",
+  ]}
+  dont={[
+    "Reestilizar danger para que parezca amigable; los errores deben leerse como errores",
+    "Eliminar o atenuar el anillo de foco",
+    "Codificar hex a mano en un componente para esquivar el sistema de tokens",
+  ]}
+/>
+
+Siguiente: [Tokens](/docs/theming/tokens), el vocabulario que cada tema revalora.

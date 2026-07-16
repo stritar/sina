@@ -1,0 +1,99 @@
+---
+title: Componentes gobernados y patrones de visualización
+sourceHash: 334943597bf3
+---
+
+Las reglas de la Constitución se resuelven en dos tipos de UI. Los **componentes
+gobernados** renderizan un escalado, el flujo más estricto que una regla impone.
+Los **patrones de visualización** renderizan una lectura limpia. Ninguno valida
+nada por sí mismo; cada uno renderiza la decisión que el control ya tomó
+([Cómo funciona](/docs/how-it-works)).
+
+## Los tres componentes gobernados
+
+Docenas de reglas gobernadas escalan a solo **tres** componentes. Las reglas
+difieren; los destinos seguros son compartidos y están probados en batalla.
+
+- **`SecureWireDialog`**: se fuerza cuando una transferencia necesita un segundo
+  aprobador. Ejecuta el circuito de doble control: revisar los términos exactos →
+  recopilar la identidad de un aprobador *distinto* → confirmar con un código de
+  un solo uso → volver a comprobar en el servidor. Una nueva comprobación denegada
+  mantiene el diálogo abierto, así que no hay forma de «saltárselo con un clic».
+  Consulta [la transferencia de 60.000 $](/docs/governance/wire-transfer).
+- **`GovernedActionDialog`**: se fuerza cuando escala casi cualquier otra acción
+  sujeta a autorización: ACH, P2P, pago de facturas, FX, operaciones con tarjeta,
+  cambios de límite, apertura de cuenta, operaciones bursátiles. La misma forma que
+  el diálogo de transferencia, con los términos derivados de la acción. Así es como
+  SINA cubre toda una aplicación bancaria sin un diálogo a medida por cada flujo.
+- **`MandatoryDisclosure`**: se fuerza cuando el usuario debe reconocer un texto
+  obligatorio: idoneidad de margen, una divulgación crediticia (TILA), un aviso de
+  diferencial de FX. El texto proviene de la regla, no del modelo, de modo que una
+  IA no puede suavizar, acortar ni omitir un aviso legalmente exigido.
+
+<Callout variant="note" title="Las mismas fases siempre">
+  Los tres comparten una única máquina de estados: revisar → recopilar →
+  pendiente → resuelto. Un patrón de interacción que aprender, un conjunto de
+  estados que probar, una experiencia accesible en cada flujo gobernado.
+</Callout>
+
+## Patrones de visualización
+
+Una aplicación real pasa la mayor parte del tiempo *mostrando* cosas. Una regla de
+visualización no tiene límites ni aprobaciones, pero aun así comprueba la **forma**
+(análisis estricto), los **límites** (las listas están acotadas) y la **privacidad**
+(los identificadores deben enmascararse). Supera las tres y SINA monta un componente
+presentacional: `TransactionList`, `BalanceCard`, `PortfolioHoldings` y sus
+hermanos, unas dos docenas, uno por cada tipo de lectura.
+
+Dos propiedades hacen el trabajo de seguridad. El modelo elige *qué* mostrar, pero
+**tu servidor suministra los valores**, así que no puede inventar un saldo. Y las
+lecturas son de **solo lectura**: ningún componente de visualización renderiza un
+botón de acción directo. Actuar desde una lista (disputar un cargo, pagar una
+factura) es una nueva intención que vuelve a entrar en el control.
+
+## El registro de intenciones
+
+El modelo elige un **verbo** de `fintechIntentManifest()`; el registro lo asigna a
+su regla y su componente. El modelo nunca nombra un componente.
+
+| Intención | Tipo | Monta / escala a |
+|---|---|---|
+| `wire_transfer` | Gobernado | `SecureWireDialog` |
+| `ach_transfer` · `p2p_payment` · `bill_pay` · `fx_convert` · `withdraw` | Gobernado | `GovernedActionDialog` |
+| `add_payee` · `link_account` · `kyc` · `change_limit` · `issue_card` · `card_control` · `security_change` | Gobernado | `GovernedActionDialog` |
+| `place_trade` · `enable_margin` · `credit_request` | Gobernado | `GovernedActionDialog` · `MandatoryDisclosure` |
+| `disclosure` | Gobernado | `MandatoryDisclosure` |
+| `list_transactions` | Visualización | `TransactionList` |
+| `account_balance` | Visualización | `BalanceCard` |
+| `portfolio_holdings` | Visualización | `PortfolioHoldings` |
+| `spending_breakdown` · `budget_progress` · `list_cards` · `list_payees` · … | Visualización | lecturas presentacionales |
+
+<Callout variant="note" title="Los verbos desconocidos se deniegan">
+  Una intención que no está en el registro se rechaza como `UNKNOWN_INTENT`, y aun
+  así se audita. El valor por defecto es denegar, no dejar pasar.
+</Callout>
+
+## El catálogo `@sina-design-system/fintech`
+
+Los esquemas viven en `@sina-design-system/fintech`: Zod puro, sin React, sin UI.
+Un único punto de entrada enruta todo:
+
+```ts
+import { evaluateFintechIntent } from "@sina-design-system/fintech";
+
+const { valid, violations, requiredComponent } = evaluateFintechIntent({
+  intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 in minor units */ },
+});
+```
+
+| Grupo | Contenido |
+|---|---|
+| Esquemas gobernados | `wire-transfer`, `ach-transfer`, `p2p-payment`, `bill-pay`, `fx-convert`, `add-payee`, `kyc`, `issue-card`, `card-control`, `change-limit`, `place-trade`, `credit-request`, … |
+| Esquemas de visualización | `transaction-list`, `account-balance`, `portfolio-holdings`, `spending-breakdown`, … |
+| Primitivas de formato | `currency` (ISO 4217), `amount` (unidades menores enteras), `iban` (ISO 13616), `bic` (ISO 9362), `routing` (ABA), `card` (Luhn), `masked-account`, `step-up` |
+| Umbrales citados | `thresholds.ts`: cada límite numérico como una constante con nombre y su cita |
+| Fixtures | cada esquema incluye cargas válidas y adversarias en `fixtures.ts` |
+
+El catálogo autoritativo es `packages/fintech/PATTERNS.md`. Para ampliarlo:
+[Escribe una regla de gobernanza](/docs/governance/writing-a-rule).

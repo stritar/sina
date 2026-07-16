@@ -1,0 +1,39 @@
+---
+title: PieChart
+sourceHash: 04cd69ecc19c
+---
+
+import { PieChartHero, PieChartExamples } from "@/app/components/docs/demos/primitives/pie-chart";
+
+<PieChartHero />
+
+`PieChart` zeigt, wie sich ein Ganzes in Teile aufteilt. Die Segmente stammen aus
+der Palette `--sina-color-chart--1…8`, in einer für Farbenblinde sicheren
+Reihenfolge angeordnet. Für eine zentrierte Zusammenfassungszahl verwenden Sie
+[DonutChart](/docs/primitives/donut-chart).
+
+## Verwendung
+
+```tsx
+import { PieChart } from "@sina-design-system/core";
+
+<PieChart label="Portfolio allocation" data={{ labels, datasets }} />
+```
+
+## Beispiele
+
+<PieChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "Erforderlicher barrierefreier Name." },
+    { prop: "data", type: "ChartData", description: "Die zu plottenden Teile (Chart.js-Format)." },
+    { prop: "valueFormatter", type: "(n: number) => string", description: "Formatiert die Tooltip-Werte." },
+  ]}
+/>
+
+## Barrierefreiheit
+
+`"use client"`, `role="img"`, mit einer Textlegende als barrierefreiem Pfad.

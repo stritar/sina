@@ -1,0 +1,40 @@
+---
+title: Tooltip
+sourceHash: eebffdf933bd
+---
+
+import { TooltipHero, TooltipExamples } from "@/app/components/docs/demos/primitives/tooltip";
+
+<TooltipHero />
+
+`Tooltip` muestra una pequeña indicación cuando el usuario pasa el cursor sobre un
+control o lo enfoca. Úsalo para aclarar un botón de icono o añadir un detalle,
+nunca para información que el usuario *necesita* para completar una tarea, ya que
+está oculto por defecto y no está disponible en pantallas táctiles.
+
+## Uso
+
+```tsx
+import {
+  TooltipProvider, Tooltip, TooltipTrigger, TooltipContent,
+} from "@sina-design-system/core";
+
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button variant="ghost" aria-label="Info"><Icon …/></Button>
+    </TooltipTrigger>
+    <TooltipContent>Groups digits on blur.</TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+```
+
+## Ejemplos
+
+<TooltipExamples />
+
+## Accesibilidad
+
+Se abre al pasar el cursor **y** con el foco del teclado, se cierra con `Esc` y se
+anuncia mediante `aria-describedby`. El disparador todavía necesita su propia
+etiqueta accesible.

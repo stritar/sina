@@ -1,0 +1,38 @@
+---
+title: VisuallyHidden
+sourceHash: 09d33ae53403
+---
+
+import { VisuallyHiddenHero, VisuallyHiddenExamples } from "@/app/components/docs/demos/primitives/visually-hidden";
+
+<VisuallyHiddenHero />
+
+`VisuallyHidden` oculta contenido visualmente pero lo mantiene disponible para la
+tecnología de asistencia. Úsalo para dar un nombre a un botón de solo icono, o para
+añadir el contexto que un lector de pantalla necesita pero que la disposición ya
+sugiere.
+
+## Uso
+
+```tsx
+import { VisuallyHidden } from "@sina-design-system/core";
+
+<button>
+  <Icon icon={X} decorative />
+  <VisuallyHidden>Close dialog</VisuallyHidden>
+</button>
+```
+
+## Ejemplos
+
+No puedes ver el texto oculto en ninguna de las vistas previas, pero un lector de
+pantalla lo anuncia, de modo que el botón de solo icono se lee como «Cerrar, botón».
+
+<VisuallyHiddenExamples />
+
+## Accesibilidad
+
+Esta es la forma accesible de ocultar texto, a diferencia de `display: none` (que lo
+elimina para todos) o de los trucos de posicionamiento fuera de pantalla (que pueden
+comportarse mal). Recurre a él siempre que el diseño visual omita una etiqueta que un
+lector de pantalla todavía necesita.

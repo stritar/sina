@@ -1,0 +1,48 @@
+---
+title: Alert
+sourceHash: 4b6702614a41
+---
+
+import { AlertHero, AlertExamples } from "@/app/components/docs/demos/primitives/alert";
+
+<AlertHero />
+
+`Alert` kommuniziert einen dauerhaften, eingebetteten Status: eine Warnung über
+einem Formular, eine Erfolgsbestätigung, die Erklärung eines Fehlers.
+
+## Verwendung
+
+```tsx
+import { Alert } from "@sina-design-system/core";
+
+<Alert variant="warning" title="Approval required">
+  This transfer needs a second approver before it can proceed.
+</Alert>
+```
+
+## Beispiele
+
+<AlertExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "variant", type: '"info" | "success" | "warning" | "danger"', default: '"info"', description: "Schweregrad. Wählt außerdem das Status-Glyph aus." },
+    { prop: "title", type: "ReactNode", description: "Fette Überschrift für die Meldung." },
+    { prop: "icon", type: "ReactNode | false", description: "Tauschen Sie das Glyph aus oder blenden Sie es für info/success aus (niemals für warning/danger)." },
+  ]}
+/>
+
+<Callout variant="warning" title="Zwei Regeln für den Status">
+  Alerts mit warning und danger rendern **immer** ein fettes Glyph. Sie können es
+  austauschen, aber nicht entfernen. Und verschachteln Sie niemals ein
+  Status-Element in einem anderen: ein Badge gehört *neben* einen Alert, nicht
+  hinein.
+</Callout>
+
+## Barrierefreiheit
+
+danger-Alerts verwenden `role="alert"` (assertiv angekündigt); die übrigen
+verwenden `role="status"` (höflich). Die Bedeutung wird durch Symbol + Titel +
+Text vermittelt, niemals allein durch Farbe.

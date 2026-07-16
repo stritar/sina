@@ -1,0 +1,31 @@
+---
+title: VisuallyHidden
+sourceHash: 09d33ae53403
+---
+
+import { VisuallyHiddenHero, VisuallyHiddenExamples } from "@/app/components/docs/demos/primitives/visually-hidden";
+
+<VisuallyHiddenHero />
+
+`VisuallyHidden` はコンテンツを視覚的に隠しつつ、支援技術からは利用できる状態に保ちます。アイコンのみのボタンに名前を与えたり、レイアウトがすでに暗示しているものの、スクリーンリーダーが必要とする文脈を補ったりするのに使います。
+
+## 使い方
+
+```tsx
+import { VisuallyHidden } from "@sina-design-system/core";
+
+<button>
+  <Icon icon={X} decorative />
+  <VisuallyHidden>Close dialog</VisuallyHidden>
+</button>
+```
+
+## 例
+
+どちらのプレビューでも隠されたテキストは見えませんが、スクリーンリーダーはそれを読み上げます。そのため、アイコンのみのボタンは「閉じる、ボタン」と読み上げられます。
+
+<VisuallyHiddenExamples />
+
+## アクセシビリティ
+
+これはテキストを隠すためのアクセシブルな方法で、（すべての人から取り除いてしまう）`display: none` や、（誤作動しうる）画面外へ飛ばすハックとは異なります。視覚的なデザインが、スクリーンリーダーがなお必要とするラベルを省いている場合には、いつでもこれを使ってください。

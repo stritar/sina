@@ -1,0 +1,76 @@
+---
+title: Gobernanza en la práctica
+sourceHash: 59e77ad9a788
+---
+
+[Cómo funciona](/docs/how-it-works) explica *cómo* decide SINA. Esta sección es
+el *qué*: las reglas reales que se incluyen hoy, para fintech, y por qué puedes
+confiar en ellas.
+
+La Constitución se divide en dos tipos de regla, y cada intención es uno u otro:
+
+- Las reglas **gobernadas** cubren **acciones**: mover dinero, abrir cuentas,
+  emitir tarjetas. Llevan política (límites, aprobaciones, divulgaciones) y pueden
+  escalar a un componente más estricto.
+- Las reglas de **visualización** cubren **lecturas**: saldos, transacciones,
+  posiciones. Comprueban la *forma* de los datos (y enmascaran campos sensibles) y
+  luego montan un componente presentacional. Nunca escalan.
+
+El catálogo completo de qué intenciones existen y qué monta cada una está en
+[Componentes gobernados y patrones de visualización](/docs/governance/components-and-patterns).
+
+<BeforeAfter>
+<Before title="Reglas basadas en prompts">
+"Nunca muevas más de 10.000 $ sin aprobación" vive en un prompt de sistema. Se
+mantiene hasta que el modelo se confunde, es vulnerado o simplemente se equivoca.
+</Before>
+<After title="Reglas de la Constitución">
+El límite de 10.000 $ es una comprobación de Zod que se ejecuta en el servidor en
+cada solicitud. El modelo no puede convencer a un parser con palabras.
+</After>
+</BeforeAfter>
+
+## Cada umbral tiene una fuente
+
+Un sistema de gobernanza solo es fiable si sus reglas son *defendibles*. Por eso
+cada regla lleva su fuente. Cuando el control bloquea algo, la infracción incluye
+un `standard`, la regulación o política de la que procede, y esa cita queda
+registrada en el [registro de auditoría](/docs/concepts/audit-trail). Un bloqueo
+nunca es un misterio.
+
+El código mantiene separados tres tipos de regla: estándares de **formato**
+(ISO 4217, IBAN, Luhn), umbrales **regulatorios** de la regulación financiera real
+(las bandas de CTR, SAR y la Travel Rule de FinCEN; FATF; Nacha), que no te
+corresponde relajar a la ligera, y valores predeterminados de **política de SINA**
+que se espera que ajustes a tu propio apetito de riesgo (el límite de doble
+control de 50.000 $ para transferencias, los topes de autorización por vía).
+
+La lista completa, y lo que SINA *realmente* comprueba en cada caso, está en
+[Estándares y citas](/docs/governance/standards).
+
+## El modelo de amenazas
+
+SINA asume que la IA que produce las intenciones puede estar equivocada, vulnerada
+o ser activamente hostil. La pregunta de diseño nunca es "¿se comportará el
+modelo?" Es "¿qué pasa cuando no lo hace?"
+
+| El ataque | Qué intenta | Por qué falla |
+|---|---|---|
+| **Control fabricado** | Colar un `confirmButton` en el payload | Esquema estricto; los campos desconocidos se rechazan antes de leer ningún valor |
+| **Datos de tarjeta colados** | Incluir un `cvv` o un PAN completo | El mismo análisis estricto; la redacción lo enmascara antes de que llegue a un registro |
+| **Acción por encima del límite** | Una transferencia de 60.000 $ sin aprobación | La política escala a un diálogo de segundo aprobador; la confirmación en bruto no puede montarse |
+| **Autoaprobación** | Aprobar tu propia transferencia | Comprobación de cuatro ojos: el aprobador debe ser distinto del iniciador conocido por el servidor |
+| **Cambiazo** | Aprobar 5.000 $ y luego ejecutar 60.000 $ | La aprobación se vincula a los términos exactos, recalculados en el servidor |
+| **Datos fabricados** | Inventar un saldo o una transacción | En las lecturas, el servidor aporta los valores; el modelo solo elige *qué* mostrar |
+| **Exfiltración de datos** | Devolver un número de cuenta sin enmascarar | Los esquemas de visualización exigen identificadores enmascarados |
+| **Inundación** | Enviar 10.000 filas para congelar el cliente | Los arrays están acotados |
+
+<Callout variant="enforced" title="Esto no son hipótesis">
+  Cada fila de arriba es un payload real en la suite de pruebas de SINA. La
+  compilación falla si alguno de ellos deja de estar bloqueado, así que las
+  garantías no pueden pudrirse en silencio.
+</Callout>
+
+Observa cómo varios de estos ataques se desarrollan en una solicitud real:
+[la transferencia de 60.000 $, de principio a fin](/docs/governance/wire-transfer). Luego
+[escribe tu propia regla](/docs/governance/writing-a-rule).

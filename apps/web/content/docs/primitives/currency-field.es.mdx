@@ -1,0 +1,38 @@
+---
+title: CurrencyField
+sourceHash: c10a09a690cc
+---
+
+import { CurrencyFieldHero, CurrencyFieldExamples } from "@/app/components/docs/demos/primitives/currency-field";
+
+<CurrencyFieldHero />
+
+`CurrencyField` da formato a un importe monetario como esperarías, agrupando los
+miles al perder el foco, y manteniendo un valor numérico limpio por debajo.
+
+## Uso
+
+```tsx
+import { CurrencyField } from "@sina-design-system/core";
+
+<CurrencyField label="Amount" currencySymbol="$" defaultValue="25000" />
+```
+
+## Ejemplos
+
+<CurrencyFieldExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "currencySymbol", type: "string", default: '"$"', description: "El símbolo que se muestra antes del importe." },
+    { prop: "label / description / error", type: "ReactNode", description: "Se pasa al Field que lo envuelve." },
+  ]}
+/>
+
+<Callout variant="governance" title="Formato, no imposición">
+  Esto es solo visual. No detendrá un importe que supere el límite; ese es el
+  trabajo del control, en el servidor. Una entrada del lado del cliente siempre
+  puede eludirse, por lo que SINA nunca confía en ella para un límite.
+</Callout>

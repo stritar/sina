@@ -1,0 +1,43 @@
+---
+title: Field
+sourceHash: 3149887e8df2
+---
+
+import { FieldHero, FieldExamples } from "@/app/components/docs/demos/primitives/field";
+
+<FieldHero />
+
+`Field` est le conteneur qu'utilise chaque champ de saisie. Il rend une étiquette,
+une description et une erreur optionnelles, et clone son enfant pour les relier
+avec le bon `id`, le bon `aria-describedby` et le bon `aria-invalid`. Vous obtenez
+une accessibilité de formulaire correcte sans câbler les identifiants à la main.
+
+## Utilisation
+
+```tsx
+import { Field } from "@sina-design-system/core";
+
+<Field label="Email" description="We'll never share it." error={errors.email}>
+  <input type="email" name="email" />
+</Field>
+```
+
+## Exemples
+
+<FieldExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "ReactNode", description: "L'étiquette du champ (associée au contrôle)." },
+    { prop: "description", type: "ReactNode", description: "Texte d'aide sous l'étiquette." },
+    { prop: "error", type: "ReactNode", description: "Un message d'erreur. Définit aria-invalid et affiche un glyphe d'avertissement en gras." },
+  ]}
+/>
+
+<Callout variant="note" title="Les erreurs portent un glyphe">
+  Lorsque `error` est défini, Field rend le glyphe d'avertissement en gras
+  obligatoire à côté du message, jamais la couleur seule. C'est une règle valable
+  dans tout SINA pour les états d'erreur et d'avertissement.
+</Callout>

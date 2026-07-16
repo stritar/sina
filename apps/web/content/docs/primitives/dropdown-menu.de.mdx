@@ -1,0 +1,52 @@
+---
+title: DropdownMenu
+sourceHash: 589f5b32ad6e
+---
+
+import { DropdownMenuHero, DropdownMenuExamples } from "@/app/components/docs/demos/primitives/dropdown-menu";
+
+<DropdownMenuHero />
+
+`DropdownMenu` ist ein zusammengesetztes Menü aus *Befehlen*, das von einem
+Auslöser ausgelöst wird. Verwenden Sie es, wenn jeder Eintrag etwas **tut**; wenn
+die Einträge **Werte** sind, die das Steuerelement hält, greifen Sie stattdessen
+zu [Select](/docs/primitives/select). Die Schaltfläche „Seite kopieren“ auf dieser
+Seite ist ein `DropdownMenu`.
+
+## Verwendung
+
+```tsx
+import {
+  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem,
+} from "@sina-design-system/core";
+
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="secondary">Page actions</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem onSelect={openInClaude}>Open in Claude</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+## Beispiele
+
+<DropdownMenuExamples />
+
+## Bestandteile
+
+`DropdownMenu` · `DropdownMenuTrigger` · `DropdownMenuContent` ·
+`DropdownMenuItem` · `DropdownMenuGroup` · `DropdownMenuLabel` ·
+`DropdownMenuSeparator`.
+
+`DropdownMenuContent` verwendet standardmäßig `align="end"` und `sideOffset={4}`;
+beide sowie alle anderen Radix-Content-props werden weitergereicht. Ein Eintrag
+wird mit `asChild` zu einem Link.
+
+## Barrierefreiheit
+
+Folgt dem ARIA-Menümuster: `Enter` oder `Space` öffnet das Menü und fokussiert den
+ersten Eintrag, die Pfeiltasten wandern durch die Einträge, Typeahead springt,
+`Esc` schließt und gibt den Fokus an den Auslöser zurück. Alles bereits für Sie
+erledigt.

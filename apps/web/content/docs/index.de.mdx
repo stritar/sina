@@ -1,0 +1,89 @@
+---
+title: Einführung
+sourceHash: 5b59fa0820fc
+---
+
+SINA ist ein **Designsystem mit eingebauter Governance**, für Anwendungen, in
+denen eine KI einen Teil der Oberfläche generiert.
+
+Es hindert ein Modell daran, eine Oberfläche zu rendern, die gegen deine
+**Richtlinienlimits, deine Compliance-Regeln oder deine Barrierefreiheitsstandards**
+verstößt.
+
+
+Du schreibst diese Regeln als Code; das Modell sendet eine Absicht; dein Server
+validiert sie, und erst dann wird eine Komponente gerendert.
+
+Das ist ganz normales bedingtes Rendern, dieselbe Entscheidung, die React
+trifft, wenn es einem nicht angemeldeten Nutzer ein Anmeldefeld zeigt. SINA
+verlagert diese Entscheidung auf deinen Server und stellt ihr eine schwierigere
+Frage: Hätte eine KI das überhaupt rendern dürfen?
+
+Der Unterschied liegt darin, wer entscheidet. In reinem React schreibst
+du das `if` selbst. Mit SINA schlägt das Modell die Oberfläche vor, und eine
+Regel auf deinem Server entscheidet, ob sie angezeigt wird, sodass niemand
+dieses `if` von Hand geschrieben hat. React hat keine Meinung dazu, ob man
+einem Modell trauen kann. SINA existiert gerade deshalb, weil man es nicht
+kann.
+
+<SameModelDiagram />
+
+## Das Problem, das es löst
+
+Bitte eine KI, eine Überweisungsbestätigung zu rendern, und sie wird eine
+rendern, auch über 60.000 $, die niemand genehmigt hat, oder ein Dropdown, das
+ein Screenreader nicht bedienen kann. Das Ergebnis sieht korrekt aus, und genau
+deshalb geht es in Produktion.
+
+SINA sitzt stattdessen im Renderpfad: Das Modell sendet eine
+<Term term="intent">Absicht</Term>, dein Server prüft sie gegen die
+<Term term="constitution">Verfassung</Term>, deine als Code geschriebenen Regeln,
+und nur was besteht, wird gerendert.
+
+<Callout variant="governance" title="Die Regel">
+  Das Modell schlägt vor; der Server entscheidet; der Bildschirm zeigt nur, was bestanden hat. SINA nennt das **erst validieren, dann einbinden**.
+</Callout>
+
+Da diese Regeln ein versioniertes Schema sind, wird jede Entscheidung, die es
+trifft, als [Audit-Ereignis](/docs/concepts/audit-trail) festgehalten, nicht in
+einem `if` vergraben.
+
+## Wie es sich vergleicht
+
+| | Was es ist | Stoppt unsichere Oberfläche? |
+|---|---|---|
+| **Ein Styleguide / Wiki** | Ratschläge, die Menschen (und KIs) ignorieren können | Nein, nur beratend |
+| **Eine Komponentenbibliothek** (Radix, shadcn) | Großartige barrierefreie Teile | Nein, Teile lassen sich weiterhin falsch verwenden |
+| **SINA** | Barrierefreie Teile **+** eine serverseitige Prüfung | **Ja, durch Code erzwungen** |
+
+SINA ist kein Konkurrent zu einer Komponentenbibliothek. Es *enthält* eine
+(barrierefreie Primitives auf Radix) und ergänzt die Prüfung obendrauf.
+
+## Für wen es ist
+
+SINA ist **kostenlos** (MIT), gebaut für Startups und einzelne Entwickler, die
+die Governance-Schicht wollen, ohne sie selbst auf einer KI aufzubauen, die aus
+dem Ruder laufen kann. Die mitgelieferten Regeln decken heute **fintech** ab:
+Geldbewegung, Konten, Karten.
+
+Die Governance braucht zwei Dinge von dir: eine KI, die deine Oberfläche
+generiert, und einen Server, auf dem die Prüfung läuft. Wenn du nicht beides
+hast, funktionieren SINAs barrierefreie Komponenten [trotzdem für sich allein](/docs/guides/adopt-incrementally).
+Du erhältst nur nicht die Governance.
+
+## Fang hier an
+
+<CardGrid columns={2}>
+  <Card href="/docs/how-it-works" eyebrow="5 Min." title="Wie SINA funktioniert">
+    Der ganze Mechanismus auf einer Seite, kein Code nötig, um zu folgen.
+  </Card>
+  <Card href="/docs/quickstart" eyebrow="10 Min." title="Schnellstart">
+    Installiere die Pakete und rendere deine erste geregelte Entscheidung.
+  </Card>
+  <Card href="/docs/governance/wire-transfer" eyebrow="Live-Demo" title="Die 60.000-$-Überweisung, Ende zu Ende">
+    Sieh zu, wie die echte Prüfung eine sichere Überweisung durchlässt und eine unsichere blockiert.
+  </Card>
+  <Card href="/docs/primitives" eyebrow="Galerie" title="Primitives">
+    28 barrierefreie Komponenten, live auf jeder Seite.
+  </Card>
+</CardGrid>

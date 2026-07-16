@@ -1,0 +1,46 @@
+---
+title: Badge
+sourceHash: 4d4d24138038
+---
+
+import { BadgeHero, BadgeExamples } from "@/app/components/docs/demos/primitives/badge";
+
+<BadgeHero />
+
+`Badge` es un pequeño chip que etiqueta el estado de algo en línea: una fila, una
+tarjeta, un encabezado.
+
+## Uso
+
+```tsx
+import { Badge } from "@sina-design-system/core";
+
+<Badge intent="success">Verified</Badge>
+<Badge intent="danger" dot>Blocked</Badge>
+```
+
+## Ejemplos
+
+<BadgeExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "intent", type: '"neutral" | "info" | "success" | "warning" | "danger"', default: '"neutral"', description: "Color y significado." },
+    { prop: "size", type: '"sm" | "md"', default: '"md"', description: "Tamaño del chip." },
+    { prop: "icon", type: "ReactNode", description: "Un glifo inicial (hereda el color de la etiqueta)." },
+    { prop: "dot", type: "boolean", default: "false", description: "Un punto de estado inicial." },
+  ]}
+/>
+
+<Callout variant="note" title="Se aplican las reglas de estado">
+  Un Badge `danger` o `warning` renderiza un glifo en negrita automáticamente. Y un Badge es un
+  elemento de estado, así que nunca lo renderices dentro de un Alert o un Toast. Colócalo como hermano.
+</Callout>
+
+## Accesibilidad
+
+El significado nunca se transmite solo por el color. Un Badge de severidad siempre acompaña su
+tono con un glifo o un punto más una etiqueta de texto. El botón de cierre de un Badge descartable
+toma un `closeLabel` explícito.

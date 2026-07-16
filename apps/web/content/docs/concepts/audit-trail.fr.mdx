@@ -1,0 +1,51 @@
+---
+title: La piste d'audit
+sourceHash: 37daeb373c64
+---
+
+Chaque décision que prend le contrôle émet un <Term term="audit event">événement
+d'audit</Term>. C'est ce qui transforme « l'IA a construit un écran » en « voici
+exactement ce qu'elle a demandé, ce que nous avons décidé et pourquoi ». La
+conformité peut l'examiner, vous pouvez déboguer avec, et les utilisateurs
+peuvent avoir la certitude que rien ne s'est passé en dehors du registre.
+
+## La forme
+
+```ts
+type AuditEvent = {
+  timestamp: string;
+  decisionId: string;
+  version: string;
+  payload: unknown;        // redacted (see below)
+  result: InterceptionResult;
+  violations: Violation[]; // each with its cited standard
+  decidedComponent: string | null;
+};
+```
+
+Comme chaque violation porte son `standard`, l'enregistrement ne dit pas
+simplement « nous l'avons bloqué ». Il indique *quelle règle* l'a bloqué et *d'où
+vient cette règle*.
+
+## L'expurgation a lieu en premier
+
+La charge utile est **expurgée avant même d'être stockée** :
+
+- **Supprimés** entièrement : les codes de sécurité des cartes (CVV) et les codes PIN.
+- **Masqués** aux quatre derniers chiffres : les numéros de carte (PAN).
+- **Hachés** en une empreinte : les numéros de compte et d'IBAN, suffisant pour
+  corréler deux événements et jamais suffisant pour reconstituer le numéro.
+
+<Callout variant="governance" title="Sûr par construction">
+  L'expurgation n'est pas un réglage que vous pourriez oublier d'activer. Elle
+  s'exécute dans le cadre de l'émission de l'événement, de sorte qu'un flux
+  hostile ne peut pas glisser de données sensibles dans le journal d'audit.
+</Callout>
+
+<Callout variant="note" title="Où cela va">
+  Aujourd'hui, l'événement d'audit est un contrat défini doté d'un puits sans
+  effet. La forme est figée et chaque décision en émet un. Le raccorder à un
+  puits durable est un travail de durcissement prévu pour la mise en production.
+</Callout>
+
+Suivant : [Pour les agents IA](/docs/agents).

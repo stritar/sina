@@ -1,0 +1,48 @@
+---
+title: KpiStat
+sourceHash: 435e274ef4a2
+---
+
+import { KpiStatHero, KpiStatExamples } from "@/app/components/docs/demos/primitives/kpi-stat";
+
+<KpiStatHero />
+
+`KpiStat` zeigt eine wichtige Zahl groß an, mit einem optionalen Vergleich, der
+als Trend-Badge dargestellt wird (standardmäßig ist ein Anstieg gut).
+
+## Verwendung
+
+```tsx
+import { KpiStat } from "@sina-design-system/core";
+
+<KpiStat
+  value={12500}
+  comparisonValue={11800}
+  valueFormatter={(v) => `$${v.toLocaleString("en-US")}`}
+  comparisonLabel="vs last month"
+/>
+```
+
+## Beispiele
+
+<KpiStatExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "value", type: "number | null", description: "Die Hauptzahl; null rendert displayNullAs." },
+    { prop: "valueFormatter", type: "(value: number) => string", description: "Formatiert den Wert und das Delta (Währung usw.)." },
+    { prop: "comparisonValue", type: "number", description: "Ein früherer Wert. Rendert die Trend-Pille." },
+    { prop: "comparisonLabel", type: "string", description: "Kontext unter der Pille, z. B. „gegenüber dem Vorzeitraum“." },
+    { prop: "showChangeAsPercentage", type: "boolean", default: "false", description: "Zeigt das Delta als Prozentsatz an." },
+    { prop: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Kachelgröße." },
+    { prop: "invertChangeColors", type: "boolean", default: "false", description: "Wenn ein Rückgang gut ist (z. B. Ausgaben)." },
+  ]}
+/>
+
+## Barrierefreiheit
+
+Ein fallender Trend verwendet ein Gefahren-Badge mit einem fetten Abwärts-Glyph,
+sodass die Bedeutung nie allein auf der Farbe beruht. Alles ist echter Text (kein
+Bild, kein Canvas) und serverseitig einbindbar (kein Client-JS).

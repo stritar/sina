@@ -1,0 +1,37 @@
+---
+title: Progress
+sourceHash: 538c1101fa22
+---
+
+import { ProgressHero, ProgressExamples } from "@/app/components/docs/demos/primitives/progress";
+
+<ProgressHero />
+
+`Progress` 用于显示任务的完成进度。传入 `value` 表示确定进度；省略它则为不确定进度条。
+
+## 用法
+
+```tsx
+import { Progress } from "@sina-design-system/core";
+
+<Progress value={62} />      {/* 62% */}
+<Progress />                 {/* indeterminate */}
+```
+
+## 示例
+
+<ProgressExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "value", type: "number", description: "0 到 100。省略则为不确定进度条。" },
+    { prop: "label", type: "string", description: "进度条的无障碍名称。" },
+  ]}
+/>
+
+## 无障碍
+
+基于 Radix Progress 构建，带有 `role="progressbar"` 以及正确的
+`aria-valuenow` / `aria-valuemin` / `aria-valuemax`。

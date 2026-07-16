@@ -1,0 +1,37 @@
+---
+title: Spinner
+sourceHash: e45c315d4436
+---
+
+import { SpinnerHero, SpinnerExamples } from "@/app/components/docs/demos/primitives/spinner";
+
+<SpinnerHero />
+
+`Spinner` indica que algo está ocurriendo, pero no sabes cuánto tiempo tardará.
+Para una duración conocida, usa [Progress](/docs/primitives/progress) en su lugar.
+
+## Uso
+
+```tsx
+import { Spinner } from "@sina-design-system/core";
+
+<Spinner size="md" label="Loading transactions" />
+```
+
+## Ejemplos
+
+<SpinnerExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Tamaño del indicador." },
+    { prop: "label", type: "string", description: "Se anuncia a los lectores de pantalla (oculto visualmente)." },
+  ]}
+/>
+
+## Accesibilidad
+
+La animación respeta `prefers-reduced-motion`. Pasa siempre una `label` para que la
+espera se anuncie, en lugar de ser silenciosa.

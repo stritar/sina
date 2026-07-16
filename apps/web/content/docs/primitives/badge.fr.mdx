@@ -1,0 +1,46 @@
+---
+title: Badge
+sourceHash: 4d4d24138038
+---
+
+import { BadgeHero, BadgeExamples } from "@/app/components/docs/demos/primitives/badge";
+
+<BadgeHero />
+
+`Badge` est une petite puce qui indique en ligne le statut de quelque chose : une ligne, une
+carte, un titre.
+
+## Utilisation
+
+```tsx
+import { Badge } from "@sina-design-system/core";
+
+<Badge intent="success">Verified</Badge>
+<Badge intent="danger" dot>Blocked</Badge>
+```
+
+## Exemples
+
+<BadgeExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "intent", type: '"neutral" | "info" | "success" | "warning" | "danger"', default: '"neutral"', description: "Couleur et signification." },
+    { prop: "size", type: '"sm" | "md"', default: '"md"', description: "Taille de la puce." },
+    { prop: "icon", type: "ReactNode", description: "Un glyphe en tête (hérite de la couleur du libellé)." },
+    { prop: "dot", type: "boolean", default: "false", description: "Un point de statut en tête." },
+  ]}
+/>
+
+<Callout variant="note" title="Les règles de statut s'appliquent">
+  Un Badge `danger` ou `warning` affiche automatiquement un glyphe en gras. Et un Badge est un
+  élément de statut, donc ne le rendez jamais à l'intérieur d'un Alert ou d'un Toast. Placez-le en tant que frère.
+</Callout>
+
+## Accessibilité
+
+La signification n'est jamais portée par la couleur seule. Un Badge de sévérité associe toujours sa
+teinte à un glyphe ou un point ainsi qu'à un libellé textuel. Le bouton de fermeture d'un Badge que l'on
+peut fermer prend un `closeLabel` explicite.

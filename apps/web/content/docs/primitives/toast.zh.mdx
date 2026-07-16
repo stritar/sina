@@ -1,0 +1,42 @@
+---
+title: Toast
+sourceHash: 9f523a8662a1
+---
+
+import { ToastHero, ToastExamples } from "@/app/components/docs/demos/primitives/toast";
+
+<ToastHero />
+
+`Toast` 是一种简短、非阻塞的通知：「已保存」「转账已发送」「复制失败」。挂载一次
+provider 和 viewport，然后按需推送 toast。
+
+## 用法
+
+```tsx
+import {
+  ToastProvider, ToastViewport, Toast, ToastTitle, ToastDescription,
+} from "@sina-design-system/core";
+
+<ToastProvider>
+  <Toast variant="success" open={open} onOpenChange={setOpen}>
+    <ToastTitle>Transfer sent</ToastTitle>
+    <ToastDescription>$500 to Beta LLC.</ToastDescription>
+  </Toast>
+  <ToastViewport />
+</ToastProvider>
+```
+
+## 示例
+
+<ToastExamples />
+
+## Props
+
+`ToastProvider` · `ToastViewport` · `Toast` · `ToastTitle` · `ToastDescription` ·
+`ToastAction` · `ToastClose`。`Toast` 接受 `variant`，可选 `success`、`danger` 或
+`info`（danger 会渲染一个粗体字形）。
+
+## 无障碍
+
+Toast 会以礼貌方式向屏幕阅读器播报，悬停时暂停，并可通过键盘关闭。不要把重要且
+不可重复的信息放在 toast 中。它会消失。

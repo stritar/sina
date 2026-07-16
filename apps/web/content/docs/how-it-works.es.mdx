@@ -1,0 +1,90 @@
+---
+title: Cómo funciona SINA
+sourceHash: 07be9cbc0042
+---
+
+Cada pantalla generada por IA en SINA pasa por los mismos tres pasos:
+
+1. **El modelo propone.** La IA envía una <Term term="intent">intención</Term>: un
+   verbo más algunos datos, como `"wire_transfer"` con un importe y un destinatario.
+   Nunca nombra un componente.
+2. **El servidor decide.** Tu servidor pasa la intención por la
+   <Term term="constitution">Constitución</Term>, tus reglas escritas como esquemas.
+   Responden una sola pregunta: ¿está permitido y, si es así, qué debe renderizarse?
+3. **La pantalla muestra lo que pasó.** SINA monta el componente que el servidor eligió.
+   Si la solicitud falló, no se renderiza nada inseguro.
+
+## La regla sobre la que se sostiene todo
+
+> **El modelo envía una intención y props, nunca un componente. La validación se
+> ejecuta solo en el servidor. Validamos y _luego_ montamos. Nunca montamos y
+> después comprobamos.**
+
+¿Por qué tu servidor y no el navegador? Porque **una vez que la interfaz llega a
+la pantalla, no puedes recuperarla.** React la transmite pieza por pieza. No
+existe el "des-renderizado".
+
+Por eso la comprobación tiene que ejecutarse **antes de que se monte nada**. El
+último lugar que controlas por completo es tu propio **servidor**. Un atacante
+puede editar o saltarse cualquier cosa que se ejecute en el navegador. Una
+comprobación ahí detiene errores honestos; **no detiene un ataque**.
+
+Esa es la recompensa. No importa si el modelo está equivocado, ha sido vulnerado
+o es hostil: **nunca decide qué se renderiza.**
+
+## Cómo es una intención
+
+```ts
+const intent = {
+  intent: "wire_transfer",
+  props: { amount: 6000000, currency: "USD", recipient: /* … */ },
+};
+```
+
+Fíjate en lo que *no* está: ni botón, ni diálogo, ni disposición. La IA describe
+*qué* quiere ("mover este dinero"), nunca *cómo* debe verse.
+
+## Qué comprueba el control
+
+Cada intención pasa por los mismos cuatro pasos, en orden:
+
+1. **Estructura.** ¿Tiene el payload exactamente la forma correcta? Los esquemas
+   son estrictos, así que un botón "Confirmar" fabricado o un número de tarjeta
+   colado es un *campo extra*, rechazado antes de leer ningún valor.
+2. **Política.** ¿Los valores cumplen las reglas? ¿Está el importe dentro de los
+   límites? ¿Se requiere un segundo aprobador? Cada umbral se cita a un estándar real.
+3. **Decisión.** Los problemas se convierten en *infracciones*, y el control
+   decide: válido o no, y si se requiere un componente más estricto, cuál.
+4. **Auditoría.** Cada decisión emite un registro de lo que se pidió, lo que se
+   decidió y qué reglas se activaron, con los datos sensibles redactados primero.
+
+Una decisión siempre termina de una de dos formas: **se monta** (la solicitud
+pasó, SINA monta el componente que las reglas eligieron), o **se bloquea** (la
+versión insegura nunca se monta; se rechaza de plano o se
+<Term term="escalation">escala</Term> a un componente más estricto, como un
+diálogo de segundo aprobador).
+
+<Callout variant="note" title="El control nombra un componente">
+  El control no devuelve "permitido / denegado". Nombra *un componente
+  específico*, como `requiredComponent: "SecureWireDialog"`, o rechaza. Ese
+  componente, y ningún otro, es lo que se monta. Un sistema de diseño, no solo un
+  motor de políticas.
+</Callout>
+
+## Tres capas, un solo flujo
+
+Bajo el capó, SINA son tres capas: tokens y primitivas, la costura de gobernanza
+y la constitución del dominio. Casi siempre piensas en el flujo de arriba. Las
+capas son solo cómo se empaqueta.
+
+<ArchitectureDiagram />
+
+<Recap>
+El modelo propone una intención; el servidor la comprueba contra la Constitución;
+la pantalla monta solo lo que pasó. Las solicitudes seguras se convierten en
+componentes reales; las inseguras se bloquean o se escalan a un componente gobernado.
+</Recap>
+
+Míralo funcionar de verdad en [la transferencia de 60.000 $, de principio a
+fin](/docs/governance/wire-transfer), o lee la forma exacta de la decisión en [el
+contrato de intercepción](/docs/concepts/the-contract).

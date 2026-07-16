@@ -1,0 +1,50 @@
+---
+title: DropdownMenu
+sourceHash: 589f5b32ad6e
+---
+
+import { DropdownMenuHero, DropdownMenuExamples } from "@/app/components/docs/demos/primitives/dropdown-menu";
+
+<DropdownMenuHero />
+
+`DropdownMenu` es un menú compuesto de *comandos* que se disparan desde un
+activador. Úsalo cuando cada entrada **hace** algo; cuando las entradas son
+**valores** que el control retiene, usa [Select](/docs/primitives/select) en su
+lugar. El botón Copiar página de esta página es un `DropdownMenu`.
+
+## Uso
+
+```tsx
+import {
+  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem,
+} from "@sina-design-system/core";
+
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="secondary">Page actions</Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem onSelect={openInClaude}>Open in Claude</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+## Ejemplos
+
+<DropdownMenuExamples />
+
+## Partes
+
+`DropdownMenu` · `DropdownMenuTrigger` · `DropdownMenuContent` ·
+`DropdownMenuItem` · `DropdownMenuGroup` · `DropdownMenuLabel` ·
+`DropdownMenuSeparator`.
+
+`DropdownMenuContent` usa por defecto `align="end"` y `sideOffset={4}`; ambos, y
+todas las demás props de contenido de Radix, se reenvían. Un elemento se convierte
+en un enlace con `asChild`.
+
+## Accesibilidad
+
+Cumple el patrón de menú ARIA: `Enter` o `Space` abre y enfoca el primer
+elemento, las teclas de flecha desplazan el foco, la escritura anticipada salta,
+`Esc` cierra y devuelve el foco al activador. Todo resuelto por ti.

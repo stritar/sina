@@ -1,0 +1,94 @@
+---
+title: Comment fonctionne SINA
+sourceHash: 07be9cbc0042
+---
+
+Chaque écran généré par IA dans SINA passe par les trois mêmes étapes :
+
+1. **Le modèle propose.** L'IA envoie une <Term term="intent">intention</Term> : un
+   verbe accompagné de quelques données, comme `"wire_transfer"` avec un montant et un destinataire.
+   Elle ne nomme jamais de composant.
+2. **Le serveur décide.** Votre serveur fait passer l'intention par la
+   <Term term="constitution">Constitution</Term>, vos règles écrites sous forme de schémas.
+   Elles répondent à une seule question : est-ce autorisé, et si oui, que faut-il rendre ?
+3. **L'écran affiche ce qui est passé.** SINA monte le composant que le serveur a choisi.
+   Si la requête a échoué, rien d'incertain n'est rendu.
+
+## La règle unique sur laquelle tout repose
+
+> **Le modèle envoie une intention et des props, jamais un composant. La
+> validation s'exécute uniquement sur le serveur. Nous validons, _puis_ montons.
+> Nous ne montons jamais avant de vérifier.**
+
+Pourquoi votre serveur, et pas le navigateur ? Parce qu'**une fois que l'UI a
+atteint l'écran, vous ne pouvez plus la reprendre.** React la diffuse morceau par
+morceau. Il n'existe pas de « dé-rendu ».
+
+La vérification doit donc s'exécuter **avant que quoi que ce soit ne soit monté**.
+Le dernier endroit que vous contrôlez entièrement est votre propre **serveur**. Un
+attaquant peut modifier ou contourner tout ce qui s'exécute dans le navigateur.
+Une vérification à cet endroit arrête les erreurs de bonne foi ; **elle n'arrête
+pas une attaque**.
+
+Voilà le gain. Peu importe que le modèle se trompe, soit jailbreaké ou hostile :
+**il ne décide jamais de ce qui est rendu.**
+
+## À quoi ressemble une intention
+
+```ts
+const intent = {
+  intent: "wire_transfer",
+  props: { amount: 6000000, currency: "USD", recipient: /* … */ },
+};
+```
+
+Remarquez ce qui *n'y* est pas : pas de bouton, pas de boîte de dialogue, pas de
+mise en page. L'IA décrit *ce qu'*elle veut (« déplacer cet argent »), jamais *à
+quoi* cela doit ressembler.
+
+## Ce que le contrôle vérifie
+
+Chaque intention passe par les quatre mêmes étapes, dans l'ordre :
+
+1. **Structure.** Le payload a-t-il exactement la bonne forme ? Les schémas sont
+   stricts, donc un bouton « Confirmer » fabriqué ou un numéro de carte glissé en
+   douce est un *champ supplémentaire*, rejeté avant même la lecture d'une valeur.
+2. **Politique.** Les valeurs respectent-elles les règles ? Le montant est-il dans
+   les limites ? Un second approbateur est-il requis ? Chaque seuil est cité à
+   partir d'une norme réelle.
+3. **Décision.** Les problèmes deviennent des *violations*, et le contrôle
+   décide : valide ou non, et si un composant plus strict est requis, lequel.
+4. **Audit.** Chaque décision émet un enregistrement de ce qui a été demandé, de
+   ce qui a été décidé et des règles qui se sont déclenchées, les données
+   sensibles étant caviardées d'abord.
+
+Une décision se termine toujours de l'une de ces deux façons : **elle monte** (la
+requête est passée, SINA monte le composant que les règles ont choisi), ou **elle
+est bloquée** (la version incertaine n'est jamais montée ; elle est refusée
+d'emblée, ou <Term term="escalation">escaladée</Term> vers un composant plus
+strict comme une boîte de dialogue de second approbateur).
+
+<Callout variant="note" title="Le contrôle nomme un composant">
+  Le contrôle ne renvoie pas « autorisé / refusé ». Il nomme *un composant
+  précis*, sous la forme `requiredComponent: "SecureWireDialog"`, ou il refuse. Ce
+  composant, et rien d'autre, est ce qui est monté. Un système de design, pas
+  seulement un moteur de politiques.
+</Callout>
+
+## Trois couches, un seul flux
+
+En coulisses, SINA se compose de trois couches : les tokens et les primitives, la
+couture de gouvernance, et la constitution du domaine. Vous pensez surtout au flux
+ci-dessus. Les couches ne sont que la façon dont tout est empaqueté.
+
+<ArchitectureDiagram />
+
+<Recap>
+Le modèle propose une intention ; le serveur la vérifie face à la Constitution ;
+l'écran ne monte que ce qui est passé. Les requêtes sûres deviennent de vrais
+composants ; les requêtes incertaines sont bloquées ou escaladées vers un composant gouverné.
+</Recap>
+
+Voyez-le fonctionner pour de vrai dans [le virement de 60 k$, de bout en
+bout](/docs/governance/wire-transfer), ou lisez la forme exacte de la décision
+dans [le contrat d'interception](/docs/concepts/the-contract).

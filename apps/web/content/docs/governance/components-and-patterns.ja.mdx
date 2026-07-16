@@ -1,0 +1,98 @@
+---
+title: 統制されたコンポーネントと表示パターン
+sourceHash: 334943597bf3
+---
+
+憲章の規則は 2 種類の UI に解決されます。**統制されたコンポーネント**はエスカレーション、
+つまり規則が強制するより厳格なフローをレンダリングします。**表示パターン**はクリーンな
+読み取りをレンダリングします。どちらもそれ自体は何も検証しません。それぞれ、ゲートが
+すでに下した決定をレンダリングします（[仕組み](/docs/how-it-works)）。
+
+## 3 つの統制されたコンポーネント
+
+数十もの統制された規則が、わずか **3 つ**のコンポーネントにエスカレーションします。規則は
+それぞれ異なりますが、安全な到達先は共有され、実戦で鍛えられています。
+
+- **`SecureWireDialog`**: 電信送金に 2 人目の承認者が必要なときに強制されます。四つ目
+  （ダブルチェック）のループを実行します。正確な条件を確認する → *別の*承認者の身元を
+  収集する → ワンタイムコードで確認する → サーバーで再チェックする。再チェックが拒否
+  されるとダイアログは開いたままになり、「クリックで通り抜ける」ことはできません。
+  [6 万ドルの電信送金](/docs/governance/wire-transfer)を参照してください。
+- **`GovernedActionDialog`**: ほぼすべての他の認可を要するアクションがエスカレーション
+  するときに強制されます。ACH、P2P、請求書支払い、FX、カード操作、限度額変更、口座開設、
+  取引です。条件がアクションから導出される点を除けば、送金ダイアログと同じ形状です。
+  こうして SINA は、フローごとに専用ダイアログを用意することなく、銀行アプリ全体を
+  カバーします。
+- **`MandatoryDisclosure`**: ユーザーが必須テキストを承認しなければならないときに強制
+  されます。証拠金の適合性、融資（TILA）開示、FX スプレッド告知などです。テキストは
+  規則から来るのであってモデルからではないため、AI は法的に要求される告知を和らげたり、
+  短縮したり、飛ばしたりできません。
+
+<Callout variant="note" title="毎回同じフェーズ">
+  3 つとも 1 つのステートマシンを共有します。確認 → 収集 → 保留中 → 解決済み。学ぶべき
+  操作パターンは 1 つ、テストすべき状態のセットは 1 つ、すべての統制されたフローにわたって
+  1 つのアクセシブルな体験です。
+</Callout>
+
+## 表示パターン
+
+実際のアプリは、その大半の時間を何かを*表示*することに費やします。表示規則には限度額も
+承認もありませんが、それでも**形状**（厳格なパース）、**境界**（リストには上限がある）、
+**プライバシー**（識別子はマスクされていなければならない）をチェックします。3 つすべてを
+通過すると、SINA は表示用コンポーネントをマウントします。`TransactionList`、
+`BalanceCard`、`PortfolioHoldings` とその同種、およそ 2 ダース、読み取りの種類ごとに
+1 つです。
+
+2 つのプロパティが安全性の仕事を担います。モデルは*何を*表示するかを選びますが、
+**値を供給するのはあなたのサーバー**なので、残高を捏造することはできません。そして
+読み取りは**読み取り専用**です。表示コンポーネントは生のアクションボタンをレンダリング
+しません。リストから行動すること（請求への異議申し立て、請求書の支払い）は、ゲートに
+再び入る新しいインテントです。
+
+## インテントレジストリ
+
+モデルは `fintechIntentManifest()` から**動詞**を選びます。レジストリはそれを対応する
+規則とコンポーネントにマッピングします。モデルがコンポーネントを名指しすることは決して
+ありません。
+
+| インテント | 種別 | マウント / エスカレーション先 |
+|---|---|---|
+| `wire_transfer` | 統制 | `SecureWireDialog` |
+| `ach_transfer` · `p2p_payment` · `bill_pay` · `fx_convert` · `withdraw` | 統制 | `GovernedActionDialog` |
+| `add_payee` · `link_account` · `kyc` · `change_limit` · `issue_card` · `card_control` · `security_change` | 統制 | `GovernedActionDialog` |
+| `place_trade` · `enable_margin` · `credit_request` | 統制 | `GovernedActionDialog` · `MandatoryDisclosure` |
+| `disclosure` | 統制 | `MandatoryDisclosure` |
+| `list_transactions` | 表示 | `TransactionList` |
+| `account_balance` | 表示 | `BalanceCard` |
+| `portfolio_holdings` | 表示 | `PortfolioHoldings` |
+| `spending_breakdown` · `budget_progress` · `list_cards` · `list_payees` · … | 表示 | 表示用の読み取り |
+
+<Callout variant="note" title="未知の動詞は拒否される">
+  レジストリにないインテントは `UNKNOWN_INTENT` として拒否され、それでも監査されます。
+  既定は拒否であって、通過ではありません。
+</Callout>
+
+## `@sina-design-system/fintech` カタログ
+
+スキーマは `@sina-design-system/fintech` にあります。純粋な Zod で、React も UI も
+ありません。単一のエントリポイントがすべてをルーティングします。
+
+```ts
+import { evaluateFintechIntent } from "@sina-design-system/fintech";
+
+const { valid, violations, requiredComponent } = evaluateFintechIntent({
+  intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 in minor units */ },
+});
+```
+
+| グループ | 内容 |
+|---|---|
+| 統制スキーマ | `wire-transfer`, `ach-transfer`, `p2p-payment`, `bill-pay`, `fx-convert`, `add-payee`, `kyc`, `issue-card`, `card-control`, `change-limit`, `place-trade`, `credit-request`, … |
+| 表示スキーマ | `transaction-list`, `account-balance`, `portfolio-holdings`, `spending-breakdown`, … |
+| フォーマットプリミティブ | `currency` (ISO 4217)、`amount`（整数の最小通貨単位）、`iban` (ISO 13616)、`bic` (ISO 9362)、`routing` (ABA)、`card` (Luhn)、`masked-account`、`step-up` |
+| 引用された閾値 | `thresholds.ts`: すべての数値上限を、出典を付した名前付き定数として |
+| フィクスチャ | 各スキーマは有効なペイロードと敵対的なペイロードを `fixtures.ts` に同梱します |
+
+権威あるカタログは `packages/fintech/PATTERNS.md` です。追加するには：
+[ガバナンス規則を書く](/docs/governance/writing-a-rule)。

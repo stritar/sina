@@ -1,0 +1,45 @@
+---
+title: Combobox
+sourceHash: 19fb4c750726
+---
+
+import { ComboboxHero, ComboboxExamples } from "@/app/components/docs/demos/primitives/combobox";
+
+<ComboboxHero />
+
+`Combobox` 是一个可以输入的选择框。当选项列表长到浏览下拉菜单变得麻烦时，就使用它。
+
+## 用法
+
+```tsx
+import { Combobox } from "@sina-design-system/core";
+
+<Combobox
+  options={[
+    { value: "usd", label: "US Dollar" },
+    { value: "eur", label: "Euro" },
+  ]}
+  value={currency}
+  onValueChange={setCurrency}
+  placeholder="Search currencies"
+/>
+```
+
+## 示例
+
+<ComboboxExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "options", type: "ComboboxOption[]", description: "可供选择的 { value, label } 项。" },
+    { prop: "value", type: "string", description: "选中的值（受控）。" },
+    { prop: "onValueChange", type: "(value: string) => void", description: "选择时触发。" },
+    { prop: "placeholder", type: "string", description: "输入框中的空状态文本。" },
+  ]}
+/>
+
+## 无障碍
+
+基于带有原生 input 的 Popover 构建。方向键在匹配项之间移动，`Enter` 进行选择，listbox 会向屏幕阅读器播报。

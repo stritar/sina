@@ -1,0 +1,40 @@
+---
+title: Field
+sourceHash: 3149887e8df2
+---
+
+import { FieldHero, FieldExamples } from "@/app/components/docs/demos/primitives/field";
+
+<FieldHero />
+
+`Field` は、すべての入力欄が使用するラッパーです。ラベル、任意の説明とエラーをレンダリングし、その子要素をクローンして、正しい
+`id`、`aria-describedby`、`aria-invalid` で互いに接続します。ID を手作業で受け渡すことなく、正しいフォームアクセシビリティが得られます。
+
+## 使い方
+
+```tsx
+import { Field } from "@sina-design-system/core";
+
+<Field label="Email" description="We'll never share it." error={errors.email}>
+  <input type="email" name="email" />
+</Field>
+```
+
+## 例
+
+<FieldExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "ReactNode", description: "フィールドのラベル（コントロールに関連付けられます）。" },
+    { prop: "description", type: "ReactNode", description: "ラベルの下に表示される補助テキスト。" },
+    { prop: "error", type: "ReactNode", description: "エラーメッセージ。aria-invalid を設定し、太字の警告グリフを表示します。" },
+  ]}
+/>
+
+<Callout variant="note" title="エラーにはグリフが伴います">
+  `error` が設定されると、Field はメッセージの横に必須の太字警告グリフをレンダリングし、色だけに頼ることはありません。これはエラーおよび警告状態に対する
+  SINA 全体の規則です。
+</Callout>

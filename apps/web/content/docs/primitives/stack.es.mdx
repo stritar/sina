@@ -1,0 +1,44 @@
+---
+title: Stack
+sourceHash: 9856ac9abe5a
+---
+
+import { StackHero, StackExamples } from "@/app/components/docs/demos/primitives/stack";
+
+<StackHero />
+
+`Stack` distribuye sus hijos a lo largo de un único eje con un `gap` tomado de la
+escala de espaciado. Es la primitiva de maquetación de uso diario; recurre a
+[Grid](/docs/primitives/grid) cuando necesites columnas que se ajusten a varias líneas.
+
+## Uso
+
+```tsx
+import { Stack } from "@sina-design-system/core";
+
+<Stack direction="row" gap={3} align="center">
+  <Badge>Draft</Badge>
+  <span>Invoice #204</span>
+</Stack>
+```
+
+## Ejemplos
+
+<StackExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "direction", type: '"row" | "column"', default: '"column"', description: "Eje de maquetación." },
+    { prop: "gap", type: "GapStep", description: "Espaciado entre los hijos (de la escala de 8 pt)." },
+    { prop: "align / justify", type: "string", description: "Alineación flex a lo largo de cada eje." },
+    { prop: "as", type: "ElementType", description: "Renderiza como un elemento distinto (polimórfico)." },
+  ]}
+/>
+
+## Accesibilidad
+
+Puramente presentacional. Renderiza un `div` simple sin semántica añadida. Cuando
+los hijos forman una estructura real, pasa `as` para conservarla (por ejemplo,
+`as="ul"` con hijos `li` mantiene una lista como lista).

@@ -1,0 +1,102 @@
+---
+title: Thématisation
+sourceHash: c387f6cda2eb
+---
+
+Un thème dans SINA, ce sont **les mêmes tokens avec des valeurs différentes**.
+Vous ne modifiez jamais un composant pour le rebrander. Vous redéfinissez les
+propriétés personnalisées `--sina-*`, et chaque composant qui pointe vers elles se
+met à jour. La cascade rend les surcharges triviales : le reset de SINA vit dans
+`@layer reset`, tandis que le CSS des composants et de l'app n'est pas en couches,
+si bien que le CSS de votre app l'emporte par simple ordre d'origine. Importez
+votre bloc de thème après les styles de SINA et il prend effet. Aucune
+recompilation, aucun fork.
+
+## Construire un thème de marque
+
+<Steps>
+  <Step title="Surchargez les rôles qui portent votre marque">
+
+Généralement `primary`, son premier plan lisible, hover et peut-être radius. Tout
+le reste est hérité.
+
+```css
+:root {
+  --sina-color-primary: #6d28d9;
+  --sina-color-primary-fg: #ffffff;
+  --sina-color-primary--hover: #5b21b6;
+  --sina-radius--md: 0.5rem; /* softer corners, brand-wide */
+}
+```
+
+  </Step>
+  <Step title="Ou laissez l'assistant typé l'émettre">
+
+`createTheme()` dans `@sina-design-system/theme` génère le bloc et vérifie par
+types quels rôles vous avez le droit de toucher :
+
+```ts
+import { createTheme } from "@sina-design-system/theme";
+
+const acme = createTheme(
+  { colors: { primary: "#7c3aed" }, radius: { md: "0.5rem" } },
+  { selector: '[data-theme="acme"]' },
+);
+```
+
+  </Step>
+  <Step title="Délimitez sa portée">
+
+Placez le bloc sur `:root` pour une seule marque, ou sous `[data-theme="acme"]`
+pour plusieurs. Les marques à portée délimitée se combinent avec le mode sombre.
+Pour une surcharge locale, `themeVars()` renvoie les mêmes tokens sous forme
+d'objet de style en ligne pour `style={}`.
+
+  </Step>
+</Steps>
+
+<Callout variant="tip" title="Commencez petit">
+  La plupart des marques surchargent une poignée de rôles (`primary`, les
+  surfaces, peut-être radius) et héritent du reste.
+</Callout>
+
+## Le mode sombre est la même astuce
+
+`theme.css` fournit un bloc `[data-theme="dark"]` qui ne fait que réaffecter ces
+mêmes rôles. Basculez `data-theme` sur `<html>` et toute l'interface se recolore.
+Un commutateur clair / sombre / système, ce n'est rien de plus qu'écrire cet
+attribut et mémoriser le choix dans `localStorage`.
+
+## La frontière verrouillée
+
+Tous les tokens ne sont pas à vous pour les changer, et cette frontière est
+elle-même une décision de gouvernance.
+
+| | Rôles | |
+|---|---|---|
+| **Ouverts à la marque** | `bg` / `surface*` / `text*` / `border*`, `primary*` / `secondary*`, `success` / `warning` / `info`, séries de graphiques, `radius` / `space` / `text` / `font` | À vous. Rebrandez librement. |
+| **Verrouillés par la gouvernance** | `danger*`, la teinte de surface sécurisée, l'anneau de focus, les alias `intent-*` | Réservés. L'API typée les refuse. |
+
+<Callout variant="governance" title="Pourquoi verrouiller quoi que ce soit ?">
+  Un thème de marque ne doit jamais faire paraître une erreur paisible, cacher
+  l'anneau de focus aux utilisateurs au clavier, ni déguiser l'affordance d'une
+  action sécurisée. Ce n'est pas du style ; ce sont des signaux de sécurité et
+  d'accessibilité. `createTheme()` rejette un rôle verrouillé à la compilation. (Le
+  CSS brut peut toujours forcer une variable par spécificité. L'API ne vous aidera
+  simplement pas à le faire.)
+</Callout>
+
+<DoDont
+  do={[
+    "Surchargez primary, les surfaces et radius pour correspondre à votre marque",
+    "Utilisez createTheme() pour que les rôles verrouillés soient détectés à la compilation",
+    "Revérifiez le contraste après un rebranding lourd",
+  ]}
+  dont={[
+    "Restyler danger pour qu'il paraisse amical ; les erreurs doivent se lire comme des erreurs",
+    "Supprimer ou atténuer l'anneau de focus",
+    "Coder en dur du hex dans un composant pour esquiver le système de tokens",
+  ]}
+/>
+
+Suite : [Tokens](/docs/theming/tokens), le vocabulaire que chaque thème réévalue.

@@ -1,0 +1,103 @@
+---
+title: Tokens
+sourceHash: 3ca63d5982d6
+---
+
+Un **token de design** est une valeur nommée que les composants référencent au
+lieu de la coder en dur : une couleur, un pas d'espacement, une taille de police.
+Changez la valeur une fois et tout ce qui pointe vers elle se met à jour. Dans
+SINA, les tokens sont des propriétés personnalisées CSS, toutes préfixées
+`--sina-`.
+
+## Trois niveaux
+
+<TokenTree />
+
+- **Primitif** : une valeur brute dans `theme.css`, comme un vert précis.
+- **Sémantique** : un *rôle* qui donne un sens à la valeur. `--sina-color-primary`
+  signifie « la couleur de l'action principale », quelle qu'elle soit.
+- **Composant** : un token limité à un seul composant, comme `--sina-button-bg`,
+  qui pointe vers un rôle sémantique.
+
+Vous vous tournez presque toujours vers le niveau **sémantique**. Il répond à « que
+*signifie* cette couleur », pas à « quel hexadécimal est-ce ». C'est pourquoi un
+[thème](/docs/theming) peut réévaluer un rôle et tous les composants suivent.
+
+## La grammaire de nommage
+
+Une seule règle, pour que vous puissiez lire un nom et savoir ce qu'il fait :
+
+- Un tiret simple joint l'**identité** (catégorie, rôle, propriété) :
+  `--sina-color-text-muted`, `--sina-button-bg`.
+- Un tiret double marque un **modificateur de feuille** (un pas d'échelle, une
+  variante ou un état), et il vient toujours en dernier : `--sina-space--4`,
+  `--sina-color-primary--hover`, `--sina-button-bg--primary--hover`.
+
+<Callout variant="tip" title="Lisez-le comme une phrase">
+  `--sina-button-bg--primary--hover` = l'arrière-plan du bouton, variante primary,
+  état hover. L'identité d'abord, les modificateurs en dernier.
+</Callout>
+
+## Couleur
+
+Choisissez les couleurs par **rôle** (« la couleur de l'action principale »), jamais
+par teinte (« la verte »). Cliquez sur un échantillon pour copier sa variable.
+
+<TokenSwatchGrid>
+  <TokenSwatch name="--sina-color-bg" note="Arrière-plan de page" />
+  <TokenSwatch name="--sina-color-surface" note="Carte / panneau" />
+  <TokenSwatch name="--sina-color-text" note="Texte du corps" />
+  <TokenSwatch name="--sina-color-text-muted" note="Texte secondaire" />
+  <TokenSwatch name="--sina-color-border" note="Bordures" />
+  <TokenSwatch name="--sina-color-primary" note="Action principale" />
+  <TokenSwatch name="--sina-color-primary-fg" note="Texte sur primary" />
+  <TokenSwatch name="--sina-color-secondary" note="Action secondaire" />
+</TokenSwatchGrid>
+
+Chaque rôle de surface a un partenaire `-fg` : la couleur garantie lisible dessus.
+Utilisez `primary` pour l'arrière-plan d'un bouton et `primary-fg` pour son
+libellé, et le contraste se règle tout seul. Les rôles d'état fonctionnent de la
+même façon :
+
+<TokenSwatchGrid>
+  <TokenSwatch name="--sina-color-danger" note="Erreur / destructif" />
+  <TokenSwatch name="--sina-color-warning" note="Avertissement" />
+  <TokenSwatch name="--sina-color-success" note="Succès" />
+  <TokenSwatch name="--sina-color-info" note="Information" />
+</TokenSwatchGrid>
+
+Deux règles sont imposées par des gardes de build : les couleurs sont écrites
+**uniquement en hexadécimal** dans `theme.css` (`#rrggbb`, jamais `rgb()` /
+`hsl()` / couleurs nommées), et le CSS des composants n'écrit jamais une couleur
+brute, seulement `var(--sina-*)`. Les couleurs d'état comme `danger`, ainsi que
+l'anneau de focus et la teinte de surface sécurisée, sont **verrouillées par la
+gouvernance**. Voir [la frontière verrouillée](/docs/theming).
+
+## Les échelles
+
+Tout ce qui n'est pas une couleur est un petit ensemble fixe de pas. S'en tenir
+aux pas garde une interface rythmée plutôt qu'arbitraire.
+
+| Famille | Tokens |
+|---|---|
+| Espacement | `--sina-space--0` … `--24` sur une base de 4px, demi-pas `--0_5` · `--1_5` · `--2_5` |
+| Taille de texte | `--sina-text--xs` · `ui` · `sm` · `base` · `lg` · `xl` · `2xl` … `5xl` |
+| Graisse / interligne | `--sina-font-weight--regular…bold` · `--sina-leading--none…relaxed` |
+| Rayon | `--sina-radius--none` · `xs` · `sm` · `md` · `lg` · `xl` · `2xl` · `full` |
+| Ombre | `--sina-shadow--xs…xl` · `focus` · `focus-ring` |
+| Mouvement | `--sina-duration--instant…slow` · `--sina-ease--standard` · `out` |
+| Z-index | `--sina-z--base` · `dropdown` · `overlay` · `modal` · `toast` |
+
+<Callout variant="tip" title="Le mouvement réduit est automatique">
+  Les durées s'effondrent à zéro sous `prefers-reduced-motion` au niveau de la
+  couche de tokens, si bien que chaque composant respecte le réglage sans code
+  par composant.
+</Callout>
+
+## Comment les tokens atteignent les composants
+
+Chaque composant déclare sa propre couche de tokens, où `--sina-button-bg--primary`
+crée un alias de `--sina-color-primary`, et son CSS ne consomme que cette couche.
+Ainsi, un thème réévalue un rôle sémantique une seule fois, et chaque emplacement
+de composant qui pointe vers lui se met à jour. Cette indirection est tout le
+mécanisme de thématisation.

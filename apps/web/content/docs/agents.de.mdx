@@ -1,0 +1,86 @@
+---
+title: Für KI-Agenten
+sourceHash: b4a9cbbe19d0
+---
+
+Eine KI kann deinen Styleguide lesen und ignorieren. Sie kann eine Regel nicht
+ignorieren, die als Code zwischen ihrer Anfrage und dem Bildschirm läuft. Das
+ist der Wandel, den SINA bewirkt: Die Regeln sind kein Dokument, das die KI zu
+Rate zieht, sondern ein Kontrollpunkt, den sie durchläuft. Ein Designsystem, das
+eine KI *lesen* kann, ist ein Vorschlag; eines, das sie *durchlaufen* muss, ist
+eine Garantie. Ein sorgfältiger Prompt kann immer noch missverstanden,
+vergessen oder durch eine clevere Eingabe außer Kraft gesetzt werden. Eine
+erzwungene Regel lässt sich nicht aus dem Weg reden.
+
+## Was der Agent sendet
+
+SINA gibt dem Modell ein Menü von Absichtsverben, ein Manifest:
+
+```ts
+[
+  { intent: "wire_transfer", kind: "governed", summary: "Move money by wire" },
+  { intent: "list_transactions", kind: "display", summary: "Show recent activity" },
+  // …
+]
+```
+
+Das Modell wählt ein Verb und liefert dessen props. Es beschreibt ein Ziel, es
+baut keinen Bildschirm.
+
+## Die zwei Dinge, die er niemals tun kann
+
+- **Er kann die Komponente nicht benennen.** Das Manifest enthält Verben, keine
+  Komponenten. SINA ordnet das Verb *nach* dem Durchlauf des Kontrollpunkts
+  einer Komponente zu, sodass das Modell nicht weiß, dass der rohe
+  Bestätigungsbutton existiert.
+- **Er kann die Daten für einen Lesevorgang nicht erfinden.** Wenn das Modell
+  darum bittet, einen Kontostand oder eine Transaktionsliste *anzuzeigen*,
+  liefert dein Server die echten Werte. Das Modell wählt, *was* angezeigt wird,
+  niemals *wie die Zahlen lauten*.
+
+Führt man beides bei der Überweisung über 60.000 $ zusammen: Das Modell kann den
+Bestätigungsbutton nicht rendern (es hat nie Komponenten gewählt), kann die
+Überweisung nicht selbst freigeben (die Freigabe erfordert eine *andere* Person,
+serverseitig geprüft) und kann keinen kleinen Betrag freigeben und dann gegen
+einen großen austauschen (die Freigabe ist an die exakten Bedingungen gebunden,
+die der Server neu berechnet).
+
+<Callout variant="enforced" title="Fragen ist nicht Tun">
+  Der Agent kann um alles *bitten*. Er kann nichts *tun*, was der Kontrollpunkt
+  nicht erlaubt hat. Diese Lücke zwischen Vorschlagen und Rendern ist der Ort,
+  an dem die gesamte Sicherheit von SINA liegt.
+</Callout>
+
+## Probier es aus
+
+Diese Demo führt den **echten Kontrollpunkt** aus: denselben Code, den dein
+Server ausführen würde, auf einem Server, wenn du auf Ausführen drückst. Ein
+feindlicher Stream versucht, einen gefälschten „Bestätigen“-Button
+einzuschleusen; das strikte Parsen wirft das zusätzliche Feld weg, bevor
+irgendein Wert gelesen wird. Wechsle die Anfrage, um zu sehen, wo die Grenze
+tatsächlich verläuft.
+
+<GovernanceDemo
+  scenario="fabricated-confirm"
+  scenarios={["fabricated-confirm", "small", "over-limit", "self-approval"]}
+/>
+
+Der Emulator hat drei Modi: mock (eine aufgezeichnete Anfrage), direct (von Hand
+geschriebenes JSON) und live (ein echtes Modell). Die Entscheidung ist in allen
+dreien identisch, weil es dem Kontrollpunkt gleichgültig ist, woher eine Anfrage
+kam. Die vollständige Durchsprache findest du in [der 60k-Überweisung](/docs/governance/wire-transfer).
+
+## Dokumentation, die dein Agent lesen kann
+
+Richte einen Coding-Assistenten hierher, und er kann die Dokumentation direkt
+konsumieren:
+
+| Ressource | Was es ist |
+|---|---|
+| `/llms.txt` | Ein kuratierter Index jeder Seite, damit ein LLM ihn crawlen kann. |
+| `.md` pro Seite | Jede Seite hat einen Roh-Markdown-Zwilling unter `/llms/docs/…`. |
+
+Der Index beginnt mit einer an Agenten gerichteten Präambel im ureigenen Geist
+von SINA: Gib UI als **Absicht** aus, ein Verb und props, niemals eine gefälschte
+Komponente; sende sie an den serverseitigen Kontrollpunkt; bevorzuge die
+registrierten Absichten, denn alles andere wird abgelehnt.

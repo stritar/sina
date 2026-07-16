@@ -1,0 +1,37 @@
+---
+title: Tooltip
+sourceHash: eebffdf933bd
+---
+
+import { TooltipHero, TooltipExamples } from "@/app/components/docs/demos/primitives/tooltip";
+
+<TooltipHero />
+
+当用户悬停或聚焦某个控件时，`Tooltip` 会显示一条简短的提示。用它来说明图标按钮或
+补充细节，切勿用于用户完成任务*所需*的信息，因为它默认隐藏，且在触摸设备上不可用。
+
+## 用法
+
+```tsx
+import {
+  TooltipProvider, Tooltip, TooltipTrigger, TooltipContent,
+} from "@sina-design-system/core";
+
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button variant="ghost" aria-label="Info"><Icon …/></Button>
+    </TooltipTrigger>
+    <TooltipContent>Groups digits on blur.</TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+```
+
+## 示例
+
+<TooltipExamples />
+
+## 无障碍
+
+在悬停**以及**键盘聚焦时打开，按 `Esc` 关闭，并通过 `aria-describedby` 播报。触发器
+仍然需要自己的无障碍标签。

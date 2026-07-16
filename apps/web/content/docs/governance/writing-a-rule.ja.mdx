@@ -1,0 +1,91 @@
+---
+title: ガバナンス規則を書く
+sourceHash: b78fbff0d2ec
+---
+
+規則とは、厳格な Zod スキーマに、引用付きのポリシーチェックを加えたもので、
+`@sina-design-system/fintech` に置かれます。境界は厳格です。**純粋な Zod、React
+なし、UI なし**で、共有される契約は `@sina-design-system/governance`
+から来ます。このガイドは `/new-schema`
+skill を反映しています。完成した規則が動作する様子を見るには、[6
+万ドルの電信送金](/docs/governance/wire-transfer)をお読みください。
+
+<Callout variant="enforced" title="黄金律：上限を決して発明しない">
+  すべてのしきい値、フォーマット、必須フィールドは、標準または規制当局までたどれなければならず、引用は**コード内に**置きます。定数には
+  `// 31 CFR …` コメントを、違反には `standard: "…"`
+  を付けます。引用できないなら、エンコードしないでください。引用はまた、どの数値が法であり、どれが調整可能な製品既定値かを示します。
+</Callout>
+
+<Steps>
+  <Step title="スキーマを定義する">
+
+`packages/fintech/src/<name>/<name>.schema.ts` を、旗艦である `wire-transfer`
+スキーマをモデルにして作成します。`.strict()` の Zod
+オブジェクトを使い、紛れ込んだキーを無視ではなく拒否させ、`src/formats/*`
+にある引用付きのフォーマットプリミティブの上に構築します。`currency`（ISO
+4217）、`amount`、`iban`、`bic`、`routing`、`card`
+です。金額は整数の**最小単位**であり、決して浮動小数点数ではありません。
+
+  </Step>
+  <Step title="ポリシーチェックを追加する">
+
+各ポリシーチェック（上限、頻度、二重統制）は、`code`、`message`、引用付きの
+`standard`、そして重大度を持つ `Violation` を生成します。重大度は
+`flag`（記録する）、`escalate`（統制されたコンポーネントを強制する）、または
+`reject`（きっぱり拒否する）です。[エスカレーション](/docs/concepts/escalation)を参照してください。エスカレーションは
+`requiredComponent` を指定します。規則は[契約](/docs/concepts/the-contract)を返さなければなりません。
+
+```ts
+// pass
+{ valid: true, violations: [], requiredComponent: null }
+// fail
+{ valid: false, violations: [{ code, message, standard }], requiredComponent: "SecureWireDialog" }
+```
+
+**統制されていない**表示規則は、ポリシーとエスカレーションを除いた同じ骨組みです。形状のみ（`.strict()`、境界のある配列、マスクされた口座番号）で、プレゼンテーション用コンポーネントをマウントします。それには
+`/new-display-pattern` を使ってください。
+
+  </Step>
+  <Step title="インテントを登録する">
+
+動詞を `src/registry.ts`（および `fintechIntentManifest()`）に追加し、
+`evaluateFintechIntent`
+がそこへルーティングできるようにします。登録されていない動詞は `UNKNOWN_INTENT`
+として拒否されます。登録されていない規則は存在しないのと同じです。
+
+  </Step>
+  <Step title="フィクスチャを書く">
+
+スキーマの隣に `fixtures.ts`
+を追加します。通過しなければならない**有効な**ペイロードと、ブロックされなければならない**敵対的な**ペイロード、たとえば上限を超える金額、紛れ込んだ余分なフィールド、マスクされていない識別子などです。ユニットテストと
+playground
+の両方がこれらを利用します。規則はコンパイルできた時点では完成ではなく、敵対的なリクエストがそれをすり抜けられなくなったときに完成します。
+
+  </Step>
+  <Step title="テストして検証する">
+
+`pnpm --filter @sina-design-system/fintech test`
+を実行し、次に規則を動かして決定を読み取ります。
+
+```ts
+const decision = evaluateFintechIntent({
+  intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 */, currency: "USD", /* … */ },
+});
+
+decision.valid;             // false
+decision.requiredComponent; // "SecureWireDialog"
+decision.violations;        // includes AMOUNT_REQUIRES_APPROVAL (escalate)
+```
+
+各違反は `message` と `standard`
+を持つため、単に「ブロックされました」と言う代わりに、引用付きでユーザーに*なぜ*かを示せます。金額を上限より下げて再実行してください。`valid`
+は `true` に変わり、`requiredComponent` は `null`
+になり、通常のサマリーがマウントされます。同じコードで、安全な結果です。
+
+  </Step>
+</Steps>
+
+出荷する前に、その規則が基本事項をそれぞれ一文で答えられるか確認してください。それが何か、取り除くリスク、ブロックする具体的なリクエスト、通過させるリクエスト、そして発動時に何が起きるか。どれかの答えが曖昧なら、その規則も曖昧です。
+
+次へ：[統制されたコンポーネントと表示パターン](/docs/governance/components-and-patterns)。あなたのエスカレーションが着地する場所です。

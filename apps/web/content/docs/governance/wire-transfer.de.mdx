@@ -1,0 +1,108 @@
+---
+title: "Praxisbeispiel: die 60.000-$-Überweisung"
+sourceHash: 1ad48a792ac1
+---
+
+<YouWillLearn>
+- Was der Kontrollpunkt bei einer Überweisung über dem Limit findet, und welche Norm jede Feststellung zitiert
+- Wie der erzwungene Freigabedialog funktioniert, und warum er sich nicht fälschen lässt
+- Was der Audit-Trail bei jedem Schritt aufzeichnet
+</YouWillLearn>
+
+Dies ist der Vorzeigeablauf von SINA und die kanonische Anleitung, auf die der Rest
+der Dokumentation verweist. Wir verfolgen eine einzelne Überweisung über 60.000 $
+von der Anfrage bis zur Auflösung. Jeder andere geregelte Ablauf ist eine Variation
+dieses einen.
+
+## Die Anfrage
+
+Die KI schlägt eine Überweisung vor. Sie sendet nur Daten: eine Absicht und props,
+niemals eine Komponente (siehe [Wie es funktioniert](/docs/how-it-works)).
+
+```ts
+{ intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 in cents */, currency: "USD", /* … */ } }
+```
+
+## Die Strukturprüfung
+
+Zuerst das strikte Parsen. Jedes Feld wird gegen das Schema geprüft: der Betrag ist
+eine Ganzzahl in Untereinheiten, der Währungscode ist real, die Kontokennungen
+bestehen ihre Prüfsummen. Jedes Feld, das das Schema nicht kennt, etwa ein
+eingeschmuggeltes `confirmButton` oder ein verirrtes `cvv`, weist die gesamte
+Nutzlast zurück. Diese Anfrage ist wohlgeformt, also geht es weiter.
+
+## Die Richtlinienprüfung findet drei Dinge
+
+Die Form ist gültig, also läuft die Richtlinie. Sie löst **drei** Verstöße aus, und
+jeder zitiert, woher er stammt:
+
+| Feststellung | Schweregrad | Norm |
+|---|---|---|
+| Meldepflichtige Transaktion (CTR) | `flag` | FinCEN, 31 CFR 1010.311 |
+| Prüfung verdächtiger Aktivität (SAR) | `flag` | FinCEN, 31 CFR Ch. X |
+| Über dem Freigabelimit von 50.000 $ | `escalate` | SINA Dual-Control-Richtlinie |
+
+Die beiden Flags sind informativ: erfasst, nicht blockierend. Der **escalate** ist
+derjenige, der handelt. Er verweigert die einfache Bestätigung und benennt
+`requiredComponent: "SecureWireDialog"`. (Schweregrade werden in
+[Eskalation](/docs/concepts/escalation) behandelt.) Auch hier wird ein
+Audit-Ereignis ausgelöst, das den Zeitstempel, die Nutzlast, alle drei Verstöße und
+die entschiedene Komponente trägt. Die Blockade steht im Protokoll, bevor
+irgendetwas gerendert wird.
+
+## Der erzwungene Dialog
+
+SINA bindet `SecureWireDialog` anstelle einer Bestätigungsschaltfläche ein. Der
+Dialog führt eine zweite Person durch:
+
+1. **Prüfen** der exakten Bedingungen (Betrag, Empfänger) in einer schreibgeschützten Zusammenfassung.
+2. **Ausweisen** als Freigebender, mit einer ID und einem Namen, die sich vom Initiator unterscheiden müssen.
+3. **Bestätigen** mit einem Einmalcode.
+
+Beim Absenden geht der Nachweis **zurück an den Server**, und die Verfassung läuft
+erneut. Der Dialog selbst validiert nichts. Er sammelt nur die Freigabe.
+
+<Callout variant="enforced" title="Zwei Prüfungen machen es unumgehbar">
+  Beim zweiten Durchlauf erzwingt der Server zwei Dinge, die ein feindseliger Stream
+  nicht fälschen kann. **Vier-Augen-Prinzip**: der Freigebende muss sich vom
+  serverseitig bekannten Initiator unterscheiden, sodass du deine eigene Überweisung
+  nicht freigeben kannst. **Nutzlastbindung**: die Freigabe ist an die exakten
+  Bedingungen gebunden, auf dem Server neu berechnet, sodass du nicht 5.000 $
+  freigeben und 60.000 $ ausführen kannst.
+</Callout>
+
+In der Demo unten versucht der Initiator, seine eigene Überweisung freizugeben. Das
+Vier-Augen-Prinzip weist sie rundweg ab, und von dort gibt es keinen Weg weiter.
+
+<GovernanceDemo scenario="self-approval" />
+
+## Das Happy End
+
+Governance eskaliert; sie verweigert nicht bloß. Eine *gültige* Freigabe passiert
+den Kontrollpunkt beim zweiten Durchlauf: ein anderer Manager, gebunden an die
+exakten Bedingungen über 60.000 $. Die Überweisung wird dann als abgeschlossene,
+geregelte Aktion eingebunden. Ein zweites [Audit-Ereignis](/docs/concepts/audit-trail)
+hält fest, wer freigegeben hat, zu welchen Bedingungen, und dass der Kontrollpunkt
+passiert wurde. Die ganze Geschichte bleibt später rekonstruierbar: Blockade,
+Freigabe, Durchlass.
+
+Probier es aus. Öffne den erzwungenen Dialog und gib als *anderer* Manager frei: der
+Server prüft erneut, und die Entscheidung kippt. Gib als Initiator frei, und sie
+wird verweigert.
+
+<GovernanceDemo
+  scenario="over-limit"
+  scenarios={["over-limit", "small", "self-approval", "fabricated-confirm"]}
+  comparison
+/>
+
+<Recap>
+Überweisung über dem Limit → striktes Parsen besteht → drei Verstöße (zwei Flags,
+ein escalate) → `SecureWireDialog` → ein *anderer* Freigebender + Einmalcode → der
+Server prüft Vier-Augen-Prinzip und Nutzlastbindung erneut → freigegeben und
+eingebunden, oder verweigert, mit einem Audit-Ereignis bei jeder Entscheidung. Die
+rohe Bestätigung ist niemals eine Option.
+</Recap>
+
+Weiter: [schreibe deine eigene Governance-Regel](/docs/governance/writing-a-rule).

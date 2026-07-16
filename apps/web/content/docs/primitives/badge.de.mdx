@@ -1,0 +1,46 @@
+---
+title: Badge
+sourceHash: 4d4d24138038
+---
+
+import { BadgeHero, BadgeExamples } from "@/app/components/docs/demos/primitives/badge";
+
+<BadgeHero />
+
+`Badge` ist ein kleiner Chip, der den Status von etwas inline kennzeichnet: eine Zeile, eine
+Karte, eine Überschrift.
+
+## Verwendung
+
+```tsx
+import { Badge } from "@sina-design-system/core";
+
+<Badge intent="success">Verified</Badge>
+<Badge intent="danger" dot>Blocked</Badge>
+```
+
+## Beispiele
+
+<BadgeExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "intent", type: '"neutral" | "info" | "success" | "warning" | "danger"', default: '"neutral"', description: "Farbe und Bedeutung." },
+    { prop: "size", type: '"sm" | "md"', default: '"md"', description: "Chip-Größe." },
+    { prop: "icon", type: "ReactNode", description: "Ein vorangestelltes Glyph (erbt die Beschriftungsfarbe)." },
+    { prop: "dot", type: "boolean", default: "false", description: "Ein vorangestellter Statuspunkt." },
+  ]}
+/>
+
+<Callout variant="note" title="Statusregeln gelten">
+  Ein `danger`- oder `warning`-Badge rendert automatisch ein fettes Glyph. Und ein Badge ist ein
+  Statuselement, rendere es also niemals innerhalb eines Alert oder Toast. Platziere es als Geschwisterelement.
+</Callout>
+
+## Barrierefreiheit
+
+Bedeutung wird niemals allein durch Farbe transportiert. Ein Schweregrad-Badge kombiniert seinen
+Farbton stets mit einem Glyph oder Punkt sowie einer Textbeschriftung. Die Schließen-Schaltfläche eines
+schließbaren Badge nimmt ein explizites `closeLabel` entgegen.

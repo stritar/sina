@@ -1,0 +1,75 @@
+---
+title: Démarrage rapide
+sourceHash: c20976614b72
+---
+
+<Prereqs>
+- **Node 20+** et un gestionnaire de paquets (pnpm, npm ou yarn).
+- Une application React capable d'exécuter du code serveur (un projet Next.js App Router est idéal).
+- Vous n'avez **pas** besoin d'un agent d'IA ni d'une clé LLM.
+</Prereqs>
+
+## Installation
+
+<Tabs>
+  <Tab label="pnpm">
+
+```bash
+pnpm add @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+  </Tab>
+  <Tab label="npm">
+
+```bash
+npm install @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+  </Tab>
+  <Tab label="yarn">
+
+```bash
+yarn add @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+  </Tab>
+</Tabs>
+
+## Brancher les feuilles de style
+
+Importez les styles de tokens et de composants une seule fois, dans cet ordre. Le
+reset est placé dans un layer, de sorte que les styles propres à votre
+application l'emportent toujours sur lui.
+
+```ts
+// app/layout.tsx
+import "@sina-design-system/theme/reset.css";
+import "@sina-design-system/theme/css";
+import "@sina-design-system/core/styles.css";
+import "@sina-design-system/fintech-react/styles.css";
+```
+
+Voilà pour la configuration. À partir d'ici, les primitives fonctionnent seules ; le contrôle est facultatif.
+
+## Étapes suivantes
+
+<CardGrid columns={2}>
+  <Card href="/docs/how-it-works" title="Comment ça marche">
+    Le flux intention → contrôle → montage, et pourquoi la validation reste côté serveur.
+  </Card>
+  <Card href="/docs/governance/wire-transfer" title="Le virement de 60 000 $, de bout en bout">
+    Une intention gouvernée bloquée, escaladée et de nouveau soumise au contrôle.
+  </Card>
+  <Card href="/docs/primitives" title="Primitives">
+    Les composants headless et accessibles, utilisables sans aucune gouvernance.
+  </Card>
+  <Card href="/docs/guides/adopt-incrementally" title="Adoption progressive">
+    Gouvernez d'abord une intention, ou utilisez les primitives sans contrôle.
+  </Card>
+</CardGrid>

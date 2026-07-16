@@ -1,0 +1,37 @@
+---
+title: Checkbox
+sourceHash: 897c9affa3b4
+---
+
+import { CheckboxHero, CheckboxExamples } from "@/app/components/docs/demos/primitives/checkbox";
+
+<CheckboxHero />
+
+`Checkbox` は単一の真偽値を切り替えます。「一部だけで全部ではない」を表す**不確定**状態にも対応しており、グループを制御する親のように使えます。
+
+## 使い方
+
+```tsx
+import { Checkbox } from "@sina-design-system/core";
+
+<Checkbox checked={agreed} onCheckedChange={setAgreed} label="I agree" />
+<Checkbox checked="indeterminate" label="Select all" />
+```
+
+## 例
+
+<CheckboxExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "checked", type: 'boolean | "indeterminate"', description: "制御された選択状態。混在状態には \"indeterminate\" を渡します。" },
+    { prop: "onCheckedChange", type: '(checked: boolean | "indeterminate") => void', description: "切り替え時に発火します。" },
+    { prop: "label", type: "ReactNode", description: "関連付けられたラベル。" },
+  ]}
+/>
+
+## アクセシビリティ
+
+`Space` で切り替え、ラベルはクリック可能、状態は選択済み・未選択・混在として読み上げられます。

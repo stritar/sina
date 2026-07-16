@@ -1,0 +1,47 @@
+---
+title: Combobox
+sourceHash: 19fb4c750726
+---
+
+import { ComboboxHero, ComboboxExamples } from "@/app/components/docs/demos/primitives/combobox";
+
+<ComboboxHero />
+
+`Combobox` ist ein Select, in das du tippen kannst. Verwende es, wenn die
+Optionsliste lang genug ist, dass das Durchsuchen eines Dropdowns mühsam wird.
+
+## Verwendung
+
+```tsx
+import { Combobox } from "@sina-design-system/core";
+
+<Combobox
+  options={[
+    { value: "usd", label: "US Dollar" },
+    { value: "eur", label: "Euro" },
+  ]}
+  value={currency}
+  onValueChange={setCurrency}
+  placeholder="Search currencies"
+/>
+```
+
+## Beispiele
+
+<ComboboxExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "options", type: "ComboboxOption[]", description: "Die { value, label }-Einträge zur Auswahl." },
+    { prop: "value", type: "string", description: "Der ausgewählte Wert (kontrolliert)." },
+    { prop: "onValueChange", type: "(value: string) => void", description: "Wird bei der Auswahl ausgelöst." },
+    { prop: "placeholder", type: "string", description: "Leerzustandstext im Eingabefeld." },
+  ]}
+/>
+
+## Barrierefreiheit
+
+Basiert auf einem Popover mit einem nativen Input. Pfeiltasten bewegen sich durch
+die Treffer, `Enter` wählt aus, und die Listbox wird Screenreadern angesagt.

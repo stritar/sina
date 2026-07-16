@@ -3,25 +3,31 @@ import { getBreadcrumbItems } from "fumadocs-core/breadcrumb";
 import { findNeighbour } from "fumadocs-core/server";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { source } from "@/lib/source";
+import { DEFAULT_LOCALE } from "@/lib/i18n/locales";
+import { getMessages } from "@/lib/i18n/messages";
+import { basePath, toLocalePath } from "@/lib/i18n/paths";
 import { CopyPageMenu } from "./CopyPageMenu";
 import styles from "./DocsToolbar.module.css";
 
 /**
  * The page toolbar above the `<h1>`: breadcrumb on the left, the Copy Page split
  * menu + prev/next arrows on the right. Both halves are derived from the same
- * page tree the sidebar renders, so nav order is defined once (in `meta.json`).
- * Server component — only `CopyPageMenu` crosses to the client.
+ * locale-scoped page tree the sidebar renders, so nav order is defined once (in
+ * `meta.json`). Server component — only `CopyPageMenu` crosses to the client.
  */
-export function DocsToolbar({ url }: { url: string }) {
-  const crumbs = getBreadcrumbItems(url, source.pageTree, {
-    includeRoot: { url: "/docs" },
+export function DocsToolbar({ url, locale = DEFAULT_LOCALE }: { url: string; locale?: string }) {
+  const tree = source.getPageTree(locale);
+  const messages = getMessages(locale);
+  const crumbs = getBreadcrumbItems(url, tree, {
+    includeRoot: { url: toLocalePath("/docs", locale) },
     includePage: true,
   });
-  const { previous, next } = findNeighbour(source.pageTree, url);
+  const { previous, next } = findNeighbour(tree, url);
 
-  // Raw markdown is pre-generated as a static asset by scripts/generate-llms.mjs.
-  // Same rule as app/llms.txt/route.ts — the root index does not collapse to "".
-  const markdownUrl = url === "/docs" ? "/llms/docs/index.md" : `/llms${url}.md`;
+  // Raw markdown is pre-generated (English only) as a static asset by
+  // scripts/generate-llms.mjs; a translation points at its English source.
+  const base = basePath(url);
+  const markdownUrl = base === "/docs" ? "/llms/docs/index.md" : `/llms${base}.md`;
 
   return (
     <div className={styles.toolbar}>
@@ -58,7 +64,7 @@ export function DocsToolbar({ url }: { url: string }) {
             <Link
               href={previous.url}
               className={styles.arrow}
-              aria-label={`Previous page: ${previous.name}`}
+              aria-label={`${messages.pager.previous}: ${previous.name}`}
             >
               <CaretLeft aria-hidden weight="bold" className={styles.arrowIcon} />
             </Link>
@@ -68,7 +74,11 @@ export function DocsToolbar({ url }: { url: string }) {
             </span>
           )}
           {next ? (
-            <Link href={next.url} className={styles.arrow} aria-label={`Next page: ${next.name}`}>
+            <Link
+              href={next.url}
+              className={styles.arrow}
+              aria-label={`${messages.pager.next}: ${next.name}`}
+            >
               <CaretRight aria-hidden weight="bold" className={styles.arrowIcon} />
             </Link>
           ) : (

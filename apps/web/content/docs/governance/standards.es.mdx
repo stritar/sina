@@ -1,0 +1,47 @@
+---
+title: Estándares y citas
+sourceHash: 077f8d3d0725
+---
+
+La regla de oro de SINA es **nunca inventar un límite**: cada umbral, formato y campo
+obligatorio se remonta a un estándar o a un regulador, con la cita en el código. Esta
+página es el comprobante: cada estándar que codifica la Constitución y, para cada uno,
+*qué comprueba realmente el código*.
+
+Esa última columna es lo importante. Una lista de estándares es una afirmación de
+cumplimiento, y las afirmaciones de cumplimiento son justo donde un sistema de gobernanza
+empieza a mentirte. Por eso cada fila indica el **mecanismo**, no la aspiración: SINA
+calcula de verdad la suma de verificación mod-97 de un IBAN, pero no coteja una dirección
+contra una lista de sanciones, y no realiza una evaluación PCI. Cuando una regla es un
+sustituto endeble de una obligación profunda, la fila lo dice.
+
+Las reglas se dividen en tres niveles, y el código los mantiene separados:
+
+- **Formato**: sumas de verificación y listas de códigos. Deterministas, así que una carga
+  útil las satisface o no.
+- **Regulatorio**: regulaciones reales. Un `flag` registra el hallazgo en el
+  [registro de auditoría](/docs/concepts/audit-trail); un `escalate` fuerza un componente
+  gobernado; un `reject` lo rechaza de plano. No es algo que debas relajar a la ligera.
+- **Política de SINA**: valores predeterminados ajustables del producto (control dual,
+  límites de verificación adicional). **No es ley.** Son los que se espera que ajustes a tu
+  propio apetito de riesgo.
+
+Cuando el control bloquea una solicitud, el `standard` de la fila correspondiente viaja
+junto con la infracción hasta el registro de auditoría. Un bloqueo nunca es un misterio, y
+un auditor puede rastrearlo hasta la línea que lo produjo. Consulta
+[el contrato](/docs/concepts/the-contract) para conocer la forma, y
+[escribe una regla](/docs/governance/writing-a-rule) para añadir uno.
+
+<Callout variant="enforced" title="Esta tabla se genera a partir de los esquemas">
+  El catálogo vive en el paquete de la constitución, no en esta página, y una prueba de
+  guarda vincula ambos: una regla que cita un estándar que el catálogo omite falla la
+  compilación, y también lo hace una entrada del catálogo que cita algo que ninguna regla
+  impone. La documentación no puede desviarse del código, ni puede afirmar una comprobación
+  que no existe.
+</Callout>
+
+## Fintech
+
+<StandardsTable industry="fintech" />
+
+<ComplianceNote />

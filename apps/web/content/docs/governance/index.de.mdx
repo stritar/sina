@@ -1,0 +1,77 @@
+---
+title: Governance in der Praxis
+sourceHash: 59e77ad9a788
+---
+
+[Wie es funktioniert](/docs/how-it-works) erklärt, *wie* SINA entscheidet. Dieser
+Abschnitt ist das *Was*: die realen Regeln, die heute ausgeliefert werden, für
+fintech, und warum Sie ihnen vertrauen können.
+
+Die Verfassung teilt sich in zwei Arten von Regel, und jede Absicht ist die eine
+oder die andere:
+
+- **Geregelte** Regeln decken **Aktionen** ab: Geld bewegen, Konten eröffnen,
+  Karten ausgeben. Sie tragen eine Richtlinie (Limits, Freigaben, Offenlegungen)
+  und können zu einer strengeren Komponente eskalieren.
+- **Anzeige**-Regeln decken **Lesevorgänge** ab: Salden, Transaktionen, Bestände.
+  Sie prüfen die *Form* der Daten (und maskieren sensible Felder) und binden dann
+  eine präsentationale Komponente ein. Sie eskalieren nie.
+
+Der vollständige Katalog, welche Absichten es gibt und was jede von ihnen
+einbindet, ist [Geregelte Komponenten und Anzeigemuster](/docs/governance/components-and-patterns).
+
+<BeforeAfter>
+<Before title="Prompt-basierte Regeln">
+„Bewege niemals mehr als 10.000 $ ohne Freigabe“ steht in einem System-Prompt. Das
+hält, bis das Modell verwirrt, jailbreakt oder einfach im Irrtum ist.
+</Before>
+<After title="Verfassungsregeln">
+Das Limit von 10.000 $ ist eine Zod-Prüfung, die bei jeder Anfrage serverseitig
+läuft. Das Modell kann sich nicht an einem Parser vorbeireden.
+</After>
+</BeforeAfter>
+
+## Jede Schwelle hat eine Quelle
+
+Ein Governance-System ist nur dann vertrauenswürdig, wenn seine Regeln
+*vertretbar* sind. Deshalb trägt jede Regel ihre Quelle. Wenn der Kontrollpunkt
+etwas blockiert, enthält der Verstoß einen `standard`, die Vorschrift oder
+Richtlinie, aus der er stammt, und dieses Zitat landet im
+[Audit-Eintrag](/docs/concepts/audit-trail). Eine Blockade ist nie ein Rätsel.
+
+Der Code hält drei Arten von Regel auseinander: **Format**-Standards (ISO 4217,
+IBAN, Luhn), **regulatorische** Schwellen aus echter Finanzregulierung (die CTR-,
+SAR- und Travel-Rule-Bänder der FinCEN; FATF; Nacha), die zu lockern nicht in
+Ihrem Ermessen liegt, und **SINA-Richtlinien**-Standardwerte, die Sie an Ihre
+eigene Risikobereitschaft anpassen sollen (das Vier-Augen-Limit von 50.000 $ für
+Überweisungen, die Autorisierungsobergrenzen pro Zahlungsweg).
+
+Die vollständige Liste und was SINA in jedem Fall *tatsächlich* prüft, ist
+[Standards und Zitate](/docs/governance/standards).
+
+## Das Bedrohungsmodell
+
+SINA geht davon aus, dass die KI, die Absichten erzeugt, falsch, jailbreakt oder
+aktiv feindselig sein könnte. Die Entwurfsfrage lautet nie „Wird sich das Modell
+benehmen?“ Sie lautet „Was passiert, wenn nicht?“
+
+| Der Angriff | Was er versucht | Warum er scheitert |
+|---|---|---|
+| **Fabrizierte Kontrolle** | Einen `confirmButton` in die Payload einschmuggeln | Striktes Schema; unbekannte Felder werden abgewiesen, bevor irgendein Wert gelesen wird |
+| **Eingeschmuggelte Kartendaten** | Ein `cvv` oder eine vollständige PAN einschließen | Dasselbe strikte Parsen; die Redaktion maskiert es, bevor es in ein Protokoll gelangen kann |
+| **Aktion über dem Limit** | Eine Überweisung von 60.000 $ ohne Freigabe | Die Richtlinie eskaliert zu einem Dialog mit Zweitfreigeber; die rohe Bestätigung kann nicht eingebunden werden |
+| **Selbstfreigabe** | Die eigene Überweisung freigeben | Vier-Augen-Prüfung: Der Freigeber muss sich vom serverseitig bekannten Initiator unterscheiden |
+| **Köder-und-Tausch** | 5.000 $ freigeben, dann 60.000 $ ausführen | Die Freigabe ist an die genauen Konditionen gebunden, auf dem Server neu berechnet |
+| **Fabrizierte Daten** | Einen Saldo oder eine Transaktion erfinden | Bei Lesevorgängen liefert der Server die Werte; das Modell wählt nur, *was* angezeigt wird |
+| **Datenexfiltration** | Eine unmaskierte Kontonummer zurückgeben | Anzeigeschemata verlangen maskierte Bezeichner |
+| **Überflutung** | 10.000 Zeilen senden, um den Client einzufrieren | Arrays sind begrenzt |
+
+<Callout variant="enforced" title="Das sind keine Hypothesen">
+  Jede Zeile oben ist eine echte Payload in SINAs Testsuite. Die Kompilierung
+  schlägt fehl, wenn eine davon nicht mehr blockiert wird, damit die Garantien
+  nicht stillschweigend verrotten.
+</Callout>
+
+Sehen Sie, wie sich mehrere dieser Angriffe in einer echten Anfrage abspielen:
+[die Überweisung von 60.000 $, von Anfang bis Ende](/docs/governance/wire-transfer).
+Dann [schreiben Sie Ihre eigene Regel](/docs/governance/writing-a-rule).

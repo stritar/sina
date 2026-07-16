@@ -1,0 +1,38 @@
+---
+title: Progress
+sourceHash: 538c1101fa22
+---
+
+import { ProgressHero, ProgressExamples } from "@/app/components/docs/demos/primitives/progress";
+
+<ProgressHero />
+
+`Progress` indique l'avancement d'une tâche. Passez une `value` pour une progression
+déterminée ; omettez-la pour une barre indéterminée.
+
+## Utilisation
+
+```tsx
+import { Progress } from "@sina-design-system/core";
+
+<Progress value={62} />      {/* 62% */}
+<Progress />                 {/* indeterminate */}
+```
+
+## Exemples
+
+<ProgressExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "value", type: "number", description: "De 0 à 100. Omettez-la pour une barre indéterminée." },
+    { prop: "label", type: "string", description: "Nom accessible pour la barre de progression." },
+  ]}
+/>
+
+## Accessibilité
+
+Construit sur Radix Progress avec `role="progressbar"` et les valeurs correctes
+`aria-valuenow` / `aria-valuemin` / `aria-valuemax`.

@@ -1,0 +1,45 @@
+---
+title: LineChart
+sourceHash: 89173318aea6
+---
+
+import { LineChartHero, LineChartExamples } from "@/app/components/docs/demos/primitives/line-chart";
+
+<LineChartHero />
+
+`LineChart` traza una o varias series a lo largo del tiempo, con tooltips al pasar
+el cursor estilizados a partir de tokens. Pasa `fill` para un gráfico de área.
+
+## Uso
+
+```tsx
+import { LineChart } from "@sina-design-system/core";
+
+<LineChart
+  label="Balance over time"
+  data={{ labels, datasets }}
+  valueFormatter={(n) => `$${n.toLocaleString()}`}
+  fill
+/>
+```
+
+## Ejemplos
+
+<LineChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "Nombre accesible obligatorio para el gráfico." },
+    { prop: "data", type: "ChartData", description: "Series y puntos (formato de Chart.js)." },
+    { prop: "valueFormatter", type: "(n: number) => string", description: "Da formato a los valores del tooltip y del eje. Mantiene el gráfico independiente del dominio." },
+    { prop: "fill", type: "boolean", default: "false", description: "Renderiza como un gráfico de área." },
+  ]}
+/>
+
+## Accesibilidad
+
+Un componente `"use client"` (canvas). El contenedor es `role="img"` con tu
+`label`; mantén un resumen de texto cerca como ruta no visual. La animación se
+desactiva con movimiento reducido.

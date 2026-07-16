@@ -1,0 +1,40 @@
+---
+title: Separator
+sourceHash: c0f3709a1e32
+---
+
+import { SeparatorHero, SeparatorExamples } from "@/app/components/docs/demos/primitives/separator";
+
+<SeparatorHero />
+
+`Separator` traza una línea fina entre secciones. De forma predeterminada es
+decorativo (oculto para los lectores de pantalla); márcalo como no decorativo
+cuando la división tenga significado.
+
+## Uso
+
+```tsx
+import { Separator } from "@sina-design-system/core";
+
+<Separator />
+<Separator orientation="vertical" />
+```
+
+## Ejemplos
+
+<SeparatorExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "orientation", type: '"horizontal" | "vertical"', default: '"horizontal"', description: "Dirección del divisor." },
+    { prop: "decorative", type: "boolean", default: "true", description: "Cuando es false, expone un rol separator a la tecnología de asistencia." },
+  ]}
+/>
+
+## Accesibilidad
+
+Los separadores decorativos se ocultan a la tecnología de asistencia. Con
+`decorative={false}` el divisor expone `role="separator"` como un límite de
+sección real.

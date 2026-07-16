@@ -1,0 +1,32 @@
+---
+title: ScrollArea
+sourceHash: 017d8f7db069
+---
+
+import { ScrollAreaHero, ScrollAreaExamples } from "@/app/components/docs/demos/primitives/scroll-area";
+
+<ScrollAreaHero />
+
+`ScrollArea` verleiht einem scrollbaren Bereich eine einheitliche, gestylte
+Scrollleiste über alle Browser hinweg, ohne das native Scrollen per Tastatur zu
+deaktivieren.
+
+## Verwendung
+
+```tsx
+import { ScrollArea } from "@sina-design-system/core";
+
+<ScrollArea style={{ height: 240 }}>
+  {/* long content */}
+</ScrollArea>
+```
+
+## Beispiele
+
+<ScrollAreaExamples />
+
+## Barrierefreiheit
+
+Verwenden Sie es für eine begrenzte Liste oder ein begrenztes Panel, das
+andernfalls überlaufen würde. Der Inhalt bleibt per Tastatur scrollbar und die
+Scrollleiste verschiebt das Layout nicht.

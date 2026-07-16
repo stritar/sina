@@ -14,6 +14,8 @@ import {
 import { Sidebar } from "./Sidebar";
 import { Search } from "./Search";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageSwitcher } from "./LanguageSwitcher";
+import { useLocale } from "./LocaleContext";
 import { SinaLogo } from "./visuals/SinaLogo";
 import styles from "./DocsHeader.module.css";
 
@@ -24,6 +26,7 @@ import styles from "./DocsHeader.module.css";
 export function DocsHeader({ tree }: { tree: Root }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { messages } = useLocale();
 
   useEffect(() => {
     setOpen(false);
@@ -36,7 +39,7 @@ export function DocsHeader({ tree }: { tree: Root }) {
           variant="ghost"
           size="sm"
           className={styles.menuButton}
-          aria-label="Open navigation"
+          aria-label={messages.header.openNav}
           onClick={() => setOpen(true)}
         >
           <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" fill="none">
@@ -48,23 +51,24 @@ export function DocsHeader({ tree }: { tree: Root }) {
             />
           </svg>
         </Button>
-        <Link href="/" className={styles.wordmark} aria-label="SINA home">
+        <Link href="/" className={styles.wordmark} aria-label={messages.header.home}>
           <SinaLogo className={styles.logo} />
         </Link>
         <span className={styles.divider} aria-hidden="true" />
-        <span className={styles.section}>Docs</span>
+        <span className={styles.section}>{messages.header.section}</span>
       </div>
 
       <div className={styles.right}>
         <Search />
         <ThemeToggle />
+        <LanguageSwitcher />
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className={styles.drawer}>
-          <DialogTitle className={styles.drawerTitle}>Documentation</DialogTitle>
+          <DialogTitle className={styles.drawerTitle}>{messages.header.drawerTitle}</DialogTitle>
           <DialogDescription className={styles.drawerDescription}>
-            Site navigation
+            {messages.header.drawerDescription}
           </DialogDescription>
           <nav aria-label="Documentation menu">
             <Sidebar tree={tree} />

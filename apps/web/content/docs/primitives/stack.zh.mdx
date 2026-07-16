@@ -1,0 +1,42 @@
+---
+title: Stack
+sourceHash: 9856ac9abe5a
+---
+
+import { StackHero, StackExamples } from "@/app/components/docs/demos/primitives/stack";
+
+<StackHero />
+
+`Stack` 将其子元素沿单一轴排列，`gap` 取自间距刻度。它是日常使用的布局基础组件；当你需要可换行的列时，请使用
+[Grid](/docs/primitives/grid)。
+
+## 用法
+
+```tsx
+import { Stack } from "@sina-design-system/core";
+
+<Stack direction="row" gap={3} align="center">
+  <Badge>Draft</Badge>
+  <span>Invoice #204</span>
+</Stack>
+```
+
+## 示例
+
+<StackExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "direction", type: '"row" | "column"', default: '"column"', description: "布局轴。" },
+    { prop: "gap", type: "GapStep", description: "子元素之间的间距（取自 8pt 刻度）。" },
+    { prop: "align / justify", type: "string", description: "沿每个轴的 Flex 对齐方式。" },
+    { prop: "as", type: "ElementType", description: "渲染为不同的元素（多态）。" },
+  ]}
+/>
+
+## 无障碍
+
+纯展示性。它渲染一个普通的 `div`，不添加任何语义。当子元素构成真实结构时，传入 `as`
+以保留它（例如，`as="ul"` 搭配 `li` 子元素可让列表保持为列表）。

@@ -1,0 +1,59 @@
+---
+title: Paquetes y exports
+sourceHash: 2e1b381ebc4d
+---
+
+> Referencia de mantenimiento manual. La autogeneración TSDoc→MDX está aplazada.
+
+SINA son cinco paquetes pequeños con límites estrictos. Cada capa solo puede
+conocer las que están por debajo:
+
+| Paquete | Qué es | Nunca contiene |
+|---|---|---|
+| `@sina-design-system/theme` | Tokens de diseño (`--sina-*`) + el reset de CSS | React, UI |
+| `@sina-design-system/core` | Primitivas headless y accesibles sobre Radix | Zod, vocabulario de dominio |
+| `@sina-design-system/governance` | La costura de intercepción compartida | React, UI, vocabulario de dominio |
+| `@sina-design-system/fintech` | La Constitución fintech, reglas Zod puras | React, UI de cualquier tipo |
+| `@sina-design-system/fintech-react` | Componentes gobernados que componen `core` + `fintech` | Zod (compone esquemas, nunca los escribe) |
+
+## `theme`
+
+Incluye `./reset.css` (en capas, así tus estilos siempre ganan) y `./css`, las
+propiedades personalizadas `--sina-*`. La gramática, los niveles y las escalas de
+los tokens están en [Tokens](/docs/theming/tokens); lo que puedes sobrescribir
+está en [Theming](/docs/theming).
+
+## `core`
+
+La biblioteca de primitivas. Cada export aparece con ejemplos en vivo en la
+[Galería de primitivas](/docs/primitives). Solo exports con nombre; los tipos de
+props por primitiva (`ButtonProps`, `GapStep`, `SummaryItem`, …) se incluyen junto
+a ellas.
+
+## `governance`
+
+La costura agnóstica al dominio sobre la que se construye cada constitución:
+
+| Export | Propósito |
+|---|---|
+| `InterceptionResult`, `Violation`, `Severity` | El contrato uniforme; consulta [el contrato de intercepción](/docs/concepts/the-contract). |
+| `intercept`, `ConstitutionRule` | Ejecuta un esquema Zod + política en el servidor y devuelve el contrato. |
+| `dispatch`, `dispatchAll`, `createRouter`, `pattern` | El enrutador de intenciones: sobre `{ intent, props }` → decisión + montaje. |
+| `UNKNOWN_INTENT`, `SCHEMA_INVALID` | Centinelas para un verbo no reconocido / un análisis fallido. |
+| `emitAudit`, `redact`, `setAuditSink`, `AuditEvent` | El punto de emisión de auditoría; consulta [el registro de auditoría](/docs/concepts/audit-trail). |
+
+El enrutador resuelve el montaje **fuera** del contrato, así la gobernanza sigue
+siendo una capa de escalado opcional sobre un validar y luego montar universal.
+
+## `fintech` y `fintech-react`
+
+`fintech` es la Constitución publicada: cada verbo de intención, esquema, umbral y
+estándar citado. `fintech-react` renderiza las decisiones que toma, los componentes
+gobernados. Ambos están catalogados en [Componentes gobernados y patrones de
+visualización](/docs/governance/components-and-patterns); escribe tu propia regla en
+[Escribe una regla de gobernanza](/docs/governance/writing-a-rule).
+
+## Versiones
+
+Los cinco se publican en la **0.1.0**; consulta [Versiones y
+estabilidad](/docs/reference/changelog).

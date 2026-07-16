@@ -1,0 +1,41 @@
+---
+title: Button
+sourceHash: 7de5af4b2e5a
+---
+
+import { ButtonHero, ButtonExamples } from "@/app/components/docs/demos/primitives/button";
+
+<ButtonHero />
+
+`Button` löst eine Aktion aus: ein Formular absenden, einen Dialog öffnen, einen
+Schritt bestätigen. Verwende einen Button für Aktionen und einen Link für die
+Navigation.
+
+## Verwendung
+
+```tsx
+import { Button } from "@sina-design-system/core";
+
+<Button variant="primary" onClick={submit}>Continue</Button>
+```
+
+## Beispiele
+
+<ButtonExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "variant", type: '"primary" | "secondary" | "danger" | "ghost"', default: '"primary"', description: "Visuelle Gewichtung und Absicht." },
+    { prop: "size", type: '"sm" | "md" | "lg" | "xl"', default: '"md"', description: "Höhe des Steuerelements." },
+    { prop: "iconLeft / iconRight", type: "ReactNode", description: "Eine vorangestellte oder nachgestellte Glyphe." },
+    { prop: "loading", type: "boolean", default: "false", description: "Zeigt einen Spinner und deaktiviert den Button." },
+    { prop: "asChild", type: "boolean", default: "false", description: "Wird als das Kindelement gerendert (z. B. ein Link) und behält dabei das Button-Styling bei." },
+  ]}
+/>
+
+## Barrierefreiheit
+
+Native `<button>`-Semantik: fokussierbar, `Enter`/`Space` aktivieren, und
+`disabled` wird angesagt. Ein reiner Icon-Button benötigt ein `aria-label`.

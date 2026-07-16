@@ -1,0 +1,41 @@
+---
+title: 审计追踪
+sourceHash: 37daeb373c64
+---
+
+关卡做出的每个决策都会发出一个<Term term="audit event">审计事件</Term>。正是它将“AI
+构建了一个界面”变成“这正是它所请求的内容、我们的决定以及原因”。合规团队可以审查它，你可以用它进行调试，用户也可以相信没有任何事情发生在记录之外。
+
+## 形态
+
+```ts
+type AuditEvent = {
+  timestamp: string;
+  decisionId: string;
+  version: string;
+  payload: unknown;        // redacted (see below)
+  result: InterceptionResult;
+  violations: Violation[]; // each with its cited standard
+  decidedComponent: string | null;
+};
+```
+
+由于每个违规都携带其 `standard`，记录不只是说“我们拦截了它”。它会说明*是哪条规则*拦截了它，以及*该规则来自何处*。
+
+## 脱敏最先发生
+
+载荷会**在存储之前先经过脱敏**：
+
+- 完全**丢弃**：卡片安全码（CVV）和 PIN。
+- **掩码**为最后四位：卡号（PAN）。
+- **哈希**为指纹：账户和 IBAN 号码，足以关联两个事件，但绝不足以重建号码。
+
+<Callout variant="governance" title="从构造上即安全">
+  脱敏不是一个你可能忘记开启的设置。它作为发出事件的一部分运行，因此恶意流无法将敏感数据偷偷带入审计日志。
+</Callout>
+
+<Callout variant="note" title="它去往何处">
+  如今，审计事件是一个已定义的契约，配有一个空操作的接收端。其形态是固定的，每个决策都会发出一个。将其接入持久化接收端是已规划的发布加固工作。
+</Callout>
+
+下一步：[面向 AI 代理](/docs/agents)。

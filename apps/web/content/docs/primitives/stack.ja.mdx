@@ -1,0 +1,42 @@
+---
+title: Stack
+sourceHash: 9856ac9abe5a
+---
+
+import { StackHero, StackExamples } from "@/app/components/docs/demos/primitives/stack";
+
+<StackHero />
+
+`Stack` は子要素を単一の軸に沿って配置し、`gap` は間隔スケールから取ります。日常的に使うレイアウトプリミティブです。折り返す列が必要な場合は
+[Grid](/docs/primitives/grid) を使ってください。
+
+## 使い方
+
+```tsx
+import { Stack } from "@sina-design-system/core";
+
+<Stack direction="row" gap={3} align="center">
+  <Badge>Draft</Badge>
+  <span>Invoice #204</span>
+</Stack>
+```
+
+## 例
+
+<StackExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "direction", type: '"row" | "column"', default: '"column"', description: "レイアウトの軸。" },
+    { prop: "gap", type: "GapStep", description: "子要素間の間隔（8pt スケールから）。" },
+    { prop: "align / justify", type: "string", description: "各軸に沿った Flex の配置。" },
+    { prop: "as", type: "ElementType", description: "別の要素としてレンダリングする（ポリモーフィック）。" },
+  ]}
+/>
+
+## アクセシビリティ
+
+純粋に表示のためのものです。意味付けを追加せず、素の `div` をレンダリングします。子要素が実際の構造を成す場合は、`as`
+を渡してそれを保ちます（例えば `li` 子要素を伴う `as="ul"` は、リストをリストのまま保ちます）。

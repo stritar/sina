@@ -1,0 +1,39 @@
+---
+title: VisuallyHidden
+sourceHash: 09d33ae53403
+---
+
+import { VisuallyHiddenHero, VisuallyHiddenExamples } from "@/app/components/docs/demos/primitives/visually-hidden";
+
+<VisuallyHiddenHero />
+
+`VisuallyHidden` blendet Inhalt visuell aus, hält ihn aber für assistive Technologien
+verfügbar. Nutze es, um einer Schaltfläche mit reinem Icon einen Namen zu geben, oder
+um Kontext zu ergänzen, den ein Screenreader benötigt, das Layout aber bereits
+impliziert.
+
+## Verwendung
+
+```tsx
+import { VisuallyHidden } from "@sina-design-system/core";
+
+<button>
+  <Icon icon={X} decorative />
+  <VisuallyHidden>Close dialog</VisuallyHidden>
+</button>
+```
+
+## Beispiele
+
+Den ausgeblendeten Text siehst du in keiner der Vorschauen, aber ein Screenreader
+kündigt ihn an, sodass die Schaltfläche mit reinem Icon als „Schließen, Schaltfläche“
+vorgelesen wird.
+
+<VisuallyHiddenExamples />
+
+## Barrierefreiheit
+
+Das ist die barrierefreie Art, Text auszublenden, anders als `display: none` (das ihn
+für alle entfernt) oder Off-Screen-Tricks (die sich fehlerhaft verhalten können).
+Greife dazu, wann immer das visuelle Design eine Beschriftung weglässt, die ein
+Screenreader dennoch braucht.

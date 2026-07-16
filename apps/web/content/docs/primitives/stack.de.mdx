@@ -1,0 +1,44 @@
+---
+title: Stack
+sourceHash: 9856ac9abe5a
+---
+
+import { StackHero, StackExamples } from "@/app/components/docs/demos/primitives/stack";
+
+<StackHero />
+
+`Stack` ordnet seine Kinder entlang einer einzelnen Achse an, mit einem `gap` aus
+der Abstandsskala. Es ist die alltägliche Layout-Primitive; greife zu
+[Grid](/docs/primitives/grid), wenn du umbrechende Spalten brauchst.
+
+## Verwendung
+
+```tsx
+import { Stack } from "@sina-design-system/core";
+
+<Stack direction="row" gap={3} align="center">
+  <Badge>Draft</Badge>
+  <span>Invoice #204</span>
+</Stack>
+```
+
+## Beispiele
+
+<StackExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "direction", type: '"row" | "column"', default: '"column"', description: "Layout-Achse." },
+    { prop: "gap", type: "GapStep", description: "Abstand zwischen den Kindern (aus der 8-pt-Skala)." },
+    { prop: "align / justify", type: "string", description: "Flex-Ausrichtung entlang jeder Achse." },
+    { prop: "as", type: "ElementType", description: "Als anderes Element rendern (polymorph)." },
+  ]}
+/>
+
+## Barrierefreiheit
+
+Rein präsentational. Es rendert ein schlichtes `div` ohne zusätzliche Semantik.
+Wenn die Kinder eine echte Struktur bilden, übergib `as`, um sie zu erhalten
+(z. B. sorgt `as="ul"` mit `li`-Kindern dafür, dass eine Liste eine Liste bleibt).

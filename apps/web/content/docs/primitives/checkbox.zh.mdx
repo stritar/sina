@@ -1,0 +1,37 @@
+---
+title: Checkbox
+sourceHash: 897c9affa3b4
+---
+
+import { CheckboxHero, CheckboxExamples } from "@/app/components/docs/demos/primitives/checkbox";
+
+<CheckboxHero />
+
+`Checkbox` 切换单个布尔值。它还支持**不确定**状态，用于表示"部分选中而非全选"，就像一个父级控制一组子项。
+
+## 用法
+
+```tsx
+import { Checkbox } from "@sina-design-system/core";
+
+<Checkbox checked={agreed} onCheckedChange={setAgreed} label="I agree" />
+<Checkbox checked="indeterminate" label="Select all" />
+```
+
+## 示例
+
+<CheckboxExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "checked", type: 'boolean | "indeterminate"', description: "受控的选中状态。传入 \"indeterminate\" 以表示混合状态。" },
+    { prop: "onCheckedChange", type: '(checked: boolean | "indeterminate") => void', description: "切换时触发。" },
+    { prop: "label", type: "ReactNode", description: "关联的标签。" },
+  ]}
+/>
+
+## 无障碍
+
+`Space` 键切换；标签可点击；状态会被朗读为已选中、未选中或混合。

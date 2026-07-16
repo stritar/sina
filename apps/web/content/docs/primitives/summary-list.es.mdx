@@ -1,0 +1,43 @@
+---
+title: SummaryList
+sourceHash: 4b44c8a631e1
+---
+
+import { SummaryListHero, SummaryListExamples } from "@/app/components/docs/demos/primitives/summary-list";
+
+<SummaryListHero />
+
+`SummaryList` renderiza valores etiquetados como un `<dl>` correcto. Es lo que un
+diálogo gobernado usa para mostrar los términos exactos que estás aprobando.
+
+## Uso
+
+```tsx
+import { SummaryList } from "@sina-design-system/core";
+
+<SummaryList
+  items={[
+    { label: "Amount", value: "$60,000.00", emphasis: true },
+    { label: "To", value: "Beta LLC" },
+    { label: "Rail", value: "Wire" },
+  ]}
+/>
+```
+
+## Ejemplos
+
+<SummaryListExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "items", type: "SummaryItem[]", description: "Las filas { label, value, emphasis? }." },
+    { prop: "emphasis (per item)", type: "boolean", description: "Resalta una fila clave, como el importe." },
+  ]}
+/>
+
+## Accesibilidad
+
+Se renderiza como `<dl>`/`<dt>`/`<dd>`, de modo que la relación etiqueta/valor queda
+expuesta a la tecnología asistiva.

@@ -1,0 +1,39 @@
+---
+title: CurrencyField
+sourceHash: c10a09a690cc
+---
+
+import { CurrencyFieldHero, CurrencyFieldExamples } from "@/app/components/docs/demos/primitives/currency-field";
+
+<CurrencyFieldHero />
+
+`CurrencyField` met en forme un montant monétaire comme on s'y attend, en
+groupant les milliers à la perte du focus, tout en conservant une valeur
+numérique propre en dessous.
+
+## Utilisation
+
+```tsx
+import { CurrencyField } from "@sina-design-system/core";
+
+<CurrencyField label="Amount" currencySymbol="$" defaultValue="25000" />
+```
+
+## Exemples
+
+<CurrencyFieldExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "currencySymbol", type: "string", default: '"$"', description: "Le symbole affiché avant le montant." },
+    { prop: "label / description / error", type: "ReactNode", description: "Transmis au Field englobant." },
+  ]}
+/>
+
+<Callout variant="governance" title="Mise en forme, pas application">
+  Ceci est purement visuel. Cela n'arrêtera pas un montant supérieur à la
+  limite ; c'est le rôle du contrôle, sur le serveur. Une saisie côté client peut
+  toujours être contournée, c'est pourquoi SINA ne s'y fie jamais pour une limite.
+</Callout>

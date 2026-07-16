@@ -1,0 +1,93 @@
+---
+title: Schrittweise einführen
+sourceHash: b9bef9982943
+---
+
+Sie müssen nicht am ersten Tag alles regeln, ja Sie müssen überhaupt nichts
+regeln. Es gibt zwei Einstiege, und der erste lässt sich sauber zum zweiten
+ausbauen.
+
+## Weg 1: nur Primitives
+
+Die Governance von SINA ist optional. Wenn Sie einfach nur zugängliche,
+themenfähige React-Komponenten in Radix-Qualität möchten, ohne selbst eine zu
+verdrahten, nutzen Sie die Primitives allein. Kein Kontrollpunkt, keine
+serverseitige Prüfung.
+
+<Steps>
+  <Step title="Zwei Pakete installieren">
+
+```bash
+pnpm add @sina-design-system/theme @sina-design-system/core
+```
+
+  </Step>
+  <Step title="Die Styles importieren">
+
+```ts
+// app/layout.tsx
+import "@sina-design-system/theme/reset.css";
+import "@sina-design-system/theme/css";
+import "@sina-design-system/core/styles.css";
+```
+
+  </Step>
+  <Step title="Die Komponenten verwenden">
+
+```tsx
+import { Button } from "@sina-design-system/core";
+
+<Button variant="primary">Save</Button>
+```
+
+Zugängliche Primitives, gestaltet durch [Tokens](/docs/theming/tokens) und neu
+brandbar mit [Theming](/docs/theming). Durchstöbern Sie das gesamte Set in der
+[Primitives-Galerie](/docs/primitives).
+
+  </Step>
+</Steps>
+
+<Callout variant="note" title="Worauf Sie verzichten">
+  Ohne den Kontrollpunkt validiert nichts die KI-Absicht, was in Ordnung ist,
+  wenn Sie noch keine UI mit KI generieren. Fügen Sie später
+  [Governance](/docs/governance) hinzu, und Sie behalten jede Komponente; nichts
+  wird ersetzt.
+</Callout>
+
+## Weg 2: eine Absicht nach der anderen regeln
+
+Die verbreitete Sorge lautet „Governance wird mein Team ausbremsen". Das tut sie
+nicht, wenn sie so ausgerollt wird, wie sie entworfen ist:
+
+<Steps>
+  <Step title="Eine hochwertige Absicht auswählen">
+
+Wählen Sie den Ablauf, bei dem ein Fehler am teuersten ist, meist die
+Geldbewegung. Leiten Sie nur diesen durch den Kontrollpunkt. Alles andere bleibt
+genau so, wie es ist.
+
+  </Step>
+  <Step title="Beobachten, was er blockiert">
+
+Lassen Sie echte (oder aufgezeichnete) Anfragen hindurchlaufen und lesen Sie die
+Entscheidungen. Stimmen Sie die Richtlinienschwellen auf die Risikobereitschaft
+Ihres Produkts ab; siehe [Eine Regel schreiben](/docs/governance/writing-a-rule).
+
+  </Step>
+  <Step title="Auf den nächsten Ablauf ausweiten">
+
+Da jede Regel denselben
+[Vertrag](/docs/concepts/the-contract) zurückgibt, funktioniert der Render-Code,
+den Sie das erste Mal geschrieben haben, auch für den zweiten.
+
+  </Step>
+</Steps>
+
+<Callout variant="note" title="Keine Governance-Steuer">
+  SINA fügt pro geregelter Absicht eine serverseitige Prüfung hinzu. Lesezugriffe
+  und nicht geregelte Abläufe bleiben unberührt, sodass Sie nur dort zahlen, wo
+  Sie es verlangt haben, und Sie können bei einem einzigen Ablauf aufhören. Und
+  jede Schwelle ist eine benannte, mit Quelle belegte Konstante: Wenn jemand
+  fragt „warum wurde das blockiert", ist die Antwort eine konkrete Regel mit
+  einer konkreten Quelle, überprüfbar in einem Pull Request.
+</Callout>

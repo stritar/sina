@@ -1,0 +1,31 @@
+---
+title: RadioGroup
+sourceHash: f5e7592046d1
+---
+
+import { RadioGroupHero, RadioGroupExamples } from "@/app/components/docs/demos/primitives/radio-group";
+
+<RadioGroupHero />
+
+`RadioGroup` は、少数の選択肢のなかから 1 つだけを排他的に選ぶためのものです。数個を超える場合は、
+[Select](/docs/primitives/select) を優先してください。
+
+## 使い方
+
+```tsx
+import { RadioGroup, RadioGroupItem } from "@sina-design-system/core";
+
+<RadioGroup value={plan} onValueChange={setPlan}>
+  <RadioGroupItem value="standard" label="Standard" />
+  <RadioGroupItem value="priority" label="Priority" />
+</RadioGroup>
+```
+
+## 例
+
+<RadioGroupExamples />
+
+## アクセシビリティ
+
+ARIA の radiogroup パターンに従います。`Tab` でグループに入り、矢印キーで選択肢の間を移動し
+（ローミングフォーカス）、選択中の選択肢だけがタブストップになります。

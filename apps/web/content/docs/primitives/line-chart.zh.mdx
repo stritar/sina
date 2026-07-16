@@ -1,0 +1,44 @@
+---
+title: LineChart
+sourceHash: 89173318aea6
+---
+
+import { LineChartHero, LineChartExamples } from "@/app/components/docs/demos/primitives/line-chart";
+
+<LineChartHero />
+
+`LineChart` 将一个或多个序列随时间绘制出来，悬停提示框的样式来自 tokens。传入
+`fill` 可得到面积图。
+
+## 用法
+
+```tsx
+import { LineChart } from "@sina-design-system/core";
+
+<LineChart
+  label="Balance over time"
+  data={{ labels, datasets }}
+  valueFormatter={(n) => `$${n.toLocaleString()}`}
+  fill
+/>
+```
+
+## 示例
+
+<LineChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "图表必需的无障碍名称。" },
+    { prop: "data", type: "ChartData", description: "序列与数据点（Chart.js 结构）。" },
+    { prop: "valueFormatter", type: "(n: number) => string", description: "格式化提示框与坐标轴的数值。使图表保持与领域无关。" },
+    { prop: "fill", type: "boolean", default: "false", description: "渲染为面积图。" },
+  ]}
+/>
+
+## 无障碍
+
+一个 `"use client"` 组件（canvas）。外层容器为 `role="img"` 并带有你的
+`label`；请在附近保留一段文字摘要作为非视觉路径。在减弱动态效果时动画会被禁用。

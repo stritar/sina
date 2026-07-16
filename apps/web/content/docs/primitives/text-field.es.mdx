@@ -1,0 +1,36 @@
+---
+title: TextField
+sourceHash: bea988c70ac4
+---
+
+import { TextFieldHero, TextFieldExamples } from "@/app/components/docs/demos/primitives/text-field";
+
+<TextFieldHero />
+
+`TextField` es una entrada de texto con todo el cableado de Field ya
+incorporado. Activa `multiline` para obtener un textarea.
+
+## Uso
+
+```tsx
+import { TextField } from "@sina-design-system/core";
+
+<TextField label="Name" placeholder="Ada Lovelace" />
+<TextField label="Notes" multiline />
+```
+
+## Ejemplos
+
+<TextFieldExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "multiline", type: "boolean", default: "false", description: "Renderiza un textarea en lugar de un input." },
+    { prop: "label / description / error", type: "ReactNode", description: "Se pasan al Field que lo envuelve." },
+  ]}
+/>
+
+Acepta los atributos nativos habituales de input/textarea (`placeholder`,
+`value`, `onChange`, etc.).

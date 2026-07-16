@@ -1,0 +1,44 @@
+---
+title: Toast
+sourceHash: 9f523a8662a1
+---
+
+import { ToastHero, ToastExamples } from "@/app/components/docs/demos/primitives/toast";
+
+<ToastHero />
+
+`Toast` es una notificación breve y no bloqueante: «Guardado», «Transferencia
+enviada», «Error al copiar». Monta un provider y un viewport una vez, y luego
+lanza toasts cuando lo necesites.
+
+## Uso
+
+```tsx
+import {
+  ToastProvider, ToastViewport, Toast, ToastTitle, ToastDescription,
+} from "@sina-design-system/core";
+
+<ToastProvider>
+  <Toast variant="success" open={open} onOpenChange={setOpen}>
+    <ToastTitle>Transfer sent</ToastTitle>
+    <ToastDescription>$500 to Beta LLC.</ToastDescription>
+  </Toast>
+  <ToastViewport />
+</ToastProvider>
+```
+
+## Ejemplos
+
+<ToastExamples />
+
+## Props
+
+`ToastProvider` · `ToastViewport` · `Toast` · `ToastTitle` · `ToastDescription` ·
+`ToastAction` · `ToastClose`. `Toast` acepta un `variant` de `success`, `danger` o
+`info` (danger renderiza un glifo en negrita).
+
+## Accesibilidad
+
+Los toasts se anuncian de forma discreta a los lectores de pantalla, se pausan al
+pasar el cursor y se pueden descartar con el teclado. No pongas información
+esencial e irrepetible en un toast. Desaparece.

@@ -1,0 +1,86 @@
+---
+title: El contrato de intercepción
+sourceHash: 9015f1ca85a8
+---
+
+Cada regla de la Constitución responde con los **mismos tres campos**. Aprende
+esta forma una vez y podrás leer cualquier decisión que tome SINA.
+
+```ts
+type InterceptionResult = {
+  valid: boolean;                   // did everything pass?
+  violations: Violation[];          // what went wrong (empty if clean)
+  requiredComponent: string | null; // a stricter component you must render instead
+};
+```
+
+- **`valid`**: `true` solo cuando nada bloquea. Un único problema que bloquee lo
+  hace `false`.
+- **`violations`**: lo que encontró el control. Cada una tiene un `message`, una
+  `severity` y un `standard`, la regulación o política de la que procede, para
+  que un bloqueo sea explicable, no un misterio.
+- **`requiredComponent`**: cuando una regla exige un componente más estricto
+  (como un diálogo de segundo aprobador), su nombre va aquí. En caso contrario,
+  `null`.
+
+## Cómo se produce el resultado: primero la forma, luego los valores
+
+**Capa 1: estructura.** ¿Es el payload exactamente de la forma correcta? Los
+esquemas son **estrictos**, así que cualquier campo que no deba estar ahí se
+rechaza. Si una IA intenta colar un `confirmButton` fabricado, un `cvv` o un
+número de tarjeta completo, esos son *campos extra*, descartados antes de mirar
+valor alguno.
+
+<BeforeAfter>
+  <Before title="Lo que envía un flujo hostil">
+    <code>{`{ amount: 500, confirmButton: true, cvv: "123" }`}</code>: un importe
+    real, más un botón falso y datos de tarjeta colados.
+  </Before>
+  <After title="Lo que acepta el esquema">
+    <code>{`{ amount: 500 }`}</code>: los campos extra se rechazan. El botón
+    falso no puede renderizarse; los datos de la tarjeta nunca llegan al registro.
+  </After>
+</BeforeAfter>
+
+**Capa 2: política.** Si la forma es válida, ¿obedecen los valores las reglas?
+Estos son los límites citados:
+
+```ts
+// From the wire-transfer rule (simplified):
+if (amount > WIRE_SECONDARY_APPROVAL_MINOR /* $50,000 */) {
+  violation("AMOUNT_REQUIRES_APPROVAL", "escalate"); // → force SecureWireDialog
+}
+```
+
+Una sutileza que conviene conocer: SINA cuenta el dinero en **unidades menores
+enteras**, céntimos en lugar de dólares, según la norma ISO 4217. Sin coma
+flotante, sin deriva de redondeo; los importes coinciden exactamente o no
+coinciden.
+
+## Aprobado frente a rechazado
+
+```ts
+// A clean request:
+{ valid: true, violations: [], requiredComponent: null }
+
+// An over-limit wire:
+{
+  valid: false,
+  violations: [
+    { code: "AMOUNT_REQUIRES_APPROVAL", severity: "escalate",
+      message: "wire above $50,000 requires secondary managerial approval",
+      standard: "SINA dual-control policy" },
+  ],
+  requiredComponent: "SecureWireDialog",
+}
+```
+
+Lees eso y sabes exactamente qué hacer: no renderices la confirmación en bruto.
+Renderiza `SecureWireDialog`.
+
+Tanto las reglas **gobernadas** (acciones, que pueden escalar) como las reglas
+**no gobernadas** (visualizaciones de solo lectura, que solo comprueban la forma
+y nunca establecen `requiredComponent`) devuelven este mismo contrato, así que el
+código que renderiza una decisión es el mismo en todas partes.
+
+Siguiente: [Escalado y aplicación](/docs/concepts/escalation).

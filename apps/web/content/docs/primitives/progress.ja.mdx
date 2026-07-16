@@ -1,0 +1,38 @@
+---
+title: Progress
+sourceHash: 538c1101fa22
+---
+
+import { ProgressHero, ProgressExamples } from "@/app/components/docs/demos/primitives/progress";
+
+<ProgressHero />
+
+`Progress` はタスクの進捗状況を表示します。確定的な進捗には `value` を渡し、
+不確定なバーの場合は省略します。
+
+## 使い方
+
+```tsx
+import { Progress } from "@sina-design-system/core";
+
+<Progress value={62} />      {/* 62% */}
+<Progress />                 {/* indeterminate */}
+```
+
+## 例
+
+<ProgressExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "value", type: "number", description: "0 から 100。不確定なバーの場合は省略します。" },
+    { prop: "label", type: "string", description: "プログレスバーのアクセシブルな名前。" },
+  ]}
+/>
+
+## アクセシビリティ
+
+Radix Progress をベースに構築され、`role="progressbar"` と正しい `aria-valuenow`
+/ `aria-valuemin` / `aria-valuemax` を備えています。

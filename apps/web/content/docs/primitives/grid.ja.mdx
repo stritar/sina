@@ -1,0 +1,38 @@
+---
+title: Grid
+sourceHash: 1699dd9105fc
+---
+
+import { GridHero, GridExamples } from "@/app/components/docs/demos/primitives/grid";
+
+<GridHero />
+
+`Grid` は子要素を折り返す列に配置し、間隔スケールの `gap` を使用します。カードグリッドやダッシュボードに使用してください。単一の行または列には [Stack](/docs/primitives/stack) を使用します。
+
+## 使い方
+
+```tsx
+import { Grid } from "@sina-design-system/core";
+
+<Grid cols={3} gap={4}>
+  {items.map((i) => <Card key={i.id} {...i} />)}
+</Grid>
+```
+
+## 例
+
+<GridExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "cols", type: "GridCols", description: "列の数。" },
+    { prop: "gap", type: "GapStep", description: "セル間の間隔（8pt スケールから）。" },
+    { prop: "as", type: "ElementType", description: "別の要素としてレンダリングします（ポリモーフィック）。" },
+  ]}
+/>
+
+## アクセシビリティ
+
+純粋に表示用です。セマンティクスを追加せず、単純な `div` をレンダリングします。セルが実際のコレクションである場合は、`as` を渡して意味のある構造を保ってください（例: `as="ul"`）。

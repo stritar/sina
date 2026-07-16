@@ -1,0 +1,101 @@
+---
+title: Theming
+sourceHash: c387f6cda2eb
+---
+
+Ein Theme in SINA sind **dieselben Tokens mit anderen Werten**. Du bearbeitest nie
+eine Komponente, um sie umzubranden. Du definierst die `--sina-*` Custom Properties
+neu, und jede Komponente, die auf sie zeigt, aktualisiert sich. Die Kaskade macht
+Überschreibungen trivial: SINAs Reset lebt in `@layer reset`, während das CSS von
+Komponenten und App ungeschichtet ist, sodass das CSS deiner App durch die reine
+Quellreihenfolge gewinnt. Importiere deinen Theme-Block nach SINAs Styles, und er
+wird wirksam. Kein Rebuild, keine Forks.
+
+## Ein Marken-Theme bauen
+
+<Steps>
+  <Step title="Überschreibe die Rollen, die deine Marke tragen">
+
+Meist `primary`, sein lesbarer Vordergrund, hover und vielleicht radius. Alles
+andere wird geerbt.
+
+```css
+:root {
+  --sina-color-primary: #6d28d9;
+  --sina-color-primary-fg: #ffffff;
+  --sina-color-primary--hover: #5b21b6;
+  --sina-radius--md: 0.5rem; /* softer corners, brand-wide */
+}
+```
+
+  </Step>
+  <Step title="Oder lass den typisierten Helfer ihn erzeugen">
+
+`createTheme()` in `@sina-design-system/theme` erzeugt den Block und prüft per
+Typen, welche Rollen du berühren darfst:
+
+```ts
+import { createTheme } from "@sina-design-system/theme";
+
+const acme = createTheme(
+  { colors: { primary: "#7c3aed" }, radius: { md: "0.5rem" } },
+  { selector: '[data-theme="acme"]' },
+);
+```
+
+  </Step>
+  <Step title="Grenze seinen Geltungsbereich ein">
+
+Setze den Block auf `:root` für eine Marke, oder unter `[data-theme="acme"]` für
+mehrere. Eingegrenzte Marken lassen sich mit dem Dark Mode kombinieren. Für eine
+lokale Überschreibung gibt `themeVars()` dieselben Tokens als Inline-Style-Objekt
+für `style={}` zurück.
+
+  </Step>
+</Steps>
+
+<Callout variant="tip" title="Fang klein an">
+  Die meisten Marken überschreiben eine Handvoll Rollen (`primary`, die Flächen,
+  vielleicht radius) und erben den Rest.
+</Callout>
+
+## Der Dark Mode ist derselbe Trick
+
+`theme.css` liefert einen `[data-theme="dark"]`-Block mit, der nur dieselben Rollen
+neu zuweist. Schalte `data-theme` auf `<html>` um, und die gesamte UI wird
+umgefärbt. Ein Hell / Dunkel / System-Umschalter besteht nur darin, dieses Attribut
+zu schreiben und die Wahl in `localStorage` zu merken.
+
+## Die gesperrte Grenze
+
+Nicht jedes Token darfst du ändern, und diese Grenze ist selbst eine
+Governance-Entscheidung.
+
+| | Rollen | |
+|---|---|---|
+| **Marken-offen** | `bg` / `surface*` / `text*` / `border*`, `primary*` / `secondary*`, `success` / `warning` / `info`, Diagrammserien, `radius` / `space` / `text` / `font` | Deine. Rebrande frei. |
+| **Governance-gesperrt** | `danger*`, der Tint der sicheren Fläche, der Fokusring, die `intent-*`-Aliase | Reserviert. Die typisierte API weist sie ab. |
+
+<Callout variant="governance" title="Warum überhaupt etwas sperren?">
+  Ein Marken-Theme darf niemals einen Fehler ruhig aussehen lassen, den Fokusring
+  vor Tastaturnutzern verbergen oder die Affordance einer sicheren Aktion
+  verschleiern. Das ist kein Stil; es sind Sicherheits- und Barrierefreiheits­
+  signale. `createTheme()` lehnt eine gesperrte Rolle zur Compile-Zeit ab. (Rohes
+  CSS kann eine Variable weiterhin per Spezifität erzwingen. Die API hilft dir
+  einfach nicht dabei.)
+</Callout>
+
+<DoDont
+  do={[
+    "Überschreibe primary, die Flächen und radius passend zu deiner Marke",
+    "Nutze createTheme(), damit gesperrte Rollen zur Compile-Zeit erkannt werden",
+    "Prüfe den Kontrast nach einem starken Rebranding erneut",
+  ]}
+  dont={[
+    "danger freundlich umstylen; Fehler müssen als Fehler lesbar sein",
+    "Den Fokusring entfernen oder abdunkeln",
+    "Hex in einer Komponente hart codieren, um das Token-System zu umgehen",
+  ]}
+/>
+
+Weiter: [Tokens](/docs/theming/tokens), das Vokabular, das jedes Theme neu bewertet.

@@ -1,0 +1,51 @@
+---
+title: El registro de auditoría
+sourceHash: 37daeb373c64
+---
+
+Cada decisión que toma el control emite un <Term term="audit event">evento de
+auditoría</Term>. Esto es lo que convierte «la IA construyó una pantalla» en
+«esto es exactamente lo que pidió, lo que decidimos y por qué». Cumplimiento
+puede revisarlo, tú puedes depurar con él, y los usuarios pueden confiar en que
+nada ocurrió fuera de registro.
+
+## La forma
+
+```ts
+type AuditEvent = {
+  timestamp: string;
+  decisionId: string;
+  version: string;
+  payload: unknown;        // redacted (see below)
+  result: InterceptionResult;
+  violations: Violation[]; // each with its cited standard
+  decidedComponent: string | null;
+};
+```
+
+Como cada infracción lleva su `standard`, el registro no dice simplemente «lo
+bloqueamos». Dice *qué regla* lo bloqueó y *de dónde proviene esa regla*.
+
+## La redacción ocurre primero
+
+La carga útil se **redacta antes de almacenarse siquiera**:
+
+- **Descartados** por completo: los códigos de seguridad de la tarjeta (CVV) y los PIN.
+- **Enmascarados** a los últimos cuatro dígitos: los números de tarjeta (PAN).
+- **Convertidos en hash** a una huella: los números de cuenta e IBAN, lo
+  suficiente para correlacionar dos eventos y nunca lo suficiente para
+  reconstruir el número.
+
+<Callout variant="governance" title="Seguro por construcción">
+  La redacción no es un ajuste que puedas olvidar activar. Se ejecuta como parte
+  de la emisión del evento, de modo que un flujo hostil no puede colar datos
+  sensibles en el registro de auditoría.
+</Callout>
+
+<Callout variant="note" title="Adónde va">
+  Hoy el evento de auditoría es un contrato definido con un sumidero inactivo. La
+  forma es fija y cada decisión emite uno. Conectarlo a un sumidero duradero es
+  trabajo de endurecimiento para el lanzamiento, ya planificado.
+</Callout>
+
+Siguiente: [Para agentes de IA](/docs/agents).

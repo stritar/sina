@@ -1,0 +1,38 @@
+---
+title: DonutChart
+sourceHash: c6fcde610388
+---
+
+import { DonutChartHero, DonutChartExamples } from "@/app/components/docs/demos/primitives/donut-chart";
+
+<DonutChartHero />
+
+`DonutChart` ist ein [PieChart](/docs/primitives/pie-chart) mit einer Aussparung,
+sodass du eine Summe oder ein Label in die Mitte setzen kannst.
+
+## Verwendung
+
+```tsx
+import { DonutChart } from "@sina-design-system/core";
+
+<DonutChart label="Holdings" data={{ labels, datasets }} centerLabel="$48k" />
+```
+
+## Beispiele
+
+<DonutChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "Erforderlicher zugänglicher Name." },
+    { prop: "data", type: "ChartData", description: "Die zu zeichnenden Teile (Chart.js-Form)." },
+    { prop: "centerLabel", type: "ReactNode", description: "Inhalt, der in der Aussparung angezeigt wird." },
+  ]}
+/>
+
+## Barrierefreiheit
+
+Nutzt dieselbe farbenblindsichere Palette und die `role="img"` +
+Textlegenden-Barrierefreiheit von PieChart.

@@ -1,0 +1,40 @@
+---
+title: Field
+sourceHash: 3149887e8df2
+---
+
+import { FieldHero, FieldExamples } from "@/app/components/docs/demos/primitives/field";
+
+<FieldHero />
+
+`Field` 是每个输入控件都会使用的包装器。它渲染一个标签、一个可选的描述和错误，并克隆其子元素，用正确的
+`id`、`aria-describedby` 和 `aria-invalid` 将它们连接起来。你无需手动传递 ID，即可获得正确的表单可访问性。
+
+## 用法
+
+```tsx
+import { Field } from "@sina-design-system/core";
+
+<Field label="Email" description="We'll never share it." error={errors.email}>
+  <input type="email" name="email" />
+</Field>
+```
+
+## 示例
+
+<FieldExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "ReactNode", description: "字段标签（与控件关联）。" },
+    { prop: "description", type: "ReactNode", description: "标签下方的帮助文本。" },
+    { prop: "error", type: "ReactNode", description: "错误消息。设置 aria-invalid 并显示一个加粗的警告字形。" },
+  ]}
+/>
+
+<Callout variant="note" title="错误会带有一个字形">
+  当设置了 `error` 时，Field 会在消息旁边渲染强制的加粗警告字形，绝不仅靠颜色。这是 SINA
+  全局适用于错误和警告状态的规则。
+</Callout>

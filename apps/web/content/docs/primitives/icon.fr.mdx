@@ -1,0 +1,41 @@
+---
+title: Icône
+sourceHash: dd59c4ec8596
+---
+
+import { IconHero, IconExamples } from "@/app/components/docs/demos/primitives/icon-demo";
+
+<IconHero />
+
+`Icon` enveloppe un glyphe Phosphor et vous force à répondre à une question : cette icône
+*signifie*-t-elle quelque chose, ou est-elle décorative ? Bien répondre à cela fait toute la différence entre
+une icône accessible et une icône déroutante.
+
+## Utilisation
+
+```tsx
+import { Icon } from "@sina-design-system/core";
+import { ShieldCheck } from "@phosphor-icons/react";
+
+<Icon icon={ShieldCheck} label="Governed by SINA" />   {/* announced */}
+<Icon icon={ShieldCheck} decorative />                 {/* silent */}
+```
+
+## Exemples
+
+<IconExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "Annoncé aux lecteurs d'écran. À utiliser lorsque l'icône véhicule un sens." },
+    { prop: "decorative", type: "boolean", description: "Masque l'icône aux technologies d'assistance (aria-hidden)." },
+  ]}
+/>
+
+## Accessibilité
+
+Fournissez exactement l'un de `label` ou `decorative`. Une icône porteuse de sens sans `label`
+est invisible pour les utilisateurs de lecteurs d'écran ; une icône décorative avec un `label` est du bruit. La couleur
+suit `currentColor`, de sorte que le token `text-*` environnant la pilote.

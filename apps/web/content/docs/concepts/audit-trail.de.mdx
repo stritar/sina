@@ -1,0 +1,51 @@
+---
+title: Der Audit-Trail
+sourceHash: 37daeb373c64
+---
+
+Jede Entscheidung, die der Kontrollpunkt trifft, gibt ein <Term term="audit event">Audit-Ereignis</Term>
+aus. Das ist es, was aus „die KI hat einen Bildschirm gebaut" ein „hier ist
+genau, was sie angefordert hat, was wir entschieden haben und warum" macht. Die
+Compliance kann ihn prüfen, du kannst damit debuggen, und Nutzer können darauf
+vertrauen, dass nichts außerhalb der Aufzeichnung geschehen ist.
+
+## Die Form
+
+```ts
+type AuditEvent = {
+  timestamp: string;
+  decisionId: string;
+  version: string;
+  payload: unknown;        // redacted (see below)
+  result: InterceptionResult;
+  violations: Violation[]; // each with its cited standard
+  decidedComponent: string | null;
+};
+```
+
+Da jeder Verstoß seinen `standard` mitführt, sagt der Datensatz nicht nur „wir
+haben es blockiert". Er sagt, *welche Regel* es blockiert hat und *woher diese
+Regel stammt*.
+
+## Die Schwärzung erfolgt zuerst
+
+Die Nutzlast wird **geschwärzt, bevor sie überhaupt gespeichert wird**:
+
+- Vollständig **verworfen**: Kartensicherheitscodes (CVV) und PINs.
+- Auf die letzten vier Ziffern **maskiert**: Kartennummern (PAN).
+- Zu einem Fingerabdruck **gehasht**: Konto- und IBAN-Nummern, genug, um zwei
+  Ereignisse zu korrelieren, und nie genug, um die Nummer zu rekonstruieren.
+
+<Callout variant="governance" title="Sicher durch Konstruktion">
+  Die Schwärzung ist keine Einstellung, die du zu aktivieren vergessen kannst.
+  Sie läuft als Teil der Ereignisausgabe, sodass ein feindseliger Stream keine
+  sensiblen Daten in das Audit-Protokoll einschleusen kann.
+</Callout>
+
+<Callout variant="note" title="Wohin es geht">
+  Heute ist das Audit-Ereignis ein definierter Vertrag mit einer wirkungslosen
+  Senke. Die Form ist festgelegt, und jede Entscheidung gibt eines aus. Es an
+  eine dauerhafte Senke anzubinden, ist geplante Härtungsarbeit für das Release.
+</Callout>
+
+Weiter: [Für KI-Agenten](/docs/agents).

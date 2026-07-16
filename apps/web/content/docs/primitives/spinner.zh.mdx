@@ -1,0 +1,36 @@
+---
+title: Spinner
+sourceHash: e45c315d4436
+---
+
+import { SpinnerHero, SpinnerExamples } from "@/app/components/docs/demos/primitives/spinner";
+
+<SpinnerHero />
+
+`Spinner` 表示某个操作正在进行，但你无法确定它需要多长时间。
+对于已知的时长，请改用 [Progress](/docs/primitives/progress)。
+
+## 用法
+
+```tsx
+import { Spinner } from "@sina-design-system/core";
+
+<Spinner size="md" label="Loading transactions" />
+```
+
+## 示例
+
+<SpinnerExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "指示器尺寸。" },
+    { prop: "label", type: "string", description: "向屏幕阅读器播报（视觉上隐藏）。" },
+  ]}
+/>
+
+## 无障碍
+
+动画会遵循 `prefers-reduced-motion`。请始终传入 `label`，以便播报等待状态，而不是无声等待。

@@ -1,0 +1,61 @@
+---
+title: Pakete & Exports
+sourceHash: 2e1b381ebc4d
+---
+
+> Von Hand gepflegte Referenz. Die automatische TSDoc→MDX-Generierung ist zurückgestellt.
+
+SINA besteht aus fünf kleinen Paketen mit harten Grenzen. Jede Schicht darf nur die
+Schichten unter ihr kennen:
+
+| Paket | Was es ist | Enthält nie |
+|---|---|---|
+| `@sina-design-system/theme` | Design-Tokens (`--sina-*`) + das CSS-Reset | React, UI |
+| `@sina-design-system/core` | Headless, barrierefreie Primitives auf Radix | Zod, Domänenvokabular |
+| `@sina-design-system/governance` | Die gemeinsame Abfang-Naht | React, UI, Domänenvokabular |
+| `@sina-design-system/fintech` | Die fintech-Verfassung, reine Zod-Regeln | React, UI jeglicher Art |
+| `@sina-design-system/fintech-react` | Geregelte Komponenten, die `core` + `fintech` zusammensetzen | Zod (setzt Schemas zusammen, verfasst sie nie) |
+
+## `theme`
+
+Liefert `./reset.css` (in Layern, damit deine Styles immer gewinnen) und `./css`,
+die `--sina-*`-Custom-Properties. Grammatik, Stufen und Skalen der Tokens finden
+sich in [Tokens](/docs/theming/tokens); was du überschreiben darfst, steht in
+[Theming](/docs/theming).
+
+## `core`
+
+Die Primitives-Bibliothek. Jeder Export ist mit Live-Beispielen in der
+[Primitives-Galerie](/docs/primitives) aufgeführt. Nur benannte Exports; die
+Prop-Typen je Primitive (`ButtonProps`, `GapStep`, `SummaryItem`, …) werden
+mitgeliefert.
+
+## `governance`
+
+Die domänenunabhängige Naht, auf der jede Verfassung aufbaut:
+
+| Export | Zweck |
+|---|---|
+| `InterceptionResult`, `Violation`, `Severity` | Der einheitliche Vertrag; siehe [den Abfang-Vertrag](/docs/concepts/the-contract). |
+| `intercept`, `ConstitutionRule` | Führt ein Zod-Schema + Policy serverseitig aus und gibt den Vertrag zurück. |
+| `dispatch`, `dispatchAll`, `createRouter`, `pattern` | Der Absichts-Router: Umschlag `{ intent, props }` → Entscheidung + Einbindung. |
+| `UNKNOWN_INTENT`, `SCHEMA_INVALID` | Sentinels für ein unbekanntes Verb / einen fehlgeschlagenen Parse. |
+| `emitAudit`, `redact`, `setAuditSink`, `AuditEvent` | Der Emissionspunkt des Audits; siehe [den Audit-Trail](/docs/concepts/audit-trail). |
+
+Der Router löst die Einbindung **außerhalb** des Vertrags auf, sodass Governance
+eine optionale Eskalationsschicht auf einem universellen erst validieren, dann
+einbinden bleibt.
+
+## `fintech` und `fintech-react`
+
+`fintech` ist die ausgelieferte Verfassung: jedes Absichtsverb, jedes Schema, jeder
+Schwellenwert und jeder zitierte Standard. `fintech-react` rendert die
+Entscheidungen, die sie trifft, die geregelten Komponenten. Beide sind in
+[Geregelte Komponenten & Anzeigemuster](/docs/governance/components-and-patterns)
+katalogisiert; schreibe deine eigene Regel in [Eine Governance-Regel
+schreiben](/docs/governance/writing-a-rule).
+
+## Versionen
+
+Alle fünf sind unter **0.1.0** veröffentlicht; siehe [Releases &
+Stabilität](/docs/reference/changelog).

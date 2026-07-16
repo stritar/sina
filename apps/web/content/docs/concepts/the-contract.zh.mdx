@@ -1,0 +1,77 @@
+---
+title: 拦截契约
+sourceHash: 9015f1ca85a8
+---
+
+章程中的每条规则都以**相同的三个字段**作答。掌握这个形态一次，你就能读懂 SINA
+做出的任何决策。
+
+```ts
+type InterceptionResult = {
+  valid: boolean;                   // did everything pass?
+  violations: Violation[];          // what went wrong (empty if clean)
+  requiredComponent: string | null; // a stricter component you must render instead
+};
+```
+
+- **`valid`**：仅当没有任何内容被阻断时才为 `true`。任何一个造成阻断的问题都会
+  使其变为 `false`。
+- **`violations`**：关卡发现的问题。每一项都带有一个 `message`、一个 `severity`
+  和一个 `standard`（它所依据的法规或政策），因此阻断是可解释的，而不是一个谜。
+- **`requiredComponent`**：当某条规则要求一个更严格的组件（例如第二审批人对话框）
+  时，其名称置于此处。否则为 `null`。
+
+## 结果如何产生：先看形态，再看取值
+
+**第 1 层：结构。** payload 的形态是否完全正确？模式是**严格**的，因此任何不应
+出现的字段都会被拒绝。如果某个 AI 试图夹带一个伪造的 `confirmButton`、一个 `cvv`
+或一个完整的卡号，这些都是*多余字段*，在查看任何取值之前就已被丢弃。
+
+<BeforeAfter>
+  <Before title="敌意数据流发送的内容">
+    <code>{`{ amount: 500, confirmButton: true, cvv: "123" }`}</code>：一个真实的
+    金额，外加一个伪造的按钮和夹带的卡片数据。
+  </Before>
+  <After title="模式所接受的内容">
+    <code>{`{ amount: 500 }`}</code>：多余字段被拒绝。伪造的按钮无法渲染；卡片
+    数据永远不会进入日志。
+  </After>
+</BeforeAfter>
+
+**第 2 层：政策。** 如果形态有效，取值是否遵守规则？以下是被引用的上限：
+
+```ts
+// From the wire-transfer rule (simplified):
+if (amount > WIRE_SECONDARY_APPROVAL_MINOR /* $50,000 */) {
+  violation("AMOUNT_REQUIRES_APPROVAL", "escalate"); // → force SecureWireDialog
+}
+```
+
+一个值得了解的微妙之处：SINA 以**整数最小货币单位**计量金额，即以分而非以美元计，
+遵循 ISO 4217。没有浮点数，没有舍入漂移；金额要么完全匹配，要么不匹配。
+
+## 通过与失败
+
+```ts
+// A clean request:
+{ valid: true, violations: [], requiredComponent: null }
+
+// An over-limit wire:
+{
+  valid: false,
+  violations: [
+    { code: "AMOUNT_REQUIRES_APPROVAL", severity: "escalate",
+      message: "wire above $50,000 requires secondary managerial approval",
+      standard: "SINA dual-control policy" },
+  ],
+  requiredComponent: "SecureWireDialog",
+}
+```
+
+你读到这些就确切地知道该怎么做：不要渲染原始的确认。渲染 `SecureWireDialog`。
+
+**受治理的**规则（可以升级的操作）和**未受治理的**规则（只读展示，只检查形态、
+从不设置 `requiredComponent`）都返回这同一份契约，因此渲染决策的代码在各处都是
+一样的。
+
+下一篇：[升级与强制执行](/docs/concepts/escalation)。

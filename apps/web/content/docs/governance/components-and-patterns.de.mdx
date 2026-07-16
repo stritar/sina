@@ -1,0 +1,101 @@
+---
+title: Geregelte Komponenten und Anzeigemuster
+sourceHash: 334943597bf3
+---
+
+Die Regeln der Verfassung lösen sich in zwei Arten von UI auf. **Geregelte
+Komponenten** rendern eine Eskalation, den strengeren Ablauf, den eine Regel
+erzwingt. **Anzeigemuster** rendern einen sauberen Lesevorgang. Keines validiert
+selbst irgendetwas; jedes rendert die Entscheidung, die der Kontrollpunkt bereits
+getroffen hat ([Wie es funktioniert](/docs/how-it-works)).
+
+## Die drei geregelten Komponenten
+
+Dutzende geregelter Regeln eskalieren zu nur **drei** Komponenten. Die Regeln
+unterscheiden sich; die sicheren Ziele sind gemeinsam genutzt und praxiserprobt.
+
+- **`SecureWireDialog`**: erzwungen, wenn eine Überweisung einen zweiten Genehmiger
+  benötigt. Sie durchläuft die Vier-Augen-Schleife: die genauen Bedingungen prüfen →
+  die Identität eines *anderen* Genehmigers erfassen → mit einem Einmalcode bestätigen
+  → auf dem Server erneut prüfen. Eine abgelehnte erneute Prüfung hält den Dialog
+  offen, sodass es keine Möglichkeit gibt, ihn „wegzuklicken". Siehe
+  [die 60.000-$-Überweisung](/docs/governance/wire-transfer).
+- **`GovernedActionDialog`**: erzwungen, wenn nahezu jede andere
+  autorisierungspflichtige Aktion eskaliert: ACH, P2P, Rechnungszahlung, FX,
+  Kartenoperationen, Limitänderungen, Kontoeröffnung, Wertpapiergeschäfte. Dieselbe
+  Form wie der Überweisungsdialog, wobei die Bedingungen aus der Aktion abgeleitet
+  werden. So deckt SINA eine ganze Banking-App ab, ohne einen maßgeschneiderten Dialog
+  pro Ablauf.
+- **`MandatoryDisclosure`**: erzwungen, wenn der Nutzer einen vorgeschriebenen Text
+  bestätigen muss: Margin-Eignung, eine Kreditoffenlegung (TILA), einen Hinweis zum
+  FX-Spread. Der Text stammt aus der Regel, nicht aus dem Modell, sodass eine KI einen
+  gesetzlich vorgeschriebenen Hinweis nicht abschwächen, kürzen oder überspringen kann.
+
+<Callout variant="note" title="Jedes Mal dieselben Phasen">
+  Alle drei teilen sich eine Zustandsmaschine: prüfen → erfassen → ausstehend →
+  aufgelöst. Ein Interaktionsmuster zum Erlernen, ein Satz von Zuständen zum Testen,
+  ein barrierefreies Erlebnis über jeden geregelten Ablauf hinweg.
+</Callout>
+
+## Anzeigemuster
+
+Eine echte App verbringt die meiste Zeit damit, Dinge *anzuzeigen*. Eine Anzeigeregel
+hat keine Limits oder Genehmigungen, prüft aber dennoch **Form** (strikte Analyse),
+**Grenzen** (Listen sind gedeckelt) und **Datenschutz** (Bezeichner müssen maskiert
+werden). Bestehen alle drei, mountet SINA eine präsentationale Komponente:
+`TransactionList`, `BalanceCard`, `PortfolioHoldings` und ihre Geschwister, etwa zwei
+Dutzend, eine pro Art von Lesevorgang.
+
+Zwei Eigenschaften leisten die Sicherheitsarbeit. Das Modell wählt aus, *was*
+angezeigt wird, aber **Ihr Server liefert die Werte**, sodass es keinen Kontostand
+erfinden kann. Und Lesevorgänge sind **schreibgeschützt**: keine Anzeigekomponente
+rendert einen rohen Aktionsbutton. Aus einer Liste heraus zu handeln (eine Buchung
+anfechten, eine Rechnung bezahlen) ist eine neue Absicht, die erneut in den
+Kontrollpunkt eintritt.
+
+## Das Absichts-Register
+
+Das Modell wählt ein **Verb** aus `fintechIntentManifest()`; das Register ordnet es
+seiner Regel und seiner Komponente zu. Das Modell benennt niemals eine Komponente.
+
+| Absicht | Art | Mountet / eskaliert zu |
+|---|---|---|
+| `wire_transfer` | Geregelt | `SecureWireDialog` |
+| `ach_transfer` · `p2p_payment` · `bill_pay` · `fx_convert` · `withdraw` | Geregelt | `GovernedActionDialog` |
+| `add_payee` · `link_account` · `kyc` · `change_limit` · `issue_card` · `card_control` · `security_change` | Geregelt | `GovernedActionDialog` |
+| `place_trade` · `enable_margin` · `credit_request` | Geregelt | `GovernedActionDialog` · `MandatoryDisclosure` |
+| `disclosure` | Geregelt | `MandatoryDisclosure` |
+| `list_transactions` | Anzeige | `TransactionList` |
+| `account_balance` | Anzeige | `BalanceCard` |
+| `portfolio_holdings` | Anzeige | `PortfolioHoldings` |
+| `spending_breakdown` · `budget_progress` · `list_cards` · `list_payees` · … | Anzeige | präsentationale Lesevorgänge |
+
+<Callout variant="note" title="Unbekannte Verben werden abgelehnt">
+  Eine Absicht, die nicht im Register steht, wird als `UNKNOWN_INTENT` abgelehnt und
+  dennoch auditiert. Die Voreinstellung ist Ablehnen, nicht Durchlassen.
+</Callout>
+
+## Der Katalog `@sina-design-system/fintech`
+
+Die Schemas leben in `@sina-design-system/fintech`: reines Zod, kein React, kein UI.
+Ein einziger Einstiegspunkt leitet alles weiter:
+
+```ts
+import { evaluateFintechIntent } from "@sina-design-system/fintech";
+
+const { valid, violations, requiredComponent } = evaluateFintechIntent({
+  intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 in minor units */ },
+});
+```
+
+| Gruppe | Inhalt |
+|---|---|
+| Geregelte Schemas | `wire-transfer`, `ach-transfer`, `p2p-payment`, `bill-pay`, `fx-convert`, `add-payee`, `kyc`, `issue-card`, `card-control`, `change-limit`, `place-trade`, `credit-request`, … |
+| Anzeige-Schemas | `transaction-list`, `account-balance`, `portfolio-holdings`, `spending-breakdown`, … |
+| Format-Primitiven | `currency` (ISO 4217), `amount` (ganzzahlige Untereinheiten), `iban` (ISO 13616), `bic` (ISO 9362), `routing` (ABA), `card` (Luhn), `masked-account`, `step-up` |
+| Zitierte Schwellenwerte | `thresholds.ts`: jedes numerische Limit als benannte Konstante mit ihrer Quellenangabe |
+| Fixtures | jedes Schema liefert gültige und adversarische Payloads in `fixtures.ts` |
+
+Der maßgebliche Katalog ist `packages/fintech/PATTERNS.md`. Um ihn zu erweitern:
+[Eine Governance-Regel schreiben](/docs/governance/writing-a-rule).

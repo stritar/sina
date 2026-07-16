@@ -1,0 +1,47 @@
+---
+title: Normes et citations
+sourceHash: 077f8d3d0725
+---
+
+La règle d'or de SINA est de **ne jamais inventer une limite** : chaque seuil, format et
+champ obligatoire renvoie à une norme ou à un régulateur, avec la citation dans le code.
+Cette page est le reçu : chaque norme que la Constitution encode et, pour chacune, *ce que
+le code vérifie réellement*.
+
+Cette dernière colonne est l'essentiel. Une liste de normes est une affirmation de
+conformité, et les affirmations de conformité sont précisément là où un système de
+gouvernance commence à vous mentir. C'est pourquoi chaque ligne indique le **mécanisme**,
+non l'aspiration : SINA calcule réellement la somme de contrôle mod-97 d'un IBAN, mais il
+ne compare pas une adresse à une liste de sanctions, et il n'effectue pas d'évaluation PCI.
+Lorsqu'une règle n'est qu'un substitut ténu à une obligation profonde, la ligne le dit.
+
+Les règles se répartissent en trois niveaux, et le code les tient séparés :
+
+- **Format** : sommes de contrôle et listes de codes. Déterministes, donc une charge utile
+  les satisfait ou non.
+- **Réglementaire** : de vraies réglementations. Un `flag` enregistre le constat dans la
+  [piste d'audit](/docs/concepts/audit-trail) ; un `escalate` force un composant gouverné ;
+  un `reject` refuse purement et simplement. Pas à assouplir à la légère.
+- **Politique SINA** : valeurs par défaut ajustables du produit (double contrôle, limites
+  de vérification renforcée). **Pas une loi.** Ce sont celles que vous êtes censé ajuster à
+  votre propre appétence au risque.
+
+Lorsque le contrôle bloque une requête, le `standard` de la ligne correspondante voyage
+avec la violation jusqu'à l'enregistrement d'audit. Un blocage n'est jamais un mystère, et
+un auditeur peut le retracer jusqu'à la ligne qui l'a produit. Voir
+[le contrat](/docs/concepts/the-contract) pour la forme, et
+[écrire une règle](/docs/governance/writing-a-rule) pour en ajouter une.
+
+<Callout variant="enforced" title="Ce tableau est généré à partir des schémas">
+  Le catalogue vit dans le paquet de la constitution, pas dans cette page, et un test de
+  garde lie les deux : une règle citant une norme que le catalogue omet fait échouer la
+  compilation, tout comme une entrée du catalogue citant quelque chose qu'aucune règle
+  n'impose. La documentation ne peut pas dériver du code, ni prétendre à une vérification
+  qui n'existe pas.
+</Callout>
+
+## Fintech
+
+<StandardsTable industry="fintech" />
+
+<ComplianceNote />

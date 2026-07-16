@@ -1,0 +1,80 @@
+---
+title: 编写治理规则
+sourceHash: b78fbff0d2ec
+---
+
+一条规则是一个严格的 Zod 模式，加上一项带引用的策略检查，位于
+`@sina-design-system/fintech` 中。边界是硬性的：**纯 Zod，没有 React，没有
+UI**，共享契约来自 `@sina-design-system/governance`。本指南与 `/new-schema`
+skill 对应；若想看到一条完成的规则在实际运行，请阅读[这笔 6
+万美元的电汇](/docs/governance/wire-transfer)。
+
+<Callout variant="enforced" title="黄金法则：绝不臆造上限">
+  每一个阈值、格式和必填字段都必须可追溯到某项标准或监管机构，并将引用**写在代码中**：在常量上加一条
+  `// 31 CFR …` 注释，在违规上写 `standard: "…"`。如果你无法引用它，就不要把它编码进去。引用还标明了哪些数字是法律，哪些是可调的产品默认值。
+</Callout>
+
+<Steps>
+  <Step title="定义模式">
+
+创建 `packages/fintech/src/<name>/<name>.schema.ts`，以旗舰 `wire-transfer`
+模式为范本。使用 `.strict()` Zod 对象，让夹带的键被拒绝而不是被忽略，并在
+`src/formats/*` 中带引用的格式基础组件之上进行构建：`currency`（ISO
+4217）、`amount`、`iban`、`bic`、`routing`、`card`。金额是整数的**最小单位**，绝不是浮点数。
+
+  </Step>
+  <Step title="添加策略检查">
+
+每一项策略检查（限额、频次、双人控制）都会产生一个 `Violation`，带有
+`code`、`message`、一个带引用的 `standard`，以及一个严重级别：`flag`（记录它）、`escalate`（强制使用一个受治理的组件）或
+`reject`（直接拒绝）；参见[升级](/docs/concepts/escalation)。一次升级会指明
+`requiredComponent`。规则必须返回[该契约](/docs/concepts/the-contract)：
+
+```ts
+// pass
+{ valid: true, violations: [], requiredComponent: null }
+// fail
+{ valid: false, violations: [{ code, message, standard }], requiredComponent: "SecureWireDialog" }
+```
+
+一条**未受治理的**展示规则是同样的骨架，只是去掉了策略和升级。它只关乎形状（`.strict()`、有界数组、掩码后的账号），并挂载一个展示型组件。为此请使用
+`/new-display-pattern`。
+
+  </Step>
+  <Step title="注册意图">
+
+将该动词添加到 `src/registry.ts`（以及 `fintechIntentManifest()`），这样
+`evaluateFintechIntent` 才能将其路由。未注册的动词会被以 `UNKNOWN_INTENT`
+拒绝。一条未注册的规则并不存在。
+
+  </Step>
+  <Step title="编写测试夹具">
+
+在模式旁添加 `fixtures.ts`：必须通过的**有效**载荷，以及必须被拦截的**对抗性**载荷，比如超过限额的金额、夹带的额外字段，或未掩码的标识符。单元测试和
+playground 都会使用它们。规则并非在能编译时就算完成；它是在一个恶意请求无法闯过它时才算完成。
+
+  </Step>
+  <Step title="测试与验证">
+
+运行 `pnpm --filter @sina-design-system/fintech test`，然后演练该规则并读取决策：
+
+```ts
+const decision = evaluateFintechIntent({
+  intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 */, currency: "USD", /* … */ },
+});
+
+decision.valid;             // false
+decision.requiredComponent; // "SecureWireDialog"
+decision.violations;        // includes AMOUNT_REQUIRES_APPROVAL (escalate)
+```
+
+每一条违规都带有 `message` 和 `standard`，因此你可以带着引用向用户展示*为什么*，而不只是“已拦截”。把金额降到限额以下并重新运行：`valid`
+翻转为 `true`，`requiredComponent` 为 `null`，正常的摘要随之挂载。同样的代码，安全的结果。
+
+  </Step>
+</Steps>
+
+在发布之前，检查这条规则能否各用一句话回答这些基本问题：它是什么、它消除了什么风险、它拦截的一个具体请求、它放行的一个请求，以及触发时会发生什么。如果任何答案含糊，那这条规则也一样含糊。
+
+下一步：[受治理的组件与展示模式](/docs/governance/components-and-patterns)，你的升级将落在那里。

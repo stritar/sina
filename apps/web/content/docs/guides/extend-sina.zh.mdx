@@ -1,0 +1,50 @@
+---
+title: 扩展 SINA
+sourceHash: 7dcc3685ebdf
+---
+
+SINA 在三个方向上成长：在 `core` 中新增基础组件，在 `fintech` 旁边新增受治理的领域，以及新增证明规则成立的测试。下面的每个方法都对应一个仓库技能（`/new-primitive`、`/new-schema`、`/adversarial-test`）。
+
+### 向 core 添加一个基础组件
+
+`core` 基础组件是无头的、可访问的，并且严格与领域无关。边界是硬性的：不用 `zod`，没有领域包，没有领域词汇（没有 "$50,000"、没有 "限额"、没有 "审批"），不用 Tailwind。
+
+1. **确认设计签核。** 它是实现的前提。按照签核后的形态构建；不要臆造 UX。
+2. **基于 Radix 构建**，位于 `packages/core/src/<Name>/<Name>.tsx`，由同位放置的 `<Name>.module.css` 设置样式：扁平的类名、用于状态的真实伪类，以及每个组件一层 `--sina-<name>-*` 令牌，作为语义[令牌](/docs/theming/tokens)的别名。绝不写裸色值。
+3. **达到无障碍标准。四项全部，不可妥协：** 在会捕获焦点的界面上进行焦点陷阱、正确的 ARIA、完整的键盘可操作性，以及一次自动化的 `axe`（jest-axe）通过。错误和警告状态在文本旁渲染对应的粗体状态字形，绝不仅靠颜色。
+4. **测试与演示：** `<Name>.test.tsx`，配合 `expect(await axe(container)).toHaveNoViolations()` 以及键盘/焦点断言，然后是一个 playground 故事。
+
+### 添加一个受治理的领域
+
+SINA 今天只附带一个领域 `fintech`，但第二个是增量式的，而非重写。共享的 `@sina-design-system/governance` 接缝拥有[契约](/docs/concepts/the-contract)、审计发出点和 `intercept` 引擎，并且对电汇一无所知。一个新领域就是两个镜像 `fintech` 和 `fintech-react` 的包：
+
+1. **一份纯 Zod 章程**（`packages/<domain>`，仅依赖 `governance`）：格式基础组件、引用的阈值（`// 31 CFR …`，绝不用臆造的数字）、返回 `{ valid, violations, requiredComponent }` 的规则，以及一个带单一评估入口的 动词 → 规则 注册表。没有 React，没有 `core`，没有 `theme`，没有 UI。要编写规则本身，请参阅[编写规则](/docs/governance/writing-a-rule)。
+2. **一个 `*-react` 层**（`packages/<domain>-react`），它将 `core` 基础组件与领域 schema 组合，并渲染关卡已经做出的决定。它从不编写 schema，也从不校验 payload；关卡保持在服务器端（参见[工作原理](/docs/how-it-works)）。
+
+由于契约是统一的，新领域的规则可放入同一个关卡，发出相同的审计事件，并由同一个对抗性测试框架进行检验。治理不会因领域而分叉。
+
+### 编写一个对抗性测试
+
+一条规则在能编译时并未完成。它在敌意请求无法通过它时才算完成。不要测试一个*有效*请求是否通过；要测试一个*无效*请求无法蒙混过关。覆盖这些经典情形：
+
+- **一个夹带的字段**：一个伪造的 `confirmButton` 或一个 `cvv`；严格解析必须拒绝它。
+- **一个超限的值**：刚好越过阈值；它必须升级到正确的组件。
+- **一次绕过尝试**：小额审批、大额执行，或自我审批；服务器端的绑定必须拒绝它。
+- **一次洪泛**：一个过大的数组；边界必须拒绝它。
+
+断言决定本身，而不只是某处抛出了异常：
+
+```ts
+const decision = evaluateFintechIntent(hostileEnvelope, ctx);
+
+expect(decision.valid).toBe(false);
+expect(decision.requiredComponent).toBe("SecureWireDialog"); // or null for a reject
+expect(decision.violations.map((v) => v.code)).toContain("AMOUNT_REQUIRES_APPROVAL");
+```
+
+<Callout variant="enforced" title="把它变成必需的检查">
+  将这些测试接入 CI 作为一项必需的检查，这样一个悄悄削弱规则的改动就会让构建失败，而不是被发布出去。
+</Callout>
+
+相关：[升级](/docs/concepts/escalation) ·
+[治理](/docs/governance)。

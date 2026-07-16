@@ -1,0 +1,41 @@
+---
+title: Tooltip
+sourceHash: eebffdf933bd
+---
+
+import { TooltipHero, TooltipExamples } from "@/app/components/docs/demos/primitives/tooltip";
+
+<TooltipHero />
+
+`Tooltip` zeigt einen kleinen Hinweis an, wenn der Benutzer ein Steuerelement mit
+dem Zeiger überfährt oder es fokussiert. Verwende ihn, um eine Icon-Schaltfläche zu
+erläutern oder ein Detail zu ergänzen, niemals für Informationen, die der Benutzer
+zum Abschluss einer Aufgabe *benötigt*, da er standardmäßig ausgeblendet und auf
+Touchgeräten nicht verfügbar ist.
+
+## Verwendung
+
+```tsx
+import {
+  TooltipProvider, Tooltip, TooltipTrigger, TooltipContent,
+} from "@sina-design-system/core";
+
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button variant="ghost" aria-label="Info"><Icon …/></Button>
+    </TooltipTrigger>
+    <TooltipContent>Groups digits on blur.</TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+```
+
+## Beispiele
+
+<TooltipExamples />
+
+## Barrierefreiheit
+
+Öffnet sich beim Überfahren **und** bei Tastaturfokus, schließt sich mit `Esc` und
+wird über `aria-describedby` angesagt. Der Auslöser benötigt weiterhin sein eigenes
+barrierefreies Label.

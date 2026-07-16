@@ -1,0 +1,93 @@
+---
+title: Adopter de façon incrémentale
+sourceHash: b9bef9982943
+---
+
+Vous n'avez pas à tout gouverner dès le premier jour, ni même à gouverner quoi
+que ce soit. Il y a deux points d'entrée, et le premier évolue proprement vers le
+second.
+
+## Voie 1 : les primitives seules
+
+La gouvernance de SINA est optionnelle. Si vous voulez simplement des composants
+React accessibles et thématisables, de la qualité de Radix, sans en câbler un
+vous-même, utilisez les primitives seules. Aucun contrôle, aucune vérification
+côté serveur.
+
+<Steps>
+  <Step title="Installez deux paquets">
+
+```bash
+pnpm add @sina-design-system/theme @sina-design-system/core
+```
+
+  </Step>
+  <Step title="Importez les styles">
+
+```ts
+// app/layout.tsx
+import "@sina-design-system/theme/reset.css";
+import "@sina-design-system/theme/css";
+import "@sina-design-system/core/styles.css";
+```
+
+  </Step>
+  <Step title="Utilisez les composants">
+
+```tsx
+import { Button } from "@sina-design-system/core";
+
+<Button variant="primary">Save</Button>
+```
+
+Des primitives accessibles, mises en forme par les [tokens](/docs/theming/tokens)
+et personnalisables via le [theming](/docs/theming). Parcourez l'ensemble dans la
+[galerie des primitives](/docs/primitives).
+
+  </Step>
+</Steps>
+
+<Callout variant="note" title="Ce que vous laissez de côté">
+  Sans le contrôle, rien ne valide l'intention de l'IA, ce qui est acceptable si
+  vous ne générez pas encore d'UI avec l'IA. Ajoutez la
+  [gouvernance](/docs/governance) plus tard et vous conservez chaque composant ;
+  rien n'est remplacé.
+</Callout>
+
+## Voie 2 : gouverner une intention à la fois
+
+L'inquiétude habituelle est « la gouvernance va ralentir mon équipe ». Ce ne sera
+pas le cas, si elle est déployée comme prévu :
+
+<Steps>
+  <Step title="Choisissez une intention à forte valeur">
+
+Choisissez le flux où une erreur coûte le plus cher, généralement le mouvement
+d'argent. N'acheminez que celui-là à travers le contrôle. Tout le reste reste
+exactement tel quel.
+
+  </Step>
+  <Step title="Observez ce qu'il bloque">
+
+Faites passer de vraies requêtes (ou enregistrées) à travers lui et lisez les
+décisions. Ajustez les seuils de politique pour qu'ils correspondent à l'appétit
+au risque de votre produit ; voir [Écrire une règle](/docs/governance/writing-a-rule).
+
+  </Step>
+  <Step title="Étendez au flux suivant">
+
+Parce que chaque règle renvoie le même
+[contrat](/docs/concepts/the-contract), le code de rendu que vous avez écrit la
+première fois fonctionne pour le second.
+
+  </Step>
+</Steps>
+
+<Callout variant="note" title="Aucune taxe de gouvernance">
+  SINA ajoute une seule vérification côté serveur par intention gouvernée. Les
+  lectures et les flux non gouvernés ne sont pas touchés, donc vous ne payez que
+  là où vous l'avez demandé, et vous pouvez vous arrêter à un seul flux. Et chaque
+  seuil est une constante nommée et citée : quand quelqu'un demande « pourquoi
+  cela a-t-il été bloqué », la réponse est une règle précise avec une source
+  précise, révisable dans une pull request.
+</Callout>

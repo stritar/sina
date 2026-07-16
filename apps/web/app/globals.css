@@ -6,6 +6,26 @@
   --sina-font--mono: var(--font-ibm-plex-mono), ui-monospace, monospace;
 }
 
+/* CJK locales: Rubik/IBM Plex carry no CJK glyphs, so append a high-quality
+   system CJK stack (PingFang/Hiragino on macOS, YaHei/Yu Gothic on Windows,
+   Noto on Linux/Android). Latin still renders in Rubik; the browser falls
+   through to the CJK face only for CJK codepoints. No web-font download, so it
+   always renders (no tofu). The `[lang]` wrapper in `app/[lang]/layout.tsx`
+   scopes these overrides to the zh/ja subtrees. */
+[lang="zh"] {
+  --sina-font--sans: var(--font-rubik), "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  --sina-font--mono: var(--font-ibm-plex-mono), "PingFang SC", "Microsoft YaHei",
+    "Noto Sans SC", ui-monospace, monospace;
+}
+
+[lang="ja"] {
+  --sina-font--sans: var(--font-rubik), "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic", Meiryo, "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
+  --sina-font--mono: var(--font-ibm-plex-mono), "Hiragino Sans", "Yu Gothic",
+    Meiryo, "Noto Sans JP", ui-monospace, monospace;
+}
+
 /* Dual-theme shiki (see source.config.ts): each token ships both `--shiki-light`
    and `--shiki-dark` as CSS variables (no baked-in color). Default to the light
    color; flip to the dark color under the `[data-theme="dark"]` root the

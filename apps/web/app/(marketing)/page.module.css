@@ -19,6 +19,9 @@
   position: absolute;
   top: var(--sina-space--6);
   right: var(--sina-space--6);
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--3);
 }
 
 .title {

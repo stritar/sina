@@ -1,0 +1,42 @@
+---
+title: Alert
+sourceHash: 4b6702614a41
+---
+
+import { AlertHero, AlertExamples } from "@/app/components/docs/demos/primitives/alert";
+
+<AlertHero />
+
+`Alert` は、持続的なインラインの状態を伝えます。フォーム上部の警告、成功の確認、エラーの説明などです。
+
+## 使い方
+
+```tsx
+import { Alert } from "@sina-design-system/core";
+
+<Alert variant="warning" title="Approval required">
+  This transfer needs a second approver before it can proceed.
+</Alert>
+```
+
+## 例
+
+<AlertExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "variant", type: '"info" | "success" | "warning" | "danger"', default: '"info"', description: "重大度。ステータスの字形も選択します。" },
+    { prop: "title", type: "ReactNode", description: "アラートの太字の見出し。" },
+    { prop: "icon", type: "ReactNode | false", description: "字形を差し替えるか、info/success では非表示にします（warning/danger では決して非表示にしません）。" },
+  ]}
+/>
+
+<Callout variant="warning" title="ステータスに関する 2 つのルール">
+  warning と danger のアラートは**常に**太字の字形を表示します。差し替えることはできますが、削除はできません。そして、ステータス要素を別のステータス要素の中に入れ子にしては決していけません。Badge は Alert の*隣*に置くものであり、内部ではありません。
+</Callout>
+
+## アクセシビリティ
+
+danger のアラートは `role="alert"` を使用します（アサーティブに通知）。その他は `role="status"` を使用します（丁寧に通知）。意味はアイコン + タイトル + テキストで伝えられ、色だけで伝えることは決してありません。

@@ -1,0 +1,40 @@
+---
+title: Button
+sourceHash: 7de5af4b2e5a
+---
+
+import { ButtonHero, ButtonExamples } from "@/app/components/docs/demos/primitives/button";
+
+<ButtonHero />
+
+`Button` 触发一个动作：提交表单、打开对话框、确认某个步骤。用 Button 表示动作，
+用链接表示导航。
+
+## 用法
+
+```tsx
+import { Button } from "@sina-design-system/core";
+
+<Button variant="primary" onClick={submit}>Continue</Button>
+```
+
+## 示例
+
+<ButtonExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "variant", type: '"primary" | "secondary" | "danger" | "ghost"', default: '"primary"', description: "视觉权重与意图。" },
+    { prop: "size", type: '"sm" | "md" | "lg" | "xl"', default: '"md"', description: "控件高度。" },
+    { prop: "iconLeft / iconRight", type: "ReactNode", description: "位于前方或后方的图标。" },
+    { prop: "loading", type: "boolean", default: "false", description: "显示加载指示器并禁用该按钮。" },
+    { prop: "asChild", type: "boolean", default: "false", description: "渲染为子元素（例如一个链接），同时保留按钮样式。" },
+  ]}
+/>
+
+## 无障碍
+
+原生 `<button>` 语义：可获得焦点，`Enter`/`Space` 触发，并会朗读 `disabled`。
+仅含图标的按钮需要一个 `aria-label`。

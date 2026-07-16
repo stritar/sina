@@ -1,0 +1,28 @@
+---
+title: ScrollArea
+sourceHash: 017d8f7db069
+---
+
+import { ScrollAreaHero, ScrollAreaExamples } from "@/app/components/docs/demos/primitives/scroll-area";
+
+<ScrollAreaHero />
+
+`ScrollArea` は、スクロール可能な領域に、ブラウザ間で一貫したスタイル付きのスクロールバーを提供します。ネイティブのキーボードスクロールを無効化することはありません。
+
+## 使い方
+
+```tsx
+import { ScrollArea } from "@sina-design-system/core";
+
+<ScrollArea style={{ height: 240 }}>
+  {/* long content */}
+</ScrollArea>
+```
+
+## 例
+
+<ScrollAreaExamples />
+
+## アクセシビリティ
+
+本来ならあふれてしまう、範囲の限られたリストやパネルに使用してください。コンテンツはキーボードでスクロール可能なままで、スクロールバーがレイアウトをずらすこともありません。

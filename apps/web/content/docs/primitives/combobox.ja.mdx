@@ -1,0 +1,45 @@
+---
+title: Combobox
+sourceHash: 19fb4c750726
+---
+
+import { ComboboxHero, ComboboxExamples } from "@/app/components/docs/demos/primitives/combobox";
+
+<ComboboxHero />
+
+`Combobox` は入力できるセレクトです。選択肢のリストが長く、ドロップダウンを見て探すのが大変なときに使います。
+
+## 使い方
+
+```tsx
+import { Combobox } from "@sina-design-system/core";
+
+<Combobox
+  options={[
+    { value: "usd", label: "US Dollar" },
+    { value: "eur", label: "Euro" },
+  ]}
+  value={currency}
+  onValueChange={setCurrency}
+  placeholder="Search currencies"
+/>
+```
+
+## 例
+
+<ComboboxExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "options", type: "ComboboxOption[]", description: "選択する { value, label } の項目。" },
+    { prop: "value", type: "string", description: "選択されている値（制御された状態）。" },
+    { prop: "onValueChange", type: "(value: string) => void", description: "選択時に発火します。" },
+    { prop: "placeholder", type: "string", description: "入力欄の空状態テキスト。" },
+  ]}
+/>
+
+## アクセシビリティ
+
+ネイティブの input を備えた Popover の上に構築されています。矢印キーで一致項目を移動し、`Enter` で選択、listbox はスクリーンリーダーに読み上げられます。

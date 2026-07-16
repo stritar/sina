@@ -1,0 +1,37 @@
+---
+title: Spinner
+sourceHash: e45c315d4436
+---
+
+import { SpinnerHero, SpinnerExamples } from "@/app/components/docs/demos/primitives/spinner";
+
+<SpinnerHero />
+
+`Spinner` は、何かが進行中であるものの、どれくらい時間がかかるか分からないことを示します。
+所要時間が分かっている場合は、代わりに [Progress](/docs/primitives/progress) を使用してください。
+
+## 使い方
+
+```tsx
+import { Spinner } from "@sina-design-system/core";
+
+<Spinner size="md" label="Loading transactions" />
+```
+
+## 例
+
+<SpinnerExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "インジケーターのサイズ。" },
+    { prop: "label", type: "string", description: "スクリーンリーダーに読み上げられます（視覚的には非表示）。" },
+  ]}
+/>
+
+## アクセシビリティ
+
+アニメーションは `prefers-reduced-motion` を尊重します。待機状態が無音ではなく読み上げられるよう、
+常に `label` を渡してください。

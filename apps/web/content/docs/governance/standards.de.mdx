@@ -1,0 +1,47 @@
+---
+title: Standards und Quellenangaben
+sourceHash: 077f8d3d0725
+---
+
+SINAs goldene Regel lautet: **niemals ein Limit erfinden**. Jeder Schwellenwert, jedes
+Format und jedes Pflichtfeld lässt sich auf einen Standard oder eine Aufsichtsbehörde
+zurückführen, mit der Quellenangabe im Code. Diese Seite ist der Beleg: jeder Standard, den
+die Verfassung kodiert, und für jeden *was der Code tatsächlich prüft*.
+
+Diese letzte Spalte ist der springende Punkt. Eine Liste von Standards ist eine
+Compliance-Behauptung, und Compliance-Behauptungen sind genau der Punkt, an dem ein
+Governance-System anfängt, Sie anzulügen. Deshalb nennt jede Zeile den **Mechanismus**,
+nicht den Anspruch: SINA berechnet die mod-97-Prüfsumme einer IBAN tatsächlich, aber es
+prüft keine Adresse gegen eine Sanktionsliste und führt keine PCI-Bewertung durch. Wo eine
+Regel nur ein dünner Ersatz für eine tiefgreifende Pflicht ist, sagt die Zeile das.
+
+Regeln fallen in drei Stufen, und der Code hält sie auseinander:
+
+- **Format**: Prüfsummen und Codelisten. Deterministisch, eine Nutzlast erfüllt sie also
+  oder nicht.
+- **Regulatorisch**: echte Vorschriften. Ein `flag` hält den Befund im
+  [Audit-Trail](/docs/concepts/audit-trail) fest; ein `escalate` erzwingt eine geregelte
+  Komponente; ein `reject` verweigert rundheraus. Nicht dazu gedacht, leichtfertig gelockert
+  zu werden.
+- **SINA-Richtlinie**: einstellbare Produktvorgaben (Vier-Augen-Prinzip, Step-up-Limits).
+  **Kein Gesetz.** Das sind die, die Sie an Ihre eigene Risikobereitschaft anpassen sollen.
+
+Wenn der Kontrollpunkt eine Anfrage blockiert, reist der `standard` aus der passenden Zeile
+mit dem Verstoß in den Audit-Datensatz. Eine Blockade ist nie ein Rätsel, und ein Prüfer
+kann sie bis zu der Zeile zurückverfolgen, die sie ausgelöst hat. Siehe
+[den Vertrag](/docs/concepts/the-contract) für die Form und
+[eine Regel schreiben](/docs/governance/writing-a-rule), um eine hinzuzufügen.
+
+<Callout variant="enforced" title="Diese Tabelle wird aus den Schemas generiert">
+  Der Katalog lebt im Verfassungspaket, nicht auf dieser Seite, und ein Guard-Test bindet
+  beide aneinander: eine Regel, die einen Standard zitiert, den der Katalog auslässt, lässt
+  den Build fehlschlagen, und ebenso ein Katalogeintrag, der etwas zitiert, das keine Regel
+  durchsetzt. Die Dokumentation kann nicht vom Code abweichen und keine Prüfung behaupten,
+  die es nicht gibt.
+</Callout>
+
+## Fintech
+
+<StandardsTable industry="fintech" />
+
+<ComplianceNote />

@@ -1,0 +1,37 @@
+---
+title: DonutChart
+sourceHash: c6fcde610388
+---
+
+import { DonutChartHero, DonutChartExamples } from "@/app/components/docs/demos/primitives/donut-chart";
+
+<DonutChartHero />
+
+`DonutChart` は中央にくり抜きのある [PieChart](/docs/primitives/pie-chart) です。中央に合計やラベルを配置できます。
+
+## 使い方
+
+```tsx
+import { DonutChart } from "@sina-design-system/core";
+
+<DonutChart label="Holdings" data={{ labels, datasets }} centerLabel="$48k" />
+```
+
+## 例
+
+<DonutChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "必須のアクセシブルな名前。" },
+    { prop: "data", type: "ChartData", description: "描画する各部分（Chart.js の形式）。" },
+    { prop: "centerLabel", type: "ReactNode", description: "くり抜き部分に表示される内容。" },
+  ]}
+/>
+
+## アクセシビリティ
+
+PieChart と同じ色覚多様性に配慮したパレットと、`role="img"` ＋テキスト凡例による
+アクセシビリティを共有します。

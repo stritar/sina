@@ -1,0 +1,43 @@
+---
+title: BarChart
+sourceHash: 81bb0ce7f3af
+---
+
+import { BarChartHero, BarChartExamples } from "@/app/components/docs/demos/primitives/bar-chart";
+
+<BarChartHero />
+
+`BarChart` 用于跨类别比较数值。启用 `horizontal` 以适应长标签，启用 `stacked` 以展示构成。
+
+## 用法
+
+```tsx
+import { BarChart } from "@sina-design-system/core";
+
+<BarChart
+  label="Spending by category"
+  data={{ labels, datasets }}
+  horizontal
+  valueFormatter={(n) => `$${n}`}
+/>
+```
+
+## 示例
+
+<BarChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "必需的无障碍名称。" },
+    { prop: "data", type: "ChartData", description: "类别和系列（Chart.js 结构）。" },
+    { prop: "horizontal", type: "boolean", default: "false", description: "条形从左到右延伸。" },
+    { prop: "stacked", type: "boolean", default: "false", description: "将各系列堆叠到一个条形中。" },
+    { prop: "valueFormatter", type: "(n: number) => string", description: "格式化提示框和坐标轴的数值。" },
+  ]}
+/>
+
+## 无障碍
+
+与所有 canvas 图表一样，它是 `"use client"`、`role="img"`，并搭配一段文本摘要作为无障碍路径。

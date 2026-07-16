@@ -1,0 +1,31 @@
+---
+title: VisuallyHidden
+sourceHash: 09d33ae53403
+---
+
+import { VisuallyHiddenHero, VisuallyHiddenExamples } from "@/app/components/docs/demos/primitives/visually-hidden";
+
+<VisuallyHiddenHero />
+
+`VisuallyHidden` 在视觉上隐藏内容，同时使其仍可供辅助技术使用。用它为纯图标按钮提供名称，或补充屏幕阅读器所需、但布局已经暗示的上下文。
+
+## 用法
+
+```tsx
+import { VisuallyHidden } from "@sina-design-system/core";
+
+<button>
+  <Icon icon={X} decorative />
+  <VisuallyHidden>Close dialog</VisuallyHidden>
+</button>
+```
+
+## 示例
+
+在任一预览中你都看不到隐藏文本，但屏幕阅读器会将其读出，因此纯图标按钮会被读作“关闭，按钮”。
+
+<VisuallyHiddenExamples />
+
+## 无障碍
+
+这是隐藏文本的无障碍方式，不同于 `display: none`（会对所有人移除该内容）或屏幕外定位技巧（可能出现异常）。每当视觉设计省略了屏幕阅读器仍然需要的标签时，就使用它。

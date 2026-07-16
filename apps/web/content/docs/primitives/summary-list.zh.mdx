@@ -1,0 +1,41 @@
+---
+title: SummaryList
+sourceHash: 4b44c8a631e1
+---
+
+import { SummaryListHero, SummaryListExamples } from "@/app/components/docs/demos/primitives/summary-list";
+
+<SummaryListHero />
+
+`SummaryList` 将带标签的值渲染为规范的 `<dl>`。受治理的对话框正是用它来展示你正在批准的确切条款。
+
+## 用法
+
+```tsx
+import { SummaryList } from "@sina-design-system/core";
+
+<SummaryList
+  items={[
+    { label: "Amount", value: "$60,000.00", emphasis: true },
+    { label: "To", value: "Beta LLC" },
+    { label: "Rail", value: "Wire" },
+  ]}
+/>
+```
+
+## 示例
+
+<SummaryListExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "items", type: "SummaryItem[]", description: "{ label, value, emphasis? } 各行。" },
+    { prop: "emphasis (per item)", type: "boolean", description: "突出显示某个关键行，例如金额。" },
+  ]}
+/>
+
+## 无障碍
+
+渲染为 `<dl>`/`<dt>`/`<dd>`，因此标签与值之间的关系会暴露给辅助技术。

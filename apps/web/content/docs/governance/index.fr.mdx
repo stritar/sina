@@ -1,0 +1,79 @@
+---
+title: La gouvernance en pratique
+sourceHash: 59e77ad9a788
+---
+
+[Comment ça marche](/docs/how-it-works) explique *comment* SINA décide. Cette
+section, c'est le *quoi* : les règles réelles livrées aujourd'hui, pour la
+fintech, et pourquoi vous pouvez leur faire confiance.
+
+La Constitution se divise en deux types de règle, et chaque intention relève de
+l'un ou de l'autre :
+
+- Les règles **gouvernées** couvrent les **actions** : déplacer de l'argent,
+  ouvrir des comptes, émettre des cartes. Elles portent une politique (limites,
+  approbations, divulgations) et peuvent escalader vers un composant plus strict.
+- Les règles d'**affichage** couvrent les **lectures** : soldes, transactions,
+  positions. Elles vérifient la *forme* des données (et masquent les champs
+  sensibles), puis montent un composant présentationnel. Elles n'escaladent jamais.
+
+Le catalogue complet des intentions existantes et de ce que chacune monte est
+[Composants gouvernés et motifs d'affichage](/docs/governance/components-and-patterns).
+
+<BeforeAfter>
+<Before title="Règles fondées sur le prompt">
+« Ne jamais déplacer plus de 10 000 $ sans approbation » vit dans un prompt
+système. Cela tient jusqu'à ce que le modèle soit confus, jailbreaké ou tout
+simplement dans l'erreur.
+</Before>
+<After title="Règles de la Constitution">
+La limite de 10 000 $ est une vérification Zod qui s'exécute côté serveur à chaque
+requête. Le modèle ne peut pas passer un parser à force de mots.
+</After>
+</BeforeAfter>
+
+## Chaque seuil a une source
+
+Un système de gouvernance n'est digne de confiance que si ses règles sont
+*défendables*. Chaque règle porte donc sa source. Quand le contrôle bloque quelque
+chose, la violation inclut un `standard`, la réglementation ou la politique dont
+elle provient, et cette citation se retrouve dans la [piste d'audit](/docs/concepts/audit-trail).
+Un blocage n'est jamais un mystère.
+
+Le code distingue trois types de règle : les standards de **format** (ISO 4217,
+IBAN, Luhn), les seuils **réglementaires** issus de la vraie réglementation
+financière (les tranches CTR, SAR et Travel Rule de FinCEN ; FATF ; Nacha), qu'il
+ne vous revient pas d'assouplir à la légère, et les valeurs par défaut de
+**politique SINA** que vous êtes censé ajuster à votre propre appétit pour le
+risque (la limite de double contrôle de 50 000 $ sur les virements, les plafonds
+d'autorisation par canal).
+
+La liste complète, et ce que SINA vérifie *réellement* dans chaque cas, est
+[Standards et citations](/docs/governance/standards).
+
+## Le modèle de menace
+
+SINA suppose que l'IA qui produit les intentions peut se tromper, être jailbreakée
+ou activement hostile. La question de conception n'est jamais « le modèle va-t-il
+bien se comporter ? » C'est « que se passe-t-il quand ce n'est pas le cas ? »
+
+| L'attaque | Ce qu'elle tente | Pourquoi elle échoue |
+|---|---|---|
+| **Contrôle fabriqué** | Glisser un `confirmButton` dans la charge utile | Schéma strict ; les champs inconnus sont rejetés avant même la lecture d'une valeur |
+| **Données de carte glissées** | Inclure un `cvv` ou un PAN complet | Même analyse stricte ; la rédaction le masque avant qu'il n'atteigne un journal |
+| **Action au-delà de la limite** | Un virement de 60 000 $ sans approbation | La politique escalade vers un dialogue de second approbateur ; la confirmation brute ne peut pas se monter |
+| **Auto-approbation** | Approuver son propre virement | Contrôle à quatre yeux : l'approbateur doit différer de l'initiateur connu du serveur |
+| **Appât et substitution** | Approuver 5 000 $, puis exécuter 60 000 $ | L'approbation est liée aux termes exacts, recalculés sur le serveur |
+| **Données fabriquées** | Inventer un solde ou une transaction | Pour les lectures, le serveur fournit les valeurs ; le modèle choisit seulement *ce qu'*il affiche |
+| **Exfiltration de données** | Renvoyer un numéro de compte non masqué | Les schémas d'affichage exigent des identifiants masqués |
+| **Inondation** | Envoyer 10 000 lignes pour figer le client | Les tableaux sont bornés |
+
+<Callout variant="enforced" title="Ce ne sont pas des hypothèses">
+  Chaque ligne ci-dessus est une charge utile réelle dans la suite de tests de
+  SINA. La compilation échoue si l'une d'elles cesse d'être bloquée, de sorte que
+  les garanties ne peuvent pas pourrir en silence.
+</Callout>
+
+Voyez plusieurs de ces attaques se dérouler sur une requête réelle :
+[le virement de 60 k$, de bout en bout](/docs/governance/wire-transfer). Puis
+[écrivez votre propre règle](/docs/governance/writing-a-rule).

@@ -1,0 +1,73 @@
+---
+title: 快速开始
+sourceHash: c20976614b72
+---
+
+<Prereqs>
+- **Node 20+** 以及一个包管理器（pnpm、npm 或 yarn）。
+- 一个能够运行服务器代码的 React 应用（Next.js App Router 项目最为理想）。
+- 你**不**需要 AI 智能体或 LLM 密钥。
+</Prereqs>
+
+## 安装
+
+<Tabs>
+  <Tab label="pnpm">
+
+```bash
+pnpm add @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+  </Tab>
+  <Tab label="npm">
+
+```bash
+npm install @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+  </Tab>
+  <Tab label="yarn">
+
+```bash
+yarn add @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+  </Tab>
+</Tabs>
+
+## 接入样式表
+
+按此顺序，将 token 和组件样式各导入一次。reset 位于独立的 layer 中，因此你的应用自身的样式始终会覆盖它。
+
+```ts
+// app/layout.tsx
+import "@sina-design-system/theme/reset.css";
+import "@sina-design-system/theme/css";
+import "@sina-design-system/core/styles.css";
+import "@sina-design-system/fintech-react/styles.css";
+```
+
+配置到此完成。从这里开始，基础组件可独立工作；关卡是可选启用的。
+
+## 后续步骤
+
+<CardGrid columns={2}>
+  <Card href="/docs/how-it-works" title="工作原理">
+    意图 → 关卡 → 挂载的流程，以及为何校验始终在服务器端进行。
+  </Card>
+  <Card href="/docs/governance/wire-transfer" title="6 万美元电汇，从头到尾">
+    一个受治理的意图被拦截、升级并重新经过关卡。
+  </Card>
+  <Card href="/docs/primitives" title="基础组件">
+    无头、可访问的组件，完全无需治理即可使用。
+  </Card>
+  <Card href="/docs/guides/adopt-incrementally" title="逐步采用">
+    先治理一个意图，或者不设关卡直接使用基础组件。
+  </Card>
+</CardGrid>

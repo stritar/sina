@@ -26,7 +26,7 @@
 }
 
 .link:hover {
-  background: var(--sina-color-surface-sunken);
+  background: var(--sina-color-surface-secure);
   color: var(--sina-color-text);
 }
 

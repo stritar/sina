@@ -1,0 +1,48 @@
+---
+title: KpiStat
+sourceHash: 435e274ef4a2
+---
+
+import { KpiStatHero, KpiStatExamples } from "@/app/components/docs/demos/primitives/kpi-stat";
+
+<KpiStatHero />
+
+`KpiStat` muestra un número importante, en grande, con una comparación opcional
+que se renderiza como una insignia de tendencia (por defecto, subir es bueno).
+
+## Uso
+
+```tsx
+import { KpiStat } from "@sina-design-system/core";
+
+<KpiStat
+  value={12500}
+  comparisonValue={11800}
+  valueFormatter={(v) => `$${v.toLocaleString("en-US")}`}
+  comparisonLabel="vs last month"
+/>
+```
+
+## Ejemplos
+
+<KpiStatExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "value", type: "number | null", description: "La cifra principal; null renderiza displayNullAs." },
+    { prop: "valueFormatter", type: "(value: number) => string", description: "Formatea el valor y el delta (moneda, etc.)." },
+    { prop: "comparisonValue", type: "number", description: "Un valor anterior. Renderiza la píldora de tendencia." },
+    { prop: "comparisonLabel", type: "string", description: "Contexto bajo la píldora, p. ej. “frente al período anterior”." },
+    { prop: "showChangeAsPercentage", type: "boolean", default: "false", description: "Muestra el delta como porcentaje." },
+    { prop: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Escala del recuadro." },
+    { prop: "invertChangeColors", type: "boolean", default: "false", description: "Cuando bajar es bueno (p. ej. el gasto)." },
+  ]}
+/>
+
+## Accesibilidad
+
+Una tendencia a la baja usa una insignia de peligro con un glifo descendente en
+negrita, de modo que el significado nunca depende solo del color. Todo es texto
+real (sin imagen, sin canvas) y se puede montar en el servidor (sin JS de cliente).

@@ -1,0 +1,72 @@
+---
+title: 渐进式采用
+sourceHash: b9bef9982943
+---
+
+你不必在第一天就治理所有内容，甚至可以完全不做治理。有两种入门方式，而第一种可以干净地升级为第二种。
+
+## 路径 1：仅使用基础组件
+
+SINA 的治理是可选的。如果你只想要具备 Radix 品质、可访问且可主题化的 React 组件，而不必自己动手接线，那就单独使用基础组件。没有关卡，没有服务器检查。
+
+<Steps>
+  <Step title="安装两个包">
+
+```bash
+pnpm add @sina-design-system/theme @sina-design-system/core
+```
+
+  </Step>
+  <Step title="导入样式">
+
+```ts
+// app/layout.tsx
+import "@sina-design-system/theme/reset.css";
+import "@sina-design-system/theme/css";
+import "@sina-design-system/core/styles.css";
+```
+
+  </Step>
+  <Step title="使用组件">
+
+```tsx
+import { Button } from "@sina-design-system/core";
+
+<Button variant="primary">Save</Button>
+```
+
+可访问的基础组件，由 [tokens](/docs/theming/tokens) 设定样式，可通过[主题化](/docs/theming)重新品牌化。在[基础组件库](/docs/primitives)中浏览整套组件。
+
+  </Step>
+</Steps>
+
+<Callout variant="note" title="你所跳过的部分">
+  没有关卡，就没有任何东西校验 AI 的意图，如果你还没有用 AI 生成 UI，这没问题。稍后添加[治理](/docs/governance)，你仍会保留每一个组件；不会有任何东西被替换。
+</Callout>
+
+## 路径 2：一次治理一个意图
+
+常见的担忧是"治理会拖慢我的团队"。按照它的设计方式推行，它不会：
+
+<Steps>
+  <Step title="挑选一个高价值意图">
+
+选择出错代价最高的流程，通常是资金流动。只把那一个流程路由到关卡。其他一切都保持原样。
+
+  </Step>
+  <Step title="观察它拦截了什么">
+
+让真实（或录制的）请求通过它，并阅读这些决策。调整策略阈值以匹配你产品的风险偏好；参见[编写规则](/docs/governance/writing-a-rule)。
+
+  </Step>
+  <Step title="扩展到下一个流程">
+
+因为每条规则都返回相同的
+[契约](/docs/concepts/the-contract)，你第一次编写的渲染代码对第二次同样有效。
+
+  </Step>
+</Steps>
+
+<Callout variant="note" title="没有治理税">
+  SINA 为每个受治理的意图添加一次服务器端检查。读取和未受治理的流程不受影响，所以你只在你要求的地方付出代价，而且你可以只停在一个流程上。而且每个阈值都是一个具名、有出处引用的常量：当有人问"这为什么被拦截"时，答案是一条具体的规则加上一个具体的来源，可在 pull request 中审阅。
+</Callout>

@@ -1,0 +1,31 @@
+---
+title: RadioGroup
+sourceHash: f5e7592046d1
+---
+
+import { RadioGroupHero, RadioGroupExamples } from "@/app/components/docs/demos/primitives/radio-group";
+
+<RadioGroupHero />
+
+`RadioGroup` sirve para una única elección exclusiva entre unas pocas opciones. Para más de un
+puñado, es preferible [Select](/docs/primitives/select).
+
+## Uso
+
+```tsx
+import { RadioGroup, RadioGroupItem } from "@sina-design-system/core";
+
+<RadioGroup value={plan} onValueChange={setPlan}>
+  <RadioGroupItem value="standard" label="Standard" />
+  <RadioGroupItem value="priority" label="Priority" />
+</RadioGroup>
+```
+
+## Ejemplos
+
+<RadioGroupExamples />
+
+## Accesibilidad
+
+Sigue el patrón ARIA radiogroup: `Tab` entra en el grupo, las teclas de flecha se mueven
+entre las opciones (foco itinerante) y solo la opción seleccionada es una parada de tabulación.

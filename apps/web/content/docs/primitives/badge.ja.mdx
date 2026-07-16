@@ -1,0 +1,44 @@
+---
+title: Badge
+sourceHash: 4d4d24138038
+---
+
+import { BadgeHero, BadgeExamples } from "@/app/components/docs/demos/primitives/badge";
+
+<BadgeHero />
+
+`Badge` は、行内で何かのステータスをラベル付けする小さなチップです。行、カード、見出しなどに使います。
+
+## 使い方
+
+```tsx
+import { Badge } from "@sina-design-system/core";
+
+<Badge intent="success">Verified</Badge>
+<Badge intent="danger" dot>Blocked</Badge>
+```
+
+## 例
+
+<BadgeExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "intent", type: '"neutral" | "info" | "success" | "warning" | "danger"', default: '"neutral"', description: "色と意味。" },
+    { prop: "size", type: '"sm" | "md"', default: '"md"', description: "チップのサイズ。" },
+    { prop: "icon", type: "ReactNode", description: "先頭の字形（ラベルの色を継承します）。" },
+    { prop: "dot", type: "boolean", default: "false", description: "先頭のステータスドット。" },
+  ]}
+/>
+
+<Callout variant="note" title="ステータスのルールが適用されます">
+  `danger` または `warning` の Badge は、太字の字形を自動的にレンダリングします。また Badge は
+  ステータス要素なので、Alert や Toast の内部には決してレンダリングしないでください。兄弟要素として配置してください。
+</Callout>
+
+## アクセシビリティ
+
+意味が色だけで伝えられることは決してありません。重大度を示す Badge は、その色合いを常に字形または
+ドットとテキストラベルと組み合わせます。閉じることのできる Badge の閉じるボタンは、明示的な `closeLabel` を受け取ります。

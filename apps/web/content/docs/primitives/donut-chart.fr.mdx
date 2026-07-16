@@ -1,0 +1,38 @@
+---
+title: DonutChart
+sourceHash: c6fcde610388
+---
+
+import { DonutChartHero, DonutChartExamples } from "@/app/components/docs/demos/primitives/donut-chart";
+
+<DonutChartHero />
+
+`DonutChart` est un [PieChart](/docs/primitives/pie-chart) avec un évidement
+central, ce qui vous permet de placer un total ou un libellé au milieu.
+
+## Utilisation
+
+```tsx
+import { DonutChart } from "@sina-design-system/core";
+
+<DonutChart label="Holdings" data={{ labels, datasets }} centerLabel="$48k" />
+```
+
+## Exemples
+
+<DonutChartExamples />
+
+## Props
+
+<PropsTable
+  rows={[
+    { prop: "label", type: "string", description: "Nom accessible obligatoire." },
+    { prop: "data", type: "ChartData", description: "Les parts à tracer (format Chart.js)." },
+    { prop: "centerLabel", type: "ReactNode", description: "Contenu affiché dans l'évidement central." },
+  ]}
+/>
+
+## Accessibilité
+
+Partage la palette adaptée au daltonisme ainsi que l'accessibilité de PieChart
+via `role="img"` + une légende textuelle.
