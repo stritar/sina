@@ -251,6 +251,25 @@ Grouped into workstreams (each a candidate hand-off; sequence by product priorit
 - **API Reference auto-generation:** stand up the TSDoc→MDX pipeline (deferred from Phase 7) so the docs Reference section never drifts from the typed contracts.
 - **Exit criteria:** audit events land in a real sink; `core` renders styled from `styles.css` alone *and* a `createTheme` brand theme rebrands it without touching primitives or governance-locked tokens; the "Theme the primitives" docs guide is live.
 
+### Phase 11 — Governance Coverage Expansion (fintech gap-closing)
+**Goal:** Close the gap between what the fintech constitution *advertises* and what a render-time gate can *honestly* enforce. Two moves: **add the in-scope, gate-shaped rules that are still missing**, and **draw a documented boundary** around the rules that are structurally out of reach for a UI intercept (live screening, backend decisioning, licensing). The golden rule holds — never fake a check. A rule we can't honestly enforce becomes a disclaimed boundary, not a green row.
+
+**Why now:** the constitution covers the money-movement rails and BSA/AML reporting thresholds well (Travel Rule, SAR, CTR, dual control, PCI field hygiene), but a real fintech expects more of the *gate-shaped* controls, and expects the non-gate controls to be named, not implied. Coverage that overclaims is the one failure mode a governance product cannot afford (it's exactly what the `standards.ts` `enforcement` field and its bidirectional guard exist to prevent).
+
+**Track A — add the in-scope, gate-shaped rules currently missing.** Each ships as a `fintech` schema + fixtures + registry entry + a cited `standards.ts` row with an honest `enforcement` string + a green adversarial gate test + a playground scenario (per `/new-schema` / `/new-governed-component` / `/new-display-pattern`):
+  - **PSD2 SCA** — a Strong Customer Authentication step-up on EU-facing money movement, distinct from the generic step-up.
+  - **CFPB §1033 open-banking consent** — a data-access consent acknowledgment gate before account data is shared.
+  - **GLBA privacy-notice** acknowledgment gate.
+  - **Deposit-side disclosures** — Reg DD / TISA (APY disclosure ack) and Reg CC (funds-availability warning).
+  - **FINRA PDT** — a pattern-day-trader warning on the trade path.
+
+**Track B — draw and document the boundary (the honest "not us" line).** Keep **OFAC/sanctions + PEP screening**, **FCRA/ECOA adverse-action decisioning**, and **state money-transmitter licensing** explicitly *out of scope and disclaimed* — never faked, because each needs a service + live data the gate never sees. SINA runs **in front of** them, it doesn't replace them. Land the "what the gate enforces and where it stops" section on the standards docs page (`governance/standards.mdx`) + its five translations.
+
+**Exit criteria:**
+  - Each Track A rule: a cited row in `standards.ts`, a green adversarial gate test, a playground scenario, and a `<StandardsTable industry="fintech" />` entry; the bidirectional `standards.test.ts` guard stays green (no undocumented citation, no uncited entry, no compliance-claim `enforcement`).
+  - The standards docs page documents **both** what SINA covers **and** the out-of-scope boundary; all docs guards green (`docs-{budget,canon,prose,links,i18n}.test.ts`).
+  - `CI=true pnpm build && pnpm typecheck && pnpm lint && pnpm test` green across the workspace.
+
 ---
 
 ## 3. Playground × AI SDK — When & Where (explicit)
@@ -266,6 +285,7 @@ The `apps/playground` Adversarial Sandbox is the **only** place the Vercel AI SD
 | **Phase 7** | The docs (Fumadocs) embed this harness's **mock mode** as read-only demos in the Components/Concepts pages (no live LLM); the schema check still runs server-side per §1b. |
 | **Phase 8** | The adversarial suite (mock mode) becomes a **required CI check** in the npm publish pipeline. |
 | **Phase 9** | The marketing landing embeds the same factored **mock-mode** demo as its live-governance section. |
+| **Phase 11** | New adversarial scenarios for the coverage-gap rules (SCA step-up, §1033 consent, GLBA/Reg DD acks, PDT warning) run against the same harness. |
 
 **The interception seam (the heart of SINA), exercised in Phase 4:**
 ```
@@ -308,6 +328,7 @@ LLM stream (streamUI intent / tool payload)
 - **Phase 8.5 (docs UX):** rewrite `apps/web/content/docs/**/*.mdx` (Getting Started + Guides + Concepts voice); no engine/route changes
 - **Phase 9 (`apps/web` landing):** new `app/(marketing)/page.tsx` + section components (bespoke landing); reuses the Phase 7 demo embed + Cloudflare pipeline
 - **Phase 10 (packaging/theming):** `packages/theme/src/create-theme.ts` (typed brand-open/governance-locked contract — **seeded**) + `assertThemeContrast`; `core/styles.css` build guard; real audit sink; TSDoc→MDX Reference generation
+- **Phase 11 (governance coverage):** new `packages/fintech/src/{sca,data-access-consent,privacy-notice,apy-disclosure,funds-availability,pdt-warning}/*` (schema + fixtures) + `registry.ts` entries; `packages/fintech/src/standards.ts` (new cited rows: PSD2 SCA, CFPB §1033, GLBA, Reg DD/CC, FINRA PDT) + `standards.test.ts`; `apps/web/content/docs/governance/standards.mdx` (+ 5 translations) — coverage/boundary section; new playground scenarios
 
 ---
 

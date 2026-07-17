@@ -1,6 +1,6 @@
 ---
 title: Standards und Quellenangaben
-sourceHash: 077f8d3d0725
+sourceHash: 813109559906
 ---
 
 SINAs goldene Regel lautet: **niemals ein Limit erfinden**. Jeder Schwellenwert, jedes
@@ -38,6 +38,36 @@ kann sie bis zu der Zeile zurückverfolgen, die sie ausgelöst hat. Siehe
   den Build fehlschlagen, und ebenso ein Katalogeintrag, der etwas zitiert, das keine Regel
   durchsetzt. Die Dokumentation kann nicht vom Code abweichen und keine Prüfung behaupten,
   die es nicht gibt.
+</Callout>
+
+## Was das Gate durchsetzt, und wo es aufhört
+
+SINA ist ein Gate zur Renderzeit und wirkt daher auf fünf Weisen auf eine Anfrage: Es
+validiert Struktur und Format, es eskaliert oder markiert beim Überschreiten eines
+Schwellenwerts, es erzwingt die Bestätigung einer Offenlegung, es verlangt eine
+zusätzliche Verifizierung (Step-up) oder einen zweiten Genehmiger, und es schwärzt den
+Audit-Trail. Jede Zeile unten ist einer dieser fünf Schritte.
+
+Drei Arten von Kontrolle liegen bewusst außerhalb dieser Reichweite. SINA gleicht keinen
+Namen und keine Adresse gegen eine Live-Sanktions- oder PEP-Liste ab, es trifft keine
+Kredit- oder Berechtigungsentscheidung im Backend, und es besitzt keine
+Geldtransmitter-Lizenz. Jede davon braucht einen Dienst und Live-Daten, die ein UI-Gate nie
+sieht. SINA läuft **vor** ihnen, es ersetzt sie nicht, und eine Zeile, die sich auf eine
+davon stützt, sagt das.
+
+Die ehrliche Form der Abdeckung ist also diese. Die Geldbewegungsschienen und die
+Meldeschwellen sind hier: Travel Rule, SAR, CTR, Vier-Augen-Kontrolle, PCI-Feldhygiene.
+Sanktionsabgleich, Entscheidungen zu fairer Kreditvergabe und Lizenzen bleiben außerhalb
+des Rahmens und werden ausdrücklich so ausgewiesen, niemals als grüner Haken vorgetäuscht.
+Einige Gate-förmige Regeln sind schlicht noch nicht gebaut, etwa die starke
+Kundenauthentifizierung für EU-Abläufe und die Einwilligung zum Datenzugriff im Open
+Banking. Um eine hinzuzufügen, siehe
+[eine Regel schreiben](/docs/governance/writing-a-rule).
+
+<Callout variant="note" title="Außerhalb des Rahmens ist ein Feature, kein Loch">
+  Ein Governance-System gewinnt Vertrauen, indem es seine Grenzen benennt. SINA steht vor
+  Ihrem Abgleich und Ihrer Backend-Entscheidung, daher ist es sicher, die Grenze klar zu
+  benennen, statt eine Prüfung anzudeuten, die der Code nie ausführt.
 </Callout>
 
 ## Fintech

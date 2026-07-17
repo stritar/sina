@@ -155,6 +155,13 @@ export const why = {
   ],
 } as const;
 
+export const pitch = {
+  eyebrow: "The whole idea, in ten seconds",
+  statement:
+    "SINA lets startups adopt AI generated UI without building the safety layer themselves. The agent proposes; a server side constitution decides; and when the answer is no, SINA doesn't just block, it mounts the governed version instead.",
+  coda: "It's free, because the safety layer is the hard part, and startups shouldn't have to pay for the thing they most need.",
+} as const;
+
 export const finalCta = {
   heading: "Put a constitution between your agent and your users.",
   sub: "Free for startups and individuals. Install it, wire the gate, ship governed agentic UI.",

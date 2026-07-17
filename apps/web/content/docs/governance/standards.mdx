@@ -35,6 +35,32 @@ shape, and [write a rule](/docs/governance/writing-a-rule) to add one.
   and cannot claim a check that doesn't exist.
 </Callout>
 
+## What the gate enforces, and where it stops
+
+SINA is a render-time gate, so it acts on a request in five ways: it validates
+structure and format, it escalates or flags on a threshold, it forces a disclosure to
+be acknowledged, it requires a step-up or a second approver, and it redacts the audit
+trail. Every row below is one of those five moves.
+
+Three kinds of control sit outside that reach, on purpose. SINA does not screen a name
+or address against a live sanctions or PEP list, it does not make a backend lending or
+eligibility decision, and it does not hold a money-transmitter license. Each of those
+needs a service and live data that a UI gate never sees. SINA runs **in front of** them,
+it does not replace them, and a row that leans on one of them says so.
+
+So the honest shape of coverage is this. The money-movement rails and the reporting
+thresholds are here: Travel Rule, SAR, CTR, dual control, PCI field hygiene. Sanctions
+screening, fair-lending decisions, and licensing stay out of scope and stay disclaimed,
+never faked as a green check. A few gate-shaped rules are simply not built yet, such as
+strong customer authentication for EU flows and open-banking data-access consent. To add
+one, see [write a rule](/docs/governance/writing-a-rule).
+
+<Callout variant="note" title="Out of scope is a feature, not a hole">
+  A governance system earns trust by naming its edges. SINA sits in front of your
+  screening and your backend decisioning, so the safe move is to state the boundary
+  plainly rather than imply a check the code never runs.
+</Callout>
+
 ## Fintech
 
 <StandardsTable industry="fintech" />

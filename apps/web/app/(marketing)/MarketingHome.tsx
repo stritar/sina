@@ -5,6 +5,7 @@ import { Hero } from "./landing/Hero";
 import { EmulatorSection } from "./landing/EmulatorSection";
 import { HowItWorks } from "./landing/HowItWorks";
 import { WhySina } from "./landing/WhySina";
+import { Pitch } from "./landing/Pitch";
 import { FinalCta } from "./landing/FinalCta";
 import { Footer } from "./landing/Footer";
 
@@ -28,6 +29,7 @@ export function MarketingHome({ locale }: { locale: string }) {
           <EmulatorSection />
           <HowItWorks />
           <WhySina />
+          <Pitch />
           <FinalCta locale={locale} />
         </main>
         <Footer locale={locale} />

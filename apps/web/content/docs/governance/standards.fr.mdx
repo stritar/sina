@@ -1,6 +1,6 @@
 ---
 title: Normes et citations
-sourceHash: 077f8d3d0725
+sourceHash: 813109559906
 ---
 
 La règle d'or de SINA est de **ne jamais inventer une limite** : chaque seuil, format et
@@ -38,6 +38,37 @@ un auditeur peut le retracer jusqu'à la ligne qui l'a produit. Voir
   compilation, tout comme une entrée du catalogue citant quelque chose qu'aucune règle
   n'impose. La documentation ne peut pas dériver du code, ni prétendre à une vérification
   qui n'existe pas.
+</Callout>
+
+## Ce que le contrôle applique, et où il s'arrête
+
+SINA est un contrôle au moment du rendu, donc il agit sur une requête de cinq façons : il
+valide la structure et le format, il escalade ou signale au franchissement d'un seuil, il
+force la reconnaissance d'une divulgation, il exige une vérification renforcée ou un second
+approbateur, et il caviarde la piste d'audit. Chaque ligne ci-dessous est l'un de ces cinq
+gestes.
+
+Trois types de contrôle échappent à cette portée, à dessein. SINA ne compare pas un nom ni
+une adresse à une liste de sanctions ou de PEP en direct, il ne prend pas de décision de
+prêt ou d'éligibilité côté backend, et il ne détient pas de licence de transmetteur de
+fonds. Chacun d'eux exige un service et des données en direct qu'un contrôle d'interface ne
+voit jamais. SINA s'exécute **en amont de** ceux-ci, il ne les remplace pas, et une ligne
+qui s'appuie sur l'un d'eux le dit.
+
+Voici donc la forme honnête de la couverture. Les rails de mouvement de fonds et les seuils
+de déclaration sont là : Travel Rule, SAR, CTR, contrôle à quatre yeux, hygiène des champs
+PCI. Le filtrage des sanctions, les décisions de prêt équitable et les licences restent
+hors périmètre et le restent explicitement, jamais falsifiés en un contrôle au vert.
+Quelques règles en forme de contrôle ne sont tout simplement pas encore construites, comme
+l'authentification forte du client pour les flux de l'UE et le consentement d'accès aux
+données de la banque ouverte. Pour en ajouter une, voir
+[écrire une règle](/docs/governance/writing-a-rule).
+
+<Callout variant="note" title="Être hors périmètre est une fonctionnalité, pas un trou">
+  Un système de gouvernance gagne la confiance en nommant ses limites. SINA se place en
+  amont de votre filtrage et de votre décision côté backend, donc le choix sûr est
+  d'énoncer la limite clairement plutôt que de laisser entendre un contrôle que le code
+  n'exécute jamais.
 </Callout>
 
 ## Fintech

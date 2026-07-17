@@ -1,6 +1,6 @@
 ---
 title: Estándares y citas
-sourceHash: 077f8d3d0725
+sourceHash: 813109559906
 ---
 
 La regla de oro de SINA es **nunca inventar un límite**: cada umbral, formato y campo
@@ -38,6 +38,34 @@ un auditor puede rastrearlo hasta la línea que lo produjo. Consulta
   compilación, y también lo hace una entrada del catálogo que cita algo que ninguna regla
   impone. La documentación no puede desviarse del código, ni puede afirmar una comprobación
   que no existe.
+</Callout>
+
+## Qué impone el control, y dónde se detiene
+
+SINA es un control en tiempo de renderizado, así que actúa sobre una solicitud de cinco
+maneras: valida la estructura y el formato, escala o marca al superar un umbral, obliga a
+reconocer una divulgación, exige una verificación adicional o un segundo aprobador, y
+redacta el registro de auditoría. Cada fila de abajo es uno de esos cinco movimientos.
+
+Tres tipos de control quedan fuera de ese alcance, a propósito. SINA no coteja un nombre ni
+una dirección contra una lista de sanciones o de PEP en vivo, no toma una decisión de
+préstamo o de elegibilidad en el backend, y no posee una licencia de transmisor de dinero.
+Cada uno de ellos necesita un servicio y datos en vivo que un control de interfaz nunca ve.
+SINA se ejecuta **por delante de** ellos, no los reemplaza, y una fila que se apoya en
+alguno de ellos lo indica.
+
+Así que la forma honesta de la cobertura es esta. Los rieles de movimiento de dinero y los
+umbrales de reporte están aquí: Travel Rule, SAR, CTR, control dual, higiene de campos PCI.
+El cotejo de sanciones, las decisiones de préstamo justo y las licencias quedan fuera de
+alcance y se declaran como tal, nunca se falsean como una comprobación en verde. Algunas
+reglas con forma de control simplemente aún no están construidas, como la autenticación
+reforzada de clientes para flujos de la UE y el consentimiento de acceso a datos de banca
+abierta. Para añadir una, consulta [escribe una regla](/docs/governance/writing-a-rule).
+
+<Callout variant="note" title="Estar fuera de alcance es una característica, no un hueco">
+  Un sistema de gobernanza gana confianza al nombrar sus límites. SINA se sitúa por delante
+  de tu cotejo y de tu decisión en el backend, así que lo seguro es declarar el límite con
+  claridad en lugar de insinuar una comprobación que el código nunca ejecuta.
 </Callout>
 
 ## Fintech

@@ -43,4 +43,4 @@ Think of it this way: **the design system is the least interesting thing SINA do
 
 ## The 10-second version
 
-> SINA lets startups adopt AI-generated UI without building the safety layer themselves. The AI proposes; a server-side constitution decides; and when the answer is "no," SINA doesn't just block, it mounts the governed version instead. It's free, because the hard part shouldn't be a paywall.
+> SINA lets startups adopt AI-generated UI without building the safety layer themselves. The AI proposes; a server-side constitution decides; and when the answer is "no," SINA doesn't just block, it mounts the governed version instead. It's free, because the safety layer is the hard part, and startups shouldn't have to pay for the thing they most need.
