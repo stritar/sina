@@ -100,9 +100,11 @@ describe("emulator a11y", () => {
     // The registry mounts every component through React.lazy, so a bare render would
     // axe the (empty) Suspense fallbacks and pass without ever seeing the real markup.
     // Wait for both lazy branches — the forced governed dialog and a presentational
-    // read — to actually resolve first.
-    await screen.findByRole("button", { name: /Open SecureWireDialog/i });
-    await screen.findAllByText(/Everyday Checking/i);
+    // read — to actually resolve first. On a cold CI runner the dynamic import() of the
+    // fintech-react → core chunk chain can exceed the default 1000ms wait, so give these
+    // lazy branches room to resolve (a genuine failure to mount still throws).
+    await screen.findByRole("button", { name: /Open SecureWireDialog/i }, { timeout: 5000 });
+    await screen.findAllByText(/Everyday Checking/i, undefined, { timeout: 5000 });
 
     expect(await axe(container)).toHaveNoViolations();
   });

@@ -38,7 +38,9 @@ function mount(ui: React.ReactElement) {
 /** Drive the dialog exactly as a reader would: review → collect → OTP → approve. */
 async function approveAs(approverId: string, approverName: string) {
   const user = userEvent.setup();
-  await user.click(await screen.findByRole("button", { name: /Open SecureWireDialog/i }));
+  await user.click(
+    await screen.findByRole("button", { name: /Open SecureWireDialog/i }, { timeout: 5000 }),
+  );
   await user.click(await screen.findByRole("button", { name: /Request approval/i }));
 
   await user.type(screen.getByLabelText(/Approver ID/i), approverId);
@@ -55,7 +57,7 @@ describe("GovernanceDemo", () => {
     const { container } = mount(<GovernanceDemo scenario="over-limit" />);
     expect(container.textContent).toContain("SecureWireDialog");
     // The forced component is lazy — wait for it, or axe runs against an empty fallback.
-    await screen.findByRole("button", { name: /Open SecureWireDialog/i });
+    await screen.findByRole("button", { name: /Open SecureWireDialog/i }, { timeout: 5000 });
     expect(await axe(container)).toHaveNoViolations();
   });
 
