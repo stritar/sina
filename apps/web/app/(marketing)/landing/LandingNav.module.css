@@ -1,0 +1,97 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--6);
+  max-width: 72rem;
+  width: 100%;
+  margin-inline: auto;
+  padding: var(--sina-space--4) var(--sina-space--6);
+  border-bottom: 1px solid var(--sina-color-border-subtle);
+}
+
+.skip {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.skip:focus-visible {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  clip-path: none;
+  padding: var(--sina-space--1) var(--sina-space--2);
+  outline: 2px solid var(--sina-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sina-space--2);
+  font-weight: var(--sina-font-weight--bold);
+  font-size: var(--sina-text--lg);
+  letter-spacing: var(--sina-tracking--wide);
+  color: var(--sina-color-text);
+  text-decoration: none;
+}
+
+.wordmark:focus-visible {
+  outline: 2px solid var(--sina-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Wireframe glyph: an empty box, on brand for the fidelity level. */
+.mark {
+  width: var(--sina-space--4);
+  height: var(--sina-space--4);
+  border: 2px solid var(--sina-color-text);
+  border-radius: var(--sina-radius--xs);
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--5);
+  margin-right: auto;
+}
+
+.link {
+  font-size: var(--sina-text--sm);
+  font-weight: var(--sina-font-weight--medium);
+  color: var(--sina-color-text-muted);
+  text-decoration: none;
+}
+
+.link:hover {
+  color: var(--sina-color-text);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--sina-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--3);
+}
+
+@media (max-width: 40rem) {
+  .header {
+    flex-wrap: wrap;
+    gap: var(--sina-space--3);
+    padding-inline: var(--sina-space--4);
+  }
+
+  .controls {
+    margin-left: auto;
+  }
+}

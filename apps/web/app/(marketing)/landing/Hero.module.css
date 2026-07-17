@@ -1,0 +1,113 @@
+.hero {
+  max-width: 72rem;
+  width: 100%;
+  margin-inline: auto;
+  padding: var(--sina-space--16) var(--sina-space--6) var(--sina-space--10);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--5);
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  text-transform: uppercase;
+  letter-spacing: var(--sina-tracking--wide);
+  color: var(--sina-color-text-muted);
+}
+
+.title {
+  margin: 0;
+  max-width: 40rem;
+  font-size: var(--sina-text--5xl);
+  font-weight: var(--sina-font-weight--bold);
+  line-height: var(--sina-leading--tight);
+  letter-spacing: var(--sina-tracking--tight);
+  color: var(--sina-color-text);
+}
+
+.subhead {
+  margin: 0;
+  max-width: 44rem;
+  font-size: var(--sina-text--lg);
+  line-height: var(--sina-leading--relaxed);
+  color: var(--sina-color-text-muted);
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sina-space--3);
+  margin-top: var(--sina-space--2);
+}
+
+.ctaPrimary,
+.ctaSecondary {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--sina-space--2_5) var(--sina-space--5);
+  border-radius: var(--sina-radius--xs);
+  font-size: var(--sina-text--sm);
+  font-weight: var(--sina-font-weight--semibold);
+  text-decoration: none;
+}
+
+.ctaPrimary {
+  background: var(--sina-color-primary);
+  color: var(--sina-color-primary-fg);
+  border: 1px solid var(--sina-color-primary);
+}
+
+.ctaPrimary:hover {
+  background: var(--sina-color-primary--hover);
+}
+
+.ctaSecondary {
+  border: 1px solid var(--sina-color-border);
+  color: var(--sina-color-text);
+  background: var(--sina-color-surface);
+}
+
+.ctaSecondary:hover {
+  background: var(--sina-overlay--hover);
+}
+
+.ctaPrimary:focus-visible,
+.ctaSecondary:focus-visible {
+  outline: 2px solid var(--sina-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.switcherRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--3);
+  margin-top: var(--sina-space--4);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 60rem) {
+  .hero {
+    padding-top: var(--sina-space--12);
+  }
+
+  .title {
+    font-size: var(--sina-text--4xl);
+  }
+}
+
+@media (max-width: 40rem) {
+  .hero {
+    padding-inline: var(--sina-space--4);
+    padding-top: var(--sina-space--8);
+  }
+
+  .title {
+    font-size: var(--sina-text--3xl);
+  }
+
+  .subhead {
+    font-size: var(--sina-text--base);
+  }
+}

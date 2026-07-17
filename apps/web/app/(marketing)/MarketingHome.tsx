@@ -1,33 +1,37 @@
-import Link from "next/link";
-import { getMessages } from "@/lib/i18n/messages";
-import { toLocalePath } from "@/lib/i18n/paths";
-import { ThemeToggle } from "../components/docs/ThemeToggle";
-import { LanguageSwitcher } from "../components/docs/LanguageSwitcher";
-import { LocaleProvider } from "../components/docs/LocaleContext";
-import styles from "./page.module.css";
+import "./wireframe.css";
+import { IndustryProvider } from "./landing/IndustryContext";
+import { LandingNav } from "./landing/LandingNav";
+import { Hero } from "./landing/Hero";
+import { EmulatorSection } from "./landing/EmulatorSection";
+import { HowItWorks } from "./landing/HowItWorks";
+import { WhySina } from "./landing/WhySina";
+import { FinalCta } from "./landing/FinalCta";
+import { Footer } from "./landing/Footer";
 
 /**
- * The landing page, shared by `/` (English) and `/[lang]` (the five translated
- * locales). Chrome copy comes from the message catalog; the theme + language
- * controls are wrapped in a LocaleProvider so they read the right strings.
+ * The Phase 9 landing, shared by `/` (English) and `/[lang]` (the five
+ * translated home routes render this same component via app/[...path], so the
+ * export name and `{ locale }` signature are load-bearing). Copy is inline
+ * English for the wireframe pass; the fidelity pass moves it to the catalogs.
+ *
+ * The `.sina-wireframe` marker scopes the black/gray/white token override
+ * (wireframe.css). It lives HERE, not in the (marketing) layout, because the
+ * locale home routes bypass that layout entirely.
  */
 export function MarketingHome({ locale }: { locale: string }) {
-  const messages = getMessages(locale);
-  const docsHref = toLocalePath("/docs", locale);
-
   return (
-    <main className={styles.main}>
-      <LocaleProvider locale={locale}>
-        <div className={styles.themeSlot}>
-          <ThemeToggle />
-          <LanguageSwitcher />
-        </div>
-      </LocaleProvider>
-      <h1 className={styles.title}>SINA</h1>
-      <p className={styles.tagline}>{messages.marketing.tagline}</p>
-      <Link className={styles.cta} href={docsHref}>
-        {messages.marketing.cta} →
-      </Link>
-    </main>
+    <div className="sina-wireframe">
+      <IndustryProvider>
+        <LandingNav locale={locale} />
+        <main id="main">
+          <Hero locale={locale} />
+          <EmulatorSection />
+          <HowItWorks />
+          <WhySina />
+          <FinalCta locale={locale} />
+        </main>
+        <Footer locale={locale} />
+      </IndustryProvider>
+    </div>
   );
 }

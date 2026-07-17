@@ -1,0 +1,142 @@
+.section {
+  border-top: 1px solid var(--sina-color-border-subtle);
+}
+
+.inner {
+  max-width: 72rem;
+  width: 100%;
+  margin-inline: auto;
+  padding: var(--sina-space--12) var(--sina-space--6);
+}
+
+.heading {
+  margin: 0 0 var(--sina-space--8);
+  font-size: var(--sina-text--3xl);
+  font-weight: var(--sina-font-weight--bold);
+  letter-spacing: var(--sina-tracking--tight);
+  color: var(--sina-color-text);
+}
+
+/* The steps ARE the wireframe diagram: numbered boxes joined by connectors. */
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--sina-space--8);
+}
+
+.step {
+  position: relative;
+  border: 1px solid var(--sina-color-border);
+  border-radius: var(--sina-radius--xs);
+  background: var(--sina-color-surface);
+  padding: var(--sina-space--5);
+}
+
+/* Connector between the boxes. */
+.step + .step::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: calc(-1 * var(--sina-space--8));
+  width: var(--sina-space--8);
+  height: 0;
+  border-top: 2px dashed var(--sina-color-border);
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--sina-space--7);
+  height: var(--sina-space--7);
+  margin-bottom: var(--sina-space--3);
+  border-radius: var(--sina-radius--xs);
+  background: var(--sina-color-primary);
+  color: var(--sina-color-primary-fg);
+  font-family: var(--sina-font--mono);
+  font-weight: var(--sina-font-weight--semibold);
+  font-size: var(--sina-text--sm);
+}
+
+.stepTitle {
+  margin: 0 0 var(--sina-space--2);
+  font-size: var(--sina-text--lg);
+  font-weight: var(--sina-font-weight--semibold);
+  color: var(--sina-color-text);
+}
+
+.stepBody {
+  margin: 0;
+  font-size: var(--sina-text--sm);
+  line-height: var(--sina-leading--relaxed);
+  color: var(--sina-color-text-muted);
+}
+
+.details {
+  margin-top: var(--sina-space--8);
+  max-width: 44rem;
+}
+
+.summary {
+  cursor: pointer;
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.summary:focus-visible {
+  outline: 2px solid var(--sina-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.code {
+  margin: var(--sina-space--3) 0 0;
+  padding: var(--sina-space--4);
+  border: 1px solid var(--sina-color-border);
+  border-radius: var(--sina-radius--xs);
+  background: var(--sina-color-surface-sunken);
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  line-height: var(--sina-leading--snug);
+  color: var(--sina-color-text-muted);
+  overflow-x: auto;
+}
+
+.caption {
+  margin: var(--sina-space--2) 0 0;
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-subtle);
+}
+
+@media (max-width: 60rem) {
+  .steps {
+    grid-template-columns: 1fr;
+    gap: var(--sina-space--6);
+  }
+
+  /* Vertical connector when stacked. */
+  .step + .step::before {
+    top: calc(-1 * var(--sina-space--6));
+    left: var(--sina-space--6);
+    width: 0;
+    height: var(--sina-space--6);
+    border-top: none;
+    border-left: 2px dashed var(--sina-color-border);
+  }
+}
+
+@media (max-width: 40rem) {
+  .inner {
+    padding-inline: var(--sina-space--4);
+    padding-block: var(--sina-space--8);
+  }
+
+  .heading {
+    font-size: var(--sina-text--2xl);
+  }
+}

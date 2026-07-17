@@ -1,0 +1,74 @@
+.section {
+  border-top: 1px solid var(--sina-color-border-subtle);
+}
+
+.inner {
+  max-width: 72rem;
+  width: 100%;
+  margin-inline: auto;
+  padding: var(--sina-space--12) var(--sina-space--6);
+}
+
+.heading {
+  margin: 0 0 var(--sina-space--8);
+  font-size: var(--sina-text--3xl);
+  font-weight: var(--sina-font-weight--bold);
+  letter-spacing: var(--sina-tracking--tight);
+  color: var(--sina-color-text);
+}
+
+.cards {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--sina-space--4);
+}
+
+.card {
+  border: 1px solid var(--sina-color-border);
+  border-radius: var(--sina-radius--xs);
+  background: var(--sina-color-surface);
+  padding: var(--sina-space--5);
+}
+
+.kicker {
+  margin: 0 0 var(--sina-space--2);
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  text-transform: uppercase;
+  letter-spacing: var(--sina-tracking--wide);
+  color: var(--sina-color-text-subtle);
+}
+
+.cardTitle {
+  margin: 0 0 var(--sina-space--2);
+  font-size: var(--sina-text--lg);
+  font-weight: var(--sina-font-weight--semibold);
+  color: var(--sina-color-text);
+}
+
+.cardBody {
+  margin: 0;
+  font-size: var(--sina-text--sm);
+  line-height: var(--sina-leading--relaxed);
+  color: var(--sina-color-text-muted);
+}
+
+@media (max-width: 60rem) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 40rem) {
+  .inner {
+    padding-inline: var(--sina-space--4);
+    padding-block: var(--sina-space--8);
+  }
+
+  .heading {
+    font-size: var(--sina-text--2xl);
+  }
+}

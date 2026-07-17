@@ -4,9 +4,11 @@
  * The deterministic, LLM-free governance demo substrate: the server-side gate seam
  * (`runGate`), the canned scenario catalog, the interception console (the "X-ray") +
  * the governed/ungoverned comparison, the mount registry, and the interactive
- * governed-component hosts. Extracted from the playground so the docs (Phase 7) and
- * the marketing landing (Phase 9) mount the SAME real demo — never a fake, never a
- * duplicate.
+ * governed-component hosts. Extracted from the playground so the docs (Phase 7) mount
+ * the SAME real demo — never a fake, never a duplicate. The marketing landing (Phase 9)
+ * deviates in presentation only: it renders its own wireframe-styled emulator but runs
+ * the SAME real gate through the same Edge endpoint and catalog ids (type-only imports
+ * from `/server`, so this package's React console stays out of the landing bundle).
  *
  * Boundary note: this is app-support, above the layered libraries. It composes `core`
  * (primitives), `fintech` (the constitution + its fixtures), `governance` (the
