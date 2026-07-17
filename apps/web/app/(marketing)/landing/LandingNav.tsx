@@ -1,14 +1,12 @@
 import Link from "next/link";
 import { toLocalePath } from "@/lib/i18n/paths";
 import { ThemeToggle } from "../../components/docs/ThemeToggle";
-import { LanguageSwitcher } from "../../components/docs/LanguageSwitcher";
-import { LocaleProvider } from "../../components/docs/LocaleContext";
 import { nav, NPM_ORG_URL } from "./copy";
 import styles from "./LandingNav.module.css";
 
 /**
  * Minimal landing chrome: wordmark, Docs, the public npm org (the repo is
- * private, so no GitHub link yet), plus the shared theme + language controls.
+ * private, so no GitHub link yet), plus the shared theme control.
  */
 export function LandingNav({ locale }: { locale: string }) {
   return (
@@ -28,12 +26,9 @@ export function LandingNav({ locale }: { locale: string }) {
           {nav.npm}
         </a>
       </nav>
-      <LocaleProvider locale={locale}>
-        <div className={styles.controls}>
-          <ThemeToggle />
-          <LanguageSwitcher />
-        </div>
-      </LocaleProvider>
+      <div className={styles.controls}>
+        <ThemeToggle />
+      </div>
     </header>
   );
 }
