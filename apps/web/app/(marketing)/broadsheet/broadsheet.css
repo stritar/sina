@@ -1,0 +1,138 @@
+/**
+ * Broadsheet foundation — the marketing design system's token layer.
+ *
+ * This is the ONLY Broadsheet file allowed to author raw values (mirrors how
+ * wireframe.css is the sole raw-hex file for the landing). Every marketing
+ * component *.module.css consumes these `--sinamk-*` tokens through
+ * `var(--sinamk-*, <fallback>)` and never writes a raw color/length/duration.
+ * If a component needs a value with no token here, add a token (with sign-off),
+ * do not hard-code it — the `/broadsheet-foundations` rule.
+ *
+ * Tokens are scoped to the `.broadsheet` marker (plus a dark variant) so the
+ * marketing palette never leaks into the product `--sina-*` roles. The one
+ * `[data-broadsheet]:focus-visible` rule auto-assigns the blue accessibility
+ * outline to every marketing component — components never author focus styles.
+ */
+
+.broadsheet {
+  color-scheme: light;
+
+  /* Secondary button surface (sage, from the SINA-marketing Figma) */
+  --sinamk-color-secondary-fill: #e9ece8;
+  --sinamk-color-secondary-fill--hover: #dfe4de;
+  --sinamk-color-secondary-fill--pressed: #d6dbd4;
+  --sinamk-color-secondary-fill--disabled: #eef0ec;
+
+  /* Primary button surface (forest green + white ink, matched to the core primitive) */
+  --sinamk-color-primary-fill: #353b31;
+  --sinamk-color-primary-fill--hover: #444d3b;
+  --sinamk-color-primary-fill--pressed: #2b3028;
+  --sinamk-color-primary-fill--disabled: #c2cdc4;
+  --sinamk-color-primary-fg: #ffffff;
+  --sinamk-color-primary-fg--disabled: #8a9a8c;
+
+  /* Destructive button surface (danger red, white ink) */
+  --sinamk-color-destructive-fill: #b42318;
+  --sinamk-color-destructive-fill--hover: #a01b12;
+  --sinamk-color-destructive-fill--pressed: #8a170f;
+  --sinamk-color-destructive-fill--disabled: #e8c5c1;
+  --sinamk-color-destructive-fg: #ffffff;
+  --sinamk-color-destructive-fg--disabled: #b98b85;
+
+  /* Ink */
+  --sinamk-color-text: #353b31;
+  --sinamk-color-text-muted: #6b7268;
+  --sinamk-color-text--disabled: #a3a99d;
+
+  /* Page chrome (the showcase reads these) */
+  --sinamk-color-bg: #f4f6f2;
+  --sinamk-color-surface: #ffffff;
+  --sinamk-color-border: #dfe4de;
+
+  /* The one accessibility focus color */
+  --sinamk-color-focus-ring: #2563eb;
+
+  /* Radius */
+  --sinamk-radius--sm: 4px;
+  --sinamk-radius--md: 6px;
+  --sinamk-radius--lg: 8px;
+
+  /* Control size scale (medium = the Figma example) */
+  --sinamk-control-height--sm: 28px;
+  --sinamk-control-height--md: 32px;
+  --sinamk-control-height--lg: 40px;
+  --sinamk-control-pad--sm: 6px;
+  --sinamk-control-pad--md: 8px;
+  --sinamk-control-pad--lg: 12px;
+  --sinamk-text--sm: 12px;
+  --sinamk-text--md: 13px;
+  --sinamk-text--lg: 15px;
+  --sinamk-icon--sm: 14px;
+  --sinamk-icon--md: 16px;
+  --sinamk-icon--lg: 20px;
+  --sinamk-label-pad--sm: 4px;
+  --sinamk-label-pad--md: 6px;
+  --sinamk-label-pad--lg: 8px;
+
+  /* Label weight climbs with size (Regular / Medium / SemiBold) */
+  --sinamk-font-weight--sm: 400;
+  --sinamk-font-weight--md: 500;
+  --sinamk-font-weight--lg: 600;
+
+  /* Motion */
+  --sinamk-duration--hover: 120ms;
+  --sinamk-duration--spin: 700ms;
+  --sinamk-ease--standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Dark Broadsheet — a first pass (sage on charcoal), pending marketing sign-off. */
+[data-theme="dark"] .broadsheet {
+  color-scheme: dark;
+
+  --sinamk-color-secondary-fill: #2b312a;
+  --sinamk-color-secondary-fill--hover: #333a31;
+  --sinamk-color-secondary-fill--pressed: #232821;
+  --sinamk-color-secondary-fill--disabled: #21261f;
+
+  --sinamk-color-primary-fill: #b9c4b1;
+  --sinamk-color-primary-fill--hover: #94a389;
+  --sinamk-color-primary-fill--pressed: #6f7e63;
+  --sinamk-color-primary-fill--disabled: #2b312a;
+  --sinamk-color-primary-fg: #21251e;
+  --sinamk-color-primary-fg--disabled: #767c71;
+
+  --sinamk-color-destructive-fill: #d64530;
+  --sinamk-color-destructive-fill--hover: #e15a45;
+  --sinamk-color-destructive-fill--pressed: #b83a28;
+  --sinamk-color-destructive-fill--disabled: #3a2420;
+  --sinamk-color-destructive-fg: #ffffff;
+  --sinamk-color-destructive-fg--disabled: #8a6a64;
+
+  --sinamk-color-text: #e7ebe3;
+  --sinamk-color-text-muted: #a3a99d;
+  --sinamk-color-text--disabled: #767c71;
+
+  --sinamk-color-bg: #131512;
+  --sinamk-color-surface: #1c1f1a;
+  --sinamk-color-border: #333a31;
+
+  --sinamk-color-focus-ring: #6c9bff;
+}
+
+/*
+ * The single, global blue focus outline for the marketing system. Any element
+ * carrying `data-broadsheet` gets it on keyboard focus, so components never
+ * write their own :focus-visible. This is the "Marketing components inherit one
+ * global blue focus outline" rule.
+ */
+[data-broadsheet]:focus-visible {
+  outline: 2px solid var(--sinamk-color-focus-ring, #2563eb);
+  outline-offset: 2px;
+}
+
+/* Foundation owns motion: reduced-motion collapses the hover transition. */
+@media (prefers-reduced-motion: reduce) {
+  .broadsheet {
+    --sinamk-duration--hover: 0ms;
+  }
+}

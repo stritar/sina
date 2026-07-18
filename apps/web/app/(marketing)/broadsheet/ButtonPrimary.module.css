@@ -1,0 +1,99 @@
+.root {
+  --_fill: var(--sinamk-color-primary-fill, #353b31);
+  --_fill-hover: var(--sinamk-color-primary-fill--hover, #444d3b);
+  --_fill-pressed: var(--sinamk-color-primary-fill--pressed, #2b3028);
+  --_fill-disabled: var(--sinamk-color-primary-fill--disabled, #c2cdc4);
+  --_fg: var(--sinamk-color-primary-fg, #ffffff);
+  --_fg-disabled: var(--sinamk-color-primary-fg--disabled, #8a9a8c);
+
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  border: 0;
+  border-radius: var(--sinamk-radius--md, 6px);
+  font-family: inherit;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+  color: var(--_fg);
+  background: var(--_fill);
+  transition: background-color var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease);
+}
+
+.root[data-size="sm"] {
+  height: var(--sinamk-control-height--sm, 28px);
+  padding-inline: var(--sinamk-control-pad--sm, 6px);
+  font-size: var(--sinamk-text--sm, 12px);
+  font-weight: var(--sinamk-font-weight--sm, 400);
+  --_icon: var(--sinamk-icon--sm, 14px);
+  --_labelpad: var(--sinamk-label-pad--sm, 4px);
+}
+
+.root[data-size="md"] {
+  height: var(--sinamk-control-height--md, 32px);
+  padding-inline: var(--sinamk-control-pad--md, 8px);
+  font-size: var(--sinamk-text--md, 13px);
+  font-weight: var(--sinamk-font-weight--md, 500);
+  --_icon: var(--sinamk-icon--md, 16px);
+  --_labelpad: var(--sinamk-label-pad--md, 6px);
+}
+
+.root[data-size="lg"] {
+  height: var(--sinamk-control-height--lg, 40px);
+  padding-inline: var(--sinamk-control-pad--lg, 12px);
+  font-size: var(--sinamk-text--lg, 15px);
+  font-weight: var(--sinamk-font-weight--lg, 600);
+  --_icon: var(--sinamk-icon--lg, 20px);
+  --_labelpad: var(--sinamk-label-pad--lg, 8px);
+}
+
+.slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.slot svg {
+  display: block;
+  width: var(--_icon);
+  height: var(--_icon);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--_labelpad);
+}
+
+.root:hover,
+.root[data-force-state="hover"] {
+  background: var(--_fill-hover);
+}
+
+.root:active,
+.root[data-force-state="pressed"] {
+  background: var(--_fill-pressed);
+}
+
+/* Preview-only forced focus (the real keyboard ring is the global rule). */
+.root[data-force-state="focus"] {
+  outline: 2px solid var(--sinamk-color-focus-ring, #2563eb);
+  outline-offset: 2px;
+}
+
+.root:disabled {
+  cursor: not-allowed;
+  color: var(--_fg-disabled);
+  background: var(--_fill-disabled);
+}
+
+/* Loading is disabled for interaction but keeps the resting look. */
+.root[data-loading] {
+  cursor: progress;
+  color: var(--_fg);
+  background: var(--_fill);
+}
