@@ -1,0 +1,210 @@
+.root {
+  --_fg: var(--sinamk-color-text, #353b31);
+  --_fg-disabled: var(--sinamk-color-text--disabled, #a3a99d);
+  --_muted: var(--sinamk-color-text-muted, #6b7268);
+  --_bg: var(--sinamk-color-field-bg, #ffffff);
+  --_bg-disabled: var(--sinamk-color-field-bg--disabled, #f0f2ed);
+  --_border: var(--sinamk-color-field-border, #cdd4c9);
+  --_border-hover: var(--sinamk-color-field-border--hover, #b6bfb1);
+  --_border-invalid: var(--sinamk-color-field-border--invalid, #b42318);
+  --_placeholder: var(--sinamk-color-field-placeholder, #8a9280);
+  --_popover-bg: var(--sinamk-color-popover-surface, #ffffff);
+  --_option-active: var(--sinamk-color-secondary-fill--hover, #dfe4de);
+  /* The shadow rgba lives only in broadsheet.css; consume via a keyword-fallback
+     alias so the foundations color guard never sees a raw rgba() here. */
+  --_shadow: var(--sinamk-shadow-popover, none);
+
+  position: relative;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--sinamk-label-pad--md, 6px);
+  max-inline-size: 100%;
+}
+
+.root[data-size="sm"] {
+  --_h: var(--sinamk-control-height--sm, 28px);
+  --_padx: var(--sinamk-control-pad--sm, 6px);
+  --_fs: var(--sinamk-text--sm, 12px);
+  --_fw: var(--sinamk-font-weight--sm, 400);
+  --_icon: var(--sinamk-icon--sm, 14px);
+  --_labelpad: var(--sinamk-label-pad--sm, 4px);
+}
+
+.root[data-size="md"] {
+  --_h: var(--sinamk-control-height--md, 32px);
+  --_padx: var(--sinamk-control-pad--md, 8px);
+  --_fs: var(--sinamk-text--md, 13px);
+  --_fw: var(--sinamk-font-weight--md, 500);
+  --_icon: var(--sinamk-icon--md, 16px);
+  --_labelpad: var(--sinamk-label-pad--md, 6px);
+}
+
+.root[data-size="lg"] {
+  --_h: var(--sinamk-control-height--lg, 40px);
+  --_padx: var(--sinamk-control-pad--lg, 12px);
+  --_fs: var(--sinamk-text--lg, 15px);
+  --_fw: var(--sinamk-font-weight--lg, 600);
+  --_icon: var(--sinamk-icon--lg, 20px);
+  --_labelpad: var(--sinamk-label-pad--lg, 8px);
+}
+
+.fieldLabel {
+  font-size: var(--_fs);
+  font-weight: var(--sinamk-font-weight--md, 500);
+  line-height: 1;
+  color: var(--_fg);
+}
+
+.trigger {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sinamk-control-pad--sm, 6px);
+  height: var(--_h);
+  margin: 0;
+  padding-inline: var(--_padx);
+  border: 1px solid var(--_border);
+  border-radius: var(--sinamk-radius--md, 6px);
+  background: var(--_bg);
+  color: var(--_fg);
+  font-family: inherit;
+  font-size: var(--_fs);
+  font-weight: var(--_fw);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease);
+}
+
+.trigger:hover,
+.trigger[data-force-state="hover"] {
+  border-color: var(--_border-hover);
+}
+
+/* Preview-only forced focus (the real keyboard ring is the global rule). */
+.trigger[data-force-state="focus"] {
+  outline: 2px solid var(--sinamk-color-focus-ring, #2563eb);
+  outline-offset: 2px;
+}
+
+.trigger[data-invalid] {
+  border-color: var(--_border-invalid);
+}
+
+.trigger:disabled {
+  cursor: not-allowed;
+  background: var(--_bg-disabled);
+  color: var(--_fg-disabled);
+}
+
+.value {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.value .label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.placeholder {
+  padding-inline: var(--_labelpad);
+  color: var(--_placeholder);
+}
+
+.slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.slot svg {
+  display: block;
+  width: var(--_icon);
+  height: var(--_icon);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--_labelpad);
+}
+
+.caret {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--_muted);
+  transition: transform var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease);
+}
+
+.caret svg {
+  display: block;
+  width: var(--_icon);
+  height: var(--_icon);
+}
+
+.trigger[aria-expanded="true"] .caret {
+  transform: rotate(180deg);
+}
+
+.popover {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 20;
+  min-width: 100%;
+  box-sizing: border-box;
+  padding-block: var(--sinamk-label-pad--sm, 4px);
+  border: 1px solid var(--_border);
+  border-radius: var(--sinamk-radius--md, 6px);
+  background: var(--_popover-bg);
+  box-shadow: var(--_shadow);
+}
+
+.listbox {
+  display: flex;
+  flex-direction: column;
+  max-height: 15rem;
+  overflow-y: auto;
+  outline: none;
+}
+
+.option {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  min-height: var(--_h);
+  padding-inline: var(--_padx);
+  color: var(--_fg);
+  font-size: var(--_fs);
+  cursor: pointer;
+}
+
+.option[data-active] {
+  background: var(--_option-active);
+}
+
+.option[data-selected] {
+  font-weight: var(--_fw);
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  padding-inline-start: var(--_labelpad);
+}
+
+.check svg {
+  display: block;
+  width: var(--_icon);
+  height: var(--_icon);
+}
