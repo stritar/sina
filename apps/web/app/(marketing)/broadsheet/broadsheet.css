@@ -46,6 +46,7 @@
 
   /* Ink */
   --sinamk-color-text: #353b31;
+  --sinamk-color-text-strong: #52564e;
   --sinamk-color-text-muted: #6b7268;
   --sinamk-color-text-subtle: #84897e;
   --sinamk-color-text--disabled: #a3a99d;
@@ -230,6 +231,7 @@
   --sinamk-color-destructive-fg--disabled: #8a6a64;
 
   --sinamk-color-text: #e7ebe3;
+  --sinamk-color-text-strong: #c8cdc1;
   --sinamk-color-text-muted: #a3a99d;
   --sinamk-color-text-subtle: #8b917f;
   --sinamk-color-text--disabled: #767c71;

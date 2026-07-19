@@ -45,7 +45,7 @@
 
 .code {
   display: block;
-  color: var(--sinamk-color-text, #353b31);
+  color: var(--sinamk-color-text-subtle, #84897e);
   font-family: var(--sinamk-font-mono, monospace);
   font-size: var(--_fs);
   line-height: 2;
@@ -54,9 +54,9 @@
   overflow-wrap: anywhere;
 }
 
-/* The `npm ` prompt prefix reads quieter than the command body. */
+/* The `npm ` prompt prefix reads stronger than the muted command body. */
 .prefix {
-  color: var(--sinamk-color-text-subtle, #84897e);
+  color: var(--sinamk-color-text-strong, #52564e);
 }
 
 .managerSlot {

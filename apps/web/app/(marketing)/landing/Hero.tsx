@@ -50,8 +50,10 @@ export function Hero() {
       <div className={styles.inner}>
         <div className={styles.textCol}>
           <GlyphField />
-          <h1 className={styles.title}>{hero.title}</h1>
-          <p className={styles.subhead}>{hero.subhead}</p>
+          <div className={styles.headingGroup}>
+            <h1 className={styles.title}>{hero.title}</h1>
+            <p className={styles.subhead}>{hero.subhead}</p>
+          </div>
           <div className={styles.controls}>
             <div className={styles.industryRow}>
               <div className={styles.segments}>

@@ -36,7 +36,7 @@
 [data-theme="dark"] .inner {
   border-color: color-mix(
     in srgb,
-    var(--sina-color-border-subtle, #e4e4e4) 55%,
+    var(--sina-color-border-subtle, #e4e4e4) 50%,
     var(--sina-color-bg, #0b0c0b)
   );
 }
