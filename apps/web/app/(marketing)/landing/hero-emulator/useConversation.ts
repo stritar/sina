@@ -9,10 +9,17 @@
  * overflow hides the cut). Matured from the /hero-concepts Diptych.
  *
  * Fully canned and zero-network: every trace comes from cannedFor(). The
- * initial state (server render, and reduced motion permanently) is the fully
- * completed thread, so no-JS readers get the whole story and hydration matches.
- * The pair changes when the visitor switches industry — the [scenarios] effect
- * resets to that industry's static frame and restarts the loop.
+ * initial state (server render and first paint) is an EMPTY thread, so the
+ * visitor never sees the finished story flash before it is typed. Under reduced
+ * motion the mount effect restores the fully completed thread instead of
+ * starting the loop, so that audience still gets the whole story. The pair
+ * changes when the visitor switches industry — the [scenarios] effect resets to
+ * an empty thread and restarts the loop.
+ *
+ * One branch leaves the loop: if a visitor actually drives the escalated turn's
+ * governed dialog to an approval, approve() commits that turn with a
+ * confirmation reply (phase "approved"), then counts down (phase "restart") and
+ * begins the story again from the first scenario.
  */
 
 import {
@@ -26,12 +33,22 @@ import {
 import type { EmulatorScenario, EmulatorTrace } from "../emulator/types";
 import { cannedFor } from "./scenarios";
 
-export type ConversationPhase = "typing" | "sent" | "intent" | "gating" | "verdict" | "dwell";
+export type ConversationPhase =
+  | "typing"
+  | "sent"
+  | "intent"
+  | "gating"
+  | "verdict"
+  | "dwell"
+  /** A visitor completed the governed dialog: the thread rests on the
+   * confirmation reply, then counts down and restarts the story. */
+  | "approved"
+  | "restart";
 
 /** Auto-mode pacing (ms). Exported so the timeline test drives real numbers. */
 export const TIMINGS = {
-  /** Hold before the first cycle so typing starts as the CSS entrance lands. */
-  start: 1600,
+  /** Hold after the page finishes loading before the first cycle types. */
+  start: 1000,
   /** Per-character typing interval. */
   type: 28,
   /** Beat between the last typed character and the bubble committing. */
@@ -46,12 +63,22 @@ export const TIMINGS = {
   verdict: 1200,
   /** Reading time on the completed frame before the next scenario. */
   dwell: 4000,
+  /** Reading time on the confirmation reply after a visitor-driven approval. */
+  approved: 2000,
+  /** The counted-down pause before the story restarts from scenario one. */
+  restart: 3000,
 } as const;
 
 export interface ConversationTurn {
   scenario: EmulatorScenario;
   trace: EmulatorTrace;
+  /** A visitor drove this turn's governed dialog to a successful approval, so
+   * the thread renders a confirmation reply under it. */
+  approved?: true;
 }
+
+/** Which turn a visitor just approved: the in-flight one, or a committed one. */
+export type ApprovalSource = { kind: "inflight" } | { kind: "history"; index: number };
 
 export interface ConversationState {
   /** Completed turns, oldest first, capped at HISTORY_CAP. */
@@ -84,6 +111,12 @@ function staticFrame(scenarios: readonly EmulatorScenario[]): ConversationState 
   };
 }
 
+/** First paint: an empty thread and an empty composer. `mode: "static"` keeps
+ * the phase machine inert until the mount effect starts the loop. */
+function emptyFrame(): ConversationState {
+  return { history: [], scenarioIndex: 0, phase: "dwell", typedChars: 0, trace: null, mode: "static" };
+}
+
 function prefersReducedMotion(): boolean {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
@@ -95,10 +128,17 @@ export interface Conversation {
   /** True while the loop is the active driver and not explicitly paused
    * (hover/focus pauses don't flip the visible play/pause button). */
   playing: boolean;
+  /** True while ANY pause source holds the loop (button, hover, focus, hidden
+   * tab) — unlike `playing`, which only reflects the visible button. The dwell
+   * countdown reads this so it restarts with the re-scheduled timer. */
+  paused: boolean;
   /** The visible pause/play button: pause the loop, or (re)start it. */
   togglePlay: () => void;
   /** The composer's send button: commit the in-flight typing instantly. */
   fastForward: () => void;
+  /** A visitor completed the governed dialog: commit + mark the turn, reply,
+   * then count down and restart the story from the first scenario. */
+  approve: (source: ApprovalSource) => void;
   /** Spread on the stage root: hover + focus pause the loop. */
   pauseHandlers: {
     onPointerEnter: () => void;
@@ -109,7 +149,7 @@ export interface Conversation {
 }
 
 export function useConversation(scenarios: readonly EmulatorScenario[]): Conversation {
-  const [state, setState] = useState<ConversationState>(() => staticFrame(scenarios));
+  const [state, setState] = useState<ConversationState>(emptyFrame);
   const [userPaused, setUserPaused] = useState(false);
   const [hoverPaused, setHoverPaused] = useState(false);
   const [focusPaused, setFocusPaused] = useState(false);
@@ -118,25 +158,43 @@ export function useConversation(scenarios: readonly EmulatorScenario[]): Convers
 
   const threadRef = useRef<HTMLDivElement | null>(null);
 
-  // Mount + industry switch: rest on the completed static frame, then (unless
-  // reduced motion) clear the thread and start the loop after the entrance hold.
+  // Mount + industry switch: rest on an EMPTY thread so nothing flashes before
+  // it is typed. Under reduced motion the completed thread is restored instead
+  // of animating; otherwise the loop starts one hold after the page has loaded.
   useEffect(() => {
     setUserPaused(false);
-    setState(staticFrame(scenarios));
-    if (prefersReducedMotion()) return;
-    const timer = setTimeout(
-      () =>
-        setState({
-          history: [],
-          scenarioIndex: 0,
-          phase: "typing",
-          typedChars: 0,
-          trace: null,
-          mode: "auto",
-        }),
-      TIMINGS.start,
-    );
-    return () => clearTimeout(timer);
+    setState(emptyFrame());
+    if (prefersReducedMotion()) {
+      setState(staticFrame(scenarios));
+      return;
+    }
+
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const start = () => {
+      timer = setTimeout(
+        () =>
+          setState({
+            history: [],
+            scenarioIndex: 0,
+            phase: "typing",
+            typedChars: 0,
+            trace: null,
+            mode: "auto",
+          }),
+        TIMINGS.start,
+      );
+    };
+
+    // Measure the hold from "page fully loaded", not from mount: hydrating
+    // early on a slow page shouldn't start the story under a half-drawn hero.
+    const loaded = document.readyState === "complete";
+    if (loaded) start();
+    else window.addEventListener("load", start, { once: true });
+
+    return () => {
+      if (timer) clearTimeout(timer);
+      if (!loaded) window.removeEventListener("load", start);
+    };
   }, [scenarios]);
 
   // Tab hidden pauses the loop; visible resumes it.
@@ -150,7 +208,32 @@ export function useConversation(scenarios: readonly EmulatorScenario[]): Convers
   // Teardown on pause clears the pending timer; resume re-schedules the full
   // phase duration (typing keeps its character progress).
   useEffect(() => {
-    if (state.mode !== "auto" || paused) return;
+    if (state.mode !== "auto") return;
+    // The post-approval sequence answers a deliberate visitor action, so only
+    // the explicit pause button holds it. Hover/focus must NOT: closing the
+    // dialog returns focus to its trigger INSIDE the panel, which would leave
+    // focusPaused set and freeze the countdown until the visitor tabbed away.
+    const terminal = state.phase === "approved" || state.phase === "restart";
+    if (terminal ? userPaused : paused) return;
+
+    if (state.phase === "approved") {
+      const timer = setTimeout(
+        () => setState((s) => ({ ...s, phase: "restart" })),
+        TIMINGS.approved,
+      );
+      return () => clearTimeout(timer);
+    }
+    if (state.phase === "restart") {
+      // Back to the top of the story. History is preserved: the thread keeps
+      // accumulating, so the approved turn stays readable above the replay.
+      const timer = setTimeout(
+        () =>
+          setState((s) => ({ ...s, scenarioIndex: 0, phase: "typing", typedChars: 0, trace: null })),
+        TIMINGS.restart,
+      );
+      return () => clearTimeout(timer);
+    }
+
     const scenario = scenarios[state.scenarioIndex];
     if (!scenario) return;
 
@@ -208,7 +291,7 @@ export function useConversation(scenarios: readonly EmulatorScenario[]): Convers
         break;
     }
     return () => clearTimeout(timer);
-  }, [state, paused, scenarios]);
+  }, [state, paused, userPaused, scenarios]);
 
   // Keep the newest stage in view; the thread scrolls, the stage never grows.
   useEffect(() => {
@@ -239,12 +322,40 @@ export function useConversation(scenarios: readonly EmulatorScenario[]): Convers
     });
   }, [scenarios]);
 
+  // A visitor drove the governed dialog to an approval. The turn commits (with
+  // its confirmation reply) and the machine hands off to the terminal sequence:
+  // any pending dwell timer is torn down by the effect, which keys on `state`.
+  const approve = useCallback((source: ApprovalSource) => {
+    setState((s) => {
+      const inFlight = scenarios[s.scenarioIndex];
+      // Commit the in-flight turn first, so an approval never silently drops it
+      // and `history.length - 1` addresses the turn that was just approved.
+      const committed =
+        s.mode === "auto" && inFlight && s.trace
+          ? [...s.history, { scenario: inFlight, trace: s.trace }]
+          : s.history;
+      const target = source.kind === "history" ? source.index : committed.length - 1;
+      if (source.kind === "inflight" && committed === s.history) return s;
+      if (target < 0 || target >= committed.length) return s;
+
+      const history = committed
+        .map((turn, i) => (i === target ? { ...turn, approved: true as const } : turn))
+        .slice(-HISTORY_CAP);
+      // Reduced motion / the resting static frame: mark the reply, but there is
+      // no running loop to count down and restart.
+      if (s.mode !== "auto") return { ...s, history };
+      return { ...s, history, phase: "approved", typedChars: 0, trace: null };
+    });
+  }, [scenarios]);
+
   return {
     state,
     threadRef,
     playing: state.mode === "auto" && !userPaused,
+    paused,
     togglePlay,
     fastForward,
+    approve,
     pauseHandlers: {
       onPointerEnter: () => setHoverPaused(true),
       onPointerLeave: () => setHoverPaused(false),

@@ -109,13 +109,29 @@ export function TurnGate({ trace }: { trace: EmulatorTrace }) {
   );
 }
 
+/**
+ * The thread's reply once a visitor drove the governed dialog to an approval.
+ * Plain text on purpose: the dialog already showed a success Alert, and a
+ * status element never wraps another (CLAUDE.md "Never nest status elements").
+ */
+export function ApprovalReply() {
+  return (
+    <ChatBubble variant="outcome" size="sm" kicker={copy.approvedKicker}>
+      <p className={styles.prompt}>{copy.wireApproved}</p>
+    </ChatBubble>
+  );
+}
+
 /** What the user sees once the gate decided: the confirm card, or the dialog. */
 export function TurnOutcome({
   scenario,
   trace,
+  onApproved,
 }: {
   scenario: EmulatorScenario;
   trace: EmulatorTrace;
+  /** Fired when this turn's governed dialog re-gate approves. */
+  onApproved?: () => void;
 }) {
   const outcome = HERO_OUTCOME[scenario.id];
   if (!outcome) return null;
@@ -136,6 +152,7 @@ export function TurnOutcome({
             intent={OVER_LIMIT_WIRE_INTENT}
             violations={trace.violations as Violation[]}
             onSubmitApproval={async () => ({ approved: true, violations: [] })}
+            onApproved={onApproved}
             triggerLabel="Review and approve"
           />
           <span className={styles.caption}>{copy.wireApproval}</span>

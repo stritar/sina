@@ -110,6 +110,9 @@ export const SINA_GLYPH_FIELD: Params = withDefaults({
   directionalChars: ". : -*^{",
   blockChars: "#SINA123456",
   bgChar: "",
+  // Verbatim from the permalink this preset records (field.test.ts pins them),
+  // NOT the shipped palette. GlyphField overwrites all three at runtime from
+  // `--sina-glyphfield-*`, which ../industry-tint.css sets per industry.
   background: "#f5f6f4",
   primaryColor: "#D7DBD2",
   accentColor: "#C4C7C2",

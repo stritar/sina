@@ -16,15 +16,17 @@ const FIRST_PROMPT = PAIR[0].prompt;
 const SECOND_PROMPT = PAIR[1].prompt;
 
 function Harness() {
-  const { state, threadRef, togglePlay, fastForward, pauseHandlers } = useConversation(PAIR);
+  const { state, threadRef, togglePlay, fastForward, approve, pauseHandlers } =
+    useConversation(PAIR);
   return (
     <section aria-label="conversation harness" {...pauseHandlers}>
       <div ref={threadRef} />
       <output data-testid="history">
-        {state.history.map((turn) => turn.scenario.id).join(",")}
+        {state.history.map((turn) => `${turn.scenario.id}${turn.approved ? "*" : ""}`).join(",")}
       </output>
       <output data-testid="mode">{state.mode}</output>
       <output data-testid="phase">{state.phase}</output>
+      <output data-testid="index">{String(state.scenarioIndex)}</output>
       <output data-testid="typed">
         {PAIR[state.scenarioIndex]?.prompt.slice(0, state.typedChars) ?? ""}
       </output>
@@ -33,6 +35,9 @@ function Harness() {
       </button>
       <button type="button" onClick={fastForward}>
         send
+      </button>
+      <button type="button" onClick={() => approve({ kind: "inflight" })}>
+        approve
       </button>
     </section>
   );
@@ -50,12 +55,12 @@ function phase(): string {
   return screen.getByTestId("phase").textContent ?? "";
 }
 
-function stubMatchMedia() {
+function stubMatchMedia(reducedMotion = false) {
   vi.stubGlobal(
     "matchMedia",
     (query: string) =>
       ({
-        matches: false,
+        matches: reducedMotion && query.includes("prefers-reduced-motion"),
         media: query,
         onchange: null,
         addEventListener: () => {},
@@ -99,13 +104,18 @@ describe("useConversation", () => {
     vi.stubGlobal("fetch", fetchMock);
     render(<Harness />);
 
-    // The pre-play static frame is the fully completed thread.
-    expect(history()).toBe("small,over-limit");
+    // First paint is an EMPTY thread: the finished story must never flash
+    // before it is typed.
+    expect(history()).toBe("");
+    expect(typed()).toBe("");
     expect(screen.getByTestId("mode").textContent).toBe("static");
 
-    // After the start hold the thread clears and the first prompt types.
-    await advance(TIMINGS.start);
+    // It stays empty for the whole start hold, then the first prompt types.
+    await advance(TIMINGS.start - 1);
     expect(history()).toBe("");
+    expect(phase()).toBe("dwell");
+    await advance(1);
+    expect(phase()).toBe("typing");
     await until(() => typed().startsWith("Send $500"));
     expect(typed().length).toBeLessThan(FIRST_PROMPT.length);
 
@@ -118,6 +128,24 @@ describe("useConversation", () => {
     // The loop wraps and keeps appending instead of resetting.
     await until(() => history() === "small,over-limit,small");
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("restores the completed thread on mount under reduced motion, without ever animating", async () => {
+    stubMatchMedia(true);
+    render(<Harness />);
+
+    // The empty first paint is restored to the full story by the mount effect
+    // (render() flushes it), so this audience still gets the whole thread.
+    expect(history()).toBe("small,over-limit");
+    expect(screen.getByTestId("mode").textContent).toBe("static");
+
+    // The loop never starts on its own; the play button is the opt-in.
+    await advance(TIMINGS.start * 10);
+    expect(history()).toBe("small,over-limit");
+    expect(typed()).toBe("");
+
+    fireEvent.click(screen.getByRole("button", { name: "toggle" }));
+    await until(() => typed().length > 0);
   });
 
   it("caps history at HISTORY_CAP across an endless loop", async () => {
@@ -150,6 +178,55 @@ describe("useConversation", () => {
     await until(() => phase() === "typing" && typed().length > 0);
     fireEvent.click(screen.getByRole("button", { name: "send" }));
     expect([FIRST_PROMPT, SECOND_PROMPT]).toContain(typed());
+  });
+
+  it("an approval commits the turn with its reply, then counts down and restarts the story", async () => {
+    render(<Harness />);
+    await advance(TIMINGS.start);
+
+    // Drive to the escalated turn resting on its decided frame — where the
+    // governed dialog is on screen and a visitor could actually approve it.
+    await until(() => history() === "small" && phase() === "dwell");
+    fireEvent.click(screen.getByRole("button", { name: "approve" }));
+
+    // The in-flight turn commits, flagged so the thread renders the reply.
+    expect(history()).toBe("small,over-limit*");
+    expect(phase()).toBe("approved");
+
+    // A reading beat on the reply, then the counted-down restart pause.
+    await advance(TIMINGS.approved);
+    expect(phase()).toBe("restart");
+
+    // Back to the top of the story, with the thread still accumulating.
+    await advance(TIMINGS.restart);
+    expect(phase()).toBe("typing");
+    expect(screen.getByTestId("index").textContent).toBe("0");
+    expect(history()).toBe("small,over-limit*");
+    await until(() => typed().startsWith("Send $500"));
+  });
+
+  it("hover does not stall the post-approval sequence, but the pause button does", async () => {
+    render(<Harness />);
+    await advance(TIMINGS.start);
+    await until(() => history() === "small" && phase() === "dwell");
+    fireEvent.click(screen.getByRole("button", { name: "approve" }));
+
+    // Closing the dialog leaves focus on its trigger INSIDE the panel, so a
+    // hover/focus pause here would freeze the countdown indefinitely.
+    const stage = screen.getByRole("region", { name: "conversation harness" });
+    fireEvent.pointerEnter(stage);
+    fireEvent.focus(stage);
+    await advance(TIMINGS.approved);
+    expect(phase()).toBe("restart");
+
+    // The explicit pause button still holds it.
+    fireEvent.click(screen.getByRole("button", { name: "toggle" }));
+    await advance(30_000);
+    expect(phase()).toBe("restart");
+
+    fireEvent.click(screen.getByRole("button", { name: "toggle" }));
+    await advance(TIMINGS.restart);
+    expect(phase()).toBe("typing");
   });
 
   it("the toggle freezes the frame and restarts it", async () => {

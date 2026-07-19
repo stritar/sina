@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, type CSSProperties } from "react";
 import { Pause, PaperPlaneRight, Play } from "@phosphor-icons/react/dist/ssr";
 import { ChatBubble, ChatComposer, ChatThread, GateCard, IconButton } from "../../broadsheet";
 import { INDUSTRIES, heroEmulator as copy } from "../copy";
 import { useIndustry } from "../IndustryContext";
 import { heroPairFor } from "./scenarios";
-import { useConversation } from "./useConversation";
-import { TurnGate, TurnOutcome } from "./hero-outcomes";
+import { TIMINGS, useConversation } from "./useConversation";
+import { ApprovalReply, TurnGate, TurnOutcome } from "./hero-outcomes";
 import styles from "./HeroEmulator.module.css";
 
 /**
@@ -28,15 +28,28 @@ export function HeroEmulator({ className }: { className?: string }) {
   // Stable per-industry reference: heroPairFor builds a fresh array, and the
   // conversation engine keys its reset/restart effect on this identity.
   const pair = useMemo(() => heroPairFor(industry), [industry]);
-  const { state, threadRef, playing, togglePlay, fastForward, pauseHandlers } =
+  const { state, threadRef, playing, paused, togglePlay, fastForward, approve, pauseHandlers } =
     useConversation(pair);
 
   const current = pair[state.scenarioIndex];
   const inFlight = state.mode === "auto";
-  const showUser = inFlight && state.phase !== "typing";
+  // The terminal sequence has no in-flight turn: its turn already committed to
+  // history, so re-showing the prompt bubble would duplicate it.
+  const terminal = state.phase === "approved" || state.phase === "restart";
+  const showUser = inFlight && !terminal && state.phase !== "typing";
   const checking = inFlight && (state.phase === "intent" || state.phase === "gating");
   const decided =
     inFlight && state.trace !== null && (state.phase === "verdict" || state.phase === "dwell");
+  // The dwell is the only wait a visitor can't read off the panel, so it gets a
+  // bar counting it down. Mounted only while the dwell timer is actually
+  // running: a pause tears that timer down and re-schedules the FULL duration,
+  // so unmounting is what keeps the animation honest on resume. The restart
+  // pause after a visitor-driven approval counts down the same way, but only
+  // the pause button holds it (`playing`), matching the machine's own guard.
+  const counting =
+    inFlight &&
+    ((state.phase === "dwell" && !paused) || (state.phase === "restart" && playing));
+  const countdownMs = state.phase === "restart" ? TIMINGS.restart : TIMINGS.dwell;
 
   return (
     <section
@@ -61,6 +74,13 @@ export function HeroEmulator({ className }: { className?: string }) {
           label={playing ? copy.pause : copy.play}
           onClick={togglePlay}
         />
+        {counting ? (
+          <span
+            className={styles.countdown}
+            style={{ "--hero-dwell": `${countdownMs}ms` } as CSSProperties}
+            aria-hidden="true"
+          />
+        ) : null}
       </header>
 
       <div className={styles.body}>
@@ -71,7 +91,12 @@ export function HeroEmulator({ className }: { className?: string }) {
                 <p className={styles.prompt}>{turn.scenario.prompt}</p>
               </ChatBubble>
               <TurnGate trace={turn.trace} />
-              <TurnOutcome scenario={turn.scenario} trace={turn.trace} />
+              <TurnOutcome
+                scenario={turn.scenario}
+                trace={turn.trace}
+                onApproved={() => approve({ kind: "history", index })}
+              />
+              {turn.approved ? <ApprovalReply /> : null}
             </div>
           ))}
           {showUser && current ? (
@@ -83,7 +108,11 @@ export function HeroEmulator({ className }: { className?: string }) {
           {decided && current && state.trace ? (
             <div className={styles.turn}>
               <TurnGate trace={state.trace} />
-              <TurnOutcome scenario={current} trace={state.trace} />
+              <TurnOutcome
+                scenario={current}
+                trace={state.trace}
+                onApproved={() => approve({ kind: "inflight" })}
+              />
             </div>
           ) : null}
         </ChatThread>

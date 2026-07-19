@@ -16,8 +16,8 @@ beforeAll(() => {
   Element.prototype.setPointerCapture = vi.fn();
   Element.prototype.releasePointerCapture = vi.fn();
 
-  // Reduced motion ON: the hero emulator never starts its auto loop and renders
-  // the completed static thread instead — both turns of the industry's story
+  // Reduced motion ON: the hero emulator never starts its auto loop; its mount
+  // effect restores the completed static thread — both turns of the industry's story
   // (the pass and the escalation). The auto-play timeline itself is covered by
   // hero-emulator/useConversation.test.tsx.
   vi.stubGlobal(
@@ -84,6 +84,9 @@ describe("landing page", () => {
     expect(screen.getByText("Escalated")).toBeDefined();
     expect(screen.queryByText("Live demo")).toBeNull();
     expect(fetchMock).not.toHaveBeenCalled();
+    // The tint rides on <html data-industry>, which is what industry-tint.css
+    // keys on and what the glyph-field canvas watches to re-read its palette.
+    expect(document.documentElement.dataset.industry).toBe("healthcare");
   });
 
   it("switches to the defense story (a two-person-control escalation)", async () => {

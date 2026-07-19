@@ -35,6 +35,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
+      // The landing's default industry, server-rendered so the tint is right on
+      // first paint. IndustryProvider takes it over from here; every tint rule
+      // also requires `body:has(.sina-wireframe)`, so this attribute is inert on
+      // the docs and /showcase.
+      data-industry="fintech"
       className={`${rubik.variable} ${ibmPlexMono.variable}`}
       suppressHydrationWarning
     >

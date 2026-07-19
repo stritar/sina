@@ -9,11 +9,16 @@
  * `body { background: var(--sina-color-bg) }` base rule in theme.css picks the
  * override up automatically.
  *
- * This file authors raw hex for the landing's token override (the one exception
- * beyond it is the decorative glyph-field palette, which lives with its consumer
- * in landing/glyph-field/GlyphField.module.css). Both variants here are held to
- * WCAG AA by construction (muted #444444 on white is above 9:1; subtle #767676
- * is 4.5:1; dark muted #c0c0c0 on #161616 is above 9:1).
+ * This file authors raw hex for the landing's token override. The other two raw-hex
+ * files on the marketing side are landing/industry-tint.css (generated; it re-hues
+ * this ramp per industry, and therefore WINS over everything below) and the
+ * decorative glyph-field palette it also generates.
+ *
+ * Both variants here are held to WCAG AA by construction (muted #444444 on white
+ * is above 9:1; dark muted #c0c0c0 on #161616 is above 9:1). `text-subtle` is a
+ * 3:1 role, not a 4.5:1 one — it is reserved for decorative / large / icon use,
+ * matching the policy in packages/theme/src/tokens.test.ts. It is set a touch
+ * darker than the 4.5:1 boundary so the per-industry re-hue has headroom.
  *
  * Two contracts carried over from the real theme (see packages/theme/theme.css):
  * - The status `*-fill` roles stay LIGHT in both modes (each fill carries its
@@ -35,7 +40,7 @@ body:has(.sina-wireframe) {
   /* Text */
   --sina-color-text: #111111;
   --sina-color-text-muted: #444444;
-  --sina-color-text-subtle: #767676;
+  --sina-color-text-subtle: #717171;
   --sina-color-text-inverse: #ffffff;
 
   /* Borders */
@@ -85,7 +90,8 @@ body:has(.sina-wireframe) {
   --sina-color-focus-ring: #000000;
   --sina-color-surface-secure: #f4f4f4;
 
-  /* Elevation — a sage-tinted shadow reads as color on a grayscale page */
+  /* Elevation — true black in both modes, and deliberately NOT tinted per
+     industry (see the governance-locked roles in industry-tint.css). */
   --sina-shadow-color: #000000;
 }
 

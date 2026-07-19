@@ -68,6 +68,9 @@ export const heroEmulator = {
   rendersKicker: "What renders",
   checking: "Checking against the constitution",
   wireApproval: "Simulated approval. The real gate re-checks server-side.",
+  approvedKicker: "The agent",
+  wireApproved:
+    "Approved. A second party signed off, the gate re-checked the same terms server-side, and the transfer is logged.",
   send: "Send",
   pause: "Pause the demo",
   play: "Play the demo",

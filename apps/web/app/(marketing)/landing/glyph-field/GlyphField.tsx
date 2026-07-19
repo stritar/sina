@@ -46,10 +46,13 @@ export function GlyphField() {
 
     let dims: Dims = { cssW: 0, cssH: 0, cols: 0, rows: 0, cell: params.cellSize };
     let pointerClient: { x: number; y: number } | null = null;
+    // The light/fintech palette (#f5f6f4 / #ced3c8 / #a3a6a1), used only until
+    // the first readColors() resolves `--sina-glyphfield-*` from the cascade,
+    // and thereafter only if that read fails.
     let colors: { bg: RGB; primary: RGB; accent: RGB } = {
-      bg: [0.96, 0.96, 0.95],
-      primary: [0.84, 0.86, 0.82],
-      accent: [0.78, 0.8, 0.76],
+      bg: [0.961, 0.965, 0.957],
+      primary: [0.808, 0.827, 0.784],
+      accent: [0.639, 0.651, 0.631],
     };
 
     // ---- Try WebGL2; fall back to a one-shot Canvas-2D frame; else no-op ----
@@ -216,10 +219,14 @@ export function GlyphField() {
       else if (fallback) drawFallback();
     }
 
+    // `data-industry` rides the same path as a theme flip: both swap the
+    // inherited `--sina-glyphfield-*` palette, and both need the canvas to
+    // re-read it (the values reached the GPU as uniforms, so CSS alone changes
+    // nothing here).
     const themeObserver = new MutationObserver(onTheme);
     themeObserver.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["data-theme", "class"],
+      attributeFilter: ["data-theme", "data-industry", "class"],
     });
     window.addEventListener("resize", onResize);
     // The box (not the viewport) drives the canvas size, so track it directly:

@@ -19,6 +19,7 @@
 /* ── Header: industry, mode, pause/play ─────────────────────────────────── */
 
 .header {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--sina-space--3);
@@ -65,6 +66,43 @@
   margin: 0;
   font-size: var(--sina-text--xs);
   color: var(--sina-color-text-subtle);
+}
+
+/*
+ * Dwell countdown: while the panel rests on a decided turn, a bar grows from
+ * the right edge leftward, full width at the moment the next scenario starts
+ * typing. It overlays the header's border-bottom, so it costs no layout, and
+ * animates transform only, so it never reflows the thread. Duration comes from
+ * TIMINGS.dwell via the inline --hero-dwell, keeping one source of truth.
+ */
+.countdown {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--sina-color-text-muted);
+  transform: scaleX(0);
+  transform-origin: right;
+  animation: hero-countdown var(--hero-dwell) linear forwards;
+}
+
+@keyframes hero-countdown {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Reduced motion rests on the static thread and never dwells, but hold the bar
+ * still in case a reader opts into the loop from the play button. */
+@media (prefers-reduced-motion: reduce) {
+  .countdown {
+    animation: none;
+    transform: scaleX(1);
+  }
 }
 
 /* ── Body: the thread fills, the composer pins to the bottom ─────────────── */
