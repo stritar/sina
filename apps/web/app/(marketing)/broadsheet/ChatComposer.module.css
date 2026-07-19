@@ -1,0 +1,80 @@
+.root {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--sinamk-space--sm, 8px);
+}
+
+/* The decorative input well: field chrome, but never focusable (aria-hidden). */
+.well {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  min-block-size: var(--sinamk-control-height--md, 32px);
+  padding-block: var(--sinamk-control-pad--sm, 6px);
+  padding-inline: var(--sinamk-control-pad--lg, 12px);
+  border: 1px solid var(--sinamk-color-field-border, #cdd4c9);
+  border-radius: var(--sinamk-radius--md, 6px);
+  background: var(--sinamk-color-field-bg, #ffffff);
+  overflow: hidden;
+}
+
+.root[data-size="sm"] .well {
+  min-block-size: var(--sinamk-control-height--sm, 28px);
+  --_fs: var(--sinamk-text--sm, 12px);
+}
+
+.root[data-size="md"] .well {
+  min-block-size: var(--sinamk-control-height--md, 32px);
+  --_fs: var(--sinamk-text--md, 13px);
+}
+
+.root[data-size="lg"] .well {
+  min-block-size: var(--sinamk-control-height--lg, 40px);
+  --_fs: var(--sinamk-text--lg, 15px);
+}
+
+.text {
+  color: var(--sinamk-color-text, #353b31);
+  font-size: var(--_fs);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.placeholder {
+  color: var(--sinamk-color-field-placeholder, #8a9280);
+  font-size: var(--_fs);
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The typewriter caret: a thin bar on the ink color, blinking on the caret
+   clock (steady when the token collapses to 0ms under reduced motion). */
+.caret {
+  display: inline-block;
+  inline-size: 2px;
+  block-size: 1em;
+  margin-inline-start: 2px;
+  vertical-align: text-bottom;
+  background: var(--sinamk-color-text, #353b31);
+  animation: composer-caret var(--sinamk-duration--caret, 700ms) steps(2, start) infinite;
+}
+
+@keyframes composer-caret {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    animation: none;
+  }
+}

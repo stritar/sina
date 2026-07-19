@@ -8,6 +8,9 @@ import {
   ListBullets,
   SquaresFour,
   CalendarBlank,
+  PaperPlaneRight,
+  Warning,
+  WarningOctagon,
 } from "@phosphor-icons/react/dist/ssr";
 import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
 import type { ComponentType } from "react";
@@ -22,6 +25,11 @@ import { Badge, type BadgeColor } from "./Badge";
 import { TextField } from "./TextField";
 import { Select, type SelectOption } from "./Select";
 import { InstallCommand, type PackageManager } from "./InstallCommand";
+import { ChatBubble, type ChatBubbleVariant } from "./ChatBubble";
+import { TraceCard } from "./TraceCard";
+import { GateCard, type GateViolation } from "./GateCard";
+import { ChatComposer } from "./ChatComposer";
+import { ChatThread } from "./ChatThread";
 import type { ComponentSpec, ControlValues } from "./types";
 
 /**
@@ -350,6 +358,181 @@ const installCommandSpec: ComponentSpec = {
   },
 };
 
+const chatBubbleSpec: ComponentSpec = {
+  id: "chat-bubble",
+  name: "Chat / Bubble",
+  controls: [
+    {
+      key: "variant",
+      label: "Variant",
+      type: "select",
+      options: ["user", "outcome"],
+      default: "user",
+    },
+    { key: "size", label: "Size", type: "select", options: ["sm", "md", "lg"], default: "md" },
+    { key: "kicker", label: "Kicker", type: "text", default: "You" },
+    { key: "icon", label: "Kicker icon", type: "boolean", default: false },
+    {
+      key: "text",
+      label: "Text",
+      type: "text",
+      default: "Show me my last 2 transactions.",
+    },
+  ],
+  render: (v: ControlValues) => (
+    <ChatBubble
+      variant={v.variant as ChatBubbleVariant}
+      size={v.size as "sm" | "md" | "lg"}
+      kicker={String(v.kicker)}
+      icon={v.icon ? <Sparkle weight="bold" /> : undefined}
+    >
+      <p>{String(v.text)}</p>
+    </ChatBubble>
+  ),
+};
+
+const TRACE_SAMPLE_JSON = [
+  "{",
+  '  "intent": "wire_transfer",',
+  '  "props": {',
+  '    "amount": 6000000,',
+  '    "currency": "USD"',
+  "  }",
+  "}",
+].join("\n");
+
+const traceCardSpec: ComponentSpec = {
+  id: "trace-card",
+  name: "Chat / Trace Card",
+  controls: [
+    { key: "size", label: "Size", type: "select", options: ["sm", "md", "lg"], default: "md" },
+    { key: "kicker", label: "Kicker", type: "text", default: "Under the hood" },
+    { key: "verb", label: "Intent verb", type: "text", default: "wire_transfer" },
+    {
+      key: "summary",
+      label: "Summary",
+      type: "text",
+      default: "A fully formed wire, above the approval limit.",
+    },
+    { key: "code", label: "Show payload", type: "boolean", default: true },
+  ],
+  render: (v: ControlValues) => (
+    <TraceCard
+      size={v.size as "sm" | "md" | "lg"}
+      kicker={String(v.kicker)}
+      verb={String(v.verb)}
+      summary={String(v.summary)}
+      code={v.code ? TRACE_SAMPLE_JSON : undefined}
+    />
+  ),
+};
+
+const GATE_SAMPLE_VIOLATIONS: readonly GateViolation[] = [
+  {
+    code: "AMOUNT_REQUIRES_APPROVAL",
+    severity: "escalate",
+    message: "A wire above the limit requires secondary managerial approval.",
+    standard: "SINA dual control: secondary approval",
+  },
+  {
+    code: "CTR_REPORTABLE",
+    severity: "flag",
+    message: "A Currency Transaction Report applies.",
+    standard: "31 CFR 1010.311",
+  },
+];
+
+const GATE_STATUSES = ["checking", "pass", "escalate", "reject"] as const;
+
+const gateCardSpec: ComponentSpec = {
+  id: "gate-card",
+  name: "Chat / Gate Card",
+  controls: [
+    {
+      key: "status",
+      label: "Status",
+      type: "select",
+      options: [...GATE_STATUSES],
+      default: "pass",
+    },
+    { key: "size", label: "Size", type: "select", options: ["sm", "md", "lg"], default: "md" },
+    { key: "kicker", label: "Kicker", type: "text", default: "The gate" },
+    { key: "violations", label: "Violations", type: "boolean", default: false },
+    { key: "mount", label: "Mount", type: "text", default: "TransactionList" },
+    { key: "meta", label: "Meta", type: "text", default: "12 ms · simulated" },
+  ],
+  render: (v: ControlValues) => {
+    const status = v.status as (typeof GATE_STATUSES)[number];
+    const shared = {
+      size: v.size as "sm" | "md" | "lg",
+      kicker: String(v.kicker),
+      mount: String(v.mount) || undefined,
+      meta: String(v.meta) || undefined,
+      violations: v.violations ? GATE_SAMPLE_VIOLATIONS : undefined,
+    };
+    // The bold status glyph is mandatory for escalate/reject and always comes
+    // from the caller (here, the spec) — the error-warning-icon convention.
+    if (status === "escalate") {
+      return <GateCard {...shared} status="escalate" statusIcon={<Warning weight="bold" />} />;
+    }
+    if (status === "reject") {
+      return (
+        <GateCard {...shared} status="reject" statusIcon={<WarningOctagon weight="bold" />} />
+      );
+    }
+    return <GateCard {...shared} status={status} />;
+  },
+};
+
+const chatComposerSpec: ComponentSpec = {
+  id: "chat-composer",
+  name: "Chat / Composer",
+  controls: [
+    { key: "size", label: "Size", type: "select", options: ["sm", "md", "lg"], default: "md" },
+    { key: "text", label: "Typed text", type: "text", default: "Wire $60,000 from Acme Corp" },
+    { key: "caret", label: "Caret", type: "boolean", default: true },
+    { key: "placeholder", label: "Placeholder", type: "text", default: "Ask for anything" },
+  ],
+  render: (v: ControlValues) => (
+    <ChatComposer
+      size={v.size as "sm" | "md" | "lg"}
+      text={String(v.text)}
+      caret={Boolean(v.caret)}
+      placeholder={String(v.placeholder)}
+      sendIcon={<PaperPlaneRight weight="bold" />}
+      sendLabel="Send"
+    />
+  ),
+};
+
+const chatThreadSpec: ComponentSpec = {
+  id: "chat-thread",
+  name: "Chat / Thread",
+  controls: [
+    {
+      key: "size",
+      label: "Size",
+      type: "select",
+      options: ["sm", "md", "lg", "fill"],
+      default: "md",
+    },
+    { key: "gate", label: "Gate card", type: "boolean", default: true },
+  ],
+  render: (v: ControlValues) => (
+    <ChatThread size={v.size as "sm" | "md" | "lg" | "fill"} aria-label="Demo conversation">
+      <ChatBubble variant="user" size="sm" kicker="You">
+        <p>Show me my last 2 transactions.</p>
+      </ChatBubble>
+      {v.gate ? (
+        <GateCard size="sm" kicker="The gate" status="pass" mount="TransactionList" />
+      ) : null}
+      <ChatBubble variant="outcome" size="sm" kicker="What renders">
+        <p>Two transactions for XYZ Company, mounted from validated intent.</p>
+      </ChatBubble>
+    </ChatThread>
+  ),
+};
+
 export const REGISTRY: readonly ComponentSpec[] = [
   textButtonSpec("button-primary", "Button / Primary", ButtonPrimary),
   textButtonSpec("button-secondary", "Button / Secondary", ButtonSecondary),
@@ -362,4 +545,9 @@ export const REGISTRY: readonly ComponentSpec[] = [
   textFieldSpec,
   selectSpec,
   installCommandSpec,
+  chatBubbleSpec,
+  traceCardSpec,
+  gateCardSpec,
+  chatComposerSpec,
+  chatThreadSpec,
 ];

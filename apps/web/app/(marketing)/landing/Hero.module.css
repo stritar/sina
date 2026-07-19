@@ -5,7 +5,7 @@
  * gutter). `.inner` is the bordered frame at the same width as the nav, split into
  * a LEFT text rectangle that hosts the glyph field as an absolute backdrop (behind
  * the title / subhead / controls) and an OPAQUE emulator column on the right
- * (empty for now).
+ * (the industry-aware conversation emulator).
  *
  * FRAME CONTRACT: `--sina-space--6` gutter + `96rem` inner width (and the
  * `max-width: 96rem` gutter-removal breakpoint below) MUST match
@@ -22,7 +22,7 @@
   max-width: 96rem;
   margin-inline: auto;
   /* Full-screen (mistral-style) sheet: both columns grow to this height via the
-     grid, so the empty emulator column stays a full-height opaque panel. */
+     grid, so the emulator column stays a full-height opaque panel. */
   min-height: 38.72rem;
   min-height: min(77.44svh, 49.28rem);
   display: grid;

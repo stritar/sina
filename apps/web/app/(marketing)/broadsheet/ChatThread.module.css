@@ -1,0 +1,41 @@
+.root {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: var(--sinamk-space--md, 12px);
+  border: 1px solid var(--sinamk-color-border, #dfe4de);
+  border-radius: var(--sinamk-radius--lg, 8px);
+  background: var(--sinamk-color-bg, #f5f6f4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.root[data-size="sm"] {
+  block-size: 260px;
+}
+
+.root[data-size="md"] {
+  block-size: 340px;
+}
+
+.root[data-size="lg"] {
+  block-size: 420px;
+}
+
+/* Stretch to a flex-column host (e.g. the hero panel) instead of a fixed
+   height, so the thread fills the available space and scrolls internally. */
+.root[data-size="fill"] {
+  block-size: 100%;
+  flex: 1 1 auto;
+  min-block-size: 0;
+}
+
+/* Bottom-anchor the conversation: margin-top auto pins a short thread to the
+   bottom edge, so the chat fills upward like a real messenger. */
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sinamk-space--sm, 8px);
+  margin-block-start: auto;
+  min-block-size: 0;
+}

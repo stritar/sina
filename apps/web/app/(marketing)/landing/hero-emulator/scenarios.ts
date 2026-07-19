@@ -22,6 +22,27 @@ export function isSimulated(scenario: EmulatorScenario): scenario is SimulatedSc
   return "result" in scenario;
 }
 
+/**
+ * The two-turn hero story per industry: a routine ask that PASSES, then a
+ * high-risk ask that ESCALATES to a governed dialog. Fintech's escalation
+ * forces the real SecureWireDialog; healthcare/defense name a governed dialog
+ * that is (openly) a simulation. Ids resolve against SCENARIO_SETS.
+ */
+const HERO_PAIR_IDS: Record<Industry, readonly [pass: string, block: string]> = {
+  fintech: ["small", "over-limit"],
+  healthcare: ["medication-list", "high-dose-order"],
+  defense: ["convoy-manifest", "munitions-transfer"],
+};
+
+export function heroPairFor(industry: Industry): readonly [EmulatorScenario, EmulatorScenario] {
+  const [passId, blockId] = HERO_PAIR_IDS[industry];
+  const set = SCENARIO_SETS[industry];
+  const pass = set.find((s) => s.id === passId);
+  const block = set.find((s) => s.id === blockId);
+  if (!pass || !block) throw new Error(`Missing hero pair for ${industry}: ${passId}/${blockId}`);
+  return [pass, block];
+}
+
 /** The deterministic canned trace for any scenario, in any industry. */
 export function cannedFor(scenario: EmulatorScenario): EmulatorTrace {
   const result = isSimulated(scenario)

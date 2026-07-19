@@ -54,64 +54,24 @@ export const INDUSTRIES: Record<Industry, IndustryDefinition> = {
   },
 };
 
-export const emulator = {
-  heading: "Watch the gate decide",
-  pickLabel: "Pick a request",
-  retry: "Try again",
-  stages: {
-    intent: "1. Agent emits intent",
-    gate: "2. The gate",
-    verdict: "3. Verdict",
-  },
-  intentUserLabel: "User",
-  intentAgentLabel: "The agent proposes, as structured data:",
-  showJson: "Show the full intent JSON",
-  gateLive: "Runs on the real gate endpoint.",
-  gateSimulated: "Simulated preview. Runs in your browser.",
-  gateChecking: "Checking with the constitution",
-  latency: "gate latency",
-  latencySimulated: "simulated",
-  gateVerdict: {
-    pass: "Pass",
-    escalate: "Escalate",
-    reject: "Block",
-  },
-  expected: {
-    pass: "passes",
-    escalate: "escalates",
-    reject: "blocked",
-  },
-  verdictPass: "Mounted",
-  verdictEscalate: "Escalated: approval required",
-  verdictReject: "Blocked",
-  verdictPassNote: "The payload was valid, so SINA mounted the real component.",
-  verdictEscalateNote:
-    "SINA blocked the raw render and forced the governed component in its place. This is where a second approver signs.",
-  verdictRejectNote: "SINA blocked the raw render. The payload violated the constitution.",
-  escalateDocsLink: "See the full approval loop in the docs",
-  violationsHeading: "Violations",
-  noViolations: "No violations.",
-  transportTitle: "Could not reach the gate",
-  transportBody:
-    "This is a network problem, not a governance decision. The constitution never said no; we could not ask it. Try again.",
-  withheldRow: "Row withheld. Logged.",
-  approveSketch: "Approve",
-  denySketch: "Deny",
-} as const;
-
 /**
- * Strings specific to the hero composer emulator (the auto-playing demo in the
- * hero's right column). Shared demo strings stay in `emulator` above.
+ * Strings for the hero conversation emulator: the auto-playing pass/block
+ * thread in the hero's right column (the matured Diptych). The gate rides
+ * inline in the conversation, so a completed turn stacks like a real messenger.
  */
 export const heroEmulator = {
-  underHood: "Under the hood",
-  userSees: "What the user sees",
-  send: "Run this request",
-  replay: "Replay this request",
+  heading: "Watch the gate decide",
+  lede: "Two requests on a loop: one passes, one hits the constitution.",
+  threadLabel: "Governed conversation",
+  youKicker: "You",
+  gateKicker: "The gate",
+  rendersKicker: "What renders",
+  checking: "Checking against the constitution",
+  wireApproval: "Simulated approval. The real gate re-checks server-side.",
+  send: "Send",
   pause: "Pause the demo",
   play: "Play the demo",
-  logged: "logged",
-  composerPlaceholder: "Pick a request to run it here.",
+  composerPlaceholder: "Ask the agent for something",
 } as const;
 
 export const how = {

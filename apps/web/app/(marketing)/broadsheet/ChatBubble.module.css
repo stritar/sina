@@ -1,0 +1,100 @@
+.root {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--sinamk-radius--lg, 8px);
+  color: var(--sinamk-color-text, #353b31);
+  animation: bubble-enter var(--sinamk-duration--enter, 200ms) var(--sinamk-ease--standard, ease)
+    backwards;
+}
+
+/* The sent ask: sage fill, hugging the end edge like a messenger bubble. */
+.root[data-variant="user"] {
+  align-self: flex-end;
+  max-inline-size: 85%;
+  padding: var(--sinamk-space--sm, 8px) var(--sinamk-space--md, 12px);
+  background: var(--sinamk-color-secondary-fill, #e9ece8);
+}
+
+/* The reply surface: bordered card the answer (or a mounted component) sits on. */
+.root[data-variant="outcome"] {
+  align-self: flex-start;
+  max-inline-size: 92%;
+  padding: var(--sinamk-space--md, 12px);
+  border: 1px solid var(--sinamk-color-border, #dfe4de);
+  background: var(--sinamk-color-surface, #ffffff);
+}
+
+.root[data-size="sm"] {
+  font-size: var(--sinamk-text--sm, 12px);
+}
+
+.root[data-size="md"] {
+  font-size: var(--sinamk-text--md, 13px);
+}
+
+.root[data-size="lg"] {
+  font-size: var(--sinamk-text--lg, 15px);
+}
+
+/* Lane label: no flex gap — the label span carries its own padding (the
+   Broadsheet label anatomy), so an icon slot needs no gap either. */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  margin-block-end: var(--sinamk-badge-label-pad--md, 4px);
+  color: var(--sinamk-color-text-subtle, #84897e);
+  font-size: var(--sinamk-badge-text--sm, 11px);
+  font-weight: var(--sinamk-font-weight--md, 500);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.slot svg {
+  display: block;
+  width: var(--sinamk-badge-icon--sm, 12px);
+  height: var(--sinamk-badge-icon--sm, 12px);
+}
+
+.kickerLabel {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--sinamk-badge-label-pad--sm, 3px);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sinamk-space--sm, 8px);
+  min-inline-size: 0;
+  line-height: 1.5;
+}
+
+.body > p {
+  margin: 0;
+}
+
+@keyframes bubble-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    animation: none;
+  }
+}

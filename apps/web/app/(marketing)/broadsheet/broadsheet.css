@@ -81,6 +81,8 @@
   --sinamk-color-focus-ring: #2563eb;
 
   /* Spacing scale (card / block padding, larger than control-pad) */
+  --sinamk-space--sm: 8px;
+  --sinamk-space--md: 12px;
   --sinamk-space--lg: 16px;
 
   /* Radius */
@@ -131,6 +133,8 @@
   /* Motion */
   --sinamk-duration--hover: 120ms;
   --sinamk-duration--spin: 700ms;
+  --sinamk-duration--enter: 200ms;
+  --sinamk-duration--caret: 700ms;
   --sinamk-ease--standard: cubic-bezier(0.2, 0, 0, 1);
 
   /*
@@ -314,9 +318,12 @@
   outline-offset: 2px;
 }
 
-/* Foundation owns motion: reduced-motion collapses the hover transition. */
+/* Foundation owns motion: reduced-motion collapses the hover transition, the
+   chat entrance, and the caret/checking pulse. */
 @media (prefers-reduced-motion: reduce) {
   .broadsheet {
     --sinamk-duration--hover: 0ms;
+    --sinamk-duration--enter: 0ms;
+    --sinamk-duration--caret: 0ms;
   }
 }

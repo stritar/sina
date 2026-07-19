@@ -52,11 +52,20 @@
   white-space: normal;
   word-break: break-word;
   overflow-wrap: anywhere;
+  transition: color var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease);
 }
 
 /* The `npm ` prompt prefix reads stronger than the muted command body. */
 .prefix {
   color: var(--sinamk-color-text-strong, #52564e);
+  transition: color var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease);
+}
+
+/* Hovering anywhere on the card pulls both text layers to the darkest ink token
+   so the command reads as active/emphasized on interaction. */
+.root:hover .code,
+.root:hover .prefix {
+  color: var(--sinamk-color-text, #353b31);
 }
 
 .managerSlot {
