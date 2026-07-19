@@ -77,21 +77,38 @@
   text-wrap: balance;
 }
 
-/* Mistral-style entrance: on load the whole content group (title, subhead,
-   controls) rises up from below and fades in together as one unit.
+/* Mistral-style entrance: on load the content group holds hidden for a beat,
+   then rises up from below and fades in — staggered top-to-bottom (title first,
+   then subhead, then controls), not all at once.
 
    This is a PURE-CSS load animation (no JS gate) on purpose. Because the rule
    lives in the render-blocking stylesheet, the very first paint — including the
-   server-rendered HTML — is already the hidden `from` frame, then it rises. A
-   JS-gated version (set `data-enter` after hydration) instead paints the resting
-   content first, then snaps it down and rises on hydrate: a flash on refresh,
-   most visible in Safari. No-JS still animates; reduced motion is handled below. */
+   server-rendered HTML — is already the hidden `from` frame, and `fill-mode:
+   both` holds that hidden frame through the animation-delay, so the ~500ms hold
+   reads as a deliberate pause before the rise (no flash on refresh). A JS-gated
+   version (set `data-enter` after hydration) instead paints the resting content
+   first, then snaps it down and rises on hydrate: a flash, most visible in
+   Safari. No-JS still animates; reduced motion is handled below. */
 .textCol .title,
 .textCol .subhead,
 .textCol .controls {
   /* Longer than the token scale tops out at (--sina-duration--slow = 320ms), on
-     purpose: a deliberate, unhurried rise for the marketing entrance. */
+     purpose: a deliberate, unhurried rise for the marketing entrance. The delay
+     is the hold before the rise, and the base of the top-to-bottom stagger. */
   animation: bs-rise-in 900ms var(--sina-ease--out) both;
+  animation-delay: 500ms;
+}
+
+/* Stagger the rise: subhead follows the title, controls follow the subhead, one
+   --sina-duration--fast (120ms) step apart, so the group enters top-to-bottom
+   instead of jumping in as one unit. (Same specificity as the grouped rule
+   above, so these must stay after it to win.) */
+.textCol .subhead {
+  animation-delay: calc(500ms + var(--sina-duration--fast));
+}
+
+.textCol .controls {
+  animation-delay: calc(500ms + 2 * var(--sina-duration--fast));
 }
 
 @keyframes bs-rise-in {
