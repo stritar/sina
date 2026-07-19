@@ -30,6 +30,13 @@ export type SelectProps = {
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   size?: ButtonSize;
+  /**
+   * Visual tone of the closed trigger. `"default"` is the bordered field
+   * surface; `"primary"` is the solid dark primary-button look (white ink +
+   * white caret), used by the InstallCommand manager control. The open menu is
+   * the light popover in both tones.
+   */
+  tone?: "default" | "primary";
   /** Visible label; renders a <span> and names the trigger + listbox. */
   label?: string;
   /** Accessible name when there is no visible label. */
@@ -58,6 +65,7 @@ export function Select({
   defaultValue,
   onValueChange,
   size = "md",
+  tone = "default",
   label,
   "aria-label": ariaLabel,
   invalid = false,
@@ -218,6 +226,7 @@ export function Select({
         type="button"
         data-broadsheet=""
         data-size={size}
+        data-tone={tone}
         data-force-state={forceState}
         data-invalid={invalid || undefined}
         disabled={disabled}

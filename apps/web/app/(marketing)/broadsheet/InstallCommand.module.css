@@ -1,19 +1,18 @@
 .root {
-  --_fg: var(--sinamk-color-text, #353b31);
-  --_code-bg: var(--sinamk-color-code-bg, #eef1ec);
-  --_mono: var(--sinamk-font-mono, monospace);
-
+  /* Lighter sage card; the command wraps directly on it (no inner well). */
+  position: relative;
   box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
+  display: flex;
+  align-items: flex-start;
   gap: var(--sinamk-control-pad--md, 8px);
   max-inline-size: 100%;
-  padding: var(--sinamk-control-pad--sm, 6px);
-  border: 1px solid var(--sinamk-color-border, #dfe4de);
-  border-radius: var(--sinamk-radius--md, 6px);
-  background: var(--sinamk-color-surface, #ffffff);
+  padding: var(--sinamk-space--lg, 16px);
+  border-radius: var(--sinamk-radius--lg, 8px);
+  background: var(--sinamk-color-secondary-fill, #e9ece8);
 }
 
+/* Per-size drives only the command font size; the card padding stays generous
+   at every size, and the manager Select scales itself from its own `size`. */
 .root[data-size="sm"] {
   --_fs: var(--sinamk-text--sm, 12px);
 }
@@ -26,23 +25,76 @@
   --_fs: var(--sinamk-text--lg, 15px);
 }
 
-.code {
+/* The whole command is the click-to-copy control. Full button reset; it carries
+   data-broadsheet, so the global blue outline handles focus (no :focus here). */
+.command {
+  box-sizing: border-box;
   flex: 1 1 auto;
   min-width: 0;
-  padding-block: var(--sinamk-label-pad--sm, 4px);
-  padding-inline: var(--sinamk-control-pad--sm, 6px);
+  margin: 0;
+  padding: 0;
+  border: 0;
   border-radius: var(--sinamk-radius--sm, 4px);
-  background: var(--_code-bg);
-  color: var(--_fg);
-  font-family: var(--_mono);
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  appearance: none;
+}
+
+.code {
+  display: block;
+  color: var(--sinamk-color-text, #353b31);
+  font-family: var(--sinamk-font-mono, monospace);
   font-size: var(--_fs);
-  line-height: 1.4;
-  white-space: nowrap;
-  overflow-x: auto;
+  line-height: 2;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* The `npm ` prompt prefix reads quieter than the command body. */
+.prefix {
+  color: var(--sinamk-color-text-subtle, #84897e);
 }
 
 .managerSlot {
   flex-shrink: 0;
+}
+
+/* Hover/focus tooltip anchored above the command. Visibility is toggled from JS
+   (the data-open attribute), never a focus pseudo-class, which marketing modules
+   must not author. The shadow rgba lives only in broadsheet.css; consume via a
+   keyword-fallback alias so the foundations color guard never sees a raw rgba(). */
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: var(--sinamk-space--lg, 16px);
+  z-index: 20;
+  box-sizing: border-box;
+  padding-block: var(--sinamk-label-pad--sm, 4px);
+  padding-inline: var(--sinamk-label-pad--md, 6px);
+  border: 1px solid var(--sinamk-color-border, #dfe4de);
+  border-radius: var(--sinamk-radius--md, 6px);
+  background: var(--sinamk-color-popover-surface, #ffffff);
+  box-shadow: var(--sinamk-shadow-popover, none);
+  color: var(--sinamk-color-text, #353b31);
+  font-family: inherit;
+  font-size: var(--sinamk-text--sm, 12px);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease),
+    visibility var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease);
+}
+
+.tooltip[data-open] {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* Visually-hidden polite live region announcing the copy result. */

@@ -23,6 +23,10 @@
   --sinamk-color-secondary-fill--pressed: #d6dbd4;
   --sinamk-color-secondary-fill--disabled: #eef0ec;
 
+  /* Secondary surface tint — a deeper sage panel that frames a lighter well
+     (the InstallCommand container; matches the SINA-marketing Figma variable) */
+  --sinamk-color-secondary--hover: #dde0d9;
+
   /* Primary button surface (forest green + white ink, matched to the core primitive) */
   --sinamk-color-primary-fill: #353b31;
   --sinamk-color-primary-fill--hover: #444d3b;
@@ -42,6 +46,7 @@
   /* Ink */
   --sinamk-color-text: #353b31;
   --sinamk-color-text-muted: #6b7268;
+  --sinamk-color-text-subtle: #84897e;
   --sinamk-color-text--disabled: #a3a99d;
   --sinamk-color-text-danger: #b42318;
 
@@ -68,6 +73,9 @@
 
   /* The one accessibility focus color */
   --sinamk-color-focus-ring: #2563eb;
+
+  /* Spacing scale (card / block padding, larger than control-pad) */
+  --sinamk-space--lg: 16px;
 
   /* Radius */
   --sinamk-radius--sm: 4px;
@@ -198,6 +206,10 @@
   --sinamk-color-secondary-fill--pressed: #232821;
   --sinamk-color-secondary-fill--disabled: #21261f;
 
+  /* Secondary surface tint (dark) — a subtle sage panel above the dark page,
+     lighter than the code well so the frame still reads */
+  --sinamk-color-secondary--hover: #313830;
+
   --sinamk-color-primary-fill: #b9c4b1;
   --sinamk-color-primary-fill--hover: #94a389;
   --sinamk-color-primary-fill--pressed: #6f7e63;
@@ -214,6 +226,7 @@
 
   --sinamk-color-text: #e7ebe3;
   --sinamk-color-text-muted: #a3a99d;
+  --sinamk-color-text-subtle: #8b917f;
   --sinamk-color-text--disabled: #767c71;
   --sinamk-color-text-danger: #f2a29a;
 

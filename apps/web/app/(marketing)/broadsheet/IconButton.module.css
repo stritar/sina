@@ -1,11 +1,4 @@
 .root {
-  --_fill: var(--sinamk-color-secondary-fill, #e9ece8);
-  --_fill-hover: var(--sinamk-color-secondary-fill--hover, #dfe4de);
-  --_fill-pressed: var(--sinamk-color-secondary-fill--pressed, #d6dbd4);
-  --_fill-disabled: var(--sinamk-color-secondary-fill--disabled, #eef0ec);
-  --_fg: var(--sinamk-color-text, #353b31);
-  --_fg-disabled: var(--sinamk-color-text--disabled, #a3a99d);
-
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
@@ -18,6 +11,45 @@
   color: var(--_fg);
   background: var(--_fill);
   transition: background-color var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease);
+}
+
+/* Per-variant fill/ink — the shared state rules below read these custom props. */
+.root[data-variant="secondary"] {
+  --_fill: var(--sinamk-color-secondary-fill, #e9ece8);
+  --_fill-hover: var(--sinamk-color-secondary-fill--hover, #dfe4de);
+  --_fill-pressed: var(--sinamk-color-secondary-fill--pressed, #d6dbd4);
+  --_fill-disabled: var(--sinamk-color-secondary-fill--disabled, #eef0ec);
+  --_fg: var(--sinamk-color-text, #353b31);
+  --_fg-disabled: var(--sinamk-color-text--disabled, #a3a99d);
+}
+
+.root[data-variant="primary"] {
+  --_fill: var(--sinamk-color-primary-fill, #353b31);
+  --_fill-hover: var(--sinamk-color-primary-fill--hover, #444d3b);
+  --_fill-pressed: var(--sinamk-color-primary-fill--pressed, #2b3028);
+  --_fill-disabled: var(--sinamk-color-primary-fill--disabled, #c2cdc4);
+  --_fg: var(--sinamk-color-primary-fg, #ffffff);
+  --_fg-disabled: var(--sinamk-color-primary-fg--disabled, #8a9a8c);
+}
+
+.root[data-variant="destructive"] {
+  --_fill: var(--sinamk-color-destructive-fill, #b42318);
+  --_fill-hover: var(--sinamk-color-destructive-fill--hover, #a01b12);
+  --_fill-pressed: var(--sinamk-color-destructive-fill--pressed, #8a170f);
+  --_fill-disabled: var(--sinamk-color-destructive-fill--disabled, #e8c5c1);
+  --_fg: var(--sinamk-color-destructive-fg, #ffffff);
+  --_fg-disabled: var(--sinamk-color-destructive-fg--disabled, #b98b85);
+}
+
+/* Ghost is transparent at rest and stays transparent when disabled/loading;
+   it borrows the secondary hover/pressed tints (the ButtonGhost pattern). */
+.root[data-variant="ghost"] {
+  --_fill: transparent;
+  --_fill-hover: var(--sinamk-color-secondary-fill--hover, #dfe4de);
+  --_fill-pressed: var(--sinamk-color-secondary-fill--pressed, #d6dbd4);
+  --_fill-disabled: transparent;
+  --_fg: var(--sinamk-color-text, #353b31);
+  --_fg-disabled: var(--sinamk-color-text--disabled, #a3a99d);
 }
 
 .root[data-size="sm"] {

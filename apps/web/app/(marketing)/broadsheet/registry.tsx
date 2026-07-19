@@ -15,7 +15,7 @@ import { ButtonPrimary } from "./ButtonPrimary";
 import { ButtonSecondary, type ButtonSecondaryProps, type ForceState } from "./ButtonSecondary";
 import { ButtonGhost } from "./ButtonGhost";
 import { ButtonDestructive } from "./ButtonDestructive";
-import { IconButton } from "./IconButton";
+import { IconButton, type IconButtonVariant } from "./IconButton";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { SegmentSelector } from "./SegmentSelector";
 import { Badge, type BadgeColor } from "./Badge";
@@ -108,10 +108,20 @@ function textButtonSpec(
   };
 }
 
+/** The icon button's four variants — one card, a Variant control (the Badge pattern). */
+const ICON_BUTTON_VARIANTS = ["secondary", "primary", "ghost", "destructive"] as const;
+
 const iconButtonSpec: ComponentSpec = {
   id: "icon-button",
   name: "Button / Icon",
   controls: [
+    {
+      key: "variant",
+      label: "Variant",
+      type: "select",
+      options: [...ICON_BUTTON_VARIANTS],
+      default: "secondary",
+    },
     { key: "size", label: "Size", type: "select", options: ["sm", "md", "lg"], default: "md" },
     { key: "state", label: "State", type: "select", options: [...STATES], default: "default" },
     {
@@ -128,6 +138,7 @@ const iconButtonSpec: ComponentSpec = {
     const Glyph = GLYPHS[String(v.icon)] ?? Plus;
     return (
       <IconButton
+        variant={v.variant as IconButtonVariant}
         size={v.size as "sm" | "md" | "lg"}
         forceState={forceState}
         disabled={disabled}
@@ -311,7 +322,13 @@ const installCommandSpec: ComponentSpec = {
   name: "Install Command",
   controls: [
     { key: "size", label: "Size", type: "select", options: ["sm", "md", "lg"], default: "md" },
-    { key: "packages", label: "Packages", type: "text", default: "@sina/core @sina/fintech" },
+    {
+      key: "packages",
+      label: "Packages",
+      type: "text",
+      default:
+        "@sina-design-system/theme @sina-design-system/core @sina-design-system/fintech @sina-design-system/fintech-react @sina-design-system/governance",
+    },
     {
       key: "manager",
       label: "Manager",

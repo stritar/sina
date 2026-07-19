@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Copy, Check } from "@phosphor-icons/react/dist/ssr";
+import { useEffect, useId, useRef, useState } from "react";
 import { cn } from "./cn";
 import type { ButtonSize } from "./ButtonSecondary";
-import { IconButton } from "./IconButton";
 import { Select, type SelectOption } from "./Select";
 import styles from "./InstallCommand.module.css";
 
@@ -30,10 +28,12 @@ export type InstallCommandProps = {
 };
 
 /**
- * Broadsheet install command block: a monospace `npm install …` line with an
- * integrated package-manager dropdown (reusing Select) and a copy button
- * (reusing IconButton). Switching the manager rewrites the command; copy writes
- * the exact command to the clipboard and announces it via a polite live region.
+ * Broadsheet install command block: a lighter sage card whose `npm install …`
+ * command wraps across lines directly on the surface (no inner well), with the
+ * package-manager dropdown pinned top-right (Select with `tone="primary"`). The
+ * whole command is the copy control: clicking it writes the exact command to the
+ * clipboard, a "click to copy" tooltip shows on hover/focus (flipping to
+ * "Copied!"), and the result is announced via a polite live region.
  */
 export function InstallCommand({
   packages,
@@ -47,7 +47,9 @@ export function InstallCommand({
     defaultManager && available.includes(defaultManager) ? defaultManager : available[0]!,
   );
   const [copied, setCopied] = useState(false);
+  const [open, setOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tooltipId = useId();
 
   const command = `${manager} ${VERB[manager]} ${packages.join(" ")}`;
 
@@ -73,22 +75,38 @@ export function InstallCommand({
 
   return (
     <div className={cn(styles.root, className)} data-size={size}>
-      <code className={styles.code}>{command}</code>
+      <button
+        type="button"
+        data-broadsheet=""
+        className={styles.command}
+        aria-describedby={tooltipId}
+        onClick={copy}
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") setOpen(false);
+        }}
+      >
+        <code className={styles.code}>
+          <span className={styles.prefix}>{manager} </span>
+          {`${VERB[manager]} ${packages.join(" ")}`}
+        </code>
+      </button>
+      <span role="tooltip" id={tooltipId} className={styles.tooltip} data-open={open || undefined}>
+        {copied ? "Copied!" : "click to copy"}
+      </span>
       <div className={styles.managerSlot}>
         <Select
           size={size}
+          tone="primary"
           aria-label="Package manager"
           options={options}
           value={manager}
           onValueChange={(value) => setManager(value as PackageManager)}
         />
       </div>
-      <IconButton
-        size={size}
-        icon={copied ? <Check weight="bold" /> : <Copy weight="bold" />}
-        label={copied ? "Copied" : "Copy command"}
-        onClick={copy}
-      />
       <span className={styles.srOnly} aria-live="polite">
         {copied ? "Copied to clipboard" : ""}
       </span>

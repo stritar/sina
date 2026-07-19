@@ -4,7 +4,10 @@ import { Spinner } from "./Spinner";
 import type { ButtonSize, ForceState } from "./ButtonSecondary";
 import styles from "./IconButton.module.css";
 
+export type IconButtonVariant = "primary" | "secondary" | "ghost" | "destructive";
+
 export type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "type" | "children"> & {
+  variant?: IconButtonVariant;
   size?: ButtonSize;
   /** The glyph to render (a Phosphor icon node). */
   icon: ReactNode;
@@ -16,11 +19,13 @@ export type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "typ
 };
 
 /**
- * Icon-only Broadsheet secondary button: a square tinted pill in sizes sm/md/lg.
- * `label` is required so the control always has an accessible name. Shares the
- * secondary fill, states, transition, and the global blue focus outline.
+ * Icon-only Broadsheet button: a square tinted pill in sizes sm/md/lg and the
+ * four button variants (primary/secondary/ghost/destructive). `label` is
+ * required so the control always has an accessible name. Shares the per-variant
+ * fill, states, transition, and the global blue focus outline.
  */
 export function IconButton({
+  variant = "secondary",
   size = "md",
   icon,
   label,
@@ -36,6 +41,7 @@ export function IconButton({
       {...rest}
       type={type}
       data-broadsheet=""
+      data-variant={variant}
       data-size={size}
       data-loading={loading || undefined}
       data-force-state={forceState}

@@ -1,20 +1,27 @@
 /*
- * Segment selector — a segmented control wearing the secondary button's skin.
- * The track is the sage secondary-fill surface; the active segment is a raised
- * surface chip. Sizes (sm/md/lg) reuse the secondary button's height, padding,
- * text, and icon scale so the control lines up with a `ButtonSecondary` beside
- * it. Segments carry a text label with an optional left icon. The keyboard
- * focus outline is the global `[data-broadsheet]` rule — never authored here.
+ * Segment selector — a segmented control on the sage secondary-fill track.
+ * The chosen segment is a solid primary pill (forest-green fill, white ink),
+ * the same primary-fill/fg pair as `ButtonPrimary`, with no ring or border.
+ * The track's outer radius follows the pill's inner radius: it is computed as
+ * `seg-radius + track-pad`, so the corners stay concentric. Sizes (sm/md/lg)
+ * reuse the control height, padding, text, and icon scale so the selector
+ * lines up with a `ButtonSecondary` beside it. Segments carry a text label
+ * with an optional left icon. The keyboard focus outline is the global
+ * `[data-broadsheet]` rule — never authored here.
  */
 
 .root {
+  /* Inner (segment) radius; the track's outer radius is derived from it below. */
+  --_seg-radius: var(--sinamk-radius--md, 6px);
+  --_track-pad: 2px;
+
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: var(--_track-pad);
   margin: 0;
-  padding: 2px;
-  border-radius: var(--sinamk-radius--md, 6px);
+  padding: var(--_track-pad);
+  border-radius: calc(var(--_seg-radius) + var(--_track-pad));
   background: var(--sinamk-color-secondary-fill, #e9ece8);
 }
 
@@ -54,14 +61,14 @@
   margin: 0;
   padding-inline: var(--_pad);
   border: 0;
-  border-radius: var(--sinamk-radius--sm, 4px);
+  border-radius: var(--_seg-radius);
   font-family: inherit;
   font-size: inherit;
   font-weight: inherit;
   line-height: 1;
   white-space: nowrap;
   user-select: none;
-  color: var(--sinamk-color-text-muted, #6b7268);
+  color: var(--sinamk-color-text, #353b31);
   background: transparent;
   cursor: pointer;
   transition:
@@ -90,13 +97,11 @@
 
 /* Hover an inactive segment: hint with the secondary hover fill. */
 .segment:hover:not([data-active]) {
-  color: var(--sinamk-color-text, #353b31);
   background: var(--sinamk-color-secondary-fill--hover, #dfe4de);
 }
 
-/* The chosen segment: a raised surface chip (inset shadow, so no layout shift). */
+/* The chosen segment: a solid primary pill (forest-green fill, white ink), no ring. */
 .segment[data-active] {
-  color: var(--sinamk-color-text, #353b31);
-  background: var(--sinamk-color-surface, #ffffff);
-  box-shadow: inset 0 0 0 1px var(--sinamk-color-border, #dfe4de);
+  color: var(--sinamk-color-primary-fg, #ffffff);
+  background: var(--sinamk-color-primary-fill, #353b31);
 }

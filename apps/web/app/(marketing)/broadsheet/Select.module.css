@@ -14,6 +14,14 @@
      alias so the foundations color guard never sees a raw rgba() here. */
   --_shadow: var(--sinamk-shadow-popover, none);
 
+  /* Primary-tone trigger surface (the solid dark ButtonPrimary look). */
+  --_primary-fill: var(--sinamk-color-primary-fill, #353b31);
+  --_primary-fill-hover: var(--sinamk-color-primary-fill--hover, #444d3b);
+  --_primary-fill-pressed: var(--sinamk-color-primary-fill--pressed, #2b3028);
+  --_primary-fill-disabled: var(--sinamk-color-primary-fill--disabled, #c2cdc4);
+  --_primary-fg: var(--sinamk-color-primary-fg, #ffffff);
+  --_primary-fg-disabled: var(--sinamk-color-primary-fg--disabled, #8a9a8c);
+
   position: relative;
   box-sizing: border-box;
   display: inline-flex;
@@ -97,6 +105,38 @@
   cursor: not-allowed;
   background: var(--_bg-disabled);
   color: var(--_fg-disabled);
+}
+
+/*
+ * Primary tone — the solid dark trigger used by InstallCommand's manager
+ * control. Matches the ButtonPrimary fill/ink (white label + white caret); the
+ * border collapses to transparent so height/padding stay identical to default.
+ */
+.trigger[data-tone="primary"] {
+  border-color: transparent;
+  background: var(--_primary-fill);
+  color: var(--_primary-fg);
+  transition: background-color var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease);
+}
+
+.trigger[data-tone="primary"]:hover,
+.trigger[data-tone="primary"][data-force-state="hover"] {
+  border-color: transparent;
+  background: var(--_primary-fill-hover);
+}
+
+.trigger[data-tone="primary"]:active,
+.trigger[data-tone="primary"][data-force-state="pressed"] {
+  background: var(--_primary-fill-pressed);
+}
+
+.trigger[data-tone="primary"]:disabled {
+  background: var(--_primary-fill-disabled);
+  color: var(--_primary-fg-disabled);
+}
+
+.trigger[data-tone="primary"] .caret {
+  color: var(--_primary-fg);
 }
 
 .value {
