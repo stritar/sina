@@ -98,7 +98,7 @@ export function GlyphField() {
 
     function measure(): { dpr: number } {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      const rect = root.getBoundingClientRect();
+      const rect = root!.getBoundingClientRect();
       const cssW = Math.max(1, Math.round(rect.width));
       const cssH = Math.max(1, Math.round(rect.height));
       const cell = Math.max(4, params.cellSize);
@@ -184,7 +184,7 @@ export function GlyphField() {
     function onPointerMove(e: MouseEvent): void {
       // Client coords are viewport-based; the field now lives in a box, so map
       // them into box space and ignore the pointer while it is outside the box.
-      const r = root.getBoundingClientRect();
+      const r = root!.getBoundingClientRect();
       const x = e.clientX - r.left;
       const y = e.clientY - r.top;
       pointerClient =
