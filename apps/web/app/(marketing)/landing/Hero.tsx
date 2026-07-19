@@ -1,7 +1,6 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useLayoutEffect, useState } from "react";
 import { Coin, Asclepius, ShieldChevron } from "@phosphor-icons/react/dist/ssr";
 import { InstallCommand, SegmentSelector } from "../broadsheet";
 import { INDUSTRIES, hero, type Industry } from "./copy";
@@ -29,17 +28,6 @@ const PACKAGES = [
   "@sina-design-system/governance",
 ] as const;
 
-/** `useLayoutEffect` on the client (applies the rewound state before the browser
-    paints, so there's no flash of the full title), a no-op `useEffect` on the
-    server so SSR doesn't warn. */
-const useIsomorphicLayoutEffect =
-  typeof document !== "undefined" ? useLayoutEffect : useEffect;
-
-/** Per-character cadence of the H1 typewriter, in ms. */
-const TYPE_MS = 38;
-
-type RevealPhase = "idle" | "typing" | "revealed";
-
 /**
  * The framed hero: a left text rectangle (title, subhead, the industry segment
  * selector, and the install command) that lets the glyph field show through, and
@@ -51,28 +39,6 @@ type RevealPhase = "idle" | "typing" | "revealed";
 export function Hero() {
   const { industry, setIndustry } = useIndustry();
 
-  // On load, type the H1 out character by character, then fade the subhead +
-  // controls in. `count` starts at the full length so SSR / no-JS / reduced-motion
-  // render the complete, static heading; the effect rewinds it before first paint.
-  const [count, setCount] = useState(hero.title.length);
-  const [phase, setPhase] = useState<RevealPhase>("idle");
-
-  useIsomorphicLayoutEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    setCount(0);
-    setPhase("typing");
-    let typed = 0;
-    const id = window.setInterval(() => {
-      typed += 1;
-      setCount(typed);
-      if (typed >= hero.title.length) {
-        window.clearInterval(id);
-        setPhase("revealed");
-      }
-    }, TYPE_MS);
-    return () => window.clearInterval(id);
-  }, []);
-
   const items = ORDER.map((id) => ({
     value: id,
     label: INDUSTRIES[id].name,
@@ -82,12 +48,9 @@ export function Hero() {
   return (
     <section className={`${styles.hero} broadsheet`}>
       <div className={styles.inner}>
-        <div className={styles.textCol} data-phase={phase}>
+        <div className={styles.textCol}>
           <GlyphField />
-          <h1 className={styles.title}>
-            <span className={styles.typed}>{hero.title.slice(0, count)}</span>
-            <span className={styles.rest}>{hero.title.slice(count)}</span>
-          </h1>
+          <h1 className={styles.title}>{hero.title}</h1>
           <p className={styles.subhead}>{hero.subhead}</p>
           <div className={styles.controls}>
             <div className={styles.industryRow}>
@@ -98,12 +61,18 @@ export function Hero() {
                   items={items}
                   value={industry}
                   onValueChange={(value) => setIndustry(value as Industry)}
+                  className={styles.surface}
                 />
               </div>
               <ComingSoonBadge />
             </div>
             <div className={styles.installWrap}>
-              <InstallCommand size="sm" defaultManager="npm" packages={PACKAGES} />
+              <InstallCommand
+                size="sm"
+                defaultManager="npm"
+                packages={PACKAGES}
+                className={styles.surface}
+              />
             </div>
           </div>
         </div>

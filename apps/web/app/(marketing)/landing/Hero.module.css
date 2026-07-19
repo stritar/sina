@@ -23,8 +23,8 @@
   margin-inline: auto;
   /* Full-screen (mistral-style) sheet: both columns grow to this height via the
      grid, so the empty emulator column stays a full-height opaque panel. */
-  min-height: 44rem;
-  min-height: min(88svh, 56rem);
+  min-height: 35.2rem;
+  min-height: min(70.4svh, 44.8rem);
   display: grid;
   grid-template-columns: minmax(0, 69fr) minmax(0, 31fr);
   border-inline: 1px solid var(--sinamk-color-border, #dfe4de);
@@ -66,58 +66,27 @@
   text-wrap: balance;
 }
 
-/* Terminal typewriter: the H1 is split into a visible typed prefix and a
-   transparent "rest" that always holds the remaining characters. Keeping the full
-   title in the DOM (rest is in the a11y tree, just color:transparent) means the
-   accessible name and textContent stay complete while only the prefix is painted,
-   and reserving the rest's space keeps the line wrap stable during typing. */
-.typed {
-  color: inherit;
+/* Mistral-style entrance: on load the whole content group (title, subhead,
+   controls) rises up from below and fades in together as one unit.
+
+   This is a PURE-CSS load animation (no JS gate) on purpose. Because the rule
+   lives in the render-blocking stylesheet, the very first paint — including the
+   server-rendered HTML — is already the hidden `from` frame, then it rises. A
+   JS-gated version (set `data-enter` after hydration) instead paints the resting
+   content first, then snaps it down and rises on hydrate: a flash on refresh,
+   most visible in Safari. No-JS still animates; reduced motion is handled below. */
+.textCol .title,
+.textCol .subhead,
+.textCol .controls {
+  /* Longer than the token scale tops out at (--sina-duration--slow = 320ms), on
+     purpose: a deliberate, unhurried rise for the marketing entrance. */
+  animation: bs-rise-in 900ms var(--sina-ease--out) both;
 }
 
-.rest {
-  color: transparent;
-}
-
-/* Blinking caret while typing: a 2px border on the typed prefix (no extra inline
-   box, so the wrap doesn't shift). Only rendered in the "typing" phase, which the
-   Hero effect never enters under reduced motion. */
-.textCol[data-phase="typing"] .typed {
-  border-right: 2px solid var(--sinamk-color-text, #353b31);
-  animation: bs-caret-blink 1.06s step-end infinite;
-}
-
-@keyframes bs-caret-blink {
-  0%,
-  100% {
-    border-right-color: var(--sinamk-color-text, #353b31);
-  }
-  50% {
-    border-right-color: transparent;
-  }
-}
-
-/* Subhead + controls: held hidden while the title types, then fade up (staggered)
-   once the title finishes. Idle/absent phase (SSR, no-JS, reduced motion) leaves
-   them at their default full opacity. */
-.textCol[data-phase="typing"] .subhead,
-.textCol[data-phase="typing"] .controls {
-  opacity: 0;
-}
-
-.textCol[data-phase="revealed"] .subhead,
-.textCol[data-phase="revealed"] .controls {
-  animation: bs-fade-up var(--sina-duration--slow) var(--sina-ease--out) both;
-}
-
-.textCol[data-phase="revealed"] .controls {
-  animation-delay: var(--sina-duration--fast);
-}
-
-@keyframes bs-fade-up {
+@keyframes bs-rise-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(40px);
   }
   to {
     opacity: 1;
@@ -125,17 +94,11 @@
   }
 }
 
-/* Defensive: even though the effect is JS-gated on reduced motion, force the final
-   state if any phase attribute is present (mirrors the Spinner.module.css guard). */
+/* Reduced motion: skip the entrance entirely; the content shows at rest. */
 @media (prefers-reduced-motion: reduce) {
-  .textCol[data-phase] .subhead,
-  .textCol[data-phase] .controls {
-    opacity: 1;
-    animation: none;
-  }
-
-  .textCol[data-phase="typing"] .typed {
-    border-right: 0;
+  .textCol .title,
+  .textCol .subhead,
+  .textCol .controls {
     animation: none;
   }
 }
@@ -181,6 +144,19 @@
   max-width: 34rem;
 }
 
+/* The segment track and install card go 5% transparent so the glyph field
+   behind the text column bleeds through. Scoped under the wrappers so it wins
+   over each Broadsheet component's own .root background (higher specificity),
+   without editing the shared component modules. */
+.segments .surface,
+.installWrap .surface {
+  background: color-mix(
+    in srgb,
+    var(--sinamk-color-secondary-fill, #e9ece8) 70%,
+    transparent
+  );
+}
+
 /* The emulator slot: opaque sheet, empty for now (the interactive demo stays in
    EmulatorSection below). Stretches to the text column's height via the grid. */
 .emulatorCol {
@@ -213,7 +189,7 @@
 @media (max-width: 40rem) {
   /* Relax the full-screen height so a phone isn't mostly empty above the fold. */
   .inner {
-    min-height: min(78svh, 40rem);
+    min-height: min(62.4svh, 32rem);
   }
 
   .textCol {

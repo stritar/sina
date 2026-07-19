@@ -1,8 +1,9 @@
 /**
  * Broadsheet foundation — the marketing design system's token layer.
  *
- * This is the ONLY Broadsheet file allowed to author raw values (mirrors how
- * wireframe.css is the sole raw-hex file for the landing). Every marketing
+ * This is the ONLY Broadsheet file allowed to author raw values (the landing's
+ * raw hex lives in wireframe.css, plus the decorative glyph-field palette in
+ * landing/glyph-field/GlyphField.module.css). Every marketing
  * component *.module.css consumes these `--sinamk-*` tokens through
  * `var(--sinamk-*, <fallback>)` and never writes a raw color/length/duration.
  * If a component needs a value with no token here, add a token (with sign-off),
@@ -70,6 +71,10 @@
   /* Popover (dropdown) surface + elevation (the only shadow in the system) */
   --sinamk-color-popover-surface: #ffffff;
   --sinamk-shadow-popover: 0 2px 6px rgba(24, 28, 22, 0.08), 0 12px 28px rgba(24, 28, 22, 0.14);
+
+  /* Tooltip chip — intentionally near-black in both themes (theme-invariant). */
+  --sinamk-color-tooltip-surface: #1c1c1c;
+  --sinamk-color-tooltip-fg: #ffffff;
 
   /* The one accessibility focus color */
   --sinamk-color-focus-ring: #2563eb;
@@ -248,6 +253,10 @@
   /* Popover surface lifted a step from surface; shadow is true-black at higher alpha */
   --sinamk-color-popover-surface: #22261f;
   --sinamk-shadow-popover: 0 2px 6px rgba(0, 0, 0, 0.4), 0 12px 28px rgba(0, 0, 0, 0.55);
+
+  /* Tooltip chip stays near-black with white ink in dark mode too (theme-invariant). */
+  --sinamk-color-tooltip-surface: #1c1c1c;
+  --sinamk-color-tooltip-fg: #ffffff;
 
   --sinamk-color-focus-ring: #6c9bff;
 

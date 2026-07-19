@@ -7,15 +7,36 @@
  * The `background` is a safety net: if the canvas is hidden (no WebGL2 and no 2D,
  * or forced-colors), the box still sits on the field's ground color rather than
  * a bare surface. The opaque canvas covers it whenever the field actually renders.
+ *
+ * COLOR PALETTE — the three `--sina-glyphfield-*` values are read by the WebGL
+ * canvas at runtime (`getComputedStyle` on the canvas in GlyphField.tsx), not
+ * consumed through the normal token cascade, so they are decorative values that
+ * cannot pass through the `--sina-*` / `--sinamk-*` systems. They live here, on
+ * the component that owns them, and inherit down to the child canvas. Light is
+ * the default; the dark block mirrors it, keyed off the `data-theme` attribute
+ * the ThemeSwitcher sets on <html>. This is the one place they are authored.
  */
 
 .root {
+  /* Light: a sage flow-field on off-white (the shared preset, verbatim). */
+  --sina-glyphfield-bg: #f5f6f4;
+  --sina-glyphfield-primary: #CED3C8;
+  --sina-glyphfield-accent: #ADB0AB;
+
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
   background: var(--sina-glyphfield-bg, #f5f6f4);
+}
+
+/* Dark: a near-black sage ground with glyphs a few steps LIGHTER than it, so the
+   field reads as subtle light-on-dark. */
+:global([data-theme="dark"]) .root {
+  --sina-glyphfield-bg: #0b0c0b;
+  --sina-glyphfield-primary: #2C332C;
+  --sina-glyphfield-accent: #363E35;
 }
 
 .canvas {

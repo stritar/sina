@@ -75,11 +75,11 @@
   box-sizing: border-box;
   padding-block: var(--sinamk-label-pad--sm, 4px);
   padding-inline: var(--sinamk-label-pad--md, 6px);
-  border: 1px solid var(--sinamk-color-border, #dfe4de);
+  border: 1px solid var(--sinamk-color-tooltip-surface, #1c1c1c);
   border-radius: var(--sinamk-radius--md, 6px);
-  background: var(--sinamk-color-popover-surface, #ffffff);
+  background: var(--sinamk-color-tooltip-surface, #1c1c1c);
   box-shadow: var(--sinamk-shadow-popover, none);
-  color: var(--sinamk-color-text, #353b31);
+  color: var(--sinamk-color-tooltip-fg, #ffffff);
   font-family: inherit;
   font-size: var(--sinamk-text--sm, 12px);
   line-height: 1;

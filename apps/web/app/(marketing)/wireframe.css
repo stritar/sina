@@ -9,9 +9,11 @@
  * `body { background: var(--sina-color-bg) }` base rule in theme.css picks the
  * override up automatically.
  *
- * This file is the ONLY marketing file that authors raw hex. Both variants are
- * held to WCAG AA by construction (muted #444444 on white is above 9:1; subtle
- * #767676 is 4.5:1; dark muted #c0c0c0 on #161616 is above 9:1).
+ * This file authors raw hex for the landing's token override (the one exception
+ * beyond it is the decorative glyph-field palette, which lives with its consumer
+ * in landing/glyph-field/GlyphField.module.css). Both variants here are held to
+ * WCAG AA by construction (muted #444444 on white is above 9:1; subtle #767676
+ * is 4.5:1; dark muted #c0c0c0 on #161616 is above 9:1).
  *
  * Two contracts carried over from the real theme (see packages/theme/theme.css):
  * - The status `*-fill` roles stay LIGHT in both modes (each fill carries its
@@ -85,12 +87,6 @@ body:has(.sina-wireframe) {
 
   /* Elevation — a sage-tinted shadow reads as color on a grayscale page */
   --sina-shadow-color: #000000;
-
-  /* Glyph-field background palette (read by the canvas, not by CSS). Light: a
-     sage flow-field on off-white — the shared preset, verbatim. */
-  --sina-glyphfield-bg: #f5f6f4;
-  --sina-glyphfield-primary: #d7dbd2;
-  --sina-glyphfield-accent: #c4c7c2;
 }
 
 /* Inverted dark wireframe — white/gray on black, same fills (see header note). */
@@ -135,12 +131,6 @@ body:has(.sina-wireframe) {
 
   --sina-color-focus-ring: #ffffff;
   --sina-color-surface-secure: #1f1f1f;
-
-  /* Glyph-field background palette (dark). A near-black sage ground with glyphs
-     a few steps LIGHTER than it, so the field reads as subtle light-on-dark. */
-  --sina-glyphfield-bg: #0b0c0b;
-  --sina-glyphfield-primary: #242a24;
-  --sina-glyphfield-accent: #2e352d;
 }
 
 /* The marker + page frame. Layout stays in the section CSS Modules. */

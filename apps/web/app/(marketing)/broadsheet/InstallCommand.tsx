@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { type MouseEvent as ReactMouseEvent, useEffect, useId, useRef, useState } from "react";
 import { cn } from "./cn";
 import type { ButtonSize } from "./ButtonSecondary";
 import { Select, type SelectOption } from "./Select";
@@ -48,8 +48,16 @@ export function InstallCommand({
   );
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
+  const [coords, setCoords] = useState<{ x: number; y: number } | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const tooltipId = useId();
+
+  /** Track the pointer in `.root`'s coordinate space so the tooltip can follow it. */
+  function trackCursor(event: ReactMouseEvent) {
+    const rect = rootRef.current?.getBoundingClientRect();
+    if (rect) setCoords({ x: event.clientX - rect.left, y: event.clientY - rect.top });
+  }
 
   const command = `${manager} ${VERB[manager]} ${packages.join(" ")}`;
 
@@ -74,15 +82,22 @@ export function InstallCommand({
   const options: SelectOption[] = available.map((m) => ({ value: m, label: m }));
 
   return (
-    <div className={cn(styles.root, className)} data-size={size}>
+    <div ref={rootRef} className={cn(styles.root, className)} data-size={size}>
       <button
         type="button"
         data-broadsheet=""
         className={styles.command}
         aria-describedby={tooltipId}
         onClick={copy}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
+        onMouseEnter={(event) => {
+          setOpen(true);
+          trackCursor(event);
+        }}
+        onMouseMove={trackCursor}
+        onMouseLeave={() => {
+          setOpen(false);
+          setCoords(null);
+        }}
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
         onKeyDown={(event) => {
@@ -94,7 +109,23 @@ export function InstallCommand({
           {`${VERB[manager]} ${packages.join(" ")}`}
         </code>
       </button>
-      <span role="tooltip" id={tooltipId} className={styles.tooltip} data-open={open || undefined}>
+      <span
+        role="tooltip"
+        id={tooltipId}
+        className={styles.tooltip}
+        data-open={open || undefined}
+        style={
+          coords
+            ? {
+                left: coords.x,
+                top: coords.y,
+                right: "auto",
+                bottom: "auto",
+                transform: "translate(-50%, calc(-100% - 12px))",
+              }
+            : undefined
+        }
+      >
         {copied ? "Copied!" : "click to copy"}
       </span>
       <div className={styles.managerSlot}>
