@@ -93,7 +93,7 @@ body:has(.sina-wireframe) {
 [data-theme="dark"] body:has(.sina-wireframe) {
   color-scheme: dark;
 
-  --sina-color-bg: #0a0a0a;
+  --sina-color-bg: #0b0c0b;
   --sina-color-surface: #161616;
   --sina-color-surface-raised: #1f1f1f;
   --sina-color-surface-sunken: #0a0a0a;

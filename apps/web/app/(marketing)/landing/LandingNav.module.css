@@ -3,7 +3,8 @@
  *
  * `.header` is a full-width, transparent shell whose horizontal padding is the
  * page gutter; the fixed glyph field shows through it. `.inner` is the opaque bar
- * (`--sinamk-color-bg`) capped at the frame width, with side + bottom borders.
+ * (`--sina-color-bg`, the wireframe page ground) capped at the frame width, with
+ * side + bottom borders.
  *
  * FRAME CONTRACT: `--sina-space--6` gutter + `96rem` inner width (and the
  * `max-width: 96rem` gutter-removal breakpoint below) MUST match Hero.module.css
@@ -25,9 +26,19 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: var(--sina-space--3);
-  background: var(--sinamk-color-bg, #f5f6f4);
-  border-inline: 1px solid var(--sinamk-color-border, #dfe4de);
-  border-bottom: 1px solid var(--sinamk-color-border, #dfe4de);
+  background: var(--sina-color-bg, #f5f6f4);
+  border-inline: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+  border-bottom: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+}
+
+/* Dark: the subtle wireframe border reads a touch bright on the near-black
+   ground, so dim the frame outline toward the page. Tune the % to taste. */
+[data-theme="dark"] .inner {
+  border-color: color-mix(
+    in srgb,
+    var(--sina-color-border-subtle, #e4e4e4) 55%,
+    var(--sina-color-bg, #0b0c0b)
+  );
 }
 
 /* Visually-hidden skip link; revealed on keyboard focus. */

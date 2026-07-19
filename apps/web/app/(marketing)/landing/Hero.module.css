@@ -27,8 +27,8 @@
   min-height: min(70.4svh, 44.8rem);
   display: grid;
   grid-template-columns: minmax(0, 69fr) minmax(0, 31fr);
-  border-inline: 1px solid var(--sinamk-color-border, #dfe4de);
-  border-bottom: 1px solid var(--sinamk-color-border, #dfe4de);
+  border-inline: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+  border-bottom: 1px solid var(--sina-color-border-subtle, #e4e4e4);
 }
 
 /* The left rectangle: the glyph field is mounted here as an absolute backdrop, so
@@ -49,7 +49,18 @@
   padding: var(--sina-space--16) var(--sina-space--8) var(--sina-space--12)
     var(--sina-space--12);
   background: transparent;
-  border-right: 1px solid var(--sinamk-color-border, #dfe4de);
+  border-right: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+}
+
+/* Dark: dim the frame + column outlines toward the near-black page ground so the
+   sheet borders don't read too bright. Tune the % to taste. */
+[data-theme="dark"] .inner,
+[data-theme="dark"] .textCol {
+  border-color: color-mix(
+    in srgb,
+    var(--sina-color-border-subtle, #e4e4e4) 55%,
+    var(--sina-color-bg, #0b0c0b)
+  );
 }
 
 /* Text content sits above the glyph-field canvas (z-index 0) in the text box. */
@@ -160,7 +171,7 @@
 /* The emulator slot: opaque sheet, empty for now (the interactive demo stays in
    EmulatorSection below). Stretches to the text column's height via the grid. */
 .emulatorCol {
-  background: var(--sinamk-color-bg, #f5f6f4);
+  background: var(--sina-color-bg, #f5f6f4);
 }
 
 /* At/below the frame's max-width the sheet is viewport-bound, so drop the side
