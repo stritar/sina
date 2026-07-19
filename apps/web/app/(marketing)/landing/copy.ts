@@ -21,7 +21,7 @@ export const hero = {
   eyebrow: "Open source. MIT licensed.",
   title: "The governed design system for AI agents",
   subhead:
-    "Your agent proposes the interface. A server side rulebook, called a constitution, checks every request before anything renders. What passes mounts as a real, accessible component. What fails is blocked, escalated, or logged.",
+    "Your AI proposes what the interface should do. SINA checks it against your product, compliance, and accessibility rules before anything reaches the user.",
   ctaDemo: "Try the demo",
   ctaDocs: "Read the docs",
   switcherLabel: "Pick an industry",

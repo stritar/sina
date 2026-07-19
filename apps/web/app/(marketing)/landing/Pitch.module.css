@@ -1,6 +1,8 @@
 .section {
   border-top: 1px solid var(--sina-color-border-subtle);
-  background: var(--sina-color-surface-sunken);
+  /* Transparent so this band sits on the page ground. (The glyph field is scoped
+     to the hero box, no longer a page-wide backdrop.) */
+  background: transparent;
 }
 
 .inner {

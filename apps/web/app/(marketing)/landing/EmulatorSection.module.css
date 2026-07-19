@@ -1,6 +1,8 @@
 .section {
   border-top: 1px solid var(--sina-color-border-subtle);
-  background: var(--sina-color-bg);
+  /* Transparent so this band sits on the page ground; the emulator panel below
+     carries its own surface. (The glyph field is scoped to the hero box.) */
+  background: transparent;
   /* Anchor target: keep the heading clear of the viewport edge on #demo jumps. */
   scroll-margin-top: var(--sina-space--8);
 }

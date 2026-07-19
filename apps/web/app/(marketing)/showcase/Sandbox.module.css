@@ -2,7 +2,7 @@
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: var(--sinamk-color-bg, #f4f6f2);
+  background: var(--sinamk-color-bg, #f5f6f4);
   color: var(--sinamk-color-text, #353b31);
 }
 
@@ -54,7 +54,7 @@
 }
 
 .themeToggle:hover {
-  background: var(--sinamk-color-bg, #f4f6f2);
+  background: var(--sinamk-color-bg, #f5f6f4);
 }
 
 .themeToggle svg {
@@ -120,7 +120,7 @@
 }
 
 .segment:hover {
-  background: var(--sinamk-color-bg, #f4f6f2);
+  background: var(--sinamk-color-bg, #f5f6f4);
 }
 
 .segment[data-selected] {

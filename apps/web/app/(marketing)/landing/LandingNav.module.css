@@ -1,14 +1,36 @@
+/*
+ * Landing nav — the top of the framed Broadsheet sheet.
+ *
+ * `.header` is a full-width, transparent shell whose horizontal padding is the
+ * page gutter; the fixed glyph field shows through it. `.inner` is the opaque bar
+ * (`--sinamk-color-bg`) capped at the frame width, with side + bottom borders.
+ *
+ * FRAME CONTRACT: `--sina-space--6` gutter + `96rem` inner width (and the
+ * `max-width: 96rem` gutter-removal breakpoint below) MUST match Hero.module.css
+ * so the side borders line up into one continuous vertical frame.
+ */
 .header {
-  display: flex;
-  align-items: center;
-  gap: var(--sina-space--6);
-  max-width: 72rem;
   width: 100%;
-  margin-inline: auto;
-  padding: var(--sina-space--4) var(--sina-space--6);
-  border-bottom: 1px solid var(--sina-color-border-subtle);
+  padding-inline: var(--sina-space--6);
+  background: transparent;
 }
 
+.inner {
+  box-sizing: border-box;
+  max-width: 96rem;
+  margin-inline: auto;
+  padding: var(--sina-space--4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sina-space--3);
+  background: var(--sinamk-color-bg, #f5f6f4);
+  border-inline: 1px solid var(--sinamk-color-border, #dfe4de);
+  border-bottom: 1px solid var(--sinamk-color-border, #dfe4de);
+}
+
+/* Visually-hidden skip link; revealed on keyboard focus. */
 .skip {
   position: absolute;
   width: 1px;
@@ -25,73 +47,103 @@
   margin: 0;
   clip-path: none;
   padding: var(--sina-space--1) var(--sina-space--2);
-  outline: 2px solid var(--sina-color-focus-ring);
+  outline: 2px solid var(--sinamk-color-focus-ring, #2563eb);
   outline-offset: 2px;
 }
 
 .wordmark {
   display: inline-flex;
   align-items: center;
-  gap: var(--sina-space--2);
-  font-weight: var(--sina-font-weight--bold);
-  font-size: var(--sina-text--lg);
-  letter-spacing: var(--sina-tracking--wide);
-  color: var(--sina-color-text);
+  color: var(--sinamk-color-text, #353b31);
   text-decoration: none;
 }
 
-.wordmark:focus-visible {
-  outline: 2px solid var(--sina-color-focus-ring);
-  outline-offset: 2px;
+.logo {
+  display: block;
+  height: 32px;
+  width: auto;
 }
 
-/* Wireframe glyph: an empty box, on brand for the fidelity level. */
-.mark {
-  width: var(--sina-space--4);
-  height: var(--sina-space--4);
-  border: 2px solid var(--sina-color-text);
-  border-radius: var(--sina-radius--xs);
+.cluster {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--2);
 }
 
 .links {
   display: flex;
   align-items: center;
-  gap: var(--sina-space--5);
-  margin-right: auto;
+  gap: var(--sina-space--2);
 }
 
-.link {
-  font-size: var(--sina-text--sm);
-  font-weight: var(--sina-font-weight--medium);
-  color: var(--sina-color-text-muted);
-  text-decoration: none;
-}
-
-.link:hover {
-  color: var(--sina-color-text);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-.link:focus-visible {
-  outline: 2px solid var(--sina-color-focus-ring);
-  outline-offset: 2px;
-}
-
-.controls {
-  display: flex;
+/* Button-styled anchors: the Broadsheet label anatomy (padded `.label`, unpadded
+   icon slot, root inline pad) reproduced for a link. `data-broadsheet` earns the
+   global blue focus outline, so no `:focus-visible` is authored here. */
+.navBtn {
+  box-sizing: border-box;
+  display: inline-flex;
   align-items: center;
-  gap: var(--sina-space--3);
+  height: var(--sinamk-control-height--md, 32px);
+  padding-inline: var(--sinamk-control-pad--md, 8px);
+  border-radius: var(--sinamk-radius--md, 6px);
+  font-size: var(--sinamk-text--md, 13px);
+  font-weight: var(--sinamk-font-weight--md, 500);
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color var(--sinamk-duration--hover, 120ms)
+    var(--sinamk-ease--standard, ease);
 }
 
-@media (max-width: 40rem) {
-  .header {
-    flex-wrap: wrap;
-    gap: var(--sina-space--3);
-    padding-inline: var(--sina-space--4);
-  }
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
 
-  .controls {
-    margin-left: auto;
+.icon svg {
+  display: block;
+  width: var(--sinamk-icon--md, 16px);
+  height: var(--sinamk-icon--md, 16px);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--sinamk-label-pad--md, 6px);
+}
+
+.navBtnPrimary {
+  background: var(--sinamk-color-primary-fill, #353b31);
+  color: var(--sinamk-color-primary-fg, #ffffff);
+}
+
+.navBtnPrimary:hover {
+  background: var(--sinamk-color-primary-fill--hover, #444d3b);
+}
+
+.navBtnSecondary {
+  background: var(--sinamk-color-secondary-fill, #e9ece8);
+  color: var(--sinamk-color-text, #353b31);
+}
+
+.navBtnSecondary:hover {
+  background: var(--sinamk-color-secondary-fill--hover, #dfe4de);
+}
+
+/* At/below the frame's max-width the sheet is viewport-bound, so drop the side
+   gutter and let the frame reach the viewport edges (mirrors Hero.module.css). */
+@media (max-width: 96rem) {
+  .header {
+    padding-inline: 0;
+  }
+}
+
+/* Narrow: the control cluster wraps onto its own row under the logo (no drawer,
+   consistent with the marketing system). */
+@media (max-width: 40rem) {
+  .inner {
+    gap: var(--sina-space--2);
   }
 }

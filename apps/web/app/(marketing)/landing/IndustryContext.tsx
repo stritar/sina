@@ -5,7 +5,7 @@ import type { Industry } from "./copy";
 
 /**
  * The one piece of landing state: which industry the visitor is exploring.
- * Written by the hero's IndustrySwitcher, read by the coming-soon badge, the
+ * Written by the hero's segment selector, read by the coming-soon badge, the
  * scenario narrative, and the emulator. Server-rendered sections pass through
  * as `children`, so only the consumers are client components.
  */

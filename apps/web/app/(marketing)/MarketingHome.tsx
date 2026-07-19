@@ -1,4 +1,5 @@
 import "./wireframe.css";
+import styles from "./MarketingHome.module.css";
 import { IndustryProvider } from "./landing/IndustryContext";
 import { LandingNav } from "./landing/LandingNav";
 import { Hero } from "./landing/Hero";
@@ -23,16 +24,18 @@ export function MarketingHome({ locale }: { locale: string }) {
   return (
     <div className="sina-wireframe">
       <IndustryProvider>
-        <LandingNav locale={locale} />
-        <main id="main">
-          <Hero locale={locale} />
-          <EmulatorSection />
-          <HowItWorks />
-          <WhySina />
-          <Pitch />
-          <FinalCta locale={locale} />
-        </main>
-        <Footer locale={locale} />
+        <div className={styles.content}>
+          <LandingNav locale={locale} />
+          <main id="main">
+            <Hero />
+            <EmulatorSection />
+            <HowItWorks />
+            <WhySina />
+            <Pitch />
+            <FinalCta locale={locale} />
+          </main>
+          <Footer locale={locale} />
+        </div>
       </IndustryProvider>
     </div>
   );

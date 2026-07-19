@@ -1,0 +1,7 @@
+/* The landing content column. The glyph field is no longer a page-wide backdrop:
+   it is scoped to the hero's left box (see Hero.tsx / GlyphField.module.css). */
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}

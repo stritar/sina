@@ -1,110 +1,224 @@
+/*
+ * Hero — the framed Broadsheet sheet below the nav.
+ *
+ * `.hero` is a full-width, transparent shell (its horizontal padding is the page
+ * gutter). `.inner` is the bordered frame at the same width as the nav, split into
+ * a LEFT text rectangle that hosts the glyph field as an absolute backdrop (behind
+ * the title / subhead / controls) and an OPAQUE emulator column on the right
+ * (empty for now).
+ *
+ * FRAME CONTRACT: `--sina-space--6` gutter + `96rem` inner width (and the
+ * `max-width: 96rem` gutter-removal breakpoint below) MUST match
+ * LandingNav.module.css so the side borders line up into one continuous frame.
+ */
 .hero {
-  max-width: 72rem;
   width: 100%;
+  padding-inline: var(--sina-space--6);
+  background: transparent;
+}
+
+.inner {
+  box-sizing: border-box;
+  max-width: 96rem;
   margin-inline: auto;
-  padding: var(--sina-space--16) var(--sina-space--6) var(--sina-space--10);
+  /* Full-screen (mistral-style) sheet: both columns grow to this height via the
+     grid, so the empty emulator column stays a full-height opaque panel. */
+  min-height: 44rem;
+  min-height: min(88svh, 56rem);
+  display: grid;
+  grid-template-columns: minmax(0, 69fr) minmax(0, 31fr);
+  border-inline: 1px solid var(--sinamk-color-border, #dfe4de);
+  border-bottom: 1px solid var(--sinamk-color-border, #dfe4de);
+}
+
+/* The left rectangle: the glyph field is mounted here as an absolute backdrop, so
+   this box is its positioning context (position: relative). The field clips itself
+   (its own overflow: hidden), so this box must NOT set overflow: hidden or it would
+   clip the install command's package-manager dropdown. The text content sits above
+   the field via z-index. Divided from the emulator column by the internal border. */
+.textCol {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--sina-space--5);
+  /* Bottom-left anchor: content sits at the bottom of the tall sheet, the glyph
+     field shows through the empty space above. Ample left + bottom padding.
+     (Cross axis stays the default `stretch` so the controls/install block keep
+     their original widths; text is left-aligned regardless.) */
+  justify-content: flex-end;
+  gap: var(--sina-space--6);
+  padding: var(--sina-space--16) var(--sina-space--8) var(--sina-space--12)
+    var(--sina-space--12);
+  background: transparent;
+  border-right: 1px solid var(--sinamk-color-border, #dfe4de);
 }
 
-.eyebrow {
-  margin: 0;
-  font-family: var(--sina-font--mono);
-  font-size: var(--sina-text--xs);
-  text-transform: uppercase;
-  letter-spacing: var(--sina-tracking--wide);
-  color: var(--sina-color-text-muted);
-}
-
+/* Text content sits above the glyph-field canvas (z-index 0) in the text box. */
 .title {
+  position: relative;
+  z-index: 1;
   margin: 0;
-  max-width: 40rem;
-  font-size: var(--sina-text--5xl);
-  font-weight: var(--sina-font-weight--bold);
+  max-width: 45rem;
+  font-size: clamp(2.25rem, 5vw + 1rem, 4.5rem);
+  font-weight: var(--sina-font-weight--semibold);
   line-height: var(--sina-leading--tight);
   letter-spacing: var(--sina-tracking--tight);
-  color: var(--sina-color-text);
+  color: var(--sinamk-color-text, #353b31);
+  text-wrap: balance;
+}
+
+/* Terminal typewriter: the H1 is split into a visible typed prefix and a
+   transparent "rest" that always holds the remaining characters. Keeping the full
+   title in the DOM (rest is in the a11y tree, just color:transparent) means the
+   accessible name and textContent stay complete while only the prefix is painted,
+   and reserving the rest's space keeps the line wrap stable during typing. */
+.typed {
+  color: inherit;
+}
+
+.rest {
+  color: transparent;
+}
+
+/* Blinking caret while typing: a 2px border on the typed prefix (no extra inline
+   box, so the wrap doesn't shift). Only rendered in the "typing" phase, which the
+   Hero effect never enters under reduced motion. */
+.textCol[data-phase="typing"] .typed {
+  border-right: 2px solid var(--sinamk-color-text, #353b31);
+  animation: bs-caret-blink 1.06s step-end infinite;
+}
+
+@keyframes bs-caret-blink {
+  0%,
+  100% {
+    border-right-color: var(--sinamk-color-text, #353b31);
+  }
+  50% {
+    border-right-color: transparent;
+  }
+}
+
+/* Subhead + controls: held hidden while the title types, then fade up (staggered)
+   once the title finishes. Idle/absent phase (SSR, no-JS, reduced motion) leaves
+   them at their default full opacity. */
+.textCol[data-phase="typing"] .subhead,
+.textCol[data-phase="typing"] .controls {
+  opacity: 0;
+}
+
+.textCol[data-phase="revealed"] .subhead,
+.textCol[data-phase="revealed"] .controls {
+  animation: bs-fade-up var(--sina-duration--slow) var(--sina-ease--out) both;
+}
+
+.textCol[data-phase="revealed"] .controls {
+  animation-delay: var(--sina-duration--fast);
+}
+
+@keyframes bs-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Defensive: even though the effect is JS-gated on reduced motion, force the final
+   state if any phase attribute is present (mirrors the Spinner.module.css guard). */
+@media (prefers-reduced-motion: reduce) {
+  .textCol[data-phase] .subhead,
+  .textCol[data-phase] .controls {
+    opacity: 1;
+    animation: none;
+  }
+
+  .textCol[data-phase="typing"] .typed {
+    border-right: 0;
+    animation: none;
+  }
 }
 
 .subhead {
+  position: relative;
+  z-index: 1;
   margin: 0;
-  max-width: 44rem;
+  max-width: 42rem;
   font-size: var(--sina-text--lg);
   line-height: var(--sina-leading--relaxed);
-  color: var(--sina-color-text-muted);
+  color: var(--sinamk-color-text-muted, #6b7268);
 }
 
-.ctas {
+.controls {
+  position: relative;
+  z-index: 1;
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--sina-space--3);
+  flex-direction: column;
+  gap: var(--sina-space--2);
   margin-top: var(--sina-space--2);
 }
 
-.ctaPrimary,
-.ctaSecondary {
-  display: inline-flex;
-  align-items: center;
-  padding: var(--sina-space--2_5) var(--sina-space--5);
-  border-radius: var(--sina-radius--xs);
-  font-size: var(--sina-text--sm);
-  font-weight: var(--sina-font-weight--semibold);
-  text-decoration: none;
-}
-
-.ctaPrimary {
-  background: var(--sina-color-primary);
-  color: var(--sina-color-primary-fg);
-  border: 1px solid var(--sina-color-primary);
-}
-
-.ctaPrimary:hover {
-  background: var(--sina-color-primary--hover);
-}
-
-.ctaSecondary {
-  border: 1px solid var(--sina-color-border);
-  color: var(--sina-color-text);
-  background: var(--sina-color-surface);
-}
-
-.ctaSecondary:hover {
-  background: var(--sina-overlay--hover);
-}
-
-.ctaPrimary:focus-visible,
-.ctaSecondary:focus-visible {
-  outline: 2px solid var(--sina-color-focus-ring);
-  outline-offset: 2px;
-}
-
-.switcherRow {
+.industryRow {
   display: flex;
   align-items: center;
   gap: var(--sina-space--3);
-  margin-top: var(--sina-space--4);
   flex-wrap: wrap;
 }
 
-@media (max-width: 60rem) {
+/* Keep the segment selector from forcing horizontal overflow on very narrow
+   screens; the negative margin cancels the padding so layout is unchanged while
+   the pad preserves the segments' focus ring inside the scroll box. */
+.segments {
+  max-inline-size: 100%;
+  overflow-x: auto;
+  padding: 4px;
+  margin: -4px;
+}
+
+.installWrap {
+  width: 100%;
+  max-width: 34rem;
+}
+
+/* The emulator slot: opaque sheet, empty for now (the interactive demo stays in
+   EmulatorSection below). Stretches to the text column's height via the grid. */
+.emulatorCol {
+  background: var(--sinamk-color-bg, #f5f6f4);
+}
+
+/* At/below the frame's max-width the sheet is viewport-bound, so drop the side
+   gutter and let the frame reach the viewport edges (mirrors LandingNav.module.css). */
+@media (max-width: 96rem) {
   .hero {
-    padding-top: var(--sina-space--12);
+    padding-inline: 0;
+  }
+}
+
+/* Collapse to a single column: the empty emulator column and its divider go away. */
+@media (max-width: 64rem) {
+  .inner {
+    grid-template-columns: 1fr;
   }
 
-  .title {
-    font-size: var(--sina-text--4xl);
+  .textCol {
+    border-right: 0;
+  }
+
+  .emulatorCol {
+    display: none;
   }
 }
 
 @media (max-width: 40rem) {
-  .hero {
-    padding-inline: var(--sina-space--4);
-    padding-top: var(--sina-space--8);
+  /* Relax the full-screen height so a phone isn't mostly empty above the fold. */
+  .inner {
+    min-height: min(78svh, 40rem);
   }
 
-  .title {
-    font-size: var(--sina-text--3xl);
+  .textCol {
+    gap: var(--sina-space--5);
+    padding: var(--sina-space--12) var(--sina-space--5) var(--sina-space--10);
   }
 
   .subhead {

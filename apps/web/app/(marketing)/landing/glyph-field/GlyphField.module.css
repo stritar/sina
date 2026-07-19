@@ -1,0 +1,32 @@
+/*
+ * The glyph-field background. Absolutely positioned to fill its container (the
+ * hero's left text box) and painted behind that box's content (z-index 0; the
+ * text sits at z-index 1). It never intercepts input; its only motion is a slow
+ * horizontal drift driven on the GPU.
+ *
+ * The `background` is a safety net: if the canvas is hidden (no WebGL2 and no 2D,
+ * or forced-colors), the box still sits on the field's ground color rather than
+ * a bare surface. The opaque canvas covers it whenever the field actually renders.
+ */
+
+.root {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--sina-glyphfield-bg, #f5f6f4);
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Decorative texture has no place in a forced high-contrast palette. */
+@media (forced-colors: active) {
+  .root {
+    display: none;
+  }
+}
