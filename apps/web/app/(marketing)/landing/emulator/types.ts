@@ -50,13 +50,16 @@ export interface EmulatorScenario {
   intentJson: string;
 }
 
+/** The canned outcome a scenario plays back when no server is consulted. */
+export interface CannedResult {
+  verdict: Verdict;
+  mount: string | null;
+  violations: EmulatorViolation[];
+}
+
 /** A canned scenario bundles the verdict the "gate" will hand back. */
 export interface SimulatedScenario extends EmulatorScenario {
-  result: {
-    verdict: Verdict;
-    mount: string | null;
-    violations: EmulatorViolation[];
-  };
+  result: CannedResult;
 }
 
 export function prettyJson(value: unknown): string {

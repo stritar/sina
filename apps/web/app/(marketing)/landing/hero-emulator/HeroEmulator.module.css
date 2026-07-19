@@ -1,0 +1,637 @@
+/*
+ * Hero composer emulator. Two visual lanes inside one thread:
+ *  - conversation (user bubble, outcome): solid 1px borders, proportional type;
+ *  - under the hood (intent, gate): dashed borders, sunken tint, mono, xs type.
+ * All color comes from the wireframe --sina-* scope (the panel sits on the
+ * hero's opaque emulator column). The panel is absolutely positioned by its
+ * host column, so the thread scrolls internally and never grows the hero.
+ */
+
+.panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: transparent;
+}
+
+/* ── Header: industry, mode, pause/play ─────────────────────────────────── */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--3);
+  padding: var(--sina-space--3) var(--sina-space--4);
+  border-bottom: 1px solid var(--sina-color-border-subtle);
+}
+
+.headerText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--0_5);
+}
+
+.headerTitle {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--2);
+  font-size: var(--sina-text--sm);
+  font-weight: var(--sina-font-weight--semibold);
+  color: var(--sina-color-text);
+}
+
+.modeTag {
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  font-weight: var(--sina-font-weight--regular);
+  padding: 0 var(--sina-space--1_5);
+  border: 1px dashed var(--sina-color-text-muted);
+  border-radius: var(--sina-radius--xs);
+  color: var(--sina-color-text-muted);
+  white-space: nowrap;
+}
+
+.modeTag[data-live] {
+  border-style: solid;
+  border-color: var(--sina-color-text);
+  color: var(--sina-color-text);
+}
+
+.modeLine {
+  margin: 0;
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-subtle);
+}
+
+/* ── Story strip: the three-step loop indicator ─────────────────────────── */
+
+.story {
+  margin: 0;
+  padding: var(--sina-space--2) var(--sina-space--4);
+  border-bottom: 1px solid var(--sina-color-border-subtle);
+  list-style: none;
+  display: flex;
+  gap: var(--sina-space--3);
+  overflow-x: auto;
+}
+
+.storyStep {
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  white-space: nowrap;
+  color: var(--sina-color-text-subtle);
+}
+
+.storyStep[data-active] {
+  color: var(--sina-color-text);
+  font-weight: var(--sina-font-weight--semibold);
+}
+
+/* ── Thread ─────────────────────────────────────────────────────────────── */
+
+.thread {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Bottom-anchor the conversation like a chat: the spacer margin pushes short
+   content to the bottom without disturbing the scroll behavior when tall. */
+.threadInner {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--3);
+  padding: var(--sina-space--4);
+}
+
+.bubbleKicker {
+  display: block;
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  text-transform: uppercase;
+  letter-spacing: var(--sina-tracking--wide);
+  color: var(--sina-color-text-subtle);
+  margin-bottom: var(--sina-space--1);
+}
+
+.userBubble {
+  align-self: flex-end;
+  max-width: 92%;
+  padding: var(--sina-space--2) var(--sina-space--3);
+  border: 1px solid var(--sina-color-border);
+  border-radius: var(--sina-radius--sm);
+  background: var(--sina-color-surface);
+}
+
+.bubbleText {
+  margin: 0;
+  font-size: var(--sina-text--sm);
+  line-height: var(--sina-leading--normal);
+  color: var(--sina-color-text);
+}
+
+/* Under-the-hood lane: dashed, sunken, mono — the x-ray aesthetic. */
+.hoodCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--2);
+  padding: var(--sina-space--3);
+  border: 1px dashed var(--sina-color-border);
+  border-radius: var(--sina-radius--sm);
+  background: var(--sina-color-surface-sunken);
+}
+
+.gateCard {
+  border-width: 2px;
+}
+
+.hoodKicker {
+  margin: 0;
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  font-weight: var(--sina-font-weight--semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--sina-tracking--wide);
+  color: var(--sina-color-text-muted);
+}
+
+.intentLead {
+  margin: 0;
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-subtle);
+}
+
+.summary {
+  margin: 0;
+  font-size: var(--sina-text--sm);
+  line-height: var(--sina-leading--normal);
+  color: var(--sina-color-text-muted);
+}
+
+.intentVerb {
+  display: inline-block;
+  margin-right: var(--sina-space--2);
+  padding: 0 var(--sina-space--1_5);
+  border: 1px solid var(--sina-color-border);
+  border-radius: var(--sina-radius--xs);
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text);
+}
+
+.detailsSummary {
+  cursor: pointer;
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.detailsSummary:focus-visible {
+  outline: 2px solid var(--sina-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.json {
+  margin: var(--sina-space--2) 0 0;
+  padding: var(--sina-space--3);
+  border: 1px solid var(--sina-color-border-subtle);
+  border-radius: var(--sina-radius--xs);
+  background: var(--sina-color-surface);
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  line-height: var(--sina-leading--snug);
+  color: var(--sina-color-text-muted);
+  overflow-x: auto;
+  max-height: 9.5rem;
+  overflow-y: auto;
+}
+
+/* ── Gate decision ──────────────────────────────────────────────────────── */
+
+.gateBusy {
+  margin: 0;
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}
+
+.decision {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--2);
+}
+
+.gateVerdict {
+  margin: 0;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sina-space--1_5);
+  padding: var(--sina-space--0_5) var(--sina-space--2);
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--sm);
+  font-weight: var(--sina-font-weight--semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--sina-tracking--wide);
+  background: var(--sina-color-primary);
+  color: var(--sina-color-primary-fg);
+  border-radius: var(--sina-radius--xs);
+}
+
+.verdictGlyph {
+  flex: none;
+}
+
+.latency {
+  margin: 0;
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-subtle);
+}
+
+.noViolations {
+  margin: 0;
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}
+
+.violations {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--2);
+}
+
+.violation {
+  display: flex;
+  gap: var(--sina-space--2);
+  align-items: baseline;
+}
+
+.severity {
+  flex: none;
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  text-transform: uppercase;
+  letter-spacing: var(--sina-tracking--wide);
+  padding: 0 var(--sina-space--1_5);
+  border: 1px solid var(--sina-color-text);
+  border-radius: var(--sina-radius--xs);
+  color: var(--sina-color-text);
+}
+
+.severity[data-severity="reject"] {
+  background: var(--sina-color-primary);
+  color: var(--sina-color-primary-fg);
+  border-color: var(--sina-color-primary);
+}
+
+.severity[data-severity="flag"] {
+  border-style: dashed;
+  color: var(--sina-color-text-muted);
+  border-color: var(--sina-color-text-muted);
+}
+
+.violationText {
+  font-size: var(--sina-text--sm);
+  line-height: var(--sina-leading--normal);
+  color: var(--sina-color-text-muted);
+}
+
+.cite {
+  display: block;
+  margin-top: var(--sina-space--0_5);
+  font-family: var(--sina-font--mono);
+  font-style: normal;
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-subtle);
+}
+
+/* ── Outcome lane ───────────────────────────────────────────────────────── */
+
+.outcome {
+  align-self: stretch;
+  padding: var(--sina-space--3);
+  border: 1px solid var(--sina-color-border);
+  border-radius: var(--sina-radius--sm);
+  background: var(--sina-color-surface);
+}
+
+.verdictBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--3);
+}
+
+.verdictHeader {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--sina-space--2);
+  font-size: var(--sina-text--sm);
+  font-weight: var(--sina-font-weight--semibold);
+  color: var(--sina-color-text);
+}
+
+.mountName {
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  padding: 0 var(--sina-space--1_5);
+  border: 1px solid var(--sina-color-border);
+  border-radius: var(--sina-radius--xs);
+}
+
+.verdictNote {
+  margin: 0;
+  font-size: var(--sina-text--sm);
+  line-height: var(--sina-leading--normal);
+  color: var(--sina-color-text-muted);
+}
+
+.docsLink {
+  color: var(--sina-color-text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.docsLink:focus-visible {
+  outline: 2px solid var(--sina-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Mounted-component sketch: skeleton bars in a bordered card. */
+.sketch {
+  border: 1px solid var(--sina-color-border);
+  border-radius: var(--sina-radius--xs);
+  padding: var(--sina-space--3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--2);
+}
+
+.sketchBar {
+  display: block;
+  height: var(--sina-space--3);
+  border-radius: var(--sina-radius--xs);
+  background: var(--sina-color-neutral-fill);
+}
+
+.sketchBar[data-w="70"] {
+  width: 70%;
+}
+
+.sketchBar[data-w="50"] {
+  width: 50%;
+}
+
+/* The withheld manifest row: hatched, labeled, logged. */
+.sketchWithheld {
+  display: block;
+  padding: var(--sina-space--1) var(--sina-space--2);
+  border: 1px dashed var(--sina-color-text-muted);
+  border-radius: var(--sina-radius--xs);
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    var(--sina-color-border-subtle) 4px,
+    var(--sina-color-border-subtle) 8px
+  );
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-muted);
+}
+
+/* Forced-dialog sketch. */
+.dialogSketch {
+  border: 1px solid var(--sina-color-text);
+  border-radius: var(--sina-radius--xs);
+  box-shadow: var(--sina-shadow--sm);
+  overflow: hidden;
+}
+
+.dialogTitle {
+  margin: 0;
+  padding: var(--sina-space--2) var(--sina-space--3);
+  border-bottom: 1px solid var(--sina-color-border);
+  background: var(--sina-color-surface-sunken);
+}
+
+.dialogFields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--2);
+  padding: var(--sina-space--3);
+}
+
+.fieldLabel {
+  display: block;
+  width: 30%;
+  height: var(--sina-space--2);
+  border-radius: var(--sina-radius--xs);
+  background: var(--sina-color-neutral-fill);
+}
+
+.fieldLabel[data-w="40"] {
+  width: 40%;
+}
+
+.fieldBox {
+  display: block;
+  height: var(--sina-space--7);
+  border: 1px solid var(--sina-color-border);
+  border-radius: var(--sina-radius--xs);
+}
+
+.dialogActions {
+  display: flex;
+  gap: var(--sina-space--2);
+  padding: var(--sina-space--3);
+  border-top: 1px solid var(--sina-color-border-subtle);
+  justify-content: flex-end;
+}
+
+.approveBlock,
+.denyBlock {
+  font-size: var(--sina-text--xs);
+  font-weight: var(--sina-font-weight--medium);
+  padding: var(--sina-space--1) var(--sina-space--3);
+  border-radius: var(--sina-radius--xs);
+}
+
+.approveBlock {
+  background: var(--sina-color-primary);
+  color: var(--sina-color-primary-fg);
+}
+
+.denyBlock {
+  border: 1px solid var(--sina-color-border);
+  color: var(--sina-color-text-muted);
+}
+
+/* Blocked verdict: Alert + SIBLING badge row (the BlockedState pattern). */
+.blockedBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sina-space--2);
+}
+
+.retryRow {
+  display: flex;
+}
+
+/* ── Chips ──────────────────────────────────────────────────────────────── */
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sina-space--2);
+  padding: var(--sina-space--3) var(--sina-space--4);
+  border-top: 1px solid var(--sina-color-border-subtle);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--sina-space--2);
+  padding: var(--sina-space--1) var(--sina-space--2);
+  border: 1px solid var(--sina-color-border);
+  border-radius: var(--sina-radius--full);
+  background: var(--sina-color-surface);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.chip:hover {
+  background: var(--sina-overlay--hover);
+}
+
+.chip[data-selected] {
+  border-color: var(--sina-color-text);
+  box-shadow: inset 0 0 0 1px var(--sina-color-text);
+}
+
+.chipLabel {
+  font-size: var(--sina-text--xs);
+  font-weight: var(--sina-font-weight--medium);
+  color: var(--sina-color-text);
+}
+
+.chipHint {
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-subtle);
+}
+
+/* ── Composer ───────────────────────────────────────────────────────────── */
+
+.composer {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--2);
+  padding: var(--sina-space--3) var(--sina-space--4);
+  border-top: 1px solid var(--sina-color-border-subtle);
+}
+
+/* A fake input: playback theater, never a real text field (the gate accepts
+   only catalog scenario ids, so free text would be a lie). */
+.composerInput {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--sina-space--8);
+  display: flex;
+  align-items: center;
+  padding: var(--sina-space--1_5) var(--sina-space--3);
+  border: 1px solid var(--sina-color-border);
+  border-radius: var(--sina-radius--sm);
+  background: var(--sina-color-surface);
+  font-size: var(--sina-text--sm);
+  line-height: var(--sina-leading--snug);
+  color: var(--sina-color-text);
+  overflow: hidden;
+}
+
+.composerText {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.composerPlaceholder {
+  color: var(--sina-color-text-subtle);
+}
+
+.caret {
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  background: var(--sina-color-text);
+  animation: hero-caret-blink 1s steps(2, start) infinite;
+}
+
+@keyframes hero-caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    animation: none;
+  }
+}
+
+/* Replay / try-again: a quiet bordered text button in the wireframe idiom. */
+.textAction {
+  padding: var(--sina-space--1) var(--sina-space--3);
+  border: 1px solid var(--sina-color-border);
+  border-radius: var(--sina-radius--sm);
+  background: var(--sina-color-surface);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--sina-text--xs);
+  font-weight: var(--sina-font-weight--medium);
+  color: var(--sina-color-text);
+  white-space: nowrap;
+}
+
+.textAction:hover {
+  background: var(--sina-overlay--hover);
+}
+
+/* ── Narrow panel (stacked mobile hero) ─────────────────────────────────── */
+
+@media (max-width: 40rem) {
+  .chipHint {
+    display: none;
+  }
+
+  .threadInner,
+  .chipRow,
+  .composer,
+  .header {
+    padding-inline: var(--sina-space--3);
+  }
+
+  /* A full frame must fit the shorter stacked panel: keep the human summary,
+     drop the raw-JSON disclosure. */
+  .details {
+    display: none;
+  }
+}

@@ -16,8 +16,10 @@ beforeAll(() => {
   Element.prototype.setPointerCapture = vi.fn();
   Element.prototype.releasePointerCapture = vi.fn();
 
-  // Reduced motion ON so the emulator's artificial delays collapse to zero and
-  // runs resolve as fast as their (mocked) transport.
+  // Reduced motion ON: the hero emulator never starts its auto loop and renders
+  // the completed static frame instead, and user-initiated runs collapse their
+  // staged delays to zero, resolving as fast as their (mocked) transport.
+  // The auto-play timeline itself is covered by hero-emulator/autoplay.test.tsx.
   vi.stubGlobal(
     "matchMedia",
     (query: string) =>
@@ -105,7 +107,7 @@ const REJECT_TRACE = {
 };
 
 describe("landing page", () => {
-  it("renders the idle page with no axe violations", async () => {
+  it("renders the idle page with the hero emulator's static frame and no axe violations", async () => {
     const { container } = render(<MarketingHome locale="en" />);
     expect(screen.getByRole("heading", { level: 1 }).textContent).toContain(
       "governed design system",
@@ -113,11 +115,18 @@ describe("landing page", () => {
     // Fintech is the default: live tag present, no coming-soon badge.
     expect(screen.getByText("Live demo")).toBeDefined();
     expect(screen.queryByText("Coming soon")).toBeNull();
+    // The static frame is the completed default scenario: the $60k wire,
+    // escalated to the governed component, marked as a canned playback.
+    expect(screen.getByText("SecureWireDialog")).toBeDefined();
+    expect(screen.getByText("Escalated: approval required")).toBeDefined();
+    expect(screen.getByText(/\(simulated\)/)).toBeDefined();
     expect(await axe(container)).toHaveNoViolations();
   });
 
-  it("switching to healthcare shows the coming-soon tag and the simulated labels", async () => {
+  it("switching industries swaps the emulator content without touching the network", async () => {
     const user = userEvent.setup();
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
     render(<MarketingHome locale="en" />);
 
     await user.click(screen.getByRole("radio", { name: "Healthcare" }));
@@ -126,10 +135,16 @@ describe("landing page", () => {
     expect(screen.getByText("Simulated preview")).toBeDefined();
     expect(screen.getByText("Simulated preview. Runs in your browser.")).toBeDefined();
     expect(screen.queryByText("Live demo")).toBeNull();
+    // The static frame swapped to healthcare's default scenario (the SSN
+    // chart pull, blocked by the minimum-necessary rule). The citation shows
+    // twice on purpose: the gate strip cite + the blocked badge.
+    expect(screen.getAllByText("HIPAA 45 CFR 164.502(b)").length).toBeGreaterThan(0);
 
-    // Back to fintech: the tag goes away.
+    // Back to fintech: the tag goes away, the fintech frame returns.
     await user.click(screen.getByRole("radio", { name: "Fintech" }));
     expect(screen.queryByText("Coming soon")).toBeNull();
+    expect(screen.getByText("SecureWireDialog")).toBeDefined();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("runs the default $60k fintech scenario against the (mocked) real gate and escalates", async () => {
@@ -138,9 +153,13 @@ describe("landing page", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     const { container } = render(<MarketingHome locale="en" />);
-    await user.click(screen.getByRole("button", { name: /run the gate/i }));
+    await user.click(screen.getByRole("button", { name: "Run this request" }));
 
-    expect(await screen.findByText("Escalated: approval required")).toBeDefined();
+    // The LIVE violation wording (distinct from the canned paraphrase) proves
+    // the server's trace rendered, not the static frame.
+    expect(
+      await screen.findByText("Amounts above $50,000 require a second approver."),
+    ).toBeDefined();
     // Only the catalog id crosses the wire; the server re-derives the terms.
     expect(fetchMock).toHaveBeenCalledWith(
       "/api/gate",
@@ -149,9 +168,10 @@ describe("landing page", () => {
         body: JSON.stringify({ kind: "gate", scenarioId: "over-limit" }),
       }),
     );
-    // The gate stage lists the cited violations.
-    expect(screen.getByText("Amounts above $50,000 require a second approver.")).toBeDefined();
+    expect(screen.getByText("Escalated: approval required")).toBeDefined();
     expect(screen.getByText("SecureWireDialog")).toBeDefined();
+    // A live trace replaced the canned one: the simulated marker is gone.
+    expect(screen.queryByText(/\(simulated\)/)).toBeNull();
     expect(await axe(container)).toHaveNoViolations();
   });
 
@@ -160,8 +180,7 @@ describe("landing page", () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(gateView(PASS_TRACE)));
 
     const { container } = render(<MarketingHome locale="en" />);
-    await user.click(screen.getByRole("radio", { name: /show my last two transactions/i }));
-    await user.click(screen.getByRole("button", { name: /run the gate/i }));
+    await user.click(screen.getByRole("button", { name: /show my last two transactions/i }));
 
     expect(await screen.findByText("Mounted")).toBeDefined();
     expect(screen.getByText("TransactionList")).toBeDefined();
@@ -174,8 +193,7 @@ describe("landing page", () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(gateView(REJECT_TRACE)));
 
     const { container } = render(<MarketingHome locale="en" />);
-    await user.click(screen.getByRole("radio", { name: /sneak in a confirm button/i }));
-    await user.click(screen.getByRole("button", { name: /run the gate/i }));
+    await user.click(screen.getByRole("button", { name: /sneak in a confirm button/i }));
 
     expect(await screen.findByText("Blocked")).toBeDefined();
     const alert = container.querySelector('[data-sina-status="alert"]');
@@ -193,7 +211,7 @@ describe("landing page", () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
 
     const { container } = render(<MarketingHome locale="en" />);
-    await user.click(screen.getByRole("button", { name: /run the gate/i }));
+    await user.click(screen.getByRole("button", { name: "Run this request" }));
 
     // Appears twice on purpose: the visible Alert title + the SR status line.
     expect((await screen.findAllByText("Could not reach the gate")).length).toBeGreaterThan(0);
@@ -209,11 +227,10 @@ describe("landing page", () => {
 
     const { container } = render(<MarketingHome locale="en" />);
     await user.click(screen.getByRole("radio", { name: "Healthcare" }));
-    await user.click(screen.getByRole("radio", { name: /order 12 mg hydromorphone/i }));
-    await user.click(screen.getByRole("button", { name: /run the gate/i }));
+    await user.click(screen.getByRole("button", { name: /order 12 mg hydromorphone/i }));
 
-    expect(await screen.findByText("Escalated: approval required")).toBeDefined();
-    expect(screen.getByText("CoSignDialog")).toBeDefined();
+    expect(await screen.findByText("CoSignDialog")).toBeDefined();
+    expect(screen.getByText("Escalated: approval required")).toBeDefined();
     expect(screen.getByText(/\(simulated\)/)).toBeDefined();
     expect(fetchMock).not.toHaveBeenCalled();
     expect(await axe(container)).toHaveNoViolations();
@@ -221,14 +238,17 @@ describe("landing page", () => {
 
   it("plays the canned defense two-person-control escalation", async () => {
     const user = userEvent.setup();
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
     render(<MarketingHome locale="en" />);
 
     await user.click(screen.getByRole("radio", { name: "Defense" }));
     expect(screen.getByText("Coming soon")).toBeDefined();
-    await user.click(screen.getByRole("button", { name: /run the gate/i }));
+    await user.click(screen.getByRole("button", { name: "Run this request" }));
 
-    expect(await screen.findByText("Escalated: approval required")).toBeDefined();
-    expect(screen.getByText("DualAuthDialog")).toBeDefined();
+    expect(await screen.findByText("DualAuthDialog")).toBeDefined();
+    expect(screen.getByText("Escalated: approval required")).toBeDefined();
     expect(screen.getByText(/two person control/)).toBeDefined();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });

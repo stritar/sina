@@ -3,7 +3,6 @@ import styles from "./MarketingHome.module.css";
 import { IndustryProvider } from "./landing/IndustryContext";
 import { LandingNav } from "./landing/LandingNav";
 import { Hero } from "./landing/Hero";
-import { EmulatorSection } from "./landing/EmulatorSection";
 import { HowItWorks } from "./landing/HowItWorks";
 import { WhySina } from "./landing/WhySina";
 import { Pitch } from "./landing/Pitch";
@@ -27,8 +26,7 @@ export function MarketingHome({ locale }: { locale: string }) {
         <div className={styles.content}>
           <LandingNav locale={locale} />
           <main id="main">
-            <Hero />
-            <EmulatorSection />
+            <Hero locale={locale} />
             <HowItWorks />
             <WhySina />
             <Pitch />

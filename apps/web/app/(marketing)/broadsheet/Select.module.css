@@ -9,7 +9,9 @@
   --_border-invalid: var(--sinamk-color-field-border--invalid, #b42318);
   --_placeholder: var(--sinamk-color-field-placeholder, #8a9280);
   --_popover-bg: var(--sinamk-color-popover-surface, #ffffff);
-  --_option-active: var(--sinamk-color-secondary-fill--hover, #dfe4de);
+  /* Shared list-option highlight — backs BOTH hover/active and the selected row.
+     The sage hover fill at 50% (softer than the solid button-hover surface). */
+  --_option-active: color-mix(in srgb, var(--sinamk-color-secondary-fill--hover, #dfe4de) 50%, transparent);
   /* The shadow rgba lives only in broadsheet.css; consume via a keyword-fallback
      alias so the foundations color guard never sees a raw rgba() here. */
   --_shadow: var(--sinamk-shadow-popover, none);
@@ -231,6 +233,7 @@
 }
 
 .option[data-selected] {
+  background: var(--_option-active);
   font-weight: var(--_fw);
 }
 

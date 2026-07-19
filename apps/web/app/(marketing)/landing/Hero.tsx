@@ -1,12 +1,15 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { Coin, Asclepius, ShieldChevron } from "@phosphor-icons/react/dist/ssr";
+import { toLocalePath } from "@/lib/i18n/paths";
 import { InstallCommand, SegmentSelector } from "../broadsheet";
 import { INDUSTRIES, hero, type Industry } from "./copy";
 import { useIndustry } from "./IndustryContext";
 import { ComingSoonBadge } from "./ComingSoonBadge";
 import { GlyphField } from "./glyph-field/GlyphField";
+import { HeroEmulator } from "./hero-emulator/HeroEmulator";
 import styles from "./Hero.module.css";
 import "../broadsheet/broadsheet.css";
 
@@ -31,12 +34,12 @@ const PACKAGES = [
 /**
  * The framed hero: a left text rectangle (title, subhead, the industry segment
  * selector, and the install command) that lets the glyph field show through, and
- * an opaque emulator column on the right (empty for now). The whole section is a
+ * the composer emulator on the opaque right column. The whole section is a
  * `.broadsheet` scope so the `--sinamk-*` palette resolves for the sheet and the
  * reused Broadsheet controls. The segment selector writes `IndustryContext`, the
- * same state the emulator section below reads.
+ * same state the emulator reads.
  */
-export function Hero() {
+export function Hero({ locale }: { locale: string }) {
   const { industry, setIndustry } = useIndustry();
 
   const items = ORDER.map((id) => ({
@@ -77,8 +80,26 @@ export function Hero() {
               />
             </div>
           </div>
+          <div className={styles.ctaRow}>
+            <Link
+              className={styles.ctaButton}
+              href={toLocalePath("/docs", locale)}
+              data-broadsheet=""
+            >
+              <span className={styles.ctaLabel}>{hero.ctaDocs}</span>
+            </Link>
+            <a
+              className={`${styles.ctaButton} ${styles.ctaButtonSecondary}`}
+              href="#how"
+              data-broadsheet=""
+            >
+              <span className={styles.ctaLabel}>{hero.ctaHowItWorks}</span>
+            </a>
+          </div>
         </div>
-        <div className={styles.emulatorCol} aria-hidden="true" />
+        <div className={styles.emulatorCol}>
+          <HeroEmulator className={styles.emulatorEnter} />
+        </div>
       </div>
     </section>
   );

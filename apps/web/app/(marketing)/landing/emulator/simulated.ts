@@ -6,7 +6,13 @@
  * real, but nothing here enforces them; they illustrate where SINA would come in.
  */
 
-import { prettyJson, type EmulatorTrace, type SimulatedScenario } from "./types";
+import {
+  prettyJson,
+  type CannedResult,
+  type EmulatorScenario,
+  type EmulatorTrace,
+  type SimulatedScenario,
+} from "./types";
 
 export const HEALTHCARE_SCENARIOS: SimulatedScenario[] = [
   {
@@ -188,6 +194,26 @@ export const DEFENSE_DEFAULT = "munitions-transfer";
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Build a canned trace synchronously with a FIXED latency: the hero emulator's
+ * server-rendered static frame and auto-play loop must be deterministic (no
+ * Math.random(), or the client would hydrate a different frame than the server
+ * sent). Canned traces are always stamped `simulated: true`; only a live
+ * /api/gate round-trip produces `simulated: false`.
+ */
+export const CANNED_LATENCY_MS = 12;
+
+export function cannedTrace(scenario: EmulatorScenario, result: CannedResult): EmulatorTrace {
+  return {
+    intent: scenario.intent,
+    verdict: result.verdict,
+    mount: result.mount,
+    violations: result.violations,
+    latencyMs: CANNED_LATENCY_MS,
+    simulated: true,
+  };
 }
 
 /**

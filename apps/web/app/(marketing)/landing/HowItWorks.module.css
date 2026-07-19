@@ -1,5 +1,8 @@
 .section {
   border-top: 1px solid var(--sina-color-border-subtle);
+  /* Anchor target: keep the heading clear of the viewport edge on #how jumps
+     from the hero's "How it works" button. */
+  scroll-margin-top: var(--sina-space--8);
 }
 
 .inner {

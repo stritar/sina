@@ -22,8 +22,8 @@ export const hero = {
   title: "The governed design system for AI agents",
   subhead:
     "Your AI proposes what the interface should do. SINA checks it against your product, compliance, and accessibility rules before anything reaches the user.",
-  ctaDemo: "Try the demo",
   ctaDocs: "Read the docs",
+  ctaHowItWorks: "How it works",
   switcherLabel: "Pick an industry",
   comingSoon: "Coming soon",
 } as const;
@@ -32,9 +32,7 @@ export interface IndustryDefinition {
   name: string;
   /** Live = runs the real server-side gate; otherwise a canned browser simulation. */
   live: boolean;
-  /** The persona scenario: where SINA comes in for this industry. */
-  narrative: string;
-  /** Short mode tag shown beside the scenario and on the gate stage. */
+  /** Short mode tag shown on the emulator header and gate stage. */
   modeTag: string;
 }
 
@@ -42,33 +40,23 @@ export const INDUSTRIES: Record<Industry, IndustryDefinition> = {
   fintech: {
     name: "Fintech",
     live: true,
-    narrative:
-      'An assistant inside a business banking app takes requests like "wire sixty thousand dollars to our supplier". The model drafts the interface, but bank policy decides what ships. Every verdict below comes from the same real gate endpoint the docs run.',
     modeTag: "Live demo",
   },
   healthcare: {
     name: "Healthcare",
     live: false,
-    narrative:
-      "A clinical assistant helps a nurse pull up charts and order medication. Privacy law says show the minimum necessary, and high risk orders need a pharmacist to co-sign. This preview is simulated in your browser: no healthcare constitution ships yet.",
     modeTag: "Simulated preview",
   },
   defense: {
     name: "Defense",
     live: false,
-    narrative:
-      "A logistics assistant answers questions about shipments and transfer orders. Some rows are export controlled, and moving munitions takes two people, never one. This preview is simulated in your browser: no defense constitution ships yet.",
     modeTag: "Simulated preview",
   },
 };
 
 export const emulator = {
   heading: "Watch the gate decide",
-  sub: "Pick a request, run the gate, and see what actually reaches the user.",
-  scenarioKicker: "The scenario",
   pickLabel: "Pick a request",
-  run: "Run the gate",
-  running: "Running",
   retry: "Try again",
   stages: {
     intent: "1. Agent emits intent",
@@ -80,9 +68,7 @@ export const emulator = {
   showJson: "Show the full intent JSON",
   gateLive: "Runs on the real gate endpoint.",
   gateSimulated: "Simulated preview. Runs in your browser.",
-  gateIdle: "The constitution waits on the server. Nothing renders until it decides.",
   gateChecking: "Checking with the constitution",
-  gateEmitting: "Streaming intent",
   latency: "gate latency",
   latencySimulated: "simulated",
   gateVerdict: {
@@ -95,7 +81,6 @@ export const emulator = {
     escalate: "escalates",
     reject: "blocked",
   },
-  verdictIdle: "Run the gate to see what mounts.",
   verdictPass: "Mounted",
   verdictEscalate: "Escalated: approval required",
   verdictReject: "Blocked",
@@ -112,6 +97,21 @@ export const emulator = {
   withheldRow: "Row withheld. Logged.",
   approveSketch: "Approve",
   denySketch: "Deny",
+} as const;
+
+/**
+ * Strings specific to the hero composer emulator (the auto-playing demo in the
+ * hero's right column). Shared demo strings stay in `emulator` above.
+ */
+export const heroEmulator = {
+  underHood: "Under the hood",
+  userSees: "What the user sees",
+  send: "Run this request",
+  replay: "Replay this request",
+  pause: "Pause the demo",
+  play: "Play the demo",
+  logged: "logged",
+  composerPlaceholder: "Pick a request to run it here.",
 } as const;
 
 export const how = {

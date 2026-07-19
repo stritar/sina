@@ -23,8 +23,8 @@
   margin-inline: auto;
   /* Full-screen (mistral-style) sheet: both columns grow to this height via the
      grid, so the empty emulator column stays a full-height opaque panel. */
-  min-height: 35.2rem;
-  min-height: min(70.4svh, 44.8rem);
+  min-height: 38.72rem;
+  min-height: min(77.44svh, 49.28rem);
   display: grid;
   grid-template-columns: minmax(0, 69fr) minmax(0, 31fr);
   border-inline: 1px solid var(--sina-color-border-subtle, #e4e4e4);
@@ -99,7 +99,8 @@
    Safari. No-JS still animates; reduced motion is handled below. */
 .textCol .title,
 .textCol .subhead,
-.textCol .controls {
+.textCol .controls,
+.textCol .ctaRow {
   /* Longer than the token scale tops out at (--sina-duration--slow = 320ms), on
      purpose: a deliberate, unhurried rise for the marketing entrance. The delay
      is the hold before the rise, and the base of the top-to-bottom stagger. */
@@ -119,6 +120,10 @@
   animation-delay: calc(500ms + 2 * var(--sina-duration--fast));
 }
 
+.textCol .ctaRow {
+  animation-delay: calc(500ms + 3 * var(--sina-duration--fast));
+}
+
 @keyframes bs-rise-in {
   from {
     opacity: 0;
@@ -134,7 +139,8 @@
 @media (prefers-reduced-motion: reduce) {
   .textCol .title,
   .textCol .subhead,
-  .textCol .controls {
+  .textCol .controls,
+  .textCol .ctaRow {
     animation: none;
   }
 }
@@ -193,10 +199,82 @@
   );
 }
 
-/* The emulator slot: opaque sheet, empty for now (the interactive demo stays in
-   EmulatorSection below). Stretches to the text column's height via the grid. */
+/* CTA row: the primary docs link and the secondary "How it works" anchor sit
+   side by side (mirrors the SINA-marketing hero, node 177:1269). The row owns the
+   left anchor + z-index; both buttons rise in together as one staged item. */
+.ctaRow {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--2);
+  flex-wrap: wrap;
+}
+
+/* CTA: a Broadsheet `lg` primary button reproduced as an anchor (a link must not
+   nest a <button>, so we don't use the ButtonPrimary component — mirrors the
+   LandingNav docs link). The label carries its own inline pad per the label-
+   anatomy convention. Sits above the glyph field like the other content, and
+   `data-broadsheet` earns the global blue focus outline, so no `:focus-visible`
+   is authored here. The shared base for both buttons; the secondary swaps only
+   its fill/text below (same pattern as LandingNav's .navBtnSecondary). */
+.ctaButton {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  height: var(--sinamk-control-height--lg, 40px);
+  padding-inline: var(--sinamk-control-pad--lg, 12px);
+  border-radius: var(--sinamk-radius--md, 6px);
+  font-size: var(--sinamk-text--lg, 15px);
+  font-weight: var(--sinamk-font-weight--lg, 600);
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--sinamk-color-primary-fg, #ffffff);
+  background: var(--sinamk-color-primary-fill, #353b31);
+  transition: background-color var(--sinamk-duration--hover, 120ms)
+    var(--sinamk-ease--standard, ease);
+}
+
+.ctaButton:hover {
+  background: var(--sinamk-color-primary-fill--hover, #444d3b);
+}
+
+.ctaButtonSecondary {
+  color: var(--sinamk-color-text, #353b31);
+  background: var(--sinamk-color-secondary-fill, #e9ece8);
+}
+
+.ctaButtonSecondary:hover {
+  background: var(--sinamk-color-secondary-fill--hover, #dfe4de);
+}
+
+.ctaLabel {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--sinamk-label-pad--lg, 8px);
+}
+
+/* The emulator slot: an opaque sheet hosting the composer emulator. It is the
+   positioning context for the ABSOLUTE panel inside, so the column's height is
+   entirely grid-driven (the thread scrolls internally and can never grow the
+   hero). Stretches to the text column's height via the grid. */
 .emulatorCol {
+  position: relative;
   background: var(--sina-color-bg, #f5f6f4);
+}
+
+/* The emulator joins the entrance stagger as the last step (after .ctaRow). */
+.emulatorEnter {
+  animation: bs-rise-in 900ms var(--sina-ease--out) both;
+  animation-delay: calc(500ms + 4 * var(--sina-duration--fast));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emulatorEnter {
+    animation: none;
+  }
 }
 
 /* At/below the frame's max-width the sheet is viewport-bound, so drop the side
@@ -208,7 +286,7 @@
 }
 
 /* Collapse to a single column and STACK: the emulator drops below the text as a
-   full-width placeholder panel (it stays visible — a real emulator lands here later). */
+   full-width, device-sized panel. */
 @media (max-width: 64rem) {
   .inner {
     grid-template-columns: 1fr;
@@ -223,8 +301,9 @@
   }
 
   .emulatorCol {
-    /* Tall placeholder so it reserves real device-sized space beneath the text. */
-    min-height: min(60svh, 32rem);
+    /* A DEFINITE height (not min-height): the panel inside is absolute, so the
+       stacked column must size itself, device-sized beneath the text. */
+    height: min(60svh, 32rem);
   }
 }
 

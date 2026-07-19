@@ -22,7 +22,7 @@ if (amount > usd(50_000)) {
  */
 export function HowItWorks() {
   return (
-    <section className={styles.section} aria-labelledby="how-heading">
+    <section id="how" className={styles.section} aria-labelledby="how-heading">
       <div className={styles.inner}>
         <h2 id="how-heading" className={styles.heading}>
           {how.heading}

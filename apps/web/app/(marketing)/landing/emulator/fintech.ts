@@ -6,7 +6,7 @@
  * never goes over the wire.
  */
 
-import { prettyJson, type EmulatorScenario } from "./types";
+import { prettyJson, type CannedResult, type EmulatorScenario } from "./types";
 
 const sepaAccount = {
   scheme: "sepa",
@@ -111,3 +111,59 @@ export const FINTECH_SCENARIOS: EmulatorScenario[] = [
 
 /** Preselect the money shot: the $60k wire that escalates on first Run. */
 export const FINTECH_DEFAULT = "over-limit";
+
+/**
+ * Display-only canned outcomes for the hero emulator's auto-play and static
+ * frames, mirroring what the REAL gate returns for each catalog id (same codes,
+ * standards, severities, and mounts as packages/fintech's wire-transfer rule;
+ * see wire-transfer.test.ts). The message wording is a paraphrase because this
+ * file is reader-facing marketing copy. A user-initiated run still POSTs
+ * /api/gate and replaces these with the server's live decision.
+ */
+export const FINTECH_CANNED: Record<string, CannedResult> = {
+  "over-limit": {
+    verdict: "escalate",
+    mount: "SecureWireDialog",
+    violations: [
+      {
+        code: "SAR_REVIEW",
+        severity: "flag",
+        message: "Amount at or above $5,000. Flagged for suspicious activity review.",
+        standard: "31 CFR Chapter X (FinCEN SAR)",
+      },
+      {
+        code: "CTR_REPORTABLE",
+        severity: "flag",
+        message: "Currency transaction above $10,000. A Currency Transaction Report applies.",
+        standard: "31 CFR 1010.311",
+      },
+      {
+        code: "AMOUNT_REQUIRES_APPROVAL",
+        severity: "escalate",
+        message: "A wire above $50,000 requires secondary managerial approval.",
+        standard: "SINA dual control: secondary approval",
+      },
+    ],
+  },
+  small: {
+    verdict: "pass",
+    mount: null,
+    violations: [],
+  },
+  "list-transactions": {
+    verdict: "pass",
+    mount: "TransactionList",
+    violations: [],
+  },
+  "fabricated-confirm": {
+    verdict: "reject",
+    mount: null,
+    violations: [
+      {
+        code: "SCHEMA_INVALID",
+        severity: "reject",
+        message: "Unrecognized key: confirmButton. The schema is closed.",
+      },
+    ],
+  },
+};

@@ -94,10 +94,7 @@ export function InstallCommand({
           trackCursor(event);
         }}
         onMouseMove={trackCursor}
-        onMouseLeave={() => {
-          setOpen(false);
-          setCoords(null);
-        }}
+        onMouseLeave={() => setOpen(false)}
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
         onKeyDown={(event) => {
