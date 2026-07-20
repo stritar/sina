@@ -142,13 +142,14 @@
   color: var(--sina-color-text);
 }
 
-/* Figma: 12px/1.6 centred, the two spans 8px apart, the line flush with the
-   bottom of the cell (y=346), which is 16px above the row's rule. Full text
-   colour per the node, not the muted grey the old footer bar used. */
+/* Figma 251:2599: 12px/1.6 centred, the two spans 8px apart, in the subtle text
+   role (not full text colour). The cell bottom is the frame's padding edge, 32px
+   above the row's rule, so the line drops 16px past it to sit 16px above the
+   rule where Figma puts it (y=346). */
 .meta {
   position: absolute;
   inset-inline: 0;
-  bottom: 0;
+  bottom: calc(var(--sina-space--4) * -1);
   margin: 0;
   display: flex;
   justify-content: center;
@@ -157,7 +158,7 @@
   line-height: 1.6;
   text-align: center;
   white-space: nowrap;
-  color: var(--sina-color-text);
+  color: var(--sina-color-text-subtle);
 }
 
 /* Underlined at rest, matching Figma; hover promotes it to the marketing text
