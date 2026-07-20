@@ -107,6 +107,10 @@ function oklchToHex({ L, C, H }) {
  * ground should read as neutral: the tint belongs in surfaces, borders and
  * accents, not in the ink. Applied only to the injected wireframe ramp — the
  * broadsheet anchors are hand-authored and already gamut-safe.
+ *
+ * Applied only to a role that declares a chroma BUDGET. A role whose budget is
+ * null is already tinted at its anchor and must not be re-derived at all; see
+ * the note in `push()`.
  */
 function taper(hex, chroma) {
   const { L } = hexToOklch(hex);
@@ -186,6 +190,13 @@ const BROADSHEET_SAGE = [
  * absorb. Budgets mirror the sage family they sit beside: surfaces are a whisper
  * (sage's secondary-fill is C=0.006), text carries the most (text-muted, 0.017).
  *
+ * A `null` budget means the role is NOT achromatic: its anchor already carries
+ * the sage chroma, so it hue-rotates and keeps it, exactly as a broadsheet anchor
+ * does. `--sina-color-bg` is the one such role — it is authored byte-identical to
+ * `--sinamk-color-bg` and `--sina-glyphfield-bg`, and injecting a budget over the
+ * top is what made the page ground drift away from the glyph field and the chat
+ * thread sitting on it. See the note in `push()`.
+ *
  * Absent from this map, and therefore untinted on purpose: the whole `danger*`
  * ramp, `focus-ring`, `surface-secure` and `shadow-color`. Those are the
  * governance-locked roles (`governanceLockedColorTokens` in
@@ -193,7 +204,7 @@ const BROADSHEET_SAGE = [
  * meaning because the visitor picked a different industry.
  */
 const WIREFRAME_CHROMA = {
-  "--sina-color-bg": 0.006,
+  "--sina-color-bg": null,
   "--sina-color-surface": 0.004,
   "--sina-color-surface-raised": 0.004,
   "--sina-color-surface-sunken": 0.006,
@@ -245,6 +256,31 @@ const anchors = {
 };
 
 /**
+ * Broadsheet anchors the landing re-points at the wireframe ground before tinting.
+ *
+ * The two grounds agree in light (both authored `#f5f6f4`), so the chat thread sits
+ * flush with the page. They do NOT agree in dark: broadsheet is a soft sage-black
+ * `#131512` while the landing runs the deliberately near-black inverted wireframe
+ * (`#0b0c0b`, see the header note in wireframe.css). The thread then read as a
+ * lifted panel in dark and a flush one in light, from one unchanged component.
+ *
+ * Substituting the anchor HERE rather than editing broadsheet.css is what keeps
+ * this landing-only: every rule in this sheet is scoped to
+ * `body:has(.sina-wireframe)`, so `/showcase` and the rest of the marketing layer
+ * keep the real `#131512` foundation. Changing that file would be a foundation
+ * edit, which the broadsheet-foundations rule gates behind design sign-off.
+ *
+ * Ground only. `--sinamk-color-surface` and the field/popover surfaces are left
+ * alone, so they simply read as a larger lift off the darker ground.
+ *
+ * The value is READ from the wireframe anchor rather than restated, so retuning
+ * the dark page ground in wireframe.css carries the thread with it.
+ */
+const LANDING_GROUND_OVERRIDE = {
+  dark: { "--sinamk-color-bg": anchors.wireframe.dark.get("--sina-color-bg") },
+};
+
+/**
  * Every derived declaration for one industry + theme, as `[name, hex]`.
  *
  * Fintech is the reference: it is generated first, and healthcare/defense are
@@ -258,14 +294,26 @@ export function derive(industry, theme) {
   const out = [];
   const push = (name, hex, chroma) => {
     const targetY = reference ? relLuminance(reference.get(name)) : null;
-    // An injected token states its chroma outright; a rotated anchor keeps its
-    // own, so scale that one by reading it back off the source hex.
-    const C = chroma ? taper(hex, chroma) * boost : hexToOklch(hex).C * boost;
+    // A role that states a chroma budget absorbs it (tapered); one whose budget
+    // is null keeps whatever chroma its own anchor already carries, which is the
+    // same path every broadsheet anchor takes.
+    //
+    // That distinction is load-bearing for the page ground. Injecting a budget
+    // into a hex that is ALREADY tinted re-derives it to a different colour than
+    // an identical hex elsewhere in the sheet, and the landing has exactly that:
+    // `--sina-color-bg` is authored `#f5f6f4` / `#0b0c0b`, byte-identical to
+    // `--sinamk-color-bg` (light) and `--sina-glyphfield-bg` (both themes). The
+    // budget broke the tie in both directions — taper() at L~0.96 cut the light
+    // ground to a fifth of the broadsheet chroma, and at L~0.1 it OVER-tinted the
+    // dark ground past the glyph field. Either way the hero showed a seam where
+    // the glyph field and the chat thread met the page. Deriving the ground from
+    // its own anchor keeps the three in lockstep by construction.
+    const C = (chroma ? taper(hex, chroma) : hexToOklch(hex).C) * boost;
     out.push([name, tint(hex, chroma ? (hue ?? SAGE_HUE) : hue, C, targetY)]);
   };
 
   for (const name of BROADSHEET_SAGE) {
-    const hex = anchors.broadsheet[theme].get(name);
+    const hex = LANDING_GROUND_OVERRIDE[theme]?.[name] ?? anchors.broadsheet[theme].get(name);
     if (hex) push(name, hex);
   }
   for (const [name, chroma] of Object.entries(WIREFRAME_CHROMA)) {

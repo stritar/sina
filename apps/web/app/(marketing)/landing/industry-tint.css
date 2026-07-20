@@ -44,7 +44,7 @@ html:not([data-theme="dark"])[data-industry="fintech"] body:has(.sina-wireframe)
   --sinamk-color-field-placeholder: #89937d;
   --sinamk-color-code-bg: #eef1eb;
   --sinamk-color-popover-surface: #ffffff;
-  --sina-color-bg: #f5f6f5;
+  --sina-color-bg: #f5f6f4;
   --sina-color-surface: #ffffff;
   --sina-color-surface-raised: #ffffff;
   --sina-color-surface-sunken: #f4f4f3;
@@ -92,7 +92,7 @@ html:not([data-theme="dark"])[data-industry="healthcare"] body:has(.sina-wirefra
   --sinamk-color-field-placeholder: #8191a4;
   --sinamk-color-code-bg: #ecf0f6;
   --sinamk-color-popover-surface: #ffffff;
-  --sina-color-bg: #f5f5f6;
+  --sina-color-bg: #f4f6f8;
   --sina-color-surface: #ffffff;
   --sina-color-surface-raised: #ffffff;
   --sina-color-surface-sunken: #f4f4f5;
@@ -140,7 +140,7 @@ html:not([data-theme="dark"])[data-industry="defense"] body:has(.sina-wireframe)
   --sinamk-color-field-placeholder: #9f8d7b;
   --sinamk-color-code-bg: #f5efea;
   --sinamk-color-popover-surface: #ffffff;
-  --sina-color-bg: #f6f6f5;
+  --sina-color-bg: #f8f6f4;
   --sina-color-surface: #ffffff;
   --sina-color-surface-raised: #ffffff;
   --sina-color-surface-sunken: #f4f4f3;
@@ -178,7 +178,7 @@ html[data-theme="dark"][data-industry="fintech"] body:has(.sina-wireframe) .broa
   --sinamk-color-text-muted: #a3a99d;
   --sinamk-color-text-subtle: #8b917f;
   --sinamk-color-text--disabled: #767c71;
-  --sinamk-color-bg: #131512;
+  --sinamk-color-bg: #0b0c0b;
   --sinamk-color-surface: #1c1f1a;
   --sinamk-color-border: #333a31;
   --sinamk-color-field-bg: #1c1f1a;
@@ -188,7 +188,7 @@ html[data-theme="dark"][data-industry="fintech"] body:has(.sina-wireframe) .broa
   --sinamk-color-field-placeholder: #7c8377;
   --sinamk-color-code-bg: #141712;
   --sinamk-color-popover-surface: #22261f;
-  --sina-color-bg: #0b0c0a;
+  --sina-color-bg: #0b0c0b;
   --sina-color-surface: #151615;
   --sina-color-surface-raised: #1e1f1e;
   --sina-color-surface-sunken: #090a09;
@@ -226,7 +226,7 @@ html[data-theme="dark"][data-industry="healthcare"] body:has(.sina-wireframe) .b
   --sinamk-color-text-muted: #9fa8b2;
   --sinamk-color-text-subtle: #83909f;
   --sinamk-color-text--disabled: #737b85;
-  --sinamk-color-bg: #121417;
+  --sinamk-color-bg: #0b0c0d;
   --sinamk-color-surface: #1a1f23;
   --sinamk-color-border: #313841;
   --sinamk-color-field-bg: #1a1f23;
@@ -236,7 +236,7 @@ html[data-theme="dark"][data-industry="healthcare"] body:has(.sina-wireframe) .b
   --sinamk-color-field-placeholder: #78828c;
   --sinamk-color-code-bg: #12171b;
   --sinamk-color-popover-surface: #20252c;
-  --sina-color-bg: #0a0b0d;
+  --sina-color-bg: #0b0c0d;
   --sina-color-surface: #141617;
   --sina-color-surface-raised: #1d1f20;
   --sina-color-surface-sunken: #080a0b;
@@ -274,7 +274,7 @@ html[data-theme="dark"][data-industry="defense"] body:has(.sina-wireframe) .broa
   --sinamk-color-text-muted: #b0a59c;
   --sinamk-color-text-subtle: #9c8c7f;
   --sinamk-color-text--disabled: #827970;
-  --sinamk-color-bg: #171411;
+  --sinamk-color-bg: #0d0b0b;
   --sinamk-color-surface: #221e19;
   --sinamk-color-border: #3f372f;
   --sinamk-color-field-bg: #221e19;
@@ -284,7 +284,7 @@ html[data-theme="dark"][data-industry="defense"] body:has(.sina-wireframe) .broa
   --sinamk-color-field-placeholder: #897f75;
   --sinamk-color-code-bg: #1a1611;
   --sinamk-color-popover-surface: #2a231e;
-  --sina-color-bg: #0d0c0a;
+  --sina-color-bg: #0d0b0b;
   --sina-color-surface: #171614;
   --sina-color-surface-raised: #201e1d;
   --sina-color-surface-sunken: #0b0a08;
