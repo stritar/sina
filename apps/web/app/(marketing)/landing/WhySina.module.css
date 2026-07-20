@@ -1,74 +1,235 @@
-.section {
-  border-top: 1px solid var(--sina-color-border-subtle);
-}
-
-.inner {
-  max-width: 72rem;
+/*
+ * WhySina — the ruled wireframe grid (Figma node 237:2412).
+ *
+ * The same language as HowItWorks directly above it: the section is banded into
+ * two ROWS by full-bleed horizontal hairlines (heading / cards). Each `.row` is
+ * full-width and carries the rule as its own `border-bottom`, so the rule runs
+ * edge to edge, WIDER than the content band. Inside each row, `.frame` is the
+ * bordered content box whose side borders are the vertical gutter rules.
+ *
+ * There is no `border-top` here: the last HowItWorks row already draws it, and
+ * Figma likewise has no rule above the heading (the verticals simply continue).
+ *
+ * FRAME CONTRACT: `--sina-space--6` gutter + `96rem` frame width (and the
+ * `max-width: 96rem` gutter-removal breakpoint below) MUST match
+ * LandingNav.module.css, Hero.module.css and HowItWorks.module.css so the side
+ * borders line up into one continuous frame running down the page.
+ *
+ * Figma draws the band at 1440px (rules at x=143/1583 of 1728). We deliberately
+ * re-anchor to the live 96rem hero frame instead so the rules are continuous
+ * with the sheet above; the column proportions are unchanged.
+ */
+.row {
   width: 100%;
-  margin-inline: auto;
-  padding: var(--sina-space--12) var(--sina-space--6);
+  padding-inline: var(--sina-space--6);
+  border-bottom: 1px solid var(--sina-color-border-subtle, #e4e4e4);
 }
 
+.frame {
+  box-sizing: border-box;
+  max-width: 96rem;
+  margin-inline: auto;
+  /* Figma: 16px above and below the content in every row. */
+  padding-block: var(--sina-space--4);
+  border-inline: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+}
+
+/* The two internal column rules. They are painted on the FRAME rather than on
+   the list items so they span the full height of their row regardless of how
+   much copy each card carries. Only the cards row is `ruled`: Figma runs these
+   verticals from y=69 to y=291, so they terminate at the row's horizontal rule
+   instead of crossing it into the heading band, which carries the outer frame
+   rails alone. Absolute positioning resolves against the frame's padding box,
+   which is exactly the grid's content box, so 1/3 and 2/3 land on the column
+   edges. */
+.ruled {
+  position: relative;
+}
+
+.ruled::before,
+.ruled::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  width: 0;
+  border-left: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+  pointer-events: none;
+}
+
+.ruled::before {
+  left: 33.3333%;
+}
+
+.ruled::after {
+  left: 66.6667%;
+}
+
+/* Dark: dim the rules toward the near-black page ground so they don't read too
+   bright (mirrors the same treatment on the hero frame). */
+[data-theme="dark"] .row,
+[data-theme="dark"] .frame,
+[data-theme="dark"] .ruled::before,
+[data-theme="dark"] .ruled::after,
+[data-theme="dark"] .card + .card {
+  border-color: color-mix(
+    in srgb,
+    var(--sina-color-border-subtle, #2a2a2a) 60%,
+    transparent
+  );
+}
+
+/* Figma 32px/1.15/-0.5px snapped to the nearest scale steps (no 32px token
+   exists: the scale jumps 30 to 36). */
 .heading {
-  margin: 0 0 var(--sina-space--8);
+  margin: 0;
+  padding-inline: var(--sina-space--4);
   font-size: var(--sina-text--3xl);
-  font-weight: var(--sina-font-weight--bold);
+  font-weight: var(--sina-font-weight--semibold);
+  line-height: var(--sina-leading--tight);
   letter-spacing: var(--sina-tracking--tight);
   color: var(--sina-color-text);
 }
 
+/* Three equal columns divided by hairlines. No gap and no card chrome: the
+   rules do the dividing, so the cells sit flush in the grid. */
 .cards {
   margin: 0;
   padding: 0;
   list-style: none;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: var(--sina-space--4);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .card {
-  border: 1px solid var(--sina-color-border);
-  border-radius: var(--sina-radius--xs);
-  background: var(--sina-color-surface);
-  padding: var(--sina-space--5);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* Figma: content sits 16px inside its column rule. */
+  padding-inline-start: var(--sina-space--4);
+  padding-inline-end: var(--sina-space--6);
 }
 
-.kicker {
-  margin: 0 0 var(--sina-space--2);
-  font-family: var(--sina-font--mono);
-  font-size: var(--sina-text--xs);
-  text-transform: uppercase;
-  letter-spacing: var(--sina-tracking--wide);
-  color: var(--sina-color-text-subtle);
+/* The audience tab: square on the left so it butts flush against the column
+   rule, rounded on the right. Pulled back by the content inset so its flat edge
+   sits ON the rule. Follows the Broadsheet label anatomy: no flex gap, the
+   label carries its own inline padding. Unlike the HowItWorks step marker it
+   hugs its text rather than taking a fixed width. */
+.tab {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: var(--sinamk-badge-height--lg, 24px);
+  margin-inline-start: calc(-1 * var(--sina-space--4));
+  margin-bottom: var(--sina-space--4);
+  /* Figma seats the label frame 12px inside the tab (label x=12 on both these
+     badges and the HowItWorks number badges), so with the label's own 5px the
+     text lands 17px in. The number tabs get that spacing from their fixed 2rem
+     width plus flex-end; this tab hugs its text, so it states the 12px. */
+  padding-inline-start: var(--sina-space--3);
+  padding-inline-end: var(--sinamk-badge-pad--sm, 4px);
+  border-start-end-radius: var(--sinamk-radius--md, 6px);
+  border-end-end-radius: var(--sinamk-radius--md, 6px);
+}
+
+.tabLabel {
+  padding-inline: var(--sinamk-badge-label-pad--lg, 5px);
+  font-size: var(--sinamk-badge-text--md, 12px);
+  font-weight: var(--sina-font-weight--bold);
+  line-height: var(--sina-leading--relaxed);
+}
+
+/* Cool trio, one hue per audience. No dark override: these --solid pairs are
+   theme-invariant by contract and land at 5.4:1 (blue), 6.5:1 (violet) and
+   4.9:1 (pink) against the white ink, all clear of the AA 4.5 bar that both
+   themes are held to. That is why they need none of the banking the HowItWorks
+   warm ladder does, where three vivid warm tabs glared on the near-black
+   ground. */
+.tab[data-tone="blue"] {
+  background: var(--sinamk-color-badge-blue-bg--solid, #2563eb);
+  color: var(--sinamk-color-badge-blue-fg--solid, #ffffff);
+}
+
+.tab[data-tone="violet"] {
+  background: var(--sinamk-color-badge-violet-bg--solid, #7c3aed);
+  color: var(--sinamk-color-badge-violet-fg--solid, #ffffff);
+}
+
+.tab[data-tone="pink"] {
+  background: var(--sinamk-color-badge-pink-bg--solid, #db2777);
+  color: var(--sinamk-color-badge-pink-fg--solid, #ffffff);
 }
 
 .cardTitle {
   margin: 0 0 var(--sina-space--2);
-  font-size: var(--sina-text--lg);
+  font-size: var(--sina-text--xl);
   font-weight: var(--sina-font-weight--semibold);
+  line-height: var(--sina-leading--snug);
   color: var(--sina-color-text);
 }
 
+/* Figma caps the body at 416px inside a 480px column. */
 .cardBody {
   margin: 0;
-  font-size: var(--sina-text--sm);
+  max-width: 26rem;
+  font-size: var(--sina-text--lg);
   line-height: var(--sina-leading--relaxed);
-  color: var(--sina-color-text-muted);
+  color: var(--sina-color-text);
 }
 
+/* At/below the frame's max-width the sheet is viewport-bound, so drop the side
+   gutter and let the frame reach the viewport edges (mirrors Hero.module.css). */
+@media (max-width: 96rem) {
+  .row {
+    padding-inline: 0;
+  }
+}
+
+/* Stack the cards; the column dividers switch off and become row dividers. */
 @media (max-width: 60rem) {
+  .ruled::before,
+  .ruled::after {
+    display: none;
+  }
+
   .cards {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .card {
+    padding-block: var(--sina-space--6);
+  }
+
+  .card:first-child {
+    padding-block-start: 0;
+  }
+
+  .card:last-child {
+    padding-block-end: 0;
+  }
+
+  .card + .card {
+    border-top: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+  }
+
+  .cardBody {
+    max-width: 40rem;
   }
 }
 
 @media (max-width: 40rem) {
-  .inner {
-    padding-inline: var(--sina-space--4);
-    padding-block: var(--sina-space--8);
+  .frame {
+    padding-block: var(--sina-space--3);
   }
 
   .heading {
     font-size: var(--sina-text--2xl);
+  }
+
+  .cardTitle {
+    font-size: var(--sina-text--lg);
+  }
+
+  .cardBody {
+    font-size: var(--sina-text--base);
   }
 }

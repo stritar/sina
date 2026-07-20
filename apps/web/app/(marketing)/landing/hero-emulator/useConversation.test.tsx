@@ -20,7 +20,7 @@ function Harness() {
     useConversation(PAIR);
   return (
     <section aria-label="conversation harness" {...pauseHandlers}>
-      <div ref={threadRef} />
+      <div ref={threadRef} data-testid="thread" />
       <output data-testid="history">
         {state.history.map((turn) => `${turn.scenario.id}${turn.approved ? "*" : ""}`).join(",")}
       </output>
@@ -76,6 +76,34 @@ async function advance(ms: number) {
   await act(async () => {
     vi.advanceTimersByTime(ms);
   });
+}
+
+/**
+ * jsdom has no layout, so the thread has no scroll geometry of its own: give it
+ * a taller-than-tall content box with a real, readable/writable scrollTop, and
+ * a scrollTo() helper that moves it the way a reader's wheel would (a `scroll`
+ * event follows the position change).
+ */
+function stubScrollBox(node: HTMLElement, { scrollHeight = 1000, clientHeight = 200 } = {}) {
+  let scrollTop = 0;
+  Object.defineProperty(node, "scrollHeight", { value: scrollHeight, configurable: true });
+  Object.defineProperty(node, "clientHeight", { value: clientHeight, configurable: true });
+  Object.defineProperty(node, "scrollTop", {
+    configurable: true,
+    get: () => scrollTop,
+    set: (next: number) => {
+      scrollTop = next;
+    },
+  });
+  return {
+    get top() {
+      return scrollTop;
+    },
+    scrollTo(next: number) {
+      scrollTop = next;
+      fireEvent.scroll(node);
+    },
+  };
 }
 
 /** Step fake time until the condition holds (transitions chain via effects). */
@@ -227,6 +255,27 @@ describe("useConversation", () => {
     fireEvent.click(screen.getByRole("button", { name: "toggle" }));
     await advance(TIMINGS.restart);
     expect(phase()).toBe("typing");
+  });
+
+  it("follows the newest turn only while the reader is at the bottom", async () => {
+    render(<Harness />);
+    const box = stubScrollBox(screen.getByTestId("thread"));
+    await advance(TIMINGS.start);
+
+    // At rest the thread is bottom-anchored, so each new stage is followed.
+    await until(() => box.top === 1000);
+
+    // The reader scrolls back through the conversation. From here every phase
+    // change used to yank them down again, which read as "it won't let me
+    // scroll" — the position must hold across the whole rest of the loop.
+    box.scrollTo(120);
+    const committed = history();
+    await until(() => history() !== committed, 120_000);
+    expect(box.top).toBe(120);
+
+    // Scrolling back to the bottom re-arms the anchor.
+    box.scrollTo(800);
+    await until(() => box.top === 1000);
   });
 
   it("the toggle freezes the frame and restarts it", async () => {

@@ -96,6 +96,15 @@ export interface ConversationState {
 /** Bounded thread length across infinite loops. */
 export const HISTORY_CAP = 6;
 
+/**
+ * How far off the bottom still counts as "at the bottom" for the follow-the-
+ * newest-turn anchor. Wide enough to absorb sub-pixel rounding on fractional
+ * device-pixel ratios (a programmatic scrollTop = scrollHeight can settle a
+ * fraction short), far narrower than any deliberate scroll back through the
+ * thread.
+ */
+const BOTTOM_ANCHOR_SLACK = 8;
+
 function completedThread(scenarios: readonly EmulatorScenario[]): ConversationTurn[] {
   return scenarios.map((scenario) => ({ scenario, trace: cannedFor(scenario) })).slice(-HISTORY_CAP);
 }
@@ -293,10 +302,29 @@ export function useConversation(scenarios: readonly EmulatorScenario[]): Convers
     return () => clearTimeout(timer);
   }, [state, paused, userPaused, scenarios]);
 
-  // Keep the newest stage in view; the thread scrolls, the stage never grows.
+  // Follow the newest stage ONLY while the reader is already parked at the
+  // bottom. An unconditional scroll-to-bottom here fights the reader: every
+  // phase change (several per scenario) would yank a thread they had scrolled
+  // back through down again, which reads as "the panel won't let me scroll".
+  // Scrolling up releases the anchor; scrolling back to the bottom re-arms it.
+  const stuckToBottom = useRef(true);
+
   useEffect(() => {
     const node = threadRef.current;
-    if (node) node.scrollTop = node.scrollHeight;
+    if (!node) return;
+    const onScroll = () => {
+      // Our own programmatic scroll lands inside the threshold, so following a
+      // turn never releases the anchor it just used.
+      stuckToBottom.current =
+        node.scrollHeight - node.scrollTop - node.clientHeight <= BOTTOM_ANCHOR_SLACK;
+    };
+    node.addEventListener("scroll", onScroll, { passive: true });
+    return () => node.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const node = threadRef.current;
+    if (node && stuckToBottom.current) node.scrollTop = node.scrollHeight;
   }, [state.history.length, state.phase, state.trace]);
 
   const togglePlay = useCallback(() => {

@@ -206,6 +206,58 @@
   --sinamk-color-badge-pink-fg--solid: #ffffff;
   --sinamk-color-badge-pink-bg--soft: #fce7f3;
   --sinamk-color-badge-pink-fg--soft: #be185d;
+
+  /*
+   * Gate palette — the ONE meaningful colour set on the marketing side, and the
+   * deliberate exception to two rules the badge palette above obeys.
+   *
+   * 1. It is theme-aware, not theme-invariant. Light is a deep fill + white ink
+   *    (the shape of `--sinamk-color-primary-fill`); dark inverts to a muted
+   *    pastel fill + the near-black `primary-fg` ink, exactly as the primary
+   *    button does. A single theme-invariant solid would have read as a sticker
+   *    on one of the two grounds.
+   * 2. It is industry-tinted. `gen-industry-tints.mjs` pulls each FILL a
+   *    fraction of the way toward the industry hue (see `GATE_TINT`) so the
+   *    verdict chips belong to whichever page they sit on, while the INK is
+   *    pushed through untouched and is byte-identical across all three
+   *    industries. Surfaces harmonize; the verdict signal does not move.
+   *
+   * Chroma is uniform across the pass/escalate/reject triad (0.11 light, 0.09
+   * dark) and roughly half the badge palette's, which is what makes these read
+   * as editorial rather than as vivid status stickers. Uniform C is also load
+   * bearing for the tint: it is what lets the hue blend hold luminance parity
+   * token by token, so one contrast matrix covers all three industries.
+   * `flag` is the near-achromatic neutral of the set.
+   */
+  --sinamk-color-gate-pass-bg--solid: #1d6835;
+  --sinamk-color-gate-pass-fg--solid: #ffffff;
+
+  --sinamk-color-gate-escalate-bg--solid: #7d4b00;
+  --sinamk-color-gate-escalate-fg--solid: #ffffff;
+
+  --sinamk-color-gate-reject-bg--solid: #8b3b36;
+  --sinamk-color-gate-reject-fg--solid: #ffffff;
+
+  --sinamk-color-gate-flag-bg--solid: #555a52;
+  --sinamk-color-gate-flag-fg--solid: #ffffff;
+
+  /*
+   * Segment selector's chosen pill.
+   *
+   * Aliases the primary pair rather than restating it, so the control keeps the
+   * exact ButtonPrimary look it has always had and cannot drift from it. The
+   * point of the indirection is that it gives the pill a SLOT of its own: the
+   * landing repoints these two per industry (see gen-industry-tints.mjs) so the
+   * chosen segment matches the emulator's industry chip, while /showcase and
+   * every other Broadsheet surface keep the sage primary.
+   *
+   * One declaration covers both themes. Custom-property substitution resolves
+   * at use time on the element, and the dark block below redefines
+   * `--sinamk-color-primary-*` on that same element, so the alias follows the
+   * flip without a dark restatement.
+   */
+  --sinamk-color-segment-fill--active: var(--sinamk-color-primary-fill);
+  --sinamk-color-segment-fg--active: var(--sinamk-color-primary-fg);
 }
 
 /* Dark Broadsheet — a first pass (sage on charcoal), pending marketing sign-off. */
@@ -306,6 +358,23 @@
 
   --sinamk-color-badge-pink-bg--soft: #500724;
   --sinamk-color-badge-pink-fg--soft: #f9a8d4;
+
+  /*
+   * Gate `--solid` inverts in dark, unlike badge `--solid`: a muted pastel fill
+   * carrying the near-black `primary-fg` ink. See the rationale in the light
+   * block above.
+   */
+  --sinamk-color-gate-pass-bg--solid: #8ec899;
+  --sinamk-color-gate-pass-fg--solid: #21251e;
+
+  --sinamk-color-gate-escalate-bg--solid: #dbae76;
+  --sinamk-color-gate-escalate-fg--solid: #21251e;
+
+  --sinamk-color-gate-reject-bg--solid: #eca199;
+  --sinamk-color-gate-reject-fg--solid: #21251e;
+
+  --sinamk-color-gate-flag-bg--solid: #b4b9b1;
+  --sinamk-color-gate-flag-fg--solid: #21251e;
 }
 
 /*

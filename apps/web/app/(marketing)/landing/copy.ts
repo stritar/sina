@@ -31,8 +31,6 @@ export interface IndustryDefinition {
   name: string;
   /** Live = runs the real server-side gate; otherwise a canned browser simulation. */
   live: boolean;
-  /** Short mode tag shown on the emulator header and gate stage. */
-  modeTag: string;
   /** The packages an adopter installs for this industry, in install order. */
   packages: readonly string[];
 }
@@ -52,19 +50,16 @@ export const INDUSTRIES: Record<Industry, IndustryDefinition> = {
   fintech: {
     name: "Fintech",
     live: true,
-    modeTag: "Live demo",
     packages: packagesFor("fintech"),
   },
   healthcare: {
     name: "Healthcare",
     live: false,
-    modeTag: "Simulated preview",
     packages: packagesFor("healthcare"),
   },
   defense: {
     name: "Defense",
     live: false,
-    modeTag: "Simulated preview",
     packages: packagesFor("defense"),
   },
 };
@@ -107,25 +102,25 @@ export const how = {
       body: "A clean pass mounts a real component. A risky request gets the safe component forced in its place. A bad one is blocked. Every decision is logged.",
     },
   ],
-  codeSummary: "Show what a rule looks like",
-  codeCaption: "A trimmed sketch of the real wire transfer rule. The full version lives in the docs.",
+  codeHeading: "What a rule looks like",
+  codeFilename: "wire-transfer.ts",
 } as const;
 
 export const why = {
   heading: "Why teams pick SINA",
   cards: [
     {
-      kicker: "For product teams",
+      badge: "Product teams",
       title: "Provable governance",
       body: "Every decision cites the rule it enforced and emits an audit event. You can show exactly why the interface did what it did.",
     },
     {
-      kicker: "For designers",
+      badge: "Designers",
       title: "Accessibility built in",
       body: "Every primitive ships with keyboard support, focus management, and contrast that passes automated checks. The blocked state is a designed moment, not an error page.",
     },
     {
-      kicker: "For engineers",
+      badge: "Engineers",
       title: "Just React and Zod",
       body: "Five plain packages on npm, MIT licensed. The gate is a function you call on your server. No runtime lock-in.",
     },

@@ -10,6 +10,16 @@
  * and chroma are identical across the three, so all three land within ~0.003
  * relative luminance of each other and every WCAG ratio holds for all of them.
  *
+ * The `--sinamk-color-gate-*` verdict palette is the one exception, and it moves
+ * less: its FILLS are blended only partway toward the industry hue (so pass,
+ * escalate and reject stay distinguishable rather than collapsing onto one hue),
+ * and its INKS are emitted verbatim, identical across all three industries.
+ *
+ * `--sina-industry-tag-bg` (the hero emulator's industry chip) takes the plain
+ * hue replacement but skips the light chroma boost: it is a chromatic fill
+ * signed off at its Figma value, not a near-neutral awaiting a wash. Its ink is
+ * white in every industry and both themes.
+ *
  * Raw hex is authored here on purpose. This is the third such exception on the
  * marketing side, alongside `wireframe.css` and `GlyphField.module.css` (the
  * glyph-field values in particular MUST stay literal hex — the WebGL canvas
@@ -63,6 +73,18 @@ html:not([data-theme="dark"])[data-industry="fintech"] body:has(.sina-wireframe)
   --sina-glyphfield-bg: #f5f6f4;
   --sina-glyphfield-primary: #cdd3c6;
   --sina-glyphfield-accent: #a3a6a0;
+  --sinamk-color-gate-pass-bg--solid: #1d6835;
+  --sinamk-color-gate-pass-fg--solid: #ffffff;
+  --sinamk-color-gate-escalate-bg--solid: #7d4b00;
+  --sinamk-color-gate-escalate-fg--solid: #ffffff;
+  --sinamk-color-gate-reject-bg--solid: #8b3b36;
+  --sinamk-color-gate-reject-fg--solid: #ffffff;
+  --sinamk-color-gate-flag-bg--solid: #555a52;
+  --sinamk-color-gate-flag-fg--solid: #ffffff;
+  --sina-industry-tag-bg: #0f766e;
+  --sina-industry-tag-fg: #ffffff;
+  --sinamk-color-segment-fill--active: #0f766e;
+  --sinamk-color-segment-fg--active: #ffffff;
 }
 
 html:not([data-theme="dark"])[data-industry="healthcare"] body:has(.sina-wireframe),
@@ -112,6 +134,18 @@ html:not([data-theme="dark"])[data-industry="healthcare"] body:has(.sina-wirefra
   --sina-glyphfield-bg: #f4f6f8;
   --sina-glyphfield-primary: #c8d2de;
   --sina-glyphfield-accent: #a1a5ab;
+  --sinamk-color-gate-pass-bg--solid: #006949;
+  --sinamk-color-gate-pass-fg--solid: #ffffff;
+  --sinamk-color-gate-escalate-bg--solid: #7e4a02;
+  --sinamk-color-gate-escalate-fg--solid: #ffffff;
+  --sinamk-color-gate-reject-bg--solid: #8a3a48;
+  --sinamk-color-gate-reject-fg--solid: #ffffff;
+  --sinamk-color-gate-flag-bg--solid: #535b54;
+  --sinamk-color-gate-flag-fg--solid: #ffffff;
+  --sina-industry-tag-bg: #406c99;
+  --sina-industry-tag-fg: #ffffff;
+  --sinamk-color-segment-fill--active: #406c99;
+  --sinamk-color-segment-fg--active: #ffffff;
 }
 
 html:not([data-theme="dark"])[data-industry="defense"] body:has(.sina-wireframe),
@@ -161,6 +195,18 @@ html:not([data-theme="dark"])[data-industry="defense"] body:has(.sina-wireframe)
   --sina-glyphfield-bg: #f8f6f4;
   --sina-glyphfield-primary: #dbcfc5;
   --sina-glyphfield-accent: #aaa49f;
+  --sinamk-color-gate-pass-bg--solid: #3d651e;
+  --sinamk-color-gate-pass-fg--solid: #ffffff;
+  --sinamk-color-gate-escalate-bg--solid: #7d4b00;
+  --sinamk-color-gate-escalate-fg--solid: #ffffff;
+  --sinamk-color-gate-reject-bg--solid: #8a3c2a;
+  --sinamk-color-gate-reject-fg--solid: #ffffff;
+  --sinamk-color-gate-flag-bg--solid: #575a51;
+  --sinamk-color-gate-flag-fg--solid: #ffffff;
+  --sina-industry-tag-bg: #8d6031;
+  --sina-industry-tag-fg: #ffffff;
+  --sinamk-color-segment-fill--active: #8d6031;
+  --sinamk-color-segment-fg--active: #ffffff;
 }
 
 html[data-theme="dark"][data-industry="fintech"] body:has(.sina-wireframe),
@@ -210,6 +256,18 @@ html[data-theme="dark"][data-industry="fintech"] body:has(.sina-wireframe) .broa
   --sina-glyphfield-bg: #0b0c0b;
   --sina-glyphfield-primary: #2c332c;
   --sina-glyphfield-accent: #363e35;
+  --sinamk-color-gate-pass-bg--solid: #8ec899;
+  --sinamk-color-gate-pass-fg--solid: #21251e;
+  --sinamk-color-gate-escalate-bg--solid: #dbae76;
+  --sinamk-color-gate-escalate-fg--solid: #21251e;
+  --sinamk-color-gate-reject-bg--solid: #eca199;
+  --sinamk-color-gate-reject-fg--solid: #21251e;
+  --sinamk-color-gate-flag-bg--solid: #b4b9b1;
+  --sinamk-color-gate-flag-fg--solid: #21251e;
+  --sina-industry-tag-bg: #7bd2c8;
+  --sina-industry-tag-fg: #21251e;
+  --sinamk-color-segment-fill--active: #7bd2c8;
+  --sinamk-color-segment-fg--active: #21251e;
 }
 
 html[data-theme="dark"][data-industry="healthcare"] body:has(.sina-wireframe),
@@ -259,6 +317,18 @@ html[data-theme="dark"][data-industry="healthcare"] body:has(.sina-wireframe) .b
   --sina-glyphfield-bg: #0b0c0d;
   --sina-glyphfield-primary: #2b3139;
   --sina-glyphfield-accent: #343d45;
+  --sinamk-color-gate-pass-bg--solid: #7bcaab;
+  --sinamk-color-gate-pass-fg--solid: #21251e;
+  --sinamk-color-gate-escalate-bg--solid: #daae76;
+  --sinamk-color-gate-escalate-fg--solid: #21251e;
+  --sinamk-color-gate-reject-bg--solid: #eb9fa9;
+  --sinamk-color-gate-reject-fg--solid: #21251e;
+  --sinamk-color-gate-flag-bg--solid: #b2b9b3;
+  --sinamk-color-gate-flag-fg--solid: #21251e;
+  --sina-industry-tag-bg: #98c7f9;
+  --sina-industry-tag-fg: #21251e;
+  --sinamk-color-segment-fill--active: #98c7f9;
+  --sinamk-color-segment-fg--active: #21251e;
 }
 
 html[data-theme="dark"][data-industry="defense"] body:has(.sina-wireframe),
@@ -308,4 +378,16 @@ html[data-theme="dark"][data-industry="defense"] body:has(.sina-wireframe) .broa
   --sina-glyphfield-bg: #0d0b0b;
   --sina-glyphfield-primary: #372f29;
   --sina-glyphfield-accent: #433b32;
+  --sinamk-color-gate-pass-bg--solid: #a1c58a;
+  --sinamk-color-gate-pass-fg--solid: #21251e;
+  --sinamk-color-gate-escalate-bg--solid: #dcad77;
+  --sinamk-color-gate-escalate-fg--solid: #21251e;
+  --sinamk-color-gate-reject-bg--solid: #eba390;
+  --sinamk-color-gate-reject-fg--solid: #21251e;
+  --sinamk-color-gate-flag-bg--solid: #b6b8b0;
+  --sinamk-color-gate-flag-fg--solid: #21251e;
+  --sina-industry-tag-bg: #ecba89;
+  --sina-industry-tag-fg: #21251e;
+  --sinamk-color-segment-fill--active: #ecba89;
+  --sinamk-color-segment-fg--active: #21251e;
 }

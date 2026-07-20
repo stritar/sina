@@ -1,6 +1,6 @@
 import type { HTMLAttributes, ReactNode } from "react";
 import { cn } from "./cn";
-import { Badge, type BadgeColor } from "./Badge";
+import { Badge, type GateColor } from "./Badge";
 import type { ButtonSize } from "./ButtonSecondary";
 import styles from "./GateCard.module.css";
 
@@ -45,29 +45,32 @@ const STATUS_LABEL: Record<Exclude<GateStatus, "checking">, string> = {
   reject: "Blocked",
 };
 
-const STATUS_COLOR: Record<Exclude<GateStatus, "checking">, BadgeColor> = {
-  pass: "green",
-  escalate: "amber",
-  reject: "red",
+const STATUS_COLOR: Record<Exclude<GateStatus, "checking">, GateColor> = {
+  pass: "gate-pass",
+  escalate: "gate-escalate",
+  reject: "gate-reject",
 };
 
-const SEVERITY_COLOR: Record<GateViolation["severity"], BadgeColor> = {
-  reject: "red",
-  escalate: "amber",
-  flag: "gray",
+const SEVERITY_COLOR: Record<GateViolation["severity"], GateColor> = {
+  reject: "gate-reject",
+  escalate: "gate-escalate",
+  flag: "gate-flag",
 };
 
 /**
  * Broadsheet gate card: the verdict lane of a chat exchange. While `checking`
- * it shows a pulsing busy line; once decided it leads with a soft verdict Badge
+ * it shows a pulsing busy line; once decided it leads with a filled verdict Badge
  * (green pass / amber escalated / red blocked), the mounted or forced component
- * in mono, the violations (a soft severity Badge stacked above each message and
+ * in mono, the violations (a severity Badge stacked above each message and
  * cited standard, all siblings — never one status nested in another), and a
  * muted meta line. Dashed border: this is the machine lane, like TraceCard.
  *
  * The whole decision is a single column: every badge sits ABOVE the text it
  * labels, never beside it, so a long machine code never squeezes its message.
- * Every badge is `soft` — the gate speaks in tinted chips, not filled ones.
+ * Every badge is `solid`, and every one is drawn from the `gate-*` palette
+ * rather than the agnostic hues: a verdict is the one thing on this card whose
+ * colour carries meaning, so it gets colours that are allowed to. On the landing
+ * they follow the industry tint; elsewhere they sit on the fintech anchors.
  */
 export function GateCard({
   status,
@@ -94,7 +97,7 @@ export function GateCard({
       ) : (
         <div className={styles.decision}>
           <div className={styles.verdict}>
-            <Badge color={STATUS_COLOR[status]} variant="soft" size={size} icon={statusIcon}>
+            <Badge color={STATUS_COLOR[status]} variant="solid" size={size} icon={statusIcon}>
               {STATUS_LABEL[status]}
             </Badge>
             {mount ? <code className={styles.mount}>mount: {mount}</code> : null}
@@ -103,7 +106,7 @@ export function GateCard({
             <ul className={styles.violations}>
               {violations.map((violation) => (
                 <li key={violation.code} className={styles.violation}>
-                  <Badge color={SEVERITY_COLOR[violation.severity]} variant="soft" size="sm">
+                  <Badge color={SEVERITY_COLOR[violation.severity]} variant="solid" size="sm">
                     {violation.code}
                   </Badge>
                   <span className={styles.message}>

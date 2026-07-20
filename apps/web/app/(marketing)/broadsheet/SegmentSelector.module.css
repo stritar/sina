@@ -100,8 +100,13 @@
   background: var(--sinamk-color-secondary-fill--hover, #dfe4de);
 }
 
-/* The chosen segment: a solid primary pill (forest-green fill, white ink), no ring. */
+/*
+ * The chosen segment: a solid pill, no ring. Its own slot rather than the
+ * primary pair directly — broadsheet.css aliases it TO that pair, so the look
+ * is unchanged, but the landing can repoint just this pill at the active
+ * industry's accent without dragging every primary control with it.
+ */
 .segment[data-active] {
-  color: var(--sinamk-color-primary-fg, #ffffff);
-  background: var(--sinamk-color-primary-fill, #353b31);
+  color: var(--sinamk-color-segment-fg--active, #ffffff);
+  background: var(--sinamk-color-segment-fill--active, #353b31);
 }

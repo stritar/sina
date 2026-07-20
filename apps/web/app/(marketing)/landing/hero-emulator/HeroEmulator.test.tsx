@@ -55,6 +55,25 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+describe("HeroEmulator industry tag", () => {
+  // The glyph is the same mark the hero's segment selector uses, so it has to
+  // actually render — a missing icon leaves a chip that no longer matches the
+  // control that set it. It must also stay decorative: the label beside it
+  // already says "Fintech", and a labelled glyph would announce it twice.
+  it("carries the industry glyph, and the glyph is not announced", () => {
+    const { container } = render(
+      <IndustryProvider>
+        <HeroEmulator />
+      </IndustryProvider>,
+    );
+
+    const tag = container.querySelector(".industryTag");
+    expect(tag).not.toBeNull();
+    expect(tag?.querySelector("svg")).not.toBeNull();
+    expect(tag?.textContent).toBe("Fintech");
+  });
+});
+
 describe("HeroEmulator dwell countdown", () => {
   it("runs only during the dwell, and restarts rather than freezing on pause", async () => {
     const { container } = render(

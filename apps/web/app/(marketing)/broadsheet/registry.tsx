@@ -23,7 +23,7 @@ import { ButtonDestructive } from "./ButtonDestructive";
 import { IconButton, type IconButtonVariant } from "./IconButton";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { SegmentSelector } from "./SegmentSelector";
-import { Badge, type BadgeColor } from "./Badge";
+import { Badge, type BadgeHue } from "./Badge";
 import { TextField } from "./TextField";
 import { Select, type SelectOption } from "./Select";
 import { InstallCommand, type PackageManager } from "./InstallCommand";
@@ -213,7 +213,7 @@ const segmentSelectorSpec: ComponentSpec = {
 };
 
 /** The 12 agnostic badge hues — color names, not meanings. */
-const BADGE_COLORS: readonly BadgeColor[] = [
+const BADGE_COLORS: readonly BadgeHue[] = [
   "gray",
   "red",
   "orange",
@@ -240,7 +240,7 @@ const badgeSpec: ComponentSpec = {
   ],
   render: (v: ControlValues) => (
     <Badge
-      color={v.color as BadgeColor}
+      color={v.color as BadgeHue}
       variant={v.variant as "solid" | "soft"}
       size={v.size as "sm" | "md" | "lg"}
       icon={v.icon ? <Sparkle weight="bold" /> : undefined}

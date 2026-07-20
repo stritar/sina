@@ -49,6 +49,30 @@ const INDUSTRIES = { fintech: null, healthcare: 250, defense: 65 };
 const SAGE_HUE = 133;
 
 /**
+ * How far the GATE fills lean toward the industry hue — the one knob on the
+ * verdict palette, and the reason that palette cannot ride `BROADSHEET_SAGE`.
+ *
+ * Every other tinted token has its hue REPLACED outright, which is fine when the
+ * hue carries no meaning. The gate triad's hues are its meaning: replacing them
+ * would collapse pass, escalate and reject onto one industry hue and leave three
+ * identical chips. So each fill takes a DOSE of the industry hue instead (see
+ * `blendTowardHue`), which leans the whole set toward the page while preserving
+ * the separation that makes a verdict legible at a glance.
+ *
+ * At 0.3, healthcare pulls `pass` from 150deg to an emerald 167deg and `reject`
+ * from 26deg to a cooler 11deg, while leaving `escalate` at 66deg (amber sits
+ * almost opposite clinical azure, so the dose all but cancels — the graceful
+ * degradation the vector form buys). Defense warms the same triad the other way:
+ * 134 / 67 / 35.
+ *
+ * Raise this and the verdicts start converging; `industry-tint.test.ts` asserts a
+ * pairwise hue floor precisely so that failure is caught rather than shipped.
+ *
+ * Fills only. The inks are pushed through untouched — see `BROADSHEET_GATE`.
+ */
+const GATE_TINT = 0.3;
+
+/**
  * Light-mode chroma multiplier — the one saturation knob.
  *
  * Light surfaces sit near white, where a given chroma reads far weaker than the
@@ -124,6 +148,39 @@ function relLuminance(hex) {
 }
 
 /**
+ * Lean hue `from` toward hue `to` by adding a dose `t` of the target's chroma
+ * VECTOR in OKLab a/b, then renormalizing back to the source's chroma. Returns
+ * the resulting hue in degrees.
+ *
+ * Vector addition rather than arc interpolation, because interpolating the hue
+ * ANGLE is ill-conditioned near the antipode and this palette lives there. The
+ * gate `escalate` anchor sits at 67deg and healthcare's hue is 250deg: 183deg
+ * apart. Rounding the anchor to 8-bit hex is enough to flip which arc is
+ * "shorter", so the same 0.3 blend swings the chip either into green or into
+ * mauve depending on the last bit of the authored hex. It genuinely did: the
+ * first cut of this generator emitted `#823b66`, a magenta "reject", and a
+ * `#8a3f49` "escalate" a reader could not tell apart from it.
+ *
+ * Adding vectors degrades gracefully instead. Where the two hues oppose, the
+ * doses cancel and the hue barely moves (healthcare leaves `escalate` at 66deg,
+ * still amber) rather than swinging halfway around the wheel. Where they agree,
+ * the shift is a clean partial lean (healthcare pulls `pass` 150deg -> 167deg,
+ * an emerald that belongs on the clinical page).
+ *
+ * Renormalizing to the source chroma is what keeps C uniform across industries.
+ * The raw sum swells on an aligned hue and collapses on an opposing one, which
+ * would hand defense a hotter triad than healthcare and quietly undo the "one
+ * contrast matrix covers all three" guarantee.
+ */
+function blendTowardHue(from, to, t) {
+  const rad = (from * Math.PI) / 180;
+  const target = (to * Math.PI) / 180;
+  const a = Math.cos(rad) + t * Math.cos(target);
+  const b = Math.sin(rad) + t * Math.sin(target);
+  return ((Math.atan2(b, a) * 180) / Math.PI + 360) % 360;
+}
+
+/**
  * Re-hue `hex`, optionally forcing chroma. Pure black/white are returned as-is.
  *
  * When `targetY` is given, OKLCH lightness is then nudged until the result's
@@ -170,9 +227,15 @@ function readBlock(file, blockRe) {
 
 /**
  * The sage family inside broadsheet.css. Everything NOT listed here keeps its
- * authored value: the badge palette, the destructive/danger ramp, the tooltip,
- * and `--sinamk-color-focus-ring` (which `marketing-focus.test.tsx` pins to
- * #2563eb). Industry tints the brand, never the semantics.
+ * authored value: the 12-hue badge palette, the destructive/danger ramp, the
+ * tooltip, and `--sinamk-color-focus-ring` (which `marketing-focus.test.tsx`
+ * pins to #2563eb). Industry tints the brand, never the semantics.
+ *
+ * The gate palette (`BROADSHEET_GATE`, below) is the one deliberate carve-out,
+ * and it is narrower than it looks. Only the FILLS move, and only partway: a
+ * verdict chip's surface joins the page it sits on, while its ink is pushed
+ * through byte-identical across all three industries. The signal a reader reads
+ * off the chip is unchanged; the surface it is printed on is not the signal.
  */
 const BROADSHEET_SAGE = [
   "secondary-fill", "secondary-fill--hover", "secondary-fill--pressed",
@@ -184,6 +247,25 @@ const BROADSHEET_SAGE = [
   "field-bg", "field-bg--disabled", "field-border", "field-border--hover",
   "field-placeholder", "code-bg", "popover-surface",
 ].map((n) => `--sinamk-color-${n}`);
+
+/**
+ * The gate verdict palette. Listed as [fill, ink] pairs because the two halves
+ * take different paths and the pairing is what makes that legible:
+ *
+ * - the FILL is hue-blended toward the industry by `GATE_TINT`, holding OKLCH L
+ *   and C, then luminance-pinned to fintech like every other derived token;
+ * - the INK is emitted verbatim. It is not tinted, not re-derived, not pinned.
+ *
+ * Emitting the ink at all — rather than letting broadsheet.css supply it — is
+ * deliberate: it puts fill and ink in the same block, so the contrast pair a
+ * reader actually sees can be read off one rule, and `industry-tint.test.ts` can
+ * assert both the ink's cross-industry invariance and the pair's ratio without
+ * resolving through the cascade.
+ */
+const BROADSHEET_GATE = ["pass", "escalate", "reject", "flag"].map((v) => [
+  `--sinamk-color-gate-${v}-bg--solid`,
+  `--sinamk-color-gate-${v}-fg--solid`,
+]);
 
 /**
  * The wireframe ramp is achromatic, so each role declares how much chroma to
@@ -250,6 +332,54 @@ const GLYPH_ANCHORS = {
     "--sina-glyphfield-accent": "#363e35",
   },
 };
+
+/**
+ * The hero emulator's industry tag — the filled chip that bleeds off the panel's
+ * inline start and names the industry the demo is running.
+ *
+ * Anchored here rather than in wireframe.css for the same reason the glyph field
+ * is: the tag is a landing-only surface with no home in the shared foundations,
+ * and the value has to be theme- and industry-derived rather than declared.
+ *
+ * It takes neither of the wireframe ramp's rules. `LIGHT_CHROMA_BOOST` is NOT
+ * applied (this is a chromatic fill signed off at its Figma value, not a
+ * near-neutral awaiting a wash — boosting it would restyle the approved teal by
+ * 20%, and only in light), and the hue is REPLACED outright rather than blended:
+ * unlike the gate triad there is only one chip on screen at a time, so there is
+ * no sibling to stay distinguishable from. Fintech therefore round-trips to the
+ * authored hex and healthcare/defense are the same colour re-hued.
+ *
+ * The accent is theme-aware, and for the same reason the gate palette is (see
+ * the note on it in broadsheet.css): light is a deep fill + white ink, dark
+ * INVERTS to a pale fill + the near-black `primary-fg`. A single theme-
+ * invariant solid does not survive here. The accent also paints the segment
+ * selector's chosen pill, which sits on the `secondary-fill` track, and the
+ * deep teal lands at 2.4:1 against that track in dark — under the 3:1 floor a
+ * UI boundary owes, and a visible regression from the pastel pill it replaces.
+ * Text contrast alone (5.5:1, fine in both themes) does not cover a filled
+ * shape whose EDGE is what a reader has to find.
+ *
+ * The dark value is derived rather than authored: it is the dark primary
+ * pastel's LIGHTNESS carrying the accent's own chroma and hue. So the chip
+ * inverts exactly as ButtonPrimary does, stays recognisably the same colour
+ * family, and needs no second hand-tuned hex per industry.
+ */
+const INDUSTRY_TAG = { bg: "#0f766e", fg: "#ffffff" };
+
+/**
+ * The accent pair for one theme, as `{ bg, fg }`. Light is the authored anchor;
+ * dark is the inversion described above, read off the broadsheet dark block so
+ * retuning the primary pastel carries the accent with it.
+ */
+function tagAnchor(theme) {
+  if (theme === "light") return INDUSTRY_TAG;
+  const accent = hexToOklch(INDUSTRY_TAG.bg);
+  const pastel = hexToOklch(anchors.broadsheet.dark.get("--sinamk-color-primary-fill"));
+  return {
+    bg: oklchToHex({ L: pastel.L, C: accent.C, H: accent.H }),
+    fg: anchors.broadsheet.dark.get("--sinamk-color-primary-fg"),
+  };
+}
 
 const anchors = {
   broadsheet: {
@@ -319,6 +449,32 @@ export function derive(industry, theme) {
     out.push([name, tint(hex, chroma ? (hue ?? SAGE_HUE) : hue, C, targetY)]);
   };
 
+  /**
+   * The gate fills take `push()`'s luminance pinning but neither of its hue
+   * rules, so they get their own path rather than a flag on `push`.
+   *
+   * Two departures, both deliberate:
+   *
+   * - Hue is BLENDED, not replaced (see `GATE_TINT`). Fintech blends by zero:
+   *   the anchors in broadsheet.css already are the fintech triad, so it
+   *   round-trips byte-for-byte exactly as the sage family does.
+   * - `LIGHT_CHROMA_BOOST` is NOT applied. That knob exists to make a
+   *   near-neutral page legibly tinted; the gate fills are chromatic by
+   *   construction and were signed off at their authored chroma. Boosting them
+   *   would restyle the approved anchors by 20% and, worse, would do it only in
+   *   light, breaking the triad's uniform C across themes.
+   */
+  const pushGate = (fill, ink) => {
+    const hex = anchors.broadsheet[theme].get(fill);
+    if (!hex) return;
+    const src = hexToOklch(hex);
+    const targetY = reference ? relLuminance(reference.get(fill)) : null;
+    const H = hue == null ? src.H : blendTowardHue(src.H, hue, GATE_TINT);
+    out.push([fill, tint(hex, H, src.C, targetY)]);
+    const inkHex = anchors.broadsheet[theme].get(ink);
+    if (inkHex) out.push([ink, inkHex]); // verbatim: the ink never tints
+  };
+
   for (const name of BROADSHEET_SAGE) {
     const hex = LANDING_GROUND_OVERRIDE[theme]?.[name] ?? anchors.broadsheet[theme].get(name);
     if (hex) push(name, hex);
@@ -330,6 +486,31 @@ export function derive(industry, theme) {
   for (const [name, hex] of Object.entries(GLYPH_ANCHORS[theme])) {
     push(name, hex);
   }
+  for (const [fill, ink] of BROADSHEET_GATE) {
+    pushGate(fill, ink);
+  }
+
+  // Hue replaced, own chroma kept, no light boost, luminance pinned to fintech
+  // so all three chips carry the white ink at exactly the same ratio. The ink
+  // itself is emitted verbatim, like the gate's.
+  const anchor = tagAnchor(theme);
+  const tagBg = tint(
+    anchor.bg,
+    hue,
+    hexToOklch(anchor.bg).C,
+    reference ? relLuminance(reference.get("--sina-industry-tag-bg")) : null,
+  );
+  out.push(["--sina-industry-tag-bg", tagBg]);
+  out.push(["--sina-industry-tag-fg", anchor.fg]);
+
+  // The hero's segment selector picks the industry; the emulator's chip reports
+  // it. Painting the chosen pill in the same accent is what ties the two into
+  // one statement, so the slot broadsheet.css opened for exactly this is
+  // repointed here — landing scope only, which is what leaves /showcase on the
+  // sage primary the alias defaults to.
+  out.push(["--sinamk-color-segment-fill--active", tagBg]);
+  out.push(["--sinamk-color-segment-fg--active", anchor.fg]);
+
   return out;
 }
 
@@ -363,6 +544,16 @@ const HEADER = `/*
  * ${"~"}133 sage, healthcare 250 clinical azure, defense 65 desert sand). Lightness
  * and chroma are identical across the three, so all three land within ~0.003
  * relative luminance of each other and every WCAG ratio holds for all of them.
+ *
+ * The \`--sinamk-color-gate-*\` verdict palette is the one exception, and it moves
+ * less: its FILLS are blended only partway toward the industry hue (so pass,
+ * escalate and reject stay distinguishable rather than collapsing onto one hue),
+ * and its INKS are emitted verbatim, identical across all three industries.
+ *
+ * \`--sina-industry-tag-bg\` (the hero emulator's industry chip) takes the plain
+ * hue replacement but skips the light chroma boost: it is a chromatic fill
+ * signed off at its Figma value, not a near-neutral awaiting a wash. Its ink is
+ * white in every industry and both themes.
  *
  * Raw hex is authored here on purpose. This is the third such exception on the
  * marketing side, alongside \`wireframe.css\` and \`GlyphField.module.css\` (the

@@ -12,6 +12,7 @@
  *   4. the glyph-field values stay literal hex (the canvas cannot parse anything else)
  *   5. every rule is theme-qualified (the :has() specificity trap)
  *   6. the governance-locked roles are never tinted
+ *   7. the gate verdict palette leans without converging, and its ink never moves
  */
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
@@ -126,6 +127,91 @@ describe("WCAG 2.2 AA contrast, all industries x both themes", () => {
   }
 });
 
+describe("gate verdict palette", () => {
+  // The gate palette is the one carve-out from "industry tints the brand, never
+  // the semantics", and it is safe only because it moves in a very particular
+  // way: the fills lean partway toward the industry hue, the inks do not move at
+  // all, and the triad never converges. Each of those three is asserted here,
+  // because each is a one-character edit away from being false — `GATE_TINT` is
+  // a single number, and the ink is emitted by a line that could just as easily
+  // have been routed through `tint()`.
+  const VERDICTS = ["pass", "escalate", "reject", "flag"] as const;
+  const fillOf = (v: string) => `--sinamk-color-gate-${v}-bg--solid`;
+  const inkOf = (v: string) => `--sinamk-color-gate-${v}-fg--solid`;
+
+  /** OKLCH hue in degrees. Enough of the transform to compare two hues. */
+  function hue(hex: string): number {
+    const lin = (i: number) => {
+      const s = parseInt(hex.slice(i + 1, i + 3), 16) / 255;
+      return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+    };
+    const [r, g, b] = [lin(0), lin(2), lin(4)];
+    const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+    const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+    const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+    const A = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
+    const B = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+    return ((Math.atan2(B, A) * 180) / Math.PI + 360) % 360;
+  }
+
+  /** Shortest angular distance between two hues, in degrees. */
+  const apart = (a: number, b: number) => Math.abs((((a - b) % 360) + 540) % 360 - 180);
+
+  it.each(THEMES)("%s: the ink is identical across all three industries", (theme) => {
+    for (const v of VERDICTS) {
+      const inks = INDUSTRIES.map((i) => pick(paletteOf(i, theme), inkOf(v)));
+      expect(new Set(inks).size, `${v} inks: ${inks.join(", ")}`).toBe(1);
+    }
+  });
+
+  it.each(THEMES)("%s: the fill does lean toward the industry", (theme) => {
+    // The inverse failure of the one above: a gate family accidentally dropped
+    // from the generator's loop would still pass every other test in this file,
+    // because an untinted token is trivially luminance-parity-safe. At least one
+    // verdict must actually move per industry, or the feature is inert.
+    for (const industry of ["healthcare", "defense"]) {
+      const base = paletteOf("fintech", theme);
+      const other = paletteOf(industry, theme);
+      const moved = VERDICTS.filter((v) => pick(base, fillOf(v)) !== pick(other, fillOf(v)));
+      expect(moved.length, `${industry}/${theme}: no gate fill moved`).toBeGreaterThan(0);
+    }
+  });
+
+  it.each(THEMES)("%s: the triad never converges", (theme) => {
+    // Raising GATE_TINT pulls the verdicts toward one another. Below ~25deg of
+    // separation a reader stops reading the colour and starts relying on the
+    // label alone, which is the point at which the palette has stopped working.
+    // `flag` is excluded: it is the near-achromatic neutral, so its hue is noise.
+    const TRIAD = ["pass", "escalate", "reject"] as const;
+    for (const industry of INDUSTRIES) {
+      const p = paletteOf(industry, theme);
+      for (let i = 0; i < TRIAD.length; i++) {
+        for (let j = i + 1; j < TRIAD.length; j++) {
+          const [a, b] = [pick(p, fillOf(TRIAD[i]!)), pick(p, fillOf(TRIAD[j]!))];
+          expect(
+            apart(hue(a), hue(b)),
+            `${industry}/${theme} ${TRIAD[i]} ${a} vs ${TRIAD[j]} ${b}`,
+          ).toBeGreaterThan(25);
+        }
+      }
+    }
+  });
+
+  for (const theme of THEMES) {
+    for (const industry of INDUSTRIES) {
+      it(`${industry}/${theme}: every verdict chip carries its ink at AA`, () => {
+        const p = paletteOf(industry, theme);
+        for (const v of VERDICTS) {
+          expect(
+            contrast(pick(p, fillOf(v)), pick(p, inkOf(v))),
+            `gate-${v}`,
+          ).toBeGreaterThanOrEqual(4.5);
+        }
+      });
+    }
+  }
+});
+
 describe("glyph-field palette stays machine-readable", () => {
   // gl/color.ts parseColor() understands only #hex and rgb(), and returns its
   // fallback on anything else — silently, with no error and no visual clue. A
@@ -137,6 +223,96 @@ describe("glyph-field palette stays machine-readable", () => {
       expect(decl[1]?.trim()).toMatch(/^#[0-9a-f]{6}$/);
     }
   });
+});
+
+describe("hero emulator industry tag", () => {
+  // The chip is the one place the industry names itself, so it is the one place
+  // the tint is meant to be obvious rather than a wash. Three claims:
+  //
+  //   1. it carries its white ink at AA in every industry and both themes,
+  //   2. the three industries actually differ (a collapsed hue would make the
+  //      chip say "fintech" in fintech colours on all three pages), and
+  //   3. the ink never moves, so the chip's contrast is a property of the fill.
+  const BG = "--sina-industry-tag-bg";
+  const FG = "--sina-industry-tag-fg";
+
+  for (const theme of THEMES) {
+    for (const industry of INDUSTRIES) {
+      it(`${industry}/${theme}: the chip carries its ink at AA`, () => {
+        const p = paletteOf(industry, theme);
+        expect(contrast(pick(p, FG), pick(p, BG))).toBeGreaterThanOrEqual(4.5);
+      });
+    }
+
+    it(`${theme}: every industry gets a distinct fill on one shared ink`, () => {
+      const fills = INDUSTRIES.map((i) => pick(paletteOf(i, theme), BG));
+      expect(new Set(fills).size).toBe(INDUSTRIES.length);
+
+      const inks = INDUSTRIES.map((i) => pick(paletteOf(i, theme), FG));
+      expect(new Set(inks).size).toBe(1);
+    });
+  }
+
+  // The whole point of the luminance pin: one contrast number covers all three,
+  // so the chip never needs per-industry tuning.
+  //
+  // Asserted on the RATIO, not on raw luminance. An absolute luminance
+  // tolerance is not a fixed unit of anything — near the dark accent's Y~0.545
+  // a single step of the 8-bit sRGB ramp is already worth ~0.004, so any bound
+  // tight enough to be meaningful in light is below the representable floor in
+  // dark. The ratio is what the pin is for and it holds in both themes.
+  it.each(THEMES)("%s: all three fills carry their ink at one ratio", (theme) => {
+    const ratios = INDUSTRIES.map((i) => {
+      const p = paletteOf(i, theme);
+      return contrast(pick(p, FG), pick(p, BG));
+    });
+    expect(Math.max(...ratios) - Math.min(...ratios)).toBeLessThan(0.1);
+  });
+
+  // Fintech is the reference and must round-trip to the value signed off in
+  // Figma (node 234:2403), not to whatever the OKLCH conversion drifts to.
+  it("light: fintech round-trips to the authored teal", () => {
+    expect(pick(paletteOf("fintech", "light"), BG)).toBe("#0f766e");
+  });
+
+  // Dark inverts (pale fill, near-black ink) rather than reusing the light
+  // solid, the same way ButtonPrimary and the gate palette do. Asserted as a
+  // relation, not a hex, so retuning the dark primary pastel carries the accent
+  // rather than breaking this.
+  it("dark: the accent inverts to a pale fill on dark ink", () => {
+    const light = paletteOf("fintech", "light");
+    const dark = paletteOf("fintech", "dark");
+    expect(luminance(pick(dark, BG))).toBeGreaterThan(luminance(pick(light, BG)));
+    expect(luminance(pick(dark, FG))).toBeLessThan(luminance(pick(dark, BG)));
+  });
+});
+
+describe("hero segment selector's chosen pill", () => {
+  // The pill and the chip are one statement: the selector picks the industry,
+  // the chip reports it. They must stay the same colour, and the pill has one
+  // requirement the chip does not — it is a filled shape sitting ON the track,
+  // so its EDGE has to be findable, not just its text. A deep light-mode solid
+  // reused in dark lands at 2.4:1 here, which is what the inversion above
+  // exists to fix; this is the test that catches it coming back.
+  const FILL = "--sinamk-color-segment-fill--active";
+  const INK = "--sinamk-color-segment-fg--active";
+  const TRACK = "--sinamk-color-secondary-fill";
+
+  for (const theme of THEMES) {
+    for (const industry of INDUSTRIES) {
+      it(`${industry}/${theme}: the pill matches the chip exactly`, () => {
+        const p = paletteOf(industry, theme);
+        expect(pick(p, FILL)).toBe(pick(p, "--sina-industry-tag-bg"));
+        expect(pick(p, INK)).toBe(pick(p, "--sina-industry-tag-fg"));
+      });
+
+      it(`${industry}/${theme}: the pill carries its ink at AA and its edge at 3:1`, () => {
+        const p = paletteOf(industry, theme);
+        expect(contrast(pick(p, INK), pick(p, FILL))).toBeGreaterThanOrEqual(4.5);
+        expect(contrast(pick(p, FILL), pick(p, TRACK))).toBeGreaterThanOrEqual(3);
+      });
+    }
+  }
 });
 
 describe("cascade safety", () => {

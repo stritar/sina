@@ -57,7 +57,17 @@
   flex-direction: column;
   gap: var(--sinamk-space--sm, 8px);
   margin-block-start: auto;
-  min-block-size: 0;
+  /* Never shrink to the scroll box. `.root` is a flex column, so `.inner` is a
+     flex item: with the default `flex-shrink: 1` it compresses to the container
+     the moment the turns outgrow it, and the `overflow-y: clip` below then eats
+     the difference. The thread's own scroll extent stays exactly one viewport,
+     so the scrollbar never appears and the conversation cannot be scrolled at
+     all. The automatic minimum size would normally stop that, but it only
+     applies to items whose overflow is `visible` — `clip` opts out of it, so
+     the floor has to be stated. (`min-block-size: 0` belongs on the scroll
+     container as a flex ITEM, where `.root[data-size="fill"]` already sets it;
+     on the content box it just re-authorised the collapse.) */
+  flex-shrink: 0;
   /* A landing bubble animates in from `translateY(4px)` (ChatBubble), and a
      transform still counts toward the scroll container's overflow: on a thread
      that otherwise fits, the last turn pushes 4px past the bottom edge and the

@@ -1,11 +1,10 @@
 "use client";
 
-import type { ReactNode } from "react";
 import Link from "next/link";
-import { Coin, Asclepius, ShieldChevron } from "@phosphor-icons/react/dist/ssr";
 import { toLocalePath } from "@/lib/i18n/paths";
 import { InstallCommand, SegmentSelector } from "../broadsheet";
 import { INDUSTRIES, hero, type Industry } from "./copy";
+import { INDUSTRY_ICONS } from "./industry-icons";
 import { useIndustry } from "./IndustryContext";
 import { GlyphField } from "./glyph-field/GlyphField";
 import { HeroEmulator } from "./hero-emulator/HeroEmulator";
@@ -13,13 +12,6 @@ import styles from "./Hero.module.css";
 import "../broadsheet/broadsheet.css";
 
 const ORDER: readonly Industry[] = ["fintech", "healthcare", "defense"];
-
-/** Left icon per industry; Phosphor nodes are supplied by the caller, never bundled. */
-const INDUSTRY_ICONS: Record<Industry, ReactNode> = {
-  fintech: <Coin />,
-  healthcare: <Asclepius />,
-  defense: <ShieldChevron />,
-};
 
 /**
  * The framed hero: a left text rectangle (title, subhead, the industry segment

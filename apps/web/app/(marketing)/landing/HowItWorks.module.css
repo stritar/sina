@@ -1,145 +1,427 @@
+/*
+ * HowItWorks — the ruled wireframe grid (Figma node 229:2234).
+ *
+ * The section is banded into three ROWS by full-bleed horizontal hairlines:
+ * heading / steps / code. Each `.row` is full-width and carries the rule as its
+ * own `border-bottom`, so the rule runs edge to edge, WIDER than the content
+ * band. Inside each row, `.frame` is the bordered content box whose side
+ * borders are the vertical gutter rules.
+ *
+ * FRAME CONTRACT: `--sina-space--6` gutter + `96rem` frame width (and the
+ * `max-width: 96rem` gutter-removal breakpoint below) MUST match
+ * LandingNav.module.css and Hero.module.css so the side borders line up into
+ * one continuous frame running down the page.
+ *
+ * Figma draws the band at 1440px (rules at x=143/1583 of 1728). We deliberately
+ * re-anchor to the live 96rem hero frame instead so the rules are continuous
+ * with the sheet above; the column proportions are unchanged.
+ */
 .section {
-  border-top: 1px solid var(--sina-color-border-subtle);
   /* Anchor target: keep the heading clear of the viewport edge on #how jumps
      from the hero's "How it works" button. */
   scroll-margin-top: var(--sina-space--8);
 }
 
-.inner {
-  max-width: 72rem;
+.row {
   width: 100%;
-  margin-inline: auto;
-  padding: var(--sina-space--12) var(--sina-space--6);
+  padding-inline: var(--sina-space--6);
+  border-bottom: 1px solid var(--sina-color-border-subtle, #e4e4e4);
 }
 
+.frame {
+  box-sizing: border-box;
+  max-width: 96rem;
+  margin-inline: auto;
+  /* Figma: 16px above and below the content in every row. */
+  padding-block: var(--sina-space--4);
+  border-inline: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+}
+
+/* The two internal column rules. They are painted on the FRAME rather than on
+   the list items so they span the full height of their row regardless of how
+   much copy each step carries. Only the steps row is `ruled`: Figma runs these
+   verticals from y=69 to y=291, so they terminate at the row's horizontal rule
+   instead of crossing it into the heading band, which carries the outer frame
+   rails alone. Absolute positioning resolves against the frame's padding box,
+   which is exactly the grid's content box, so 1/3 and 2/3 land on the column
+   edges. */
+.ruled {
+  position: relative;
+}
+
+.ruled::before,
+.ruled::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  width: 0;
+  border-left: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+  pointer-events: none;
+}
+
+.ruled::before {
+  left: 33.3333%;
+}
+
+.ruled::after {
+  left: 66.6667%;
+}
+
+/* Dark: dim the rules toward the near-black page ground so they don't read too
+   bright (mirrors the same treatment on the hero frame). */
+[data-theme="dark"] .row,
+[data-theme="dark"] .frame,
+[data-theme="dark"] .ruled::before,
+[data-theme="dark"] .ruled::after,
+[data-theme="dark"] .panel,
+[data-theme="dark"] .panel::before,
+[data-theme="dark"] .panelBar,
+[data-theme="dark"] .step + .step {
+  border-color: color-mix(
+    in srgb,
+    var(--sina-color-border-subtle, #2a2a2a) 60%,
+    transparent
+  );
+}
+
+/* Figma 32px/1.15/-0.5px snapped to the nearest scale steps (no 32px token
+   exists: the scale jumps 30 to 36). */
 .heading {
-  margin: 0 0 var(--sina-space--8);
+  margin: 0;
+  padding-inline: var(--sina-space--4);
   font-size: var(--sina-text--3xl);
-  font-weight: var(--sina-font-weight--bold);
+  font-weight: var(--sina-font-weight--semibold);
+  line-height: var(--sina-leading--tight);
   letter-spacing: var(--sina-tracking--tight);
   color: var(--sina-color-text);
 }
 
-/* The steps ARE the wireframe diagram: numbered boxes joined by connectors. */
+/* Three equal columns divided by hairlines. The dividers are real borders on
+   the list items (not pseudo-elements) so they span the full row height
+   regardless of how much copy each step carries. */
 .steps {
   margin: 0;
   padding: 0;
   list-style: none;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: var(--sina-space--8);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .step {
-  position: relative;
-  border: 1px solid var(--sina-color-border);
-  border-radius: var(--sina-radius--xs);
-  background: var(--sina-color-surface);
-  padding: var(--sina-space--5);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* Figma: content sits 16px inside its column rule. */
+  padding-inline-start: var(--sina-space--4);
+  padding-inline-end: var(--sina-space--6);
 }
 
-/* Connector between the boxes. */
-.step + .step::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: calc(-1 * var(--sina-space--8));
-  width: var(--sina-space--8);
-  height: 0;
-  border-top: 2px dashed var(--sina-color-border);
-}
+/* No border here: the column rules are drawn by `.ruled` on the frame so they
+   continue up through the heading band. `.step + .step` only picks up a rule in
+   the stacked layout below, where the verticals are switched off. */
 
-.stepNumber {
+/* The numbered tab: square on the left so it butts flush against the column
+   rule, rounded on the right. Pulled back by the content inset so its flat edge
+   sits ON the rule. Follows the Broadsheet label anatomy: no flex gap, the
+   label carries its own inline padding. */
+.marker {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: var(--sina-space--7);
-  height: var(--sina-space--7);
-  margin-bottom: var(--sina-space--3);
-  border-radius: var(--sina-radius--xs);
-  background: var(--sina-color-primary);
-  color: var(--sina-color-primary-fg);
-  font-family: var(--sina-font--mono);
-  font-weight: var(--sina-font-weight--semibold);
-  font-size: var(--sina-text--sm);
+  justify-content: flex-end;
+  box-sizing: border-box;
+  width: 2rem;
+  height: var(--sinamk-badge-height--lg, 24px);
+  margin-inline-start: calc(-1 * var(--sina-space--4));
+  margin-bottom: var(--sina-space--4);
+  padding-inline-end: var(--sinamk-badge-pad--sm, 4px);
+  border-start-end-radius: var(--sinamk-radius--md, 6px);
+  border-end-end-radius: var(--sinamk-radius--md, 6px);
+}
+
+.markerLabel {
+  padding-inline: var(--sinamk-badge-label-pad--lg, 5px);
+  font-size: var(--sinamk-badge-text--md, 12px);
+  font-weight: var(--sina-font-weight--bold);
+  line-height: var(--sina-leading--relaxed);
+}
+
+/* Warming ladder across the three steps. The --solid fg tokens are the
+   contrast-tuned near-blacks (#431407 etc.), not the pure black Figma drew. */
+.marker[data-step="1"] {
+  background: var(--sinamk-color-badge-orange-bg--solid, #f97316);
+  color: var(--sinamk-color-badge-orange-fg--solid, #431407);
+}
+
+.marker[data-step="2"] {
+  background: var(--sinamk-color-badge-amber-bg--solid, #f59e0b);
+  color: var(--sinamk-color-badge-amber-fg--solid, #451a03);
+}
+
+.marker[data-step="3"] {
+  background: var(--sinamk-color-badge-yellow-bg--solid, #eab308);
+  color: var(--sinamk-color-badge-yellow-fg--solid, #422006);
+}
+
+/* Dark: the --solid badge fills are theme-invariant by design, and at full
+   strength three vivid tabs glare against the near-black page. Bank each fill
+   45% toward the page ground and switch to the light --soft ink, which keeps the
+   warming ladder legible but calm. 45% is the measured floor: it lands all three
+   pairs at 5.1 to 5.2:1, clear of the AA 4.5 bar that both themes are held to
+   (the tab label is bold 12px, so it does not qualify as large text). Mixing
+   against --sina-color-bg rather than black means the tabs follow the
+   per-industry dark ground instead of drifting off it. */
+[data-theme="dark"] .marker[data-step="1"] {
+  background: color-mix(
+    in srgb,
+    var(--sinamk-color-badge-orange-bg--solid, #f97316) 45%,
+    var(--sina-color-bg, #0b0c0b)
+  );
+  color: var(--sinamk-color-badge-orange-fg--soft, #fdba74);
+}
+
+[data-theme="dark"] .marker[data-step="2"] {
+  background: color-mix(
+    in srgb,
+    var(--sinamk-color-badge-amber-bg--solid, #f59e0b) 45%,
+    var(--sina-color-bg, #0b0c0b)
+  );
+  color: var(--sinamk-color-badge-amber-fg--soft, #fcd34d);
+}
+
+[data-theme="dark"] .marker[data-step="3"] {
+  background: color-mix(
+    in srgb,
+    var(--sinamk-color-badge-yellow-bg--solid, #eab308) 45%,
+    var(--sina-color-bg, #0b0c0b)
+  );
+  color: var(--sinamk-color-badge-yellow-fg--soft, #fde047);
 }
 
 .stepTitle {
   margin: 0 0 var(--sina-space--2);
-  font-size: var(--sina-text--lg);
+  font-size: var(--sina-text--xl);
   font-weight: var(--sina-font-weight--semibold);
+  line-height: var(--sina-leading--snug);
   color: var(--sina-color-text);
 }
 
+/* Figma caps the body at 416px inside a 480px column. */
 .stepBody {
   margin: 0;
-  font-size: var(--sina-text--sm);
+  max-width: 26rem;
+  font-size: var(--sina-text--lg);
   line-height: var(--sina-leading--relaxed);
-  color: var(--sina-color-text-muted);
+  color: var(--sina-color-text);
 }
 
-.details {
-  margin-top: var(--sina-space--8);
-  max-width: 44rem;
-}
-
-.summary {
-  cursor: pointer;
-  font-family: var(--sina-font--mono);
-  font-size: var(--sina-text--sm);
-  color: var(--sina-color-text-muted);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.summary:focus-visible {
-  outline: 2px solid var(--sina-color-focus-ring);
-  outline-offset: 2px;
-}
-
-.code {
-  margin: var(--sina-space--3) 0 0;
-  padding: var(--sina-space--4);
-  border: 1px solid var(--sina-color-border);
-  border-radius: var(--sina-radius--xs);
-  background: var(--sina-color-surface-sunken);
-  font-family: var(--sina-font--mono);
-  font-size: var(--sina-text--xs);
+/* The heading gets its own band, so the rule beneath it becomes the code cell's
+   top edge (matching how the steps band is capped). */
+.codeHeading {
+  margin: 0;
+  padding-inline: var(--sina-space--4);
+  font-size: var(--sina-text--xl);
+  font-weight: var(--sina-font-weight--semibold);
   line-height: var(--sina-leading--snug);
-  color: var(--sina-color-text-muted);
-  overflow-x: auto;
+  color: var(--sina-color-text);
 }
 
-.caption {
-  margin: var(--sina-space--2) 0 0;
+/* The code panel is a CELL OF THE GRID, not a card sitting on it. It has no
+   border, no radius and no inset of its own: its left edge IS the frame's gutter
+   rule, its top edge IS the row rule above, and its only self-drawn edge is the
+   right one, which continues the 2/3 column divider straight down from the steps
+   band. That is why `.codeRow .frame` drops its block padding: the cell has to
+   reach the row rules to look flush. */
+.codeRow .frame {
+  padding-block: 0;
+}
+
+.panel {
+  /* One source of truth for the line-number gutter: the line grid's first
+     column, the gutter rule, and the title strip's indent all read it, so they
+     cannot drift apart. */
+  --_gutter: 3rem;
+
+  position: relative;
+  margin: 0;
+  /* Ends on the second column divider, so the vertical rule above continues. */
+  width: 66.6667%;
+  border-right: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+  background: var(--sina-color-surface-sunken);
+}
+
+/* The gutter rule, drawn on the PANEL rather than per line so it runs the full
+   height of the cell, edge to edge, crossing the title strip exactly like the
+   section's column rules cross its bands. Per-line borders started below the
+   strip and stopped short of the block padding, which left it floating. */
+.panel::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: var(--_gutter);
+  width: 0;
+  border-left: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+  pointer-events: none;
+}
+
+/* A quiet title strip banding the top of the cell: same hairline language as the
+   section's rows, so it reads as one more band in the grid. Indented past the
+   gutter so the filename lines up with the code, not with the numbers. */
+.panelBar {
+  display: flex;
+  align-items: center;
+  padding-block: var(--sina-space--2);
+  padding-inline: calc(var(--_gutter) + var(--sina-space--4))
+    var(--sina-space--4);
+  border-bottom: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+}
+
+.panelFile {
+  font-family: var(--sina-font--mono);
   font-size: var(--sina-text--xs);
+  letter-spacing: var(--sina-tracking--wide);
   color: var(--sina-color-text-subtle);
 }
 
+.code {
+  margin: 0;
+  padding: var(--sina-space--4) 0;
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--sm);
+  line-height: var(--sina-leading--relaxed);
+  color: var(--sina-color-text);
+  overflow-x: auto;
+}
+
+/* Each line is a two-column grid: the faint number gutter, then the code. The
+   number is a ::before on `attr(data-line)` so it is never part of the
+   selection, and copying the block yields clean, paste-ready source. */
+.line {
+  display: grid;
+  grid-template-columns: var(--_gutter) 1fr;
+}
+
+/* No border here: the gutter rule belongs to the panel so it spans the whole
+   cell rather than only the lines. */
+.line::before {
+  content: attr(data-line);
+  padding-inline-end: var(--sina-space--4);
+  text-align: right;
+  color: var(--sina-color-text-subtle);
+  /* Faint: present enough to count by, quiet enough to read past. */
+  opacity: 0.55;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.lineCode {
+  padding-inline-start: var(--sina-space--4);
+  white-space: pre;
+}
+
+/* Syntax palette.
+ *
+ * These are the Broadsheet `*-fg--soft` badge inks, which are already tuned as
+ * readable text on a light ground AND redefined in the dark block, so the
+ * highlighting flips theme for free and follows the per-industry tint. That is
+ * why no raw colour is authored here. Restrained on purpose: five hues, with
+ * plain identifiers left as body text so the eye lands on the governance verbs
+ * (`escalate`, the limit) rather than on a rainbow.
+ */
+.code [data-t="kw"] {
+  color: var(--sinamk-color-badge-violet-fg--soft, #6d28d9);
+}
+
+.code [data-t="fn"] {
+  color: var(--sinamk-color-badge-blue-fg--soft, #1d4ed8);
+}
+
+.code [data-t="str"] {
+  color: var(--sinamk-color-badge-green-fg--soft, #15803d);
+}
+
+.code [data-t="num"] {
+  color: var(--sinamk-color-badge-amber-fg--soft, #b45309);
+}
+
+.code [data-t="type"] {
+  color: var(--sinamk-color-badge-cyan-fg--soft, #0e7490);
+}
+
+.code [data-t="prop"] {
+  color: var(--sina-color-text-muted);
+}
+
+.code [data-t="punct"] {
+  color: var(--sina-color-text-subtle);
+}
+
+/* At/below the frame's max-width the sheet is viewport-bound, so drop the side
+   gutter and let the frame reach the viewport edges (mirrors Hero.module.css). */
+@media (max-width: 96rem) {
+  .row {
+    padding-inline: 0;
+  }
+}
+
+/* Stack the steps; the column dividers switch off and become row dividers. */
 @media (max-width: 60rem) {
-  .steps {
-    grid-template-columns: 1fr;
-    gap: var(--sina-space--6);
+  .ruled::before,
+  .ruled::after {
+    display: none;
   }
 
-  /* Vertical connector when stacked. */
-  .step + .step::before {
-    top: calc(-1 * var(--sina-space--6));
-    left: var(--sina-space--6);
-    width: 0;
-    height: var(--sina-space--6);
-    border-top: none;
-    border-left: 2px dashed var(--sina-color-border);
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .step {
+    padding-block: var(--sina-space--6);
+  }
+
+  .step:first-child {
+    padding-block-start: 0;
+  }
+
+  .step:last-child {
+    padding-block-end: 0;
+  }
+
+  .step + .step {
+    border-top: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+  }
+
+  .stepBody {
+    max-width: 40rem;
+  }
+
+  /* With the column dividers off, a 2/3 cell has no rule to align to, so the
+     panel fills the frame and drops its right edge. */
+  .panel {
+    width: 100%;
+    border-right: none;
   }
 }
 
 @media (max-width: 40rem) {
-  .inner {
-    padding-inline: var(--sina-space--4);
-    padding-block: var(--sina-space--8);
+  .frame {
+    padding-block: var(--sina-space--3);
   }
 
   .heading {
     font-size: var(--sina-text--2xl);
+  }
+
+  .stepTitle,
+  .codeHeading {
+    font-size: var(--sina-text--lg);
+  }
+
+  .stepBody {
+    font-size: var(--sina-text--base);
+  }
+
+  .code {
+    font-size: var(--sina-text--xs);
   }
 }

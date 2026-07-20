@@ -1,7 +1,7 @@
 /*
  * Hero conversation emulator (the matured Diptych). The panel chrome (header,
- * mode tag, layout) sits on the wireframe --sina-* scope, since it lives on the
- * hero's opaque emulator column; the chat pieces inside (ChatBubble, GateCard,
+ * industry tag, layout) sits on the wireframe --sina-* scope, since it lives on
+ * the hero's opaque emulator column; the chat pieces inside (ChatBubble, GateCard,
  * ChatComposer) bring their own Broadsheet --sinamk-* palette. The column is a
  * single flat surface: the thread is stripped to a bare scroll box below, so
  * bubbles and cards read directly on it rather than on a second inset panel.
@@ -18,14 +18,18 @@
   background: transparent;
 }
 
-/* ── Header: industry, mode, pause/play ─────────────────────────────────── */
+/* ── Header: industry tag, lede, pause/play ─────────────────────────────── */
 
 .header {
+  /* The industry tag bleeds back out to the panel edge, so it has to cancel
+     exactly this pad. Bound here so the narrow override below moves both. */
+  --hero-header-pad: var(--sina-space--4);
+
   position: relative;
   display: flex;
   align-items: center;
   gap: var(--sina-space--3);
-  padding: var(--sina-space--3) var(--sina-space--4);
+  padding: var(--sina-space--4) var(--hero-header-pad);
   border-bottom: 1px solid var(--sina-color-border-subtle);
 }
 
@@ -34,40 +38,73 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--sina-space--0_5);
-}
-
-.headerTitle {
-  margin: 0;
-  display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--sina-space--2);
-  font-size: var(--sina-text--sm);
-  font-weight: var(--sina-font-weight--semibold);
-  color: var(--sina-color-text);
 }
 
-.modeTag {
-  font-family: var(--sina-font--mono);
+/*
+ * Industry tag: a pill that runs off the panel's inline start, so its flat left
+ * edge sits on the column divider and only its trailing corners are rounded.
+ * The negative margin cancels the header pad; the matching start padding puts
+ * the GLYPH on the same 16px line as the lede beneath it (it is the mark that
+ * reads as the tag's leading edge now, so it takes the alignment the label
+ * used to).
+ *
+ * Anatomy mirrors the Broadsheet Badge at size lg, which is what the Figma node
+ * is built from: 24px tall, a 16px glyph in an unpadded slot, and the label as
+ * its own 5px-padded box. No flex gap anywhere — the label's padding IS the
+ * icon-to-text distance, so a label-less tag closes up on its own rather than
+ * leaving a stranded gap (see /broadsheet-label-anatomy).
+ *
+ * The fill is the per-industry chip colour, generated into industry-tint.css:
+ * a teal for fintech, and the same colour re-hued to clinical azure / desert
+ * sand for the other two. All three are pinned to one luminance, so the white
+ * ink sits at 5.5:1 whichever industry the visitor picked, and one anchor
+ * covers both themes because the chip carries its own surface.
+ *
+ * Deliberately not the Broadsheet --sinamk-* twin, since this chrome is an
+ * opaque landing surface and the two palettes diverge in dark.
+ */
+.industryTag {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  margin-inline-start: calc(-1 * var(--hero-header-pad));
+  padding-inline: var(--hero-header-pad) var(--sina-space--1);
+  border-start-end-radius: var(--sina-radius--md);
+  border-end-end-radius: var(--sina-radius--md);
+  background: var(--sina-industry-tag-bg);
   font-size: var(--sina-text--xs);
-  font-weight: var(--sina-font-weight--regular);
-  padding: 0 var(--sina-space--1_5);
-  border: 1px dashed var(--sina-color-text-muted);
-  border-radius: var(--sina-radius--xs);
-  color: var(--sina-color-text-muted);
+  font-weight: var(--sina-font-weight--bold);
+  color: var(--sina-industry-tag-fg);
   white-space: nowrap;
 }
 
-.modeTag[data-live] {
-  border-style: solid;
-  border-color: var(--sina-color-text);
-  color: var(--sina-color-text);
+.industryTagIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Sized on the box, not the font: Phosphor's default 1em would track the 12px
+   label and land the glyph at 12px instead of the 16px the design calls for. */
+.industryTagIcon svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.industryTagLabel {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: 5px;
 }
 
 .lede {
   margin: 0;
   font-size: var(--sina-text--xs);
-  color: var(--sina-color-text-subtle);
+  color: var(--sina-color-text-muted);
 }
 
 /*
@@ -149,14 +186,26 @@
  * Doubled class because ChatThread composes cn(styles.root, className), which
  * ties on specificity — source order alone would not settle the cascade.
  *
- * The top pad lives here rather than on .body so the scroll box runs all the
- * way up to the header rule: padding-block-start sits inside the scrollable
- * flow, so it holds the first turn clear of the line at rest but scrolls away
- * with the content, and a turn scrolling out is cut by the divider itself.
+ * Both pads live here rather than on .body so the scroll box runs the full
+ * height between the two rules: padding sits inside the scrollable flow, so it
+ * holds the end turns clear of the lines at rest (16px above the composer's
+ * divider, 16px below the header's) but scrolls away with the content, and a
+ * turn scrolling out is cut by the divider itself rather than fading out in a
+ * dead band short of it.
  */
 .thread.thread {
   padding: 0;
-  padding-block-start: var(--sina-space--4);
+  padding-block: var(--sina-space--4);
+  /* The gutter stays reserved (never `auto`) so a bar appearing mid-conversation
+     cannot reflow the turns, but `both-edges` is dropped and the one remaining
+     gutter is pulled OUT of the frame by a negative inline-end margin: the
+     thread's content edge lands flush on .body's padding edge, aligned with the
+     docked composer's glyphs, and the bar rides in .body's 16px pad instead of
+     eating into the conversation. --hero-sbw is measured in HeroEmulator.tsx
+     (it is a UA constant while the gutter is stable); the 0px fallback is the
+     SSR/no-JS pass, which simply keeps the gutter inside the frame. */
+  scrollbar-gutter: stable;
+  margin-inline-end: calc(-1 * var(--hero-sbw, 0px));
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -167,7 +216,27 @@
  * border and ink still come from --sinamk-* roles that industry-tint.css swaps
  * per industry (sage / azure / sand), so it follows the segment selector
  * without a fill of its own.
+ *
+ * In the hero it docks edge to edge rather than sitting as a field inside the
+ * frame: a negative inline margin cancels .body's padding so the bar spans the
+ * full panel width, the corners square off, and the inset ring collapses to a
+ * single top rule (the only edge still dividing anything). The inline padding
+ * it gave up comes back on its private --_pad-inline axis, so the glyphs stay
+ * off the panel edge. Doubled class because ChatComposer composes
+ * cn(styles.root, className), which ties on specificity.
  */
+.composer.composer {
+  --_pad-inline: var(--sina-space--4);
+  margin-inline: calc(-1 * var(--sina-space--4));
+  /* The bar owns the panel's bottom edge, so it eats .body's flex gap above it
+     (the rule then sits directly on the thread it divides, with no dead band)
+     and .body's bottom padding below it. What is left reads as one docked bar
+     whose ink is centred in it, rather than a field floating in the frame. */
+  margin-block-start: calc(-1 * var(--sina-space--3));
+  margin-block-end: calc(-1 * var(--sina-space--4));
+  border-radius: 0;
+  box-shadow: inset 0 1px 0 0 var(--sinamk-color-field-border, #cdd4c9);
+}
 
 /*
  * The gate is the machine lane, not a speaker: it reads directly on the
@@ -280,7 +349,7 @@
 
 @media (max-width: 40rem) {
   .header {
-    padding-inline: var(--sina-space--3);
+    --hero-header-pad: var(--sina-space--3);
   }
 
   .body {

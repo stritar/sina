@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 
@@ -38,6 +38,9 @@ beforeAll(() => {
 
 import { MarketingHome } from "../MarketingHome";
 
+/** The emulator panel, so header assertions don't collide with the switcher. */
+const emulator = () => screen.getByRole("region", { name: "Watch the gate decide" });
+
 describe("landing page", () => {
   it("renders the idle page with the fintech story static frame and no axe violations", async () => {
     const fetchMock = vi.fn();
@@ -47,9 +50,10 @@ describe("landing page", () => {
     expect(screen.getByRole("heading", { level: 1 }).textContent).toContain(
       "governed design system",
     );
-    // Fintech is the default: live tag present, no coming-soon badge, and the
-    // install command names the fintech constitution pair.
-    expect(screen.getByText("Live demo")).toBeDefined();
+    // Fintech is the default: the emulator header names it, no coming-soon
+    // badge, and the install command names the fintech constitution pair.
+    // Scoped to the panel, since the switcher carries the same label.
+    expect(within(emulator()).getByText("Fintech")).toBeDefined();
     expect(screen.queryByText("Coming soon")).toBeNull();
     expect(screen.getByText(/@sina-design-system\/fintech-react/)).toBeDefined();
 
@@ -77,7 +81,7 @@ describe("landing page", () => {
     await user.click(screen.getByRole("radio", { name: "Healthcare" }));
 
     expect(screen.getByText("Coming soon")).toBeDefined();
-    expect(screen.getByText("Simulated preview")).toBeDefined();
+    expect(within(emulator()).getByText("Healthcare")).toBeDefined();
     // The install command swaps to the healthcare pair and locks itself down,
     // so nobody copies an install line for packages that are not published.
     expect(screen.getByText(/@sina-design-system\/healthcare-react/)).toBeDefined();
@@ -90,7 +94,7 @@ describe("landing page", () => {
     // openly a simulation (no fintech-react component exists for it yet).
     expect(screen.getByText("CoSignDialog")).toBeDefined();
     expect(screen.getByText("Escalated")).toBeDefined();
-    expect(screen.queryByText("Live demo")).toBeNull();
+    expect(within(emulator()).queryByText("Fintech")).toBeNull();
     expect(fetchMock).not.toHaveBeenCalled();
     // The tint rides on <html data-industry>, which is what industry-tint.css
     // keys on and what the glyph-field canvas watches to re-read its palette.
@@ -118,5 +122,18 @@ describe("landing page", () => {
     const escalated = screen.getByText("Escalated");
     const badge = escalated.closest("[data-broadsheet]");
     expect(badge?.querySelector("svg")).not.toBeNull();
+  });
+
+  it("draws its verdict chips from the industry-tinted gate palette", () => {
+    // The chips must reach for `gate-*`, not the agnostic hues. Only the gate
+    // family is carried by industry-tint.css, so a chip that regressed to
+    // `amber`/`red` would still render — it would simply stop following the page
+    // when the visitor switches industry, which nothing else here would catch.
+    // `solid` matters for the same reason: the gate palette is authored solid
+    // only, and a `soft` pairing silently falls back to the base blue.
+    render(<MarketingHome locale="en" />);
+    const badge = screen.getByText("Escalated").closest("[data-broadsheet]");
+    expect(badge?.getAttribute("data-color")).toBe("gate-escalate");
+    expect(badge?.getAttribute("data-variant")).toBe("solid");
   });
 });

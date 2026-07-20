@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, type CSSProperties } from "react";
+import { useEffect, useMemo, type CSSProperties } from "react";
 import { Microphone, Pause, Play, PlusCircle, Waveform } from "@phosphor-icons/react/dist/ssr";
 import { ChatBubble, ChatComposer, ChatThread, GateCard, IconButton } from "../../broadsheet";
 import { INDUSTRIES, heroEmulator as copy } from "../copy";
+import { INDUSTRY_ICONS } from "../industry-icons";
 import { useIndustry } from "../IndustryContext";
 import { heroPairFor } from "./scenarios";
 import { TIMINGS, useConversation } from "./useConversation";
@@ -30,6 +31,17 @@ export function HeroEmulator({ className }: { className?: string }) {
   const pair = useMemo(() => heroPairFor(industry), [industry]);
   const { state, threadRef, playing, paused, togglePlay, fastForward, approve, pauseHandlers } =
     useConversation(pair);
+
+  // The thread's reserved scrollbar gutter is a UA constant (thin bar,
+  // `scrollbar-gutter: stable`), so one measurement holds: offsetWidth minus
+  // clientWidth is exactly the track width. Published on the thread itself,
+  // where the CSS negative inline-end margin consumes it to pull the gutter out
+  // of the frame. Not derivable in CSS, hence the read.
+  useEffect(() => {
+    const el = threadRef.current;
+    if (!el) return;
+    el.style.setProperty("--hero-sbw", `${el.offsetWidth - el.clientWidth}px`);
+  }, [threadRef]);
 
   const current = pair[state.scenarioIndex];
   const inFlight = state.mode === "auto";
@@ -59,12 +71,14 @@ export function HeroEmulator({ className }: { className?: string }) {
     >
       <header className={styles.header}>
         <div className={styles.headerText}>
-          <p className={styles.headerTitle}>
-            {definition.name}
-            <span className={styles.modeTag} data-live={definition.live || undefined}>
-              {definition.modeTag}
+          <span className={styles.industryTag}>
+            {/* Decorative: the label beside it already names the industry, so
+                the glyph would only repeat it to a screen reader. */}
+            <span className={styles.industryTagIcon} aria-hidden="true">
+              {INDUSTRY_ICONS[industry]}
             </span>
-          </p>
+            <span className={styles.industryTagLabel}>{definition.name}</span>
+          </span>
           <p className={styles.lede}>{copy.lede}</p>
         </div>
         <IconButton

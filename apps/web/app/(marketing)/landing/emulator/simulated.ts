@@ -1,8 +1,9 @@
 /**
  * Canned healthcare + defense scenarios and the browser-side "gate" that plays
  * them back. No constitution exists for these industries yet, so these are
- * openly labeled simulations (the UI shows a persistent "Simulated preview"
- * tag): plain data, no Zod, no new industry packages. The cited regulations are
+ * openly labeled simulations (every trace is stamped `simulated`, and the
+ * switcher marks the industry "Coming soon"): plain data, no Zod, no new
+ * industry packages. The cited regulations are
  * real, but nothing here enforces them; they illustrate where SINA would come in.
  */
 

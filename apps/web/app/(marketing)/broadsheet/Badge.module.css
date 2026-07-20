@@ -100,3 +100,13 @@
 
 .root[data-variant="solid"][data-color="pink"] { --_bg: var(--sinamk-color-badge-pink-bg--solid, #db2777); --_fg: var(--sinamk-color-badge-pink-fg--solid, #ffffff); }
 .root[data-variant="soft"][data-color="pink"] { --_bg: var(--sinamk-color-badge-pink-bg--soft, #fce7f3); --_fg: var(--sinamk-color-badge-pink-fg--soft, #be185d); }
+
+/*
+ * Gate verdict palette — solid only, and meaningful (see GateColor in Badge.tsx).
+ * The fallbacks are the fintech/light anchors; on the landing the industry tint
+ * substitutes the token and these chips follow the page.
+ */
+.root[data-variant="solid"][data-color="gate-pass"] { --_bg: var(--sinamk-color-gate-pass-bg--solid, #1d6835); --_fg: var(--sinamk-color-gate-pass-fg--solid, #ffffff); }
+.root[data-variant="solid"][data-color="gate-escalate"] { --_bg: var(--sinamk-color-gate-escalate-bg--solid, #7d4b00); --_fg: var(--sinamk-color-gate-escalate-fg--solid, #ffffff); }
+.root[data-variant="solid"][data-color="gate-reject"] { --_bg: var(--sinamk-color-gate-reject-bg--solid, #8b3b36); --_fg: var(--sinamk-color-gate-reject-fg--solid, #ffffff); }
+.root[data-variant="solid"][data-color="gate-flag"] { --_bg: var(--sinamk-color-gate-flag-bg--solid, #555a52); --_fg: var(--sinamk-color-gate-flag-fg--solid, #ffffff); }

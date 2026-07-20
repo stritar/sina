@@ -202,10 +202,10 @@ export function TurnOutcome({
       <div className={styles.simCard}>
         {/*
          * The gate card directly above already cites the violation and its
-         * standard, and the panel header carries a persistent "Simulated
-         * preview" tag, so neither is repeated here: this card is the terms and
-         * the step-up. The description says what the component would DO, not why
-         * the request was blocked, which is the gate card's line to deliver.
+         * standard, and its trace meta line stamps the turn "simulated", so
+         * neither is repeated here: this card is the terms and the step-up. The
+         * description says what the component would DO, not why the request was
+         * blocked, which is the gate card's line to deliver.
          */}
         <code className={styles.mount}>{outcome.mount}</code>
         <p className={styles.simTitle}>{outcome.title}</p>
