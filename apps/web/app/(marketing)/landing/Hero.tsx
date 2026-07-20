@@ -81,13 +81,6 @@ export function Hero({ locale }: { locale: string }) {
             >
               <span className={styles.ctaLabel}>{hero.ctaDocs}</span>
             </Link>
-            <a
-              className={`${styles.ctaButton} ${styles.ctaButtonSecondary}`}
-              href="#how"
-              data-broadsheet=""
-            >
-              <span className={styles.ctaLabel}>{hero.ctaHowItWorks}</span>
-            </a>
           </div>
         </div>
         <div className={styles.emulatorCol}>

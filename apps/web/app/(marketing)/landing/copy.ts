@@ -23,7 +23,6 @@ export const hero = {
   subhead:
     "Your AI proposes what the interface should do. SINA checks it against your product, compliance, and accessibility rules before anything reaches the user.",
   ctaDocs: "Read the docs",
-  ctaHowItWorks: "How it works",
   switcherLabel: "Pick an industry",
   comingSoon: "Coming soon",
 } as const;

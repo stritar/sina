@@ -241,15 +241,6 @@
   background: var(--sinamk-color-primary-fill--hover, #444d3b);
 }
 
-.ctaButtonSecondary {
-  color: var(--sinamk-color-text, #353b31);
-  background: var(--sinamk-color-secondary-fill, #e9ece8);
-}
-
-.ctaButtonSecondary:hover {
-  background: var(--sinamk-color-secondary-fill--hover, #dfe4de);
-}
-
 .ctaLabel {
   display: inline-flex;
   align-items: center;
