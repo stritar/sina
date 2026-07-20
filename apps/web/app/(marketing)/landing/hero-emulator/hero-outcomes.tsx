@@ -19,14 +19,28 @@ const OVER_LIMIT_WIRE_INTENT = {
  * What renders once the gate decided, per scenario id:
  *  - `summary`         → the confirm/read card the pass mounts (a SummaryList).
  *  - `secure-wire-dialog` → the REAL fintech-react governed dialog (the payoff).
- *  - `simulated-dialog` → a non-interactive card NAMING the governed component
- *    SINA would mount for a non-fintech escalation (openly a simulation; no
- *    such component exists yet, so no fake buttons — the honest, axe-clean choice).
+ *  - `simulated-mount` → a non-interactive card showing the ANATOMY of the
+ *    governed component SINA would mount for a non-fintech escalation: the terms
+ *    it would bind and the step-up it would collect, in the same order as
+ *    SecureWireDialog's review phase. No such component exists yet, so the card
+ *    carries no buttons and no inputs — not even disabled ones, since a control
+ *    that collects nothing is the same lie as a fake button. It describes the
+ *    step-up rather than simulating it, and says so on its face.
  */
 type HeroOutcome =
   | { kind: "summary"; items: SummaryItem[] }
   | { kind: "secure-wire-dialog" }
-  | { kind: "simulated-dialog"; mount: string; caption: string };
+  | {
+      kind: "simulated-mount";
+      /** Component name. Must match the scenario's `mount` in simulated.ts. */
+      mount: string;
+      title: string;
+      description: string;
+      /** The terms the dialog would bind, drawn from the scenario's payload. */
+      terms: SummaryItem[];
+      /** What the dialog's step-up would gather from the approver. */
+      collects: string[];
+    };
 
 const HERO_OUTCOME: Record<string, HeroOutcome> = {
   // Fintech
@@ -49,9 +63,18 @@ const HERO_OUTCOME: Record<string, HeroOutcome> = {
     ],
   },
   "high-dose-order": {
-    kind: "simulated-dialog",
+    kind: "simulated-mount",
     mount: "CoSignDialog",
-    caption: "A pharmacist co-signs here. Simulated preview.",
+    title: "Pharmacist co-signature required",
+    description:
+      "The order is held until a pharmacist signs it, and the signature binds to the exact dose below.",
+    terms: [
+      { label: "Patient", value: "pt_4821" },
+      { label: "Drug", value: "hydromorphone" },
+      { label: "Dose", value: "12 mg", emphasis: true },
+      { label: "Route", value: "IV" },
+    ],
+    collects: ["Pharmacist ID", "Pharmacist name", "6 digit co-sign code"],
   },
   // Defense
   "convoy-manifest": {
@@ -63,9 +86,19 @@ const HERO_OUTCOME: Record<string, HeroOutcome> = {
     ],
   },
   "munitions-transfer": {
-    kind: "simulated-dialog",
+    kind: "simulated-mount",
     mount: "DualAuthDialog",
-    caption: "A second officer approves here. Simulated preview.",
+    title: "Second officer approval required",
+    description:
+      "The transfer is held until a second officer signs it. The officer who drafted it cannot be that signer.",
+    terms: [
+      { label: "NSN", value: "1305-01-155-5459" },
+      { label: "Item", value: "5.56mm ball" },
+      { label: "Quantity", value: "40 cases", emphasis: true },
+      { label: "From", value: "Depot A" },
+      { label: "To", value: "Depot B" },
+    ],
+    collects: ["Second officer ID", "Officer name", "6 digit authorization code"],
   },
 };
 
@@ -163,9 +196,29 @@ export function TurnOutcome({
 
   return (
     <ChatBubble variant="outcome" size="sm">
-      <div className={styles.simulatedDialog}>
+      <div className={styles.simCard}>
+        {/*
+         * The gate card directly above already cites the violation and its
+         * standard, and the panel header carries a persistent "Simulated
+         * preview" tag, so neither is repeated here: this card is the terms and
+         * the step-up. The description says what the component would DO, not why
+         * the request was blocked, which is the gate card's line to deliver.
+         */}
         <code className={styles.mount}>{outcome.mount}</code>
-        <span className={styles.caption}>{outcome.caption}</span>
+        <p className={styles.simTitle}>{outcome.title}</p>
+        <p className={styles.simDesc}>{outcome.description}</p>
+        <SummaryList items={outcome.terms} />
+        <div className={styles.simCollects}>
+          <span className={styles.simCollectsLabel}>{copy.simulatedCollects}</span>
+          <ul className={styles.simChips}>
+            {outcome.collects.map((field) => (
+              <li key={field} className={styles.simChip}>
+                {field}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <span className={styles.caption}>{copy.simulatedCaption}</span>
       </div>
     </ChatBubble>
   );

@@ -190,11 +190,63 @@
   gap: var(--sina-space--3);
 }
 
-/* A non-fintech escalation names the governed component SINA would mount. */
-.simulatedDialog {
+/*
+ * A non-fintech escalation shows the ANATOMY of the component SINA would mount:
+ * the terms it binds and the step-up it collects, openly tagged as a simulation.
+ * It carries a border so it reads as a mounted surface inside the bubble rather
+ * than loose text, echoing the GateCard above it without borrowing that card's
+ * Broadsheet palette (landing chrome stays on the --sina-* wireframe scope).
+ *
+ * Nothing here is focusable by design: no buttons, no inputs, not even disabled
+ * ones. .body pins every type token to 12px, so hierarchy inside this card comes
+ * from weight and the text-colour ladder, never from font-size.
+ */
+.simCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--2);
+  padding: var(--sina-space--3);
+  border: 1px solid var(--sina-color-border-subtle);
+  border-radius: var(--sina-radius--sm);
+}
+
+.simTitle {
+  margin: 0;
+  font-weight: var(--sina-font-weight--semibold);
+  color: var(--sina-color-text);
+}
+
+.simDesc {
+  margin: 0;
+  color: var(--sina-color-text-muted);
+}
+
+.simCollects {
   display: flex;
   flex-direction: column;
   gap: var(--sina-space--1_5);
+}
+
+.simCollectsLabel {
+  font-weight: var(--sina-font-weight--medium);
+  color: var(--sina-color-text-subtle);
+}
+
+.simChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sina-space--1_5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Deliberately unlike a field: no fill, no caret, no affordance to type into. */
+.simChip {
+  padding: var(--sina-space--0_5) var(--sina-space--2);
+  border: 1px dashed var(--sina-color-border);
+  border-radius: var(--sina-radius--full);
+  color: var(--sina-color-text-muted);
 }
 
 .mount {

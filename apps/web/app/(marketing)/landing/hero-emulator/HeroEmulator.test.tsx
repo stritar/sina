@@ -13,9 +13,13 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
+import { axe } from "jest-axe";
 import { heroEmulator as copy } from "../copy";
 import { IndustryProvider } from "../IndustryContext";
+import { DEFENSE_SCENARIOS, HEALTHCARE_SCENARIOS, cannedTrace } from "../emulator/simulated";
+import type { SimulatedScenario } from "../emulator/types";
 import { HeroEmulator } from "./HeroEmulator";
+import { TurnOutcome } from "./hero-outcomes";
 import { TIMINGS } from "./useConversation";
 
 function stubMatchMedia() {
@@ -125,6 +129,81 @@ describe("HeroEmulator thread surface", () => {
     expect(composer?.hasAttribute("data-broadsheet")).toBe(true);
     expect(composer?.querySelectorAll("button")).toHaveLength(1);
   });
+});
+
+/**
+ * The non-fintech escalations. No constitution exists for these industries, so
+ * the outcome is a described component rather than a mounted one: it must show
+ * enough anatomy to be worth reading, and must never grow a control that
+ * pretends to collect the step-up it describes.
+ */
+describe("HeroEmulator simulated mount preview", () => {
+  const CASES: Array<{
+    industry: string;
+    scenario: SimulatedScenario;
+    title: string;
+    emphasised: string;
+  }> = [
+    {
+      industry: "healthcare",
+      scenario: HEALTHCARE_SCENARIOS.find((s) => s.id === "high-dose-order")!,
+      title: "Pharmacist co-signature required",
+      emphasised: "12 mg",
+    },
+    {
+      industry: "defense",
+      scenario: DEFENSE_SCENARIOS.find((s) => s.id === "munitions-transfer")!,
+      title: "Second officer approval required",
+      emphasised: "40 cases",
+    },
+  ];
+
+  for (const { industry, scenario, title, emphasised } of CASES) {
+    it(`shows the ${industry} component's terms and step-up, with no fake controls`, () => {
+      const { container } = render(
+        <TurnOutcome scenario={scenario} trace={cannedTrace(scenario, scenario.result)} />,
+      );
+
+      // The anatomy a visitor came for: what the component would bind...
+      expect(screen.queryByText(title)).not.toBeNull();
+      expect(screen.queryByText(emphasised)).not.toBeNull();
+      // ...and what its step-up would gather, described rather than simulated.
+      expect(screen.queryByText(copy.simulatedCollects)).not.toBeNull();
+      // Framed as hypothetical, so the card never reads as a mounted component.
+      expect(screen.queryByText(copy.simulatedCaption)).not.toBeNull();
+
+      // The honesty guard. A disabled control that collects nothing is the same
+      // lie as a fake button, so neither may appear here.
+      expect(container.querySelectorAll("button")).toHaveLength(0);
+      expect(container.querySelectorAll("input")).toHaveLength(0);
+    });
+
+    it(`names the same component the ${industry} gate said it would mount`, () => {
+      // Two sources state the component name: the canned trace (which the gate
+      // card renders) and the outcome card. They must never drift apart.
+      render(<TurnOutcome scenario={scenario} trace={cannedTrace(scenario, scenario.result)} />);
+      expect(screen.queryByText(scenario.result.mount!)).not.toBeNull();
+    });
+
+    it(`reads top to bottom and passes axe for ${industry}`, async () => {
+      // axe schedules its own work; the suite-wide fake timers would stall it.
+      vi.useRealTimers();
+      const { container } = render(
+        <TurnOutcome scenario={scenario} trace={cannedTrace(scenario, scenario.result)} />,
+      );
+
+      // Component name, then title, then description, then the bound terms,
+      // then the step-up, then the honest close. The terms carry the meaning,
+      // so they must not sink below the step-up that merely describes a form.
+      const card = container.querySelector('[class*="simCard"]')!;
+      const order = [...card.children].map((el) => el.tagName.toLowerCase());
+      expect(order).toEqual(["code", "p", "p", "dl", "div", "span"]);
+
+      // The landing axe pass only covers the fintech frame, so this path needs
+      // its own: it introduces a list and a definition list of its own.
+      expect(await axe(container)).toHaveNoViolations();
+    });
+  }
 });
 
 describe("HeroEmulator visitor-driven approval", () => {

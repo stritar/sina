@@ -13,12 +13,12 @@
  * by its own package-local test.
  */
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const CASES = [
-  { file: "./SecureWireDialog/SecureWireDialog.module.css", rule: "violationRow" },
-  { file: "./GovernedActionDialog/GovernedActionDialog.module.css", rule: "violationRow" },
+  { file: "src/SecureWireDialog/SecureWireDialog.module.css", rule: "violationRow" },
+  { file: "src/GovernedActionDialog/GovernedActionDialog.module.css", rule: "violationRow" },
 ] as const;
 
 function ruleBlock(css: string, rule: string): string {
@@ -29,7 +29,9 @@ function ruleBlock(css: string, rule: string): string {
 
 describe("violation rows stack the severity Badge above the message", () => {
   it.each(CASES)("$file .$rule is a column", ({ file, rule }) => {
-    const css = readFileSync(fileURLToPath(new URL(file, import.meta.url)), "utf8");
+    // Vitest runs with the package root as cwd; `import.meta.url` is an http:
+    // URL under the jsdom environment, so it can't be resolved to a path.
+    const css = readFileSync(resolve(process.cwd(), file), "utf8");
     const block = ruleBlock(css, rule);
 
     expect(

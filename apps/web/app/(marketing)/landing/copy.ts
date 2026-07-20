@@ -82,6 +82,8 @@ export const heroEmulator = {
   gateKicker: "The gate",
   checking: "Checking against the constitution",
   wireApproval: "Simulated approval. The real gate re-checks server-side.",
+  simulatedCollects: "The dialog collects",
+  simulatedCaption: "SINA would mount this component here.",
   wireApproved:
     "Approved. A second party signed off, the gate re-checked the same terms server-side, and the transfer is logged.",
   send: "Send",
