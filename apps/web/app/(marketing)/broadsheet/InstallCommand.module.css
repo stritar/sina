@@ -55,6 +55,13 @@
   transition: color var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease);
 }
 
+/* Unreleased state: the card keeps its normal surface and ink; the only signal
+   is the tooltip, which turns amber and reads "Coming soon" instead of offering
+   a copy the visitor cannot use. Copy stays off (see the component). */
+.root[data-coming-soon] .command {
+  cursor: default;
+}
+
 /* The `npm ` prompt prefix reads stronger than the muted command body. */
 .prefix {
   color: var(--sinamk-color-text-strong, #52564e);
@@ -104,6 +111,16 @@
 .tooltip[data-open] {
   opacity: 1;
   visibility: visible;
+}
+
+/* "Coming soon" reuses the tooltip chip but in the amber badge pair, so the
+   unreleased state reads as a status rather than an offer to copy. Same solid
+   fill + deep same-hue ink the Badge uses, which carries its own contrast. */
+.tooltip[data-coming-soon] {
+  border-color: var(--sinamk-color-badge-amber-bg--solid, #f59e0b);
+  background: var(--sinamk-color-badge-amber-bg--solid, #f59e0b);
+  color: var(--sinamk-color-badge-amber-fg--solid, #451a03);
+  font-weight: 600;
 }
 
 /* Visually-hidden polite live region announcing the copy result. */

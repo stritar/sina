@@ -89,6 +89,7 @@
   --sinamk-radius--sm: 4px;
   --sinamk-radius--md: 6px;
   --sinamk-radius--lg: 8px;
+  --sinamk-radius--xl: 24px;
   --sinamk-radius--full: 999px;
 
   /* Control size scale (medium = the Figma example) */

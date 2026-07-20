@@ -23,9 +23,11 @@
   gap: var(--sina-space--1);
 }
 
+/* Severity Badge stacked above its message, never beside it. */
 .violationHead {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   gap: var(--sina-space--1_5);
 }
 
@@ -41,7 +43,6 @@
 }
 
 .standard {
-  padding-left: var(--sina-space--1);
   font-family: var(--sina-font--mono);
   font-size: var(--sina-text--xs);
   color: var(--sina-color-text-subtle);

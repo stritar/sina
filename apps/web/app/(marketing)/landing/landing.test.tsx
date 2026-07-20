@@ -47,9 +47,11 @@ describe("landing page", () => {
     expect(screen.getByRole("heading", { level: 1 }).textContent).toContain(
       "governed design system",
     );
-    // Fintech is the default: live tag present, no coming-soon badge.
+    // Fintech is the default: live tag present, no coming-soon badge, and the
+    // install command names the fintech constitution pair.
     expect(screen.getByText("Live demo")).toBeDefined();
     expect(screen.queryByText("Coming soon")).toBeNull();
+    expect(screen.getByText(/@sina-design-system\/fintech-react/)).toBeDefined();
 
     // The static thread carries BOTH turns: the $500 wire that passes and
     // renders a confirm card, then the $60k wire that escalates to the REAL
@@ -76,6 +78,12 @@ describe("landing page", () => {
 
     expect(screen.getByText("Coming soon")).toBeDefined();
     expect(screen.getByText("Simulated preview")).toBeDefined();
+    // The install command swaps to the healthcare pair and locks itself down,
+    // so nobody copies an install line for packages that are not published.
+    expect(screen.getByText(/@sina-design-system\/healthcare-react/)).toBeDefined();
+    expect(screen.getByRole("button", { name: /healthcare/ }).getAttribute("aria-disabled")).toBe(
+      "true",
+    );
     // Pass turn: the medication read renders its component (the patient row).
     expect(screen.getByText("Maria Chen")).toBeDefined();
     // Escalation turn: the gate names the governed dialog SINA would mount,
@@ -105,7 +113,7 @@ describe("landing page", () => {
 
   it("carries the bold warning glyph on an escalate gate (the error/warning icon rule)", async () => {
     render(<MarketingHome locale="en" />);
-    // The escalate GateCard leads with a soft 'Escalated' badge that MUST carry
+    // The escalate GateCard leads with a solid 'Escalated' badge that MUST carry
     // its bold status glyph beside the label — never fill + text alone.
     const escalated = screen.getByText("Escalated");
     const badge = escalated.closest("[data-broadsheet]");

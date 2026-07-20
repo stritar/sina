@@ -24,7 +24,7 @@
   padding: 0;
 }
 
-/* One blocking-violation row: a severity Badge beside its message. */
+/* One blocking-violation row: a severity Badge stacked above its message. */
 .violationRow {
   display: flex;
   flex-direction: column;

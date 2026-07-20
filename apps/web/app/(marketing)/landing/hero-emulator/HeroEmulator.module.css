@@ -1,9 +1,11 @@
 /*
  * Hero conversation emulator (the matured Diptych). The panel chrome (header,
  * mode tag, layout) sits on the wireframe --sina-* scope, since it lives on the
- * hero's opaque emulator column; the chat pieces inside (ChatThread, ChatBubble,
- * GateCard, ChatComposer) bring their own Broadsheet --sinamk-* palette. The
- * panel is absolutely positioned by its host column, so the thread scrolls
+ * hero's opaque emulator column; the chat pieces inside (ChatBubble, GateCard,
+ * ChatComposer) bring their own Broadsheet --sinamk-* palette. The column is a
+ * single flat surface: the thread is stripped to a bare scroll box below, so
+ * bubbles and cards read directly on it rather than on a second inset panel.
+ * The panel is absolutely positioned by its host column, so the thread scrolls
  * internally and never grows the hero.
  */
 
@@ -107,14 +109,65 @@
 
 /* ── Body: the thread fills, the composer pins to the bottom ─────────────── */
 
+/*
+ * One type size for the whole conversation. The chat pieces are size-driven
+ * (ChatBubble/GateCard/ChatComposer read --sinamk-text--*, Badge reads
+ * --sinamk-badge-text--*) and the mounted outcomes are core primitives on the
+ * --sina-* scale, so pinning both scales here flattens bubbles, gate cards,
+ * violations, badges and the reply summaries to 12px without touching the
+ * shared Broadsheet components (which the /showcase + Figma sync own). The
+ * panel header keeps its own chrome scale: this block is scoped to .body.
+ */
 .body {
+  --sinamk-text--sm: 12px;
+  --sinamk-text--md: 12px;
+  --sinamk-text--lg: 12px;
+  --sinamk-badge-text--sm: 12px;
+  --sinamk-badge-text--md: 12px;
+  --sinamk-badge-text--lg: 12px;
+  --sina-text--xs: 12px;
+  --sina-text--sm: 12px;
+  --sina-text--ui: 12px;
+  --sina-text--base: 12px;
+  --sina-text--lg: 12px;
+  --sina-text--2xl: 12px;
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
   gap: var(--sina-space--3);
   padding: var(--sina-space--4);
+  /* No top pad here: it would clip the thread short of the header rule, so a
+     scrolling turn would fade out in mid-air. The thread carries it instead. */
+  padding-block-start: 0;
 }
+
+/*
+ * The hero frame has no thread surface of its own: turns sit directly on the
+ * emulator column. ChatThread keeps its scrolling + bottom-anchor behaviour and
+ * drops its chrome; .body's padding supplies the frame the thread used to add.
+ * Doubled class because ChatThread composes cn(styles.root, className), which
+ * ties on specificity — source order alone would not settle the cascade.
+ *
+ * The top pad lives here rather than on .body so the scroll box runs all the
+ * way up to the header rule: padding-block-start sits inside the scrollable
+ * flow, so it holds the first turn clear of the line at rest but scrolls away
+ * with the content, and a turn scrolling out is cut by the divider itself.
+ */
+.thread.thread {
+  padding: 0;
+  padding-block-start: var(--sina-space--4);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+/*
+ * The composer is transparent by design, so the panel shows through it. Its
+ * border and ink still come from --sinamk-* roles that industry-tint.css swaps
+ * per industry (sage / azure / sand), so it follows the segment selector
+ * without a fill of its own.
+ */
 
 /* One committed exchange: ask, gate decision, outcome, stacked as a unit. */
 .turn {
@@ -168,5 +221,10 @@
 
   .body {
     padding: var(--sina-space--3);
+    padding-block-start: 0;
+  }
+
+  .thread.thread {
+    padding-block-start: var(--sina-space--3);
   }
 }

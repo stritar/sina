@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, type CSSProperties } from "react";
-import { Pause, PaperPlaneRight, Play } from "@phosphor-icons/react/dist/ssr";
+import { Microphone, Pause, Play, PlusCircle, Waveform } from "@phosphor-icons/react/dist/ssr";
 import { ChatBubble, ChatComposer, ChatThread, GateCard, IconButton } from "../../broadsheet";
 import { INDUSTRIES, heroEmulator as copy } from "../copy";
 import { useIndustry } from "../IndustryContext";
@@ -84,10 +84,15 @@ export function HeroEmulator({ className }: { className?: string }) {
       </header>
 
       <div className={styles.body}>
-        <ChatThread ref={threadRef} size="fill" aria-label={copy.threadLabel}>
+        <ChatThread
+          ref={threadRef}
+          size="fill"
+          className={styles.thread}
+          aria-label={copy.threadLabel}
+        >
           {state.history.map((turn, index) => (
             <div className={styles.turn} key={`${turn.scenario.id}-${index}`}>
-              <ChatBubble variant="user" size="sm" kicker={copy.youKicker}>
+              <ChatBubble variant="user" size="sm">
                 <p className={styles.prompt}>{turn.scenario.prompt}</p>
               </ChatBubble>
               <TurnGate trace={turn.trace} />
@@ -100,7 +105,7 @@ export function HeroEmulator({ className }: { className?: string }) {
             </div>
           ))}
           {showUser && current ? (
-            <ChatBubble variant="user" size="sm" kicker={copy.youKicker}>
+            <ChatBubble variant="user" size="sm">
               <p className={styles.prompt}>{current.prompt}</p>
             </ChatBubble>
           ) : null}
@@ -118,6 +123,7 @@ export function HeroEmulator({ className }: { className?: string }) {
         </ChatThread>
 
         <ChatComposer
+          className={styles.composer}
           size="md"
           text={
             state.phase === "typing" && current
@@ -126,7 +132,9 @@ export function HeroEmulator({ className }: { className?: string }) {
           }
           caret={inFlight && state.phase === "typing"}
           placeholder={copy.composerPlaceholder}
-          sendIcon={<PaperPlaneRight weight="bold" />}
+          leadingIcon={<PlusCircle weight="fill" />}
+          trailingIcon={<Microphone weight="fill" />}
+          sendIcon={<Waveform weight="bold" />}
           sendLabel={copy.send}
           onSend={fastForward}
         />

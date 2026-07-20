@@ -7,7 +7,27 @@
   border-radius: var(--sinamk-radius--lg, 8px);
   background: var(--sinamk-color-bg, #f5f6f4);
   overflow-y: auto;
+  /* Reserve the scrollbar track up front. A thread grows turn by turn, so the
+     bar appears mid-conversation; without a stable gutter that reflows every
+     bubble sideways at the exact moment a new one lands. `both-edges` because
+     the hero strips this component's padding: a right-only gutter would leave
+     the turns visibly off-centre in the panel. */
+  scrollbar-gutter: stable both-edges;
+  /* Branded scrollbar, on the standard properties rather than the -webkit-
+     pseudo-elements: those need raw pixel widths, these need none. `thin` also
+     narrows the gutter reserved above, so the thread reads more compact. The
+     thumb is the field border, which industry-tint.css swaps per industry, so
+     the bar picks up the sage / azure / sand the rest of the panel wears. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--sinamk-color-field-border, #cdd4c9) transparent;
   overscroll-behavior: contain;
+}
+
+/* The bar is a background detail until the reader is actually over the thread.
+   Hover only, deliberately: the keyboard focus ring is the global
+   [data-broadsheet] rule's job, and a component module must never author one. */
+.root:hover {
+  scrollbar-color: var(--sinamk-color-field-border--hover, #b6bfb1) transparent;
 }
 
 .root[data-size="sm"] {

@@ -1,55 +1,117 @@
+/*
+ * One bordered field that holds the whole composer: leading glyph, typed text,
+ * trailing glyph, send button. The fill is transparent by design — the surface
+ * behind it (the hero panel) shows through, and only the border and ink carry
+ * the theme. Per-size rules set the private axes below; every slot reads them,
+ * so a size change is one block, not four.
+ */
 .root {
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: var(--sinamk-space--sm, 8px);
+  gap: var(--_gap);
+  padding-block: var(--_pad-block);
+  padding-inline: var(--_pad-inline);
+  border-radius: var(--sinamk-radius--lg, 8px);
+  background: transparent;
+  /*
+   * An inset ring, not a border: Figma draws the stroke INSIDE the frame, so a
+   * real border would push the composer 2px taller than the 48px it is drawn at
+   * and shrink the padding it sits against. The ThemeSwitcher does the same.
+   */
+  box-shadow: inset 0 0 0 1px var(--sinamk-color-field-border, #cdd4c9);
 }
 
-/* The decorative input well: field chrome, but never focusable (aria-hidden). */
-.well {
-  box-sizing: border-box;
-  display: flex;
+/* A box-shadow is dropped in forced-colors mode, so the outline comes back. */
+@media (forced-colors: active) {
+  .root {
+    outline: 1px solid;
+    outline-offset: -1px;
+  }
+}
+
+.root[data-size="sm"] {
+  --_gap: var(--sinamk-space--sm, 8px);
+  --_pad-block: var(--sinamk-control-pad--md, 8px);
+  --_pad-inline: var(--sinamk-space--sm, 8px);
+  --_fs: var(--sinamk-text--sm, 12px);
+  --_glyph: var(--sinamk-icon--sm, 14px);
+  --_btn: 24px;
+  --_btn-icon: var(--sinamk-icon--sm, 14px);
+}
+
+.root[data-size="md"] {
+  --_gap: var(--sinamk-space--md, 12px);
+  --_pad-block: var(--sinamk-control-pad--lg, 12px);
+  --_pad-inline: var(--sinamk-space--sm, 8px);
+  --_fs: var(--sinamk-text--sm, 12px);
+  --_glyph: var(--sinamk-icon--md, 16px);
+  --_btn: 24px;
+  --_btn-icon: var(--sinamk-icon--md, 16px);
+}
+
+.root[data-size="lg"] {
+  --_gap: var(--sinamk-space--md, 12px);
+  --_pad-block: var(--sinamk-control-pad--lg, 12px);
+  --_pad-inline: var(--sinamk-control-pad--lg, 12px);
+  --_fs: var(--sinamk-text--md, 13px);
+  --_glyph: var(--sinamk-icon--lg, 20px);
+  --_btn: var(--sinamk-control-height--md, 32px);
+  --_btn-icon: var(--sinamk-icon--lg, 20px);
+}
+
+/* Decorative glyph slots (attach, voice) — inert, so they never take focus. */
+.glyph {
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--sinamk-color-text, #353b31);
+}
+
+.glyph svg {
+  display: block;
+  width: var(--_glyph);
+  height: var(--_glyph);
+}
+
+/* The text column takes the slack; min-inline-size lets it actually shrink. */
+.body {
+  display: block;
   flex: 1 1 auto;
   min-inline-size: 0;
-  min-block-size: var(--sinamk-control-height--md, 32px);
-  padding-block: var(--sinamk-control-pad--sm, 6px);
-  padding-inline: var(--sinamk-control-pad--lg, 12px);
-  border: 1px solid var(--sinamk-color-field-border, #cdd4c9);
-  border-radius: var(--sinamk-radius--md, 6px);
-  background: var(--sinamk-color-field-bg, #ffffff);
   overflow: hidden;
-}
-
-.root[data-size="sm"] .well {
-  min-block-size: var(--sinamk-control-height--sm, 28px);
-  --_fs: var(--sinamk-text--sm, 12px);
-}
-
-.root[data-size="md"] .well {
-  min-block-size: var(--sinamk-control-height--md, 32px);
-  --_fs: var(--sinamk-text--md, 13px);
-}
-
-.root[data-size="lg"] .well {
-  min-block-size: var(--sinamk-control-height--lg, 40px);
-  --_fs: var(--sinamk-text--lg, 15px);
 }
 
 .text {
   color: var(--sinamk-color-text, #353b31);
   font-size: var(--_fs);
-  line-height: 1.4;
+  font-weight: var(--sinamk-font-weight--sm, 400);
+  line-height: normal;
   word-break: break-word;
 }
 
 .placeholder {
-  color: var(--sinamk-color-field-placeholder, #8a9280);
+  display: block;
+  color: var(--sinamk-color-text, #353b31);
   font-size: var(--_fs);
-  line-height: 1.4;
+  font-weight: var(--sinamk-font-weight--sm, 400);
+  line-height: normal;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/*
+ * The send button is a round pill smaller than any IconButton size, so the box
+ * is overridden here rather than minting a control-height token for one use.
+ * The [data-size] on the ancestor keeps this above IconButton's own size rules.
+ */
+.root[data-size] .send {
+  width: var(--_btn);
+  height: var(--_btn);
+  border-radius: var(--sinamk-radius--full, 999px);
+  --_icon: var(--_btn-icon);
 }
 
 /* The typewriter caret: a thin bar on the ink color, blinking on the caret

@@ -7,7 +7,6 @@ import { toLocalePath } from "@/lib/i18n/paths";
 import { InstallCommand, SegmentSelector } from "../broadsheet";
 import { INDUSTRIES, hero, type Industry } from "./copy";
 import { useIndustry } from "./IndustryContext";
-import { ComingSoonBadge } from "./ComingSoonBadge";
 import { GlyphField } from "./glyph-field/GlyphField";
 import { HeroEmulator } from "./hero-emulator/HeroEmulator";
 import styles from "./Hero.module.css";
@@ -21,15 +20,6 @@ const INDUSTRY_ICONS: Record<Industry, ReactNode> = {
   healthcare: <Asclepius />,
   defense: <ShieldChevron />,
 };
-
-/** The five packages an adopter installs, mirrored from the SINA-marketing hero. */
-const PACKAGES = [
-  "@sina-design-system/theme",
-  "@sina-design-system/core",
-  "@sina-design-system/fintech",
-  "@sina-design-system/fintech-react",
-  "@sina-design-system/governance",
-] as const;
 
 /**
  * The framed hero: a left text rectangle (title, subhead, the industry segment
@@ -69,13 +59,16 @@ export function Hero({ locale }: { locale: string }) {
                   className={styles.surface}
                 />
               </div>
-              <ComingSoonBadge />
             </div>
-            <div className={styles.installWrap}>
+            {/* Permanently mounted so the announcement fires when the industry
+                flips to one whose constitution has not shipped. */}
+            <div className={styles.installWrap} aria-live="polite">
               <InstallCommand
                 size="sm"
                 defaultManager="npm"
-                packages={PACKAGES}
+                packages={INDUSTRIES[industry].packages}
+                comingSoon={!INDUSTRIES[industry].live}
+                comingSoonLabel={hero.comingSoon}
                 className={styles.surface}
               />
             </div>

@@ -46,13 +46,14 @@
 .decision {
   display: flex;
   flex-direction: column;
-  gap: var(--sinamk-space--sm, 8px);
+  gap: var(--sinamk-space--lg, 16px);
 }
 
-.verdictRow {
+/* Single column: the verdict badge sits above the mounted component, never beside it. */
+.verdict {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
   gap: var(--sinamk-space--sm, 8px);
 }
 
@@ -71,18 +72,17 @@
   list-style: none;
 }
 
+/* Single column: the code badge sits above its message, never beside it.
+   `align-items: flex-start` keeps the badge at its content width. */
 .violation {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
   gap: var(--sinamk-space--sm, 8px);
 }
 
-.violation > span:first-child {
-  flex-shrink: 0;
-}
-
 .message {
-  min-inline-size: 0;
+  inline-size: 100%;
   color: var(--sinamk-color-text-muted, #6b7268);
   font-size: var(--_fs);
   line-height: 1.5;

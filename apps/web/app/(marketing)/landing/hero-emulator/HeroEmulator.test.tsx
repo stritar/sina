@@ -92,6 +92,41 @@ describe("HeroEmulator dwell countdown", () => {
   });
 });
 
+describe("HeroEmulator thread surface", () => {
+  it("strips the thread's own panel so the simulator reads as one flat card", () => {
+    const { container } = render(
+      <IndustryProvider>
+        <HeroEmulator />
+      </IndustryProvider>,
+    );
+
+    // The hero frame has no inset thread surface (Figma 196:819): the override
+    // must actually reach ChatThread, which composes cn(styles.root, className).
+    const thread = container.querySelector('[role="region"]');
+    expect(thread).not.toBeNull();
+    expect(thread?.className).toContain("thread");
+    expect(thread?.className).toContain("root");
+  });
+
+  it("mounts the composer as one field with a single real control", () => {
+    const { container } = render(
+      <IndustryProvider>
+        <HeroEmulator />
+      </IndustryProvider>,
+    );
+
+    // The composer root is the field itself: it carries the class the hero
+    // styles it through, the data-composer hook, and the data-broadsheet marker
+    // that earns the global focus outline. Everything inside it is decorative
+    // except the send button, which stays the only focusable element.
+    const composer = container.querySelector('[class*="composer"]');
+    expect(composer).not.toBeNull();
+    expect(composer?.hasAttribute("data-composer")).toBe(true);
+    expect(composer?.hasAttribute("data-broadsheet")).toBe(true);
+    expect(composer?.querySelectorAll("button")).toHaveLength(1);
+  });
+});
+
 describe("HeroEmulator visitor-driven approval", () => {
   it("answers a completed approval with a confirmation reply, then counts down and restarts", async () => {
     const { container } = render(

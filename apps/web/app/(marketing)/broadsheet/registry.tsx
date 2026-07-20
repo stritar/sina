@@ -8,7 +8,9 @@ import {
   ListBullets,
   SquaresFour,
   CalendarBlank,
-  PaperPlaneRight,
+  PlusCircle,
+  Microphone,
+  Waveform,
   Warning,
   WarningOctagon,
 } from "@phosphor-icons/react/dist/ssr";
@@ -344,6 +346,7 @@ const installCommandSpec: ComponentSpec = {
       options: ["npm", "pnpm", "yarn", "bun"],
       default: "npm",
     },
+    { key: "comingSoon", label: "Coming soon", type: "boolean", default: false },
   ],
   render: (v: ControlValues) => {
     const pkgs = String(v.packages).split(/\s+/).filter(Boolean);
@@ -353,6 +356,7 @@ const installCommandSpec: ComponentSpec = {
         size={v.size as "sm" | "md" | "lg"}
         packages={pkgs.length ? pkgs : ["@sina/core"]}
         defaultManager={v.manager as PackageManager}
+        comingSoon={Boolean(v.comingSoon)}
       />
     );
   },
@@ -370,8 +374,6 @@ const chatBubbleSpec: ComponentSpec = {
       default: "user",
     },
     { key: "size", label: "Size", type: "select", options: ["sm", "md", "lg"], default: "md" },
-    { key: "kicker", label: "Kicker", type: "text", default: "You" },
-    { key: "icon", label: "Kicker icon", type: "boolean", default: false },
     {
       key: "text",
       label: "Text",
@@ -380,12 +382,7 @@ const chatBubbleSpec: ComponentSpec = {
     },
   ],
   render: (v: ControlValues) => (
-    <ChatBubble
-      variant={v.variant as ChatBubbleVariant}
-      size={v.size as "sm" | "md" | "lg"}
-      kicker={String(v.kicker)}
-      icon={v.icon ? <Sparkle weight="bold" /> : undefined}
-    >
+    <ChatBubble variant={v.variant as ChatBubbleVariant} size={v.size as "sm" | "md" | "lg"}>
       <p>{String(v.text)}</p>
     </ChatBubble>
   ),
@@ -492,6 +489,8 @@ const chatComposerSpec: ComponentSpec = {
     { key: "text", label: "Typed text", type: "text", default: "Wire $60,000 from Acme Corp" },
     { key: "caret", label: "Caret", type: "boolean", default: true },
     { key: "placeholder", label: "Placeholder", type: "text", default: "Ask for anything" },
+    { key: "leading", label: "Leading glyph", type: "boolean", default: true },
+    { key: "voice", label: "Voice glyph", type: "boolean", default: true },
   ],
   render: (v: ControlValues) => (
     <ChatComposer
@@ -499,7 +498,9 @@ const chatComposerSpec: ComponentSpec = {
       text={String(v.text)}
       caret={Boolean(v.caret)}
       placeholder={String(v.placeholder)}
-      sendIcon={<PaperPlaneRight weight="bold" />}
+      leadingIcon={v.leading ? <PlusCircle weight="fill" /> : undefined}
+      trailingIcon={v.voice ? <Microphone weight="fill" /> : undefined}
+      sendIcon={<Waveform weight="bold" />}
       sendLabel="Send"
     />
   ),
@@ -520,13 +521,13 @@ const chatThreadSpec: ComponentSpec = {
   ],
   render: (v: ControlValues) => (
     <ChatThread size={v.size as "sm" | "md" | "lg" | "fill"} aria-label="Demo conversation">
-      <ChatBubble variant="user" size="sm" kicker="You">
+      <ChatBubble variant="user" size="sm">
         <p>Show me my last 2 transactions.</p>
       </ChatBubble>
       {v.gate ? (
         <GateCard size="sm" kicker="The gate" status="pass" mount="TransactionList" />
       ) : null}
-      <ChatBubble variant="outcome" size="sm" kicker="What renders">
+      <ChatBubble variant="outcome" size="sm">
         <p>Two transactions for XYZ Company, mounted from validated intent.</p>
       </ChatBubble>
     </ChatThread>

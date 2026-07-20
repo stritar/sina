@@ -259,10 +259,12 @@
 /* The emulator slot: an opaque sheet hosting the composer emulator. It is the
    positioning context for the ABSOLUTE panel inside, so the column's height is
    entirely grid-driven (the thread scrolls internally and can never grow the
-   hero). Stretches to the text column's height via the grid. */
+   hero). Stretches to the text column's height via the grid. One flat card, not
+   a page-grey column: the turns sit directly on this fill, so it takes the
+   surface role (white in light, raised against the page in dark). */
 .emulatorCol {
   position: relative;
-  background: var(--sina-color-bg, #f5f6f4);
+  background: var(--sina-color-surface, #ffffff);
 }
 
 /* The emulator joins the entrance stagger as the last step (after .ctaRow). */

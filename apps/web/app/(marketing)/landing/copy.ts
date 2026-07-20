@@ -34,6 +34,19 @@ export interface IndustryDefinition {
   live: boolean;
   /** Short mode tag shown on the emulator header and gate stage. */
   modeTag: string;
+  /** The packages an adopter installs for this industry, in install order. */
+  packages: readonly string[];
+}
+
+/** Every industry installs the same shell around its own constitution pair. */
+function packagesFor(industry: Industry): readonly string[] {
+  return [
+    "@sina-design-system/theme",
+    "@sina-design-system/core",
+    `@sina-design-system/${industry}`,
+    `@sina-design-system/${industry}-react`,
+    "@sina-design-system/governance",
+  ] as const;
 }
 
 export const INDUSTRIES: Record<Industry, IndustryDefinition> = {
@@ -41,16 +54,19 @@ export const INDUSTRIES: Record<Industry, IndustryDefinition> = {
     name: "Fintech",
     live: true,
     modeTag: "Live demo",
+    packages: packagesFor("fintech"),
   },
   healthcare: {
     name: "Healthcare",
     live: false,
     modeTag: "Simulated preview",
+    packages: packagesFor("healthcare"),
   },
   defense: {
     name: "Defense",
     live: false,
     modeTag: "Simulated preview",
+    packages: packagesFor("defense"),
   },
 };
 
@@ -63,12 +79,9 @@ export const heroEmulator = {
   heading: "Watch the gate decide",
   lede: "Two requests on a loop: one passes, one hits the constitution.",
   threadLabel: "Governed conversation",
-  youKicker: "You",
   gateKicker: "The gate",
-  rendersKicker: "What renders",
   checking: "Checking against the constitution",
   wireApproval: "Simulated approval. The real gate re-checks server-side.",
-  approvedKicker: "The agent",
   wireApproved:
     "Approved. A second party signed off, the gate re-checked the same terms server-side, and the transfer is logged.",
   send: "Send",

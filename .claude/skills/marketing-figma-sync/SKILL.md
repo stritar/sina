@@ -40,6 +40,7 @@ See [[marketing-design-system-figma]] for the full foundations inventory and his
 
 ## Recipe — Direction B (Figma → code)
 
+0. **Run `/figma-inspect` first — mandatory.** Do not translate a node from `get_design_context` alone: reconcile the geometry, inspect every nested instance, download the vector assets to identify each glyph *and its weight*, and write the measurement table with a token column. Everything below assumes that table exists.
 1. Diff the Figma set's `componentPropertyDefinitions` against the component's props + `registry.tsx` controls.
 2. Map Figma axes back to the code: variant axes → the `data-size` / discriminated props; boolean/instance-swap/text → the optional props; keep names lowercase in code (`sm`, not `Small`).
 3. Apply the delta inside the Broadsheet boundary: **no `@sina-design-system/*` imports**, `--sinamk-*` tokens only (with fallbacks), `data-broadsheet` on the focusable root, no authored `:focus-visible`.

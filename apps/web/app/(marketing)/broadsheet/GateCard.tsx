@@ -59,11 +59,15 @@ const SEVERITY_COLOR: Record<GateViolation["severity"], BadgeColor> = {
 
 /**
  * Broadsheet gate card: the verdict lane of a chat exchange. While `checking`
- * it shows a pulsing busy line; once decided it leads with a soft verdict Badge
+ * it shows a pulsing busy line; once decided it leads with a solid verdict Badge
  * (green pass / amber escalated / red blocked), the mounted or forced component
- * in mono, the violation rows (a severity Badge beside each message and cited
- * standard, all siblings — never one status nested in another), and a muted
- * meta line. Dashed border: this is the machine lane, like TraceCard.
+ * in mono, the violations (a solid severity Badge stacked above each message and
+ * cited standard, all siblings — never one status nested in another), and a
+ * muted meta line. Dashed border: this is the machine lane, like TraceCard.
+ *
+ * The whole decision is a single column: every badge sits ABOVE the text it
+ * labels, never beside it, so a long machine code never squeezes its message.
+ * Every badge is `solid` — the gate speaks in filled chips, not tints.
  */
 export function GateCard({
   status,
@@ -89,8 +93,8 @@ export function GateCard({
         <p className={styles.busy}>Checking against the constitution&hellip;</p>
       ) : (
         <div className={styles.decision}>
-          <div className={styles.verdictRow}>
-            <Badge color={STATUS_COLOR[status]} variant="soft" size={size} icon={statusIcon}>
+          <div className={styles.verdict}>
+            <Badge color={STATUS_COLOR[status]} variant="solid" size={size} icon={statusIcon}>
               {STATUS_LABEL[status]}
             </Badge>
             {mount ? <code className={styles.mount}>mount: {mount}</code> : null}
@@ -99,7 +103,7 @@ export function GateCard({
             <ul className={styles.violations}>
               {violations.map((violation) => (
                 <li key={violation.code} className={styles.violation}>
-                  <Badge color={SEVERITY_COLOR[violation.severity]} variant="soft" size="sm">
+                  <Badge color={SEVERITY_COLOR[violation.severity]} variant="solid" size="sm">
                     {violation.code}
                   </Badge>
                   <span className={styles.message}>

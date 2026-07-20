@@ -23,6 +23,14 @@ export type InstallCommandProps = {
   managers?: readonly PackageManager[];
   /** Initial selected manager; defaults to the first available. */
   defaultManager?: PackageManager;
+  /**
+   * Marks the packages as unreleased: the tooltip turns amber and announces the
+   * state instead of offering a copy, and copying is switched off so nobody
+   * walks away with an install line for something that is not on the registry.
+   */
+  comingSoon?: boolean;
+  /** Tooltip text when `comingSoon` is set. */
+  comingSoonLabel?: string;
   size?: ButtonSize;
   className?: string;
 };
@@ -34,11 +42,17 @@ export type InstallCommandProps = {
  * whole command is the copy control: clicking it writes the exact command to the
  * clipboard, a "click to copy" tooltip shows on hover/focus (flipping to
  * "Copied!"), and the result is announced via a polite live region.
+ *
+ * With `comingSoon`, the card looks unchanged but the tooltip carries the state:
+ * it turns amber and reads "Coming soon" in place of "click to copy", and the
+ * copy itself plus the manager dropdown go inert.
  */
 export function InstallCommand({
   packages,
   managers = ["npm", "pnpm", "yarn", "bun"],
   defaultManager,
+  comingSoon = false,
+  comingSoonLabel = "Coming soon",
   size = "md",
   className,
 }: InstallCommandProps) {
@@ -68,6 +82,8 @@ export function InstallCommand({
   }, []);
 
   async function copy() {
+    // Unreleased packages are not copyable; the card is a placeholder only.
+    if (comingSoon) return;
     try {
       await navigator.clipboard.writeText(command);
     } catch {
@@ -82,11 +98,19 @@ export function InstallCommand({
   const options: SelectOption[] = available.map((m) => ({ value: m, label: m }));
 
   return (
-    <div ref={rootRef} className={cn(styles.root, className)} data-size={size}>
+    <div
+      ref={rootRef}
+      className={cn(styles.root, className)}
+      data-size={size}
+      data-coming-soon={comingSoon || undefined}
+    >
       <button
         type="button"
         data-broadsheet=""
         className={styles.command}
+        // Stays focusable so keyboard users still reach and hear the state; the
+        // handlers below are what make it inert, not `disabled`.
+        aria-disabled={comingSoon || undefined}
         aria-describedby={tooltipId}
         onClick={copy}
         onMouseEnter={(event) => {
@@ -111,6 +135,7 @@ export function InstallCommand({
         id={tooltipId}
         className={styles.tooltip}
         data-open={open || undefined}
+        data-coming-soon={comingSoon || undefined}
         style={
           coords
             ? {
@@ -123,7 +148,7 @@ export function InstallCommand({
             : undefined
         }
       >
-        {copied ? "Copied!" : "click to copy"}
+        {comingSoon ? comingSoonLabel : copied ? "Copied!" : "click to copy"}
       </span>
       <div className={styles.managerSlot}>
         <Select

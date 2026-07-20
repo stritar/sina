@@ -57,6 +57,7 @@ Load `figma-use` guidance first — read `skill://figma/figma-use/SKILL.md` (and
 
 ## Direction B — Figma → code
 
+0. **Run `/figma-inspect` first — mandatory.** Reconcile the node geometry, inspect every nested instance, download the vector assets to identify each glyph *and its weight*, and write the measurement table with a token column before touching code.
 1. **Diff the Figma surface.** Dump `componentPropertyDefinitions` + variant options on the set; screenshot the variants, states strip, and coverage frame.
 2. **Map back to code names.** Variant values are lowercase and map to `cva` variants; booleans/text/instance-swaps map to the `*Props` interface. Tokens map to theme class names (`bg-surface-raised`, `text-text-muted`, `size-control-xs`, …) — see `new-primitive` for the exact token vocabulary.
 3. **Apply the delta to `<Name>.tsx`** within the hard boundary: `core` stays headless, Radix-based, token-styled, **no `zod` / domain packages / domain vocabulary** (`CLAUDE.md`). New visual states use Tailwind state variants, not new component variants.

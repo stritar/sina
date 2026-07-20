@@ -1,8 +1,11 @@
+/* Padding and radius are constant across variants and sizes (the Figma set
+   only moves font-size per size), so both live here rather than per-variant. */
 .root {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  border-radius: var(--sinamk-radius--lg, 8px);
+  padding: var(--sinamk-space--md, 12px) var(--sinamk-space--lg, 16px);
+  border-radius: var(--sinamk-radius--xl, 24px);
   color: var(--sinamk-color-text, #353b31);
   animation: bubble-enter var(--sinamk-duration--enter, 200ms) var(--sinamk-ease--standard, ease)
     backwards;
@@ -12,15 +15,17 @@
 .root[data-variant="user"] {
   align-self: flex-end;
   max-inline-size: 85%;
-  padding: var(--sinamk-space--sm, 8px) var(--sinamk-space--md, 12px);
   background: var(--sinamk-color-secondary-fill, #e9ece8);
 }
 
 /* The reply surface: bordered card the answer (or a mounted component) sits on. */
+/* `stretch`, not `flex-start`: a reply carries a mounted component (a summary
+   card, a governed dialog), and hugging its content leaves each one a
+   different width. Stretching fills the thread up to the 92% cap so every
+   reply lands on the same lane. */
 .root[data-variant="outcome"] {
-  align-self: flex-start;
+  align-self: stretch;
   max-inline-size: 92%;
-  padding: var(--sinamk-space--md, 12px);
   border: 1px solid var(--sinamk-color-border, #dfe4de);
   background: var(--sinamk-color-surface, #ffffff);
 }
@@ -35,39 +40,6 @@
 
 .root[data-size="lg"] {
   font-size: var(--sinamk-text--lg, 15px);
-}
-
-/* Lane label: no flex gap — the label span carries its own padding (the
-   Broadsheet label anatomy), so an icon slot needs no gap either. */
-.kicker {
-  display: inline-flex;
-  align-items: center;
-  margin-block-end: var(--sinamk-badge-label-pad--md, 4px);
-  color: var(--sinamk-color-text-subtle, #84897e);
-  font-size: var(--sinamk-badge-text--sm, 11px);
-  font-weight: var(--sinamk-font-weight--md, 500);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  line-height: 1;
-}
-
-.slot {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.slot svg {
-  display: block;
-  width: var(--sinamk-badge-icon--sm, 12px);
-  height: var(--sinamk-badge-icon--sm, 12px);
-}
-
-.kickerLabel {
-  display: inline-flex;
-  align-items: center;
-  padding-inline: var(--sinamk-badge-label-pad--sm, 3px);
 }
 
 .body {

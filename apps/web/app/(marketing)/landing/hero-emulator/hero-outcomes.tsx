@@ -116,7 +116,7 @@ export function TurnGate({ trace }: { trace: EmulatorTrace }) {
  */
 export function ApprovalReply() {
   return (
-    <ChatBubble variant="outcome" size="sm" kicker={copy.approvedKicker}>
+    <ChatBubble variant="outcome" size="sm">
       <p className={styles.prompt}>{copy.wireApproved}</p>
     </ChatBubble>
   );
@@ -138,7 +138,7 @@ export function TurnOutcome({
 
   if (outcome.kind === "summary") {
     return (
-      <ChatBubble variant="outcome" size="sm" kicker={copy.rendersKicker}>
+      <ChatBubble variant="outcome" size="sm">
         <SummaryList items={outcome.items} />
       </ChatBubble>
     );
@@ -146,7 +146,7 @@ export function TurnOutcome({
 
   if (outcome.kind === "secure-wire-dialog") {
     return (
-      <ChatBubble variant="outcome" size="sm" kicker={copy.rendersKicker}>
+      <ChatBubble variant="outcome" size="sm">
         <div className={styles.dialogRow}>
           <SecureWireDialog
             intent={OVER_LIMIT_WIRE_INTENT}
@@ -162,7 +162,7 @@ export function TurnOutcome({
   }
 
   return (
-    <ChatBubble variant="outcome" size="sm" kicker={copy.rendersKicker}>
+    <ChatBubble variant="outcome" size="sm">
       <div className={styles.simulatedDialog}>
         <code className={styles.mount}>{outcome.mount}</code>
         <span className={styles.caption}>{outcome.caption}</span>
