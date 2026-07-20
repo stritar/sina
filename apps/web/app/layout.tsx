@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Rubik, IBM_Plex_Mono } from "next/font/google";
 // SINA styles: reset (layered) → tokens → component CSS. App CSS (globals + CSS
@@ -22,6 +22,31 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://sinahub.app"),
   title: "SINA — The Design System for AI Agents",
   description: "Governed UI for LLM-generated interfaces.",
+  // Every icon is declared explicitly and served from `public/` at a stable URL.
+  // Do NOT move these back to the `app/icon.*` file convention: declaring ANY
+  // `icons` key here overrides the convention wholesale, and the SVG + Apple icon
+  // silently vanish from the <head> while favicon.ico keeps working — which looks
+  // like nothing is wrong. Regenerate the files with scripts/generate-favicons.mjs.
+  manifest: "/site.webmanifest",
+  icons: {
+    icon: [
+      // SVG first: browsers that understand it prefer it at every size, and it
+      // carries its own light/dark media query. The .ico is the legacy fallback.
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "16x16 32x32 48x48" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    other: [{ rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#353b31" }],
+  },
+};
+
+// Tints the browser chrome on mobile (Android Chrome, iOS Safari) to match the
+// page background in each theme, so the URL bar doesn't fight the site.
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f6f4" },
+    { media: "(prefers-color-scheme: dark)", color: "#21251e" },
+  ],
 };
 
 // Applied before paint so the theme is correct on first render (no flash). Reads
