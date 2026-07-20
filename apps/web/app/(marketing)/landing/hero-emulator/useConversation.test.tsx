@@ -132,15 +132,16 @@ describe("useConversation", () => {
     vi.stubGlobal("fetch", fetchMock);
     render(<Harness />);
 
-    // First paint is an EMPTY thread: the finished story must never flash
-    // before it is typed.
-    expect(history()).toBe("");
+    // First paint is the story ALREADY PLAYED ONCE, so the panel arrives busy
+    // instead of empty — but nothing is typing yet.
+    expect(history()).toBe("small,over-limit");
     expect(typed()).toBe("");
     expect(screen.getByTestId("mode").textContent).toBe("static");
 
-    // It stays empty for the whole start hold, then the first prompt types.
+    // It rests there for the whole start hold, then the second pass types on
+    // top of the seeded turns.
     await advance(TIMINGS.start - 1);
-    expect(history()).toBe("");
+    expect(history()).toBe("small,over-limit");
     expect(phase()).toBe("dwell");
     await advance(1);
     expect(phase()).toBe("typing");
@@ -149,21 +150,20 @@ describe("useConversation", () => {
 
     // The first turn commits WHILE the second prompt is already typing — the
     // accumulation a per-scenario reset would fail.
-    await until(() => history() === "small");
+    await until(() => history() === "small,over-limit,small");
     await until(() => typed().startsWith("Wire $60,000"));
-    expect(history()).toBe("small");
 
     // The loop wraps and keeps appending instead of resetting.
-    await until(() => history() === "small,over-limit,small");
+    await until(() => history() === "small,over-limit,small,over-limit,small");
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("restores the completed thread on mount under reduced motion, without ever animating", async () => {
+  it("keeps the completed thread on mount under reduced motion, without ever animating", async () => {
     stubMatchMedia(true);
     render(<Harness />);
 
-    // The empty first paint is restored to the full story by the mount effect
-    // (render() flushes it), so this audience still gets the whole thread.
+    // The seeded first paint IS this audience's end state: the whole thread,
+    // and no loop on top of it.
     expect(history()).toBe("small,over-limit");
     expect(screen.getByTestId("mode").textContent).toBe("static");
 
@@ -214,11 +214,11 @@ describe("useConversation", () => {
 
     // Drive to the escalated turn resting on its decided frame — where the
     // governed dialog is on screen and a visitor could actually approve it.
-    await until(() => history() === "small" && phase() === "dwell");
+    await until(() => history() === "small,over-limit,small" && phase() === "dwell");
     fireEvent.click(screen.getByRole("button", { name: "approve" }));
 
     // The in-flight turn commits, flagged so the thread renders the reply.
-    expect(history()).toBe("small,over-limit*");
+    expect(history()).toBe("small,over-limit,small,over-limit*");
     expect(phase()).toBe("approved");
 
     // A reading beat on the reply, then the counted-down restart pause.
@@ -229,14 +229,14 @@ describe("useConversation", () => {
     await advance(TIMINGS.restart);
     expect(phase()).toBe("typing");
     expect(screen.getByTestId("index").textContent).toBe("0");
-    expect(history()).toBe("small,over-limit*");
+    expect(history()).toBe("small,over-limit,small,over-limit*");
     await until(() => typed().startsWith("Send $500"));
   });
 
   it("hover does not stall the post-approval sequence, but the pause button does", async () => {
     render(<Harness />);
     await advance(TIMINGS.start);
-    await until(() => history() === "small" && phase() === "dwell");
+    await until(() => history() === "small,over-limit,small" && phase() === "dwell");
     fireEvent.click(screen.getByRole("button", { name: "approve" }));
 
     // Closing the dialog leaves focus on its trigger INSIDE the panel, so a

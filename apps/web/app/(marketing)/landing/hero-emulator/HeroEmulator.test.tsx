@@ -83,7 +83,7 @@ describe("HeroEmulator dwell countdown", () => {
     );
     const bar = () => container.querySelector(".countdown");
 
-    // The empty pre-play frame rests on phase "dwell" but isn't counting down
+    // The seeded pre-play frame rests on phase "dwell" but isn't counting down
     // to anything: the loop hasn't started.
     expect(bar()).toBeNull();
 
