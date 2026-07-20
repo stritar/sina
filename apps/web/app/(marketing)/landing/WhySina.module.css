@@ -184,6 +184,23 @@
   }
 }
 
+/* Gutter ladder under the frame cap, so the sheet never touches the viewport
+   edge until there is no room to spare: 32px on desktop, halved to 16px on small
+   desktops/tablets, and dropped entirely on phones (the base rule above), where
+   every pixel of line length counts. Part of the FRAME CONTRACT: the bounds +
+   values MUST match the other framed sections. */
+@media (min-width: 64rem) and (max-width: 96rem) {
+  .row {
+    padding-inline: var(--sina-space--8);
+  }
+}
+
+@media (min-width: 40rem) and (max-width: 64rem) {
+  .row {
+    padding-inline: var(--sina-space--4);
+  }
+}
+
 /* Stack the cards; the column dividers switch off and become row dividers. */
 @media (max-width: 60rem) {
   .ruled::before,

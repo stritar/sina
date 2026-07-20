@@ -281,6 +281,23 @@
   }
 }
 
+/* Gutter ladder under the frame cap, so the sheet never touches the viewport
+   edge until there is no room to spare: 32px on desktop, halved to 16px on small
+   desktops/tablets, and dropped entirely on phones (the base rule above), where
+   every pixel of line length counts. Part of the FRAME CONTRACT: the bounds +
+   values MUST match the other framed sections. */
+@media (min-width: 64rem) and (max-width: 96rem) {
+  .hero {
+    padding-inline: var(--sina-space--8);
+  }
+}
+
+@media (min-width: 40rem) and (max-width: 64rem) {
+  .hero {
+    padding-inline: var(--sina-space--4);
+  }
+}
+
 /* Collapse to a single column and STACK: the emulator drops below the text as a
    full-width, device-sized panel. */
 @media (max-width: 64rem) {
