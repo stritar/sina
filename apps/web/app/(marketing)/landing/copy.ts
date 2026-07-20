@@ -10,6 +10,8 @@ export type Industry = "fintech" | "healthcare" | "defense";
 
 export const NPM_ORG_URL = "https://www.npmjs.com/org/sina-design-system";
 
+export const LINKEDIN_URL = "https://www.linkedin.com/in/denisstritar/";
+
 export const nav = {
   wordmark: "SINA",
   docs: "Docs",
@@ -128,20 +130,18 @@ export const why = {
 } as const;
 
 export const pitch = {
-  eyebrow: "The whole idea, in ten seconds",
+  heading: "In ten seconds",
   statement:
     "SINA lets startups adopt AI generated UI without building the safety layer themselves. The agent proposes; a server side constitution decides; and when the answer is no, SINA doesn't just block, it mounts the governed version instead.",
   coda: "It's free, because the safety layer is the hard part, and startups shouldn't have to pay for the thing they most need.",
-} as const;
-
-export const finalCta = {
-  heading: "Put a constitution between your agent and your users.",
-  sub: "Free for startups and individuals. Install it, wire the gate, ship governed agentic UI.",
-  docs: "Read the docs",
-  npm: "View on npm",
-  install: "npm install @sina-design-system/theme @sina-design-system/core",
-} as const;
-
-export const footer = {
-  line: "SINA. MIT licensed. Built in the open.",
+  ctaDocs: "Read the docs",
+  /**
+   * The license + attribution line, which used to be its own footer bar. Figma
+   * 247:2454 folds it into this band's right column, under the brand mark, so
+   * the sheet closes on a ruled tail instead of an opaque bar. The mark carries
+   * "SINA", so the line itself does not name it.
+   */
+  license: "MIT licensed. Built in the open.",
+  madeBy: "Made by ",
+  author: "Denis Stritar",
 } as const;

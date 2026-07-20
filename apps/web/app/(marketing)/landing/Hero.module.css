@@ -7,13 +7,13 @@
  * the title / subhead / controls) and an OPAQUE emulator column on the right
  * (the industry-aware conversation emulator).
  *
- * FRAME CONTRACT: `--sina-space--6` gutter + `96rem` inner width (and the
+ * FRAME CONTRACT: `--sina-space--12` gutter + `96rem` inner width (and the
  * `max-width: 96rem` gutter-removal breakpoint below) MUST match
  * LandingNav.module.css so the side borders line up into one continuous frame.
  */
 .hero {
   width: 100%;
-  padding-inline: var(--sina-space--6);
+  padding-inline: var(--sina-space--12);
   background: transparent;
 }
 
@@ -282,19 +282,19 @@
 }
 
 /* Gutter ladder under the frame cap, so the sheet never touches the viewport
-   edge until there is no room to spare: 32px on desktop, halved to 16px on small
+   edge until there is no room to spare: 48px on large desktops, 32px on small
    desktops/tablets, and dropped entirely on phones (the base rule above), where
    every pixel of line length counts. Part of the FRAME CONTRACT: the bounds +
    values MUST match the other framed sections. */
 @media (min-width: 64rem) and (max-width: 96rem) {
   .hero {
-    padding-inline: var(--sina-space--8);
+    padding-inline: var(--sina-space--12);
   }
 }
 
 @media (min-width: 40rem) and (max-width: 64rem) {
   .hero {
-    padding-inline: var(--sina-space--4);
+    padding-inline: var(--sina-space--8);
   }
 }
 

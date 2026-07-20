@@ -164,4 +164,8 @@ body:has(.sina-wireframe) {
      it is scoped to the hero's left box (see Hero.tsx). */
   background: transparent;
   color: var(--sina-color-text);
+  /* Landing type is set large and light on a near-black/near-white ground, where
+     subpixel rendering fattens the strokes. Grayscale AA keeps the weights true. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

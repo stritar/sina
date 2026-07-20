@@ -10,8 +10,6 @@ import { Hero } from "./landing/Hero";
 import { HowItWorks } from "./landing/HowItWorks";
 import { WhySina } from "./landing/WhySina";
 import { Pitch } from "./landing/Pitch";
-import { FinalCta } from "./landing/FinalCta";
-import { Footer } from "./landing/Footer";
 
 /**
  * The Phase 9 landing, shared by `/` (English) and `/[lang]` (the five
@@ -33,10 +31,8 @@ export function MarketingHome({ locale }: { locale: string }) {
             <Hero locale={locale} />
             <HowItWorks />
             <WhySina />
-            <Pitch />
-            <FinalCta locale={locale} />
+            <Pitch locale={locale} />
           </main>
-          <Footer locale={locale} />
         </div>
       </IndustryProvider>
     </div>

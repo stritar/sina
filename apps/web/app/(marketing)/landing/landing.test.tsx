@@ -124,6 +124,20 @@ describe("landing page", () => {
     expect(badge?.querySelector("svg")).not.toBeNull();
   });
 
+  it("no longer renders a footer bar: the Pitch band closes the page", () => {
+    render(<MarketingHome locale="en" />);
+
+    // The footer was folded into the Pitch right column, so the bar and its
+    // Docs/npm nav are gone. The nav landmark is the regression to watch: if a
+    // footer ever comes back it must not duplicate the header's links.
+    expect(screen.queryByRole("navigation", { name: "Footer" })).toBeNull();
+    expect(document.querySelector("footer")).toBeNull();
+
+    // The attribution itself survives, one page down in Pitch. Covered in
+    // detail by pitch.test.tsx; asserted here so a silent drop would fail.
+    expect(screen.getByRole("link", { name: "Denis Stritar" })).toBeTruthy();
+  });
+
   it("draws its verdict chips from the industry-tinted gate palette", () => {
     // The chips must reach for `gate-*`, not the agnostic hues. Only the gate
     // family is carried by industry-tint.css, so a chip that regressed to

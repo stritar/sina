@@ -1,13 +1,13 @@
 /*
  * HowItWorks — the ruled wireframe grid (Figma node 229:2234).
  *
- * The section is banded into three ROWS by full-bleed horizontal hairlines:
- * heading / steps / code. Each `.row` is full-width and carries the rule as its
- * own `border-bottom`, so the rule runs edge to edge, WIDER than the content
- * band. Inside each row, `.frame` is the bordered content box whose side
- * borders are the vertical gutter rules.
+ * The section is banded into three ROWS by horizontal hairlines: heading /
+ * steps / code. `.row` is the full-width transparent shell (its padding is the
+ * page gutter); the rule lives on `.frame`, the bordered content box capped at
+ * the frame width, so the hairline stops at the container instead of running
+ * edge to edge. `.frame`'s side borders are the vertical gutter rules.
  *
- * FRAME CONTRACT: `--sina-space--6` gutter + `96rem` frame width (and the
+ * FRAME CONTRACT: `--sina-space--12` gutter + `96rem` frame width (and the
  * `max-width: 96rem` gutter-removal breakpoint below) MUST match
  * LandingNav.module.css and Hero.module.css so the side borders line up into
  * one continuous frame running down the page.
@@ -24,17 +24,17 @@
 
 .row {
   width: 100%;
-  padding-inline: var(--sina-space--6);
-  border-bottom: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+  padding-inline: var(--sina-space--12);
 }
 
 .frame {
   box-sizing: border-box;
   max-width: 96rem;
   margin-inline: auto;
-  /* Figma: 16px above and below the content in every row. */
-  padding-block: var(--sina-space--4);
+  /* Figma: 32px above and below the content in every row. */
+  padding-block: var(--sina-space--8);
   border-inline: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+  border-bottom: 1px solid var(--sina-color-border-subtle, #e4e4e4);
 }
 
 /* The two internal column rules. They are painted on the FRAME rather than on
@@ -69,7 +69,6 @@
 
 /* Dark: dim the rules toward the near-black page ground so they don't read too
    bright (mirrors the same treatment on the hero frame). */
-[data-theme="dark"] .row,
 [data-theme="dark"] .frame,
 [data-theme="dark"] .ruled::before,
 [data-theme="dark"] .ruled::after,
@@ -211,7 +210,7 @@
   max-width: 26rem;
   font-size: var(--sina-text--lg);
   line-height: var(--sina-leading--relaxed);
-  color: var(--sina-color-text);
+  color: var(--sinamk-color-text-strong, #52564e);
 }
 
 /* The heading gets its own band, so the rule beneath it becomes the code cell's
@@ -227,7 +226,7 @@
 
 /* The code panel is a CELL OF THE GRID, not a card sitting on it. It has no
    border, no radius and no inset of its own: its left edge IS the frame's gutter
-   rule, its top edge IS the row rule above, and its only self-drawn edge is the
+   rule, its top edge IS the band rule above, and its only self-drawn edge is the
    right one, which continues the 2/3 column divider straight down from the steps
    band. That is why `.codeRow .frame` drops its block padding: the cell has to
    reach the row rules to look flush. */
@@ -365,19 +364,19 @@
 }
 
 /* Gutter ladder under the frame cap, so the sheet never touches the viewport
-   edge until there is no room to spare: 32px on desktop, halved to 16px on small
+   edge until there is no room to spare: 48px on large desktops, 32px on small
    desktops/tablets, and dropped entirely on phones (the base rule above), where
    every pixel of line length counts. Part of the FRAME CONTRACT: the bounds +
    values MUST match the other framed sections. */
 @media (min-width: 64rem) and (max-width: 96rem) {
   .row {
-    padding-inline: var(--sina-space--8);
+    padding-inline: var(--sina-space--12);
   }
 }
 
 @media (min-width: 40rem) and (max-width: 64rem) {
   .row {
-    padding-inline: var(--sina-space--4);
+    padding-inline: var(--sina-space--8);
   }
 }
 
