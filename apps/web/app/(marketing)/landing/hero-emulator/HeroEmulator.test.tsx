@@ -83,11 +83,10 @@ describe("HeroEmulator dwell countdown", () => {
     );
     const bar = () => container.querySelector(".countdown");
 
-    // The seeded pre-play frame rests on phase "dwell" but isn't counting down
-    // to anything: the loop hasn't started.
+    // The loop starts typing immediately, and typing doesn't count down.
     expect(bar()).toBeNull();
 
-    await advance(TIMINGS.start);
+    await advance(0);
     expect(bar()).toBeNull(); // typing
 
     // Step to the first verdict's dwell.
@@ -233,7 +232,7 @@ describe("HeroEmulator visitor-driven approval", () => {
       </IndustryProvider>,
     );
 
-    await advance(TIMINGS.start);
+    await advance(0);
     // Step to the escalated turn, where the REAL SecureWireDialog is mounted.
     const trigger = () => screen.queryByRole("button", { name: /Review and approve/ });
     for (let elapsed = 0; elapsed < 60_000 && !trigger(); elapsed += 100) {

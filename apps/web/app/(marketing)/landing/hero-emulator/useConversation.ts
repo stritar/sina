@@ -9,13 +9,14 @@
  * overflow hides the cut). Matured from the /hero-concepts Diptych.
  *
  * Fully canned and zero-network: every trace comes from cannedFor(). The
- * initial state (server render and first paint) is the story ALREADY PLAYED
- * ONCE — every scenario committed to history — so the panel reads as a busy
- * thread mid-conversation the moment the page loads, and the loop that starts a
- * beat later is visibly its second pass. Under reduced motion the loop never
- * starts, so that audience simply keeps the completed thread. The pair changes
- * when the visitor switches industry — the [scenarios] effect re-seeds the
- * thread for the new industry and restarts the loop.
+ * initial state (server render and first paint) is an EMPTY thread, so the
+ * visitor never sees the finished story flash before it is typed — and the
+ * first prompt starts typing the instant the page has loaded, with no opening
+ * hold, so the panel is alive on arrival. Under reduced motion the mount effect
+ * restores the fully completed thread instead of starting the loop, so that
+ * audience still gets the whole story. The pair changes when the visitor
+ * switches industry — the [scenarios] effect resets to an empty thread and
+ * restarts the loop.
  *
  * One branch leaves the loop: if a visitor actually drives the escalated turn's
  * governed dialog to an approval, approve() commits that turn with a
@@ -48,8 +49,6 @@ export type ConversationPhase =
 
 /** Auto-mode pacing (ms). Exported so the timeline test drives real numbers. */
 export const TIMINGS = {
-  /** Hold after the page finishes loading before the first cycle types. */
-  start: 1000,
   /** Per-character typing interval. */
   type: 28,
   /** Beat between the last typed character and the bubble committing. */
@@ -110,11 +109,7 @@ function completedThread(scenarios: readonly EmulatorScenario[]): ConversationTu
   return scenarios.map((scenario) => ({ scenario, trace: cannedFor(scenario) })).slice(-HISTORY_CAP);
 }
 
-/**
- * The resting frame: the whole story committed to history, machine inert.
- * Doubles as first paint (the thread is busy on arrival) and as the
- * reduced-motion end state.
- */
+/** The reduced-motion end state: the whole story committed, machine inert. */
 function staticFrame(scenarios: readonly EmulatorScenario[]): ConversationState {
   return {
     history: completedThread(scenarios),
@@ -124,6 +119,12 @@ function staticFrame(scenarios: readonly EmulatorScenario[]): ConversationState 
     trace: null,
     mode: "static",
   };
+}
+
+/** First paint: an empty thread and an empty composer. `mode: "static"` keeps
+ * the phase machine inert until the mount effect starts the loop. */
+function emptyFrame(): ConversationState {
+  return { history: [], scenarioIndex: 0, phase: "dwell", typedChars: 0, trace: null, mode: "static" };
 }
 
 function prefersReducedMotion(): boolean {
@@ -158,7 +159,7 @@ export interface Conversation {
 }
 
 export function useConversation(scenarios: readonly EmulatorScenario[]): Conversation {
-  const [state, setState] = useState<ConversationState>(() => staticFrame(scenarios));
+  const [state, setState] = useState<ConversationState>(emptyFrame);
   const [userPaused, setUserPaused] = useState(false);
   const [hoverPaused, setHoverPaused] = useState(false);
   const [focusPaused, setFocusPaused] = useState(false);
@@ -167,37 +168,35 @@ export function useConversation(scenarios: readonly EmulatorScenario[]): Convers
 
   const threadRef = useRef<HTMLDivElement | null>(null);
 
-  // Mount + industry switch: rest on the story already played once, so the
-  // thread arrives busy. Under reduced motion that IS the end state and nothing
-  // animates; otherwise the loop takes over one hold after the page has loaded
-  // and types the second pass on top of the seeded turns.
+  // Mount + industry switch: reset to an EMPTY thread so nothing flashes before
+  // it is typed. Under reduced motion the completed thread is restored instead
+  // of animating; otherwise the first prompt starts typing immediately, with no
+  // opening hold, so the panel is never a dead frame on arrival.
   useEffect(() => {
     setUserPaused(false);
-    const seeded = staticFrame(scenarios);
-    setState(seeded);
-    if (prefersReducedMotion()) return;
+    setState(emptyFrame());
+    if (prefersReducedMotion()) {
+      setState(staticFrame(scenarios));
+      return;
+    }
 
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    const start = () => {
-      timer = setTimeout(
-        () =>
-          setState({
-            ...seeded,
-            phase: "typing",
-            mode: "auto",
-          }),
-        TIMINGS.start,
-      );
-    };
+    const start = () =>
+      setState({
+        history: [],
+        scenarioIndex: 0,
+        phase: "typing",
+        typedChars: 0,
+        trace: null,
+        mode: "auto",
+      });
 
-    // Measure the hold from "page fully loaded", not from mount: hydrating
-    // early on a slow page shouldn't start the story under a half-drawn hero.
+    // Start from "page fully loaded", not from mount: hydrating early on a slow
+    // page shouldn't run the story under a half-drawn hero.
     const loaded = document.readyState === "complete";
     if (loaded) start();
     else window.addEventListener("load", start, { once: true });
 
     return () => {
-      if (timer) clearTimeout(timer);
       if (!loaded) window.removeEventListener("load", start);
     };
   }, [scenarios]);
