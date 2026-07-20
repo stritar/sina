@@ -138,6 +138,18 @@ describe("landing page", () => {
     expect(screen.getByRole("link", { name: "Denis Stritar" })).toBeTruthy();
   });
 
+  it("gives every docs CTA the leading FileText glyph", () => {
+    // Figma 176:1248. There are two on the page (hero + pitch) and they must not
+    // drift apart, so this asserts across all of them rather than one by name.
+    render(<MarketingHome locale="en" />);
+
+    const ctas = screen.getAllByRole("link", { name: "Read the docs" });
+    expect(ctas.length).toBe(2);
+    for (const cta of ctas) {
+      expect(cta.querySelector("svg")).not.toBeNull();
+    }
+  });
+
   it("draws its verdict chips from the industry-tinted gate palette", () => {
     // The chips must reach for `gate-*`, not the agnostic hues. Only the gate
     // family is carried by industry-tint.css, so a chip that regressed to

@@ -37,6 +37,10 @@ describe("Pitch redesign", () => {
     // The marker is what earns the single global blue outline, so the component
     // never authors its own :focus-visible.
     expect(cta.hasAttribute("data-broadsheet")).toBe(true);
+    // Figma 176:1248 gives the CTA a leading FileText glyph. It is decorative
+    // (the label already names the destination), so it must stay out of the
+    // accessible name — which `getByRole` above already proves.
+    expect(cta.querySelector("svg")).not.toBeNull();
   });
 
   it("mounts the glyph field as a decorative backdrop in the right half", () => {

@@ -221,6 +221,23 @@
   background: var(--sinamk-color-primary-fill--hover, #444d3b);
 }
 
+/* The leading glyph slot (Figma 176:1248: FileText bold, 20px). Unpadded, per
+   the Broadsheet label anatomy: the label carries its own inline padding and
+   there is no flex `gap`, so the icon sits 8px from the text and 12px from the
+   rail exactly as the real `ButtonPrimary` does. Mirrors Hero.module.css. */
+.ctaIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ctaIcon svg {
+  display: block;
+  width: var(--sinamk-icon--lg, 20px);
+  height: var(--sinamk-icon--lg, 20px);
+}
+
 .ctaLabel {
   display: inline-flex;
   align-items: center;

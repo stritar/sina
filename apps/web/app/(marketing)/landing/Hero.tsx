@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { FileText } from "@phosphor-icons/react/dist/ssr";
 import { toLocalePath } from "@/lib/i18n/paths";
 import { InstallCommand, SegmentSelector } from "../broadsheet";
 import { INDUSTRIES, hero, type Industry } from "./copy";
@@ -71,6 +72,9 @@ export function Hero({ locale }: { locale: string }) {
               href={toLocalePath("/docs", locale)}
               data-broadsheet=""
             >
+              <span className={styles.ctaIcon} aria-hidden="true">
+                <FileText weight="bold" />
+              </span>
               <span className={styles.ctaLabel}>{hero.ctaDocs}</span>
             </Link>
           </div>

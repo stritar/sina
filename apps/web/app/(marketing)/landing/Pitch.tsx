@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FileText } from "@phosphor-icons/react/dist/ssr";
 import { toLocalePath } from "@/lib/i18n/paths";
 import { SinaLogo } from "@/app/components/docs/visuals/SinaLogo";
 import { pitch, LINKEDIN_URL } from "./copy";
@@ -49,6 +50,9 @@ export function Pitch({ locale }: { locale: string }) {
               href={toLocalePath("/docs", locale)}
               data-broadsheet=""
             >
+              <span className={styles.ctaIcon} aria-hidden="true">
+                <FileText weight="bold" />
+              </span>
               <span className={styles.ctaLabel}>{pitch.ctaDocs}</span>
             </Link>
           </div>
@@ -69,6 +73,7 @@ export function Pitch({ locale }: { locale: string }) {
                   <a
                     className={styles.author}
                     href={LINKEDIN_URL}
+                    target="_blank"
                     rel="noreferrer"
                     data-broadsheet=""
                   >
