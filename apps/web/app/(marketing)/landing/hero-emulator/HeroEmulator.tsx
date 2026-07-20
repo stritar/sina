@@ -109,7 +109,14 @@ export function HeroEmulator({ className }: { className?: string }) {
               <p className={styles.prompt}>{current.prompt}</p>
             </ChatBubble>
           ) : null}
-          {checking ? <GateCard size="sm" kicker={copy.gateKicker} status="checking" /> : null}
+          {checking ? (
+            <GateCard
+              className={styles.gate}
+              size="sm"
+              kicker={copy.gateKicker}
+              status="checking"
+            />
+          ) : null}
           {decided && current && state.trace ? (
             <div className={styles.turn}>
               <TurnGate trace={state.trace} />

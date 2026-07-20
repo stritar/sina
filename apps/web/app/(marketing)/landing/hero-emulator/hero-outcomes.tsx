@@ -108,6 +108,7 @@ export function TurnGate({ trace }: { trace: EmulatorTrace }) {
   if (trace.verdict === "escalate") {
     return (
       <GateCard
+        className={styles.gate}
         size="sm"
         kicker={copy.gateKicker}
         status="escalate"
@@ -121,6 +122,7 @@ export function TurnGate({ trace }: { trace: EmulatorTrace }) {
   if (trace.verdict === "reject") {
     return (
       <GateCard
+        className={styles.gate}
         size="sm"
         kicker={copy.gateKicker}
         status="reject"
@@ -132,6 +134,7 @@ export function TurnGate({ trace }: { trace: EmulatorTrace }) {
   }
   return (
     <GateCard
+      className={styles.gate}
       size="sm"
       kicker={copy.gateKicker}
       status="pass"

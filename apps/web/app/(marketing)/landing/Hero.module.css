@@ -252,10 +252,13 @@
    entirely grid-driven (the thread scrolls internally and can never grow the
    hero). Stretches to the text column's height via the grid. One flat card, not
    a page-grey column: the turns sit directly on this fill, so it takes the
-   surface role (white in light, raised against the page in dark). */
+   emulator surface role: an off-white in light, a lift off the near-black ground
+   in dark, hue-rotated per industry by industry-tint.css. It is deliberately NOT
+   the shared `--sina-color-surface` the other landing cards sit on — this sheet
+   hosts the conversation and reads as its own plane. */
 .emulatorCol {
   position: relative;
-  background: var(--sina-color-surface, #ffffff);
+  background: var(--sina-color-surface-emulator, #fafbf9);
 }
 
 /* The emulator joins the entrance stagger as the last step (after .ctaRow). */

@@ -192,10 +192,16 @@ const BROADSHEET_SAGE = [
  *
  * A `null` budget means the role is NOT achromatic: its anchor already carries
  * the sage chroma, so it hue-rotates and keeps it, exactly as a broadsheet anchor
- * does. `--sina-color-bg` is the one such role — it is authored byte-identical to
- * `--sinamk-color-bg` and `--sina-glyphfield-bg`, and injecting a budget over the
- * top is what made the page ground drift away from the glyph field and the chat
- * thread sitting on it. See the note in `push()`.
+ * does. Two roles take that path:
+ *
+ * - `--sina-color-bg` is authored byte-identical to `--sinamk-color-bg` and
+ *   `--sina-glyphfield-bg`, and injecting a budget over the top is what made the
+ *   page ground drift away from the glyph field and the chat thread sitting on
+ *   it. See the note in `push()`.
+ * - `--sina-color-surface-emulator` is authored as a DESIGNED off-white
+ *   (`#fafbf9`), not as a neutral awaiting a wash. A budget would taper to
+ *   almost nothing at L~0.98 and hand fintech a flat gray instead of the chosen
+ *   hex; keeping the anchor's own chroma round-trips it byte-for-byte.
  *
  * Absent from this map, and therefore untinted on purpose: the whole `danger*`
  * ramp, `focus-ring`, `surface-secure` and `shadow-color`. Those are the
@@ -206,6 +212,7 @@ const BROADSHEET_SAGE = [
 const WIREFRAME_CHROMA = {
   "--sina-color-bg": null,
   "--sina-color-surface": 0.004,
+  "--sina-color-surface-emulator": null,
   "--sina-color-surface-raised": 0.004,
   "--sina-color-surface-sunken": 0.006,
   "--sina-color-text": 0.012,

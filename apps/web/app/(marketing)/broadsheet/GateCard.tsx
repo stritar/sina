@@ -59,15 +59,15 @@ const SEVERITY_COLOR: Record<GateViolation["severity"], BadgeColor> = {
 
 /**
  * Broadsheet gate card: the verdict lane of a chat exchange. While `checking`
- * it shows a pulsing busy line; once decided it leads with a solid verdict Badge
+ * it shows a pulsing busy line; once decided it leads with a soft verdict Badge
  * (green pass / amber escalated / red blocked), the mounted or forced component
- * in mono, the violations (a solid severity Badge stacked above each message and
+ * in mono, the violations (a soft severity Badge stacked above each message and
  * cited standard, all siblings — never one status nested in another), and a
  * muted meta line. Dashed border: this is the machine lane, like TraceCard.
  *
  * The whole decision is a single column: every badge sits ABOVE the text it
  * labels, never beside it, so a long machine code never squeezes its message.
- * Every badge is `solid` — the gate speaks in filled chips, not tints.
+ * Every badge is `soft` — the gate speaks in tinted chips, not filled ones.
  */
 export function GateCard({
   status,
@@ -94,7 +94,7 @@ export function GateCard({
       ) : (
         <div className={styles.decision}>
           <div className={styles.verdict}>
-            <Badge color={STATUS_COLOR[status]} variant="solid" size={size} icon={statusIcon}>
+            <Badge color={STATUS_COLOR[status]} variant="soft" size={size} icon={statusIcon}>
               {STATUS_LABEL[status]}
             </Badge>
             {mount ? <code className={styles.mount}>mount: {mount}</code> : null}
@@ -103,7 +103,7 @@ export function GateCard({
             <ul className={styles.violations}>
               {violations.map((violation) => (
                 <li key={violation.code} className={styles.violation}>
-                  <Badge color={SEVERITY_COLOR[violation.severity]} variant="solid" size="sm">
+                  <Badge color={SEVERITY_COLOR[violation.severity]} variant="soft" size="sm">
                     {violation.code}
                   </Badge>
                   <span className={styles.message}>

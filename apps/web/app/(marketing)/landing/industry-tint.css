@@ -46,6 +46,7 @@ html:not([data-theme="dark"])[data-industry="fintech"] body:has(.sina-wireframe)
   --sinamk-color-popover-surface: #ffffff;
   --sina-color-bg: #f5f6f4;
   --sina-color-surface: #ffffff;
+  --sina-color-surface-emulator: #fafbf9;
   --sina-color-surface-raised: #ffffff;
   --sina-color-surface-sunken: #f4f4f3;
   --sina-color-text: #0f120c;
@@ -94,6 +95,7 @@ html:not([data-theme="dark"])[data-industry="healthcare"] body:has(.sina-wirefra
   --sinamk-color-popover-surface: #ffffff;
   --sina-color-bg: #f4f6f8;
   --sina-color-surface: #ffffff;
+  --sina-color-surface-emulator: #f9fafd;
   --sina-color-surface-raised: #ffffff;
   --sina-color-surface-sunken: #f4f4f5;
   --sina-color-text: #0c1217;
@@ -142,6 +144,7 @@ html:not([data-theme="dark"])[data-industry="defense"] body:has(.sina-wireframe)
   --sinamk-color-popover-surface: #ffffff;
   --sina-color-bg: #f8f6f4;
   --sina-color-surface: #ffffff;
+  --sina-color-surface-emulator: #fdfbf9;
   --sina-color-surface-raised: #ffffff;
   --sina-color-surface-sunken: #f4f4f3;
   --sina-color-text: #16100a;
@@ -190,6 +193,7 @@ html[data-theme="dark"][data-industry="fintech"] body:has(.sina-wireframe) .broa
   --sinamk-color-popover-surface: #22261f;
   --sina-color-bg: #0b0c0b;
   --sina-color-surface: #151615;
+  --sina-color-surface-emulator: #1c1c1b;
   --sina-color-surface-raised: #1e1f1e;
   --sina-color-surface-sunken: #090a09;
   --sina-color-text: #f5f5f4;
@@ -238,6 +242,7 @@ html[data-theme="dark"][data-industry="healthcare"] body:has(.sina-wireframe) .b
   --sinamk-color-popover-surface: #20252c;
   --sina-color-bg: #0b0c0d;
   --sina-color-surface: #141617;
+  --sina-color-surface-emulator: #1b1c1d;
   --sina-color-surface-raised: #1d1f20;
   --sina-color-surface-sunken: #080a0b;
   --sina-color-text: #f4f5f6;
@@ -286,6 +291,7 @@ html[data-theme="dark"][data-industry="defense"] body:has(.sina-wireframe) .broa
   --sinamk-color-popover-surface: #2a231e;
   --sina-color-bg: #0d0b0b;
   --sina-color-surface: #171614;
+  --sina-color-surface-emulator: #1c1c1b;
   --sina-color-surface-raised: #201e1d;
   --sina-color-surface-sunken: #0b0a08;
   --sina-color-text: #f6f5f3;

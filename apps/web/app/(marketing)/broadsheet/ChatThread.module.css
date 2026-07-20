@@ -58,4 +58,15 @@
   gap: var(--sinamk-space--sm, 8px);
   margin-block-start: auto;
   min-block-size: 0;
+  /* A landing bubble animates in from `translateY(4px)` (ChatBubble), and a
+     transform still counts toward the scroll container's overflow: on a thread
+     that otherwise fits, the last turn pushes 4px past the bottom edge and the
+     scrollbar flashes on for the length of the enter animation. Clipping the
+     block axis here keeps that transient out of the scrollable area, so the bar
+     appears only when the turns genuinely overflow. `overflow-clip-margin`
+     hands the 4px back visually (and leaves room for a focus ring), because
+     clipped ink never contributes to an ancestor's scroll extent either way.
+     Inline stays visible, so nothing is cut at the sides. */
+  overflow-y: clip;
+  overflow-clip-margin: var(--sinamk-space--sm, 8px);
 }

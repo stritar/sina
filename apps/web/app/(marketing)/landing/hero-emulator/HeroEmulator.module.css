@@ -169,6 +169,18 @@
  * without a fill of its own.
  */
 
+/*
+ * The gate is the machine lane, not a speaker: it reads directly on the
+ * emulator column rather than on a filled card, so only the user's ChatBubble
+ * carries a surface and the verdict never looks like a third participant. The
+ * dashed border stays (it is what marks the lane); only the fill is dropped.
+ * Doubled class because GateCard composes cn(styles.root, className), which
+ * ties on specificity — source order alone would not settle the cascade.
+ */
+.gate.gate {
+  background: transparent;
+}
+
 /* One committed exchange: ask, gate decision, outcome, stacked as a unit. */
 .turn {
   display: flex;
