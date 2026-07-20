@@ -115,9 +115,12 @@
   position: relative;
 }
 
+/* The cell sits inside `.frame`'s 32px block padding, so `inset: 0` would stop
+   the field 32px short of the rules. The negative block inset cancels exactly
+   that padding, running the field from the rule above to the rule below. */
 .fieldCanvas {
   position: absolute;
-  inset: 0;
+  inset: calc(var(--sina-space--8) * -1) 0;
   z-index: 0;
 }
 
