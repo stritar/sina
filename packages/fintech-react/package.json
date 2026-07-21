@@ -1,6 +1,6 @@
 {
   "name": "@sina-design-system/fintech-react",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "SINA governed fintech components — core primitives composed with the fintech constitution. The gate is server-side; these render the decision.",
   "license": "MIT",
   "author": "Denis Stritar",
