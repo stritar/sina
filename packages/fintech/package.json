@@ -1,6 +1,6 @@
 {
   "name": "@sina-design-system/fintech",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "SINA Fintech constitution — pure Zod schemas that validate LLM intents before render.",
   "license": "MIT",
   "author": "Denis Stritar",

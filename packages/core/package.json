@@ -1,6 +1,6 @@
 {
   "name": "@sina-design-system/core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "SINA headless, accessible UI primitives. Consumes @sina-design-system/theme. No domain logic.",
   "license": "MIT",
   "author": "Denis Stritar",
