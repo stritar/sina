@@ -1,6 +1,7 @@
 ---
 title: Componentes gobernados y patrones de visualización
-sourceHash: 334943597bf3
+wordBudget: 780
+sourceHash: f755165da5a9
 ---
 
 Las reglas de la Constitución se resuelven en dos tipos de UI. Los **componentes
@@ -36,6 +37,10 @@ difieren; los destinos seguros son compartidos y están probados en batalla.
   estados que probar, una experiencia accesible en cada flujo gobernado.
 </Callout>
 
+En un paso limpio, un verbo gobernado no monta nada (`mount: null`); el paso de
+confirmación pertenece a tu aplicación. Consulta
+[Escalado](/docs/concepts/escalation).
+
 ## Patrones de visualización
 
 Una aplicación real pasa la mayor parte del tiempo *mostrando* cosas. Una regla de
@@ -45,11 +50,14 @@ visualización no tiene límites ni aprobaciones, pero aun así comprueba la **f
 presentacional: `TransactionList`, `BalanceCard`, `PortfolioHoldings` y sus
 hermanos, unas dos docenas, uno por cada tipo de lectura.
 
-Dos propiedades hacen el trabajo de seguridad. El modelo elige *qué* mostrar, pero
-**tu servidor suministra los valores**, así que no puede inventar un saldo. Y las
-lecturas son de **solo lectura**: ningún componente de visualización renderiza un
-botón de acción directo. Actuar desde una lista (disputar un cargo, pagar una
-factura) es una nueva intención que vuelve a entrar en el control.
+Dos propiedades hacen el trabajo de seguridad. **Procedencia de la visualización**:
+el modelo solo elige *qué* mostrar y envía pistas de selección; **tu servidor
+resuelve las filas reales** desde su propio almacén. Una fila redactada por el
+modelo pasaría la validación y aun así frustraría el propósito, porque SINA
+comprueba la forma, no la verdad. Y las lecturas son de **solo lectura**: ningún
+componente de visualización renderiza un botón de acción directo. Actuar desde una
+lista (disputar un cargo, pagar una factura) es una nueva intención que vuelve a
+entrar en el control.
 
 ## El registro de intenciones
 
@@ -66,7 +74,11 @@ su regla y su componente. El modelo nunca nombra un componente.
 | `list_transactions` | Visualización | `TransactionList` |
 | `account_balance` | Visualización | `BalanceCard` |
 | `portfolio_holdings` | Visualización | `PortfolioHoldings` |
+| `clarify_choice` | Visualización | `ClarifyChoice` |
 | `spending_breakdown` · `budget_progress` · `list_cards` · `list_payees` · … | Visualización | lecturas presentacionales |
+
+La tabla muestra la forma; el registro incluido tiene 50 verbos, y
+`fintechIntentManifest()` devuelve cada uno con sus props como JSON Schema.
 
 <Callout variant="note" title="Los verbos desconocidos se deniegan">
   Una intención que no está en el registro se rechaza como `UNKNOWN_INTENT`, y aun

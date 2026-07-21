@@ -28,6 +28,7 @@ import {
   stepUpViolations,
   type ActionContext,
 } from "../formats/step-up.js";
+import { usdScopeFlag } from "../formats/usd-scope.js";
 import {
   P2P_AUTHORIZATION_MINOR,
   STRIPE_MAX_MINOR,
@@ -58,7 +59,7 @@ export const p2pPaymentPayload = p2pPaymentBase
 
 export type P2pPaymentPayload = z.infer<typeof p2pPaymentPayload>;
 
-export const P2P_PAYMENT_VERSION = "1.0.0";
+export const P2P_PAYMENT_VERSION = "1.1.0";
 
 /** Never store prohibited card data; keep the one-time code and approver out of the audit log. */
 export const P2P_PAYMENT_REDACTION: RedactionConfig = {
@@ -68,13 +69,17 @@ export const P2P_PAYMENT_REDACTION: RedactionConfig = {
 
 /**
  * Post-parse policy, curried over the server-supplied {@link ActionContext}. USD
- * bands only (FX equivalence deferred, by design). Above the P2P authorization
- * threshold ($2,500) a send requires a second factor.
+ * bands only (FX equivalence is out of scope); a non-USD pass carries a
+ * `POLICY_BANDS_NOT_EVALUATED` flag, never a silent skip. Above the P2P
+ * authorization threshold ($2,500) a send requires a second factor.
  */
 export function makeP2pPaymentPolicy(ctx: ActionContext) {
   return function p2pPaymentPolicy(data: P2pPaymentPayload): Violation[] {
     const violations: Violation[] = [];
-    if (data.currency !== "USD") return violations;
+    if (data.currency !== "USD") {
+      violations.push(usdScopeFlag(data.currency));
+      return violations;
+    }
 
     const { amount } = data;
 

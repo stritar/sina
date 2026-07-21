@@ -103,7 +103,7 @@ describe("emulator a11y", () => {
     // read — to actually resolve first. On a cold CI runner the dynamic import() of the
     // fintech-react → core chunk chain can exceed the default 1000ms wait, so give these
     // lazy branches room to resolve (a genuine failure to mount still throws).
-    await screen.findByRole("button", { name: /Open SecureWireDialog/i }, { timeout: 5000 });
+    await screen.findByRole("button", { name: /Review wire transfer/i }, { timeout: 5000 });
     await screen.findAllByText(/Everyday Checking/i, undefined, { timeout: 5000 });
 
     expect(await axe(container)).toHaveNoViolations();

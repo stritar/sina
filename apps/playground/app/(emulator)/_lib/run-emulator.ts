@@ -34,6 +34,7 @@ import {
   upcomingFixtures,
   portfolioFixtures,
   watchlistFixtures,
+  clarifyChoiceFixtures,
   type IntentEnvelope,
 } from "@sina-design-system/fintech";
 import { runGate, runExperience } from "@sina-design-system/governance-demo";
@@ -60,6 +61,7 @@ const READ_FIXTURES: Record<string, unknown> = {
   [INTENTS.UPCOMING_PAYMENTS]: upcomingFixtures.validUpcoming,
   [INTENTS.PORTFOLIO_HOLDINGS]: portfolioFixtures.validHoldings,
   [INTENTS.WATCHLIST]: watchlistFixtures.validWatchlist,
+  [INTENTS.CLARIFY_CHOICE]: clarifyChoiceFixtures.validWhichAlex,
 };
 
 const DISPLAY_INTENTS = fintechIntentManifest().filter((entry) => entry.kind === "display");

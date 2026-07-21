@@ -13,6 +13,7 @@ import { formatAmount, formatDate } from "../format.js";
 import styles from "./SavingsGoal.module.css";
 
 export interface SavingsGoalProps {
+  /** The server-validated `savings_goal` payload (`IntentProps<"savings_goal">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
 }

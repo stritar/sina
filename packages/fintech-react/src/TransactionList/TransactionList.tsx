@@ -27,7 +27,7 @@ import { formatAmount, formatDate, readTransactionList } from "../format.js";
 import styles from "./TransactionList.module.css";
 
 export interface TransactionListProps {
-  /** The server-validated `list_transactions` payload. */
+  /** The server-validated `list_transactions` payload (`IntentProps<"list_transactions">` in `@sina-design-system/fintech`). */
   payload: unknown;
   /**
    * Emit a new intent for any action this display later offers (e.g. repeat a

@@ -28,6 +28,7 @@ import {
   stepUpViolations,
   type ActionContext,
 } from "../formats/step-up.js";
+import { usdScopeFlag } from "../formats/usd-scope.js";
 import {
   LIMIT_CHANGE_AUTHORIZATION_MINOR,
   STRIPE_MAX_MINOR,
@@ -52,7 +53,7 @@ export const changeLimitPayload = changeLimitBase
 
 export type ChangeLimitPayload = z.infer<typeof changeLimitPayload>;
 
-export const CHANGE_LIMIT_VERSION = "1.0.0";
+export const CHANGE_LIMIT_VERSION = "1.1.0";
 
 /** Never store prohibited card data; keep the approver identity out of the audit log in the clear. */
 export const CHANGE_LIMIT_REDACTION: RedactionConfig = {
@@ -62,13 +63,17 @@ export const CHANGE_LIMIT_REDACTION: RedactionConfig = {
 
 /**
  * Post-parse policy, curried over the server-supplied {@link ActionContext}. USD
- * bands only (FX equivalence deferred, by design — matches the wire schema). A
+ * bands only (FX equivalence is out of scope — matches the wire schema); a non-USD
+ * pass carries a `POLICY_BANDS_NOT_EVALUATED` flag, never a silent skip. A
  * new limit above the authorization threshold demands a second approver.
  */
 export function makeChangeLimitPolicy(ctx: ActionContext) {
   return function changeLimitPolicy(data: ChangeLimitPayload): Violation[] {
     const violations: Violation[] = [];
-    if (data.currency !== "USD") return violations;
+    if (data.currency !== "USD") {
+      violations.push(usdScopeFlag(data.currency));
+      return violations;
+    }
 
     const newLimit = data.amount;
 

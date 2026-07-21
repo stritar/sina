@@ -14,7 +14,7 @@ describe("WhySina redesign", () => {
     // rule instead of crossing up into the heading band.
     expect(container.querySelectorAll('[class*="ruled"]')).toHaveLength(1);
     const [headingRow] = container.querySelectorAll('[class*="frame"]');
-    expect(headingRow.className).not.toContain("ruled");
+    expect(headingRow!.className).not.toContain("ruled");
 
     // The old card chrome is gone: no per-item border, radius or fill. One
     // mechanism owns the dividing lines.

@@ -11,6 +11,7 @@ import { formatAmount, readBudgetProgress } from "../format.js";
 import styles from "./BudgetProgress.module.css";
 
 export interface BudgetProgressProps {
+  /** The server-validated `budget_progress` payload (`IntentProps<"budget_progress">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
 }

@@ -39,7 +39,7 @@ function mount(ui: React.ReactElement) {
 async function approveAs(approverId: string, approverName: string) {
   const user = userEvent.setup();
   await user.click(
-    await screen.findByRole("button", { name: /Open SecureWireDialog/i }, { timeout: 5000 }),
+    await screen.findByRole("button", { name: /Review wire transfer/i }, { timeout: 5000 }),
   );
   await user.click(await screen.findByRole("button", { name: /Request approval/i }));
 
@@ -57,7 +57,7 @@ describe("GovernanceDemo", () => {
     const { container } = mount(<GovernanceDemo scenario="over-limit" />);
     expect(container.textContent).toContain("SecureWireDialog");
     // The forced component is lazy — wait for it, or axe runs against an empty fallback.
-    await screen.findByRole("button", { name: /Open SecureWireDialog/i }, { timeout: 5000 });
+    await screen.findByRole("button", { name: /Review wire transfer/i }, { timeout: 5000 });
     expect(await axe(container)).toHaveNoViolations();
   });
 

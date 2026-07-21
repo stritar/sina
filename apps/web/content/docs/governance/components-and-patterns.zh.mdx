@@ -1,6 +1,7 @@
 ---
 title: 受治理的组件与展示模式
-sourceHash: 334943597bf3
+wordBudget: 780
+sourceHash: f755165da5a9
 ---
 
 章程的规则会解析为两种 UI。**受治理的组件**渲染一次升级，即规则强制施加的更严格
@@ -28,6 +29,9 @@ sourceHash: 334943597bf3
   状态，在每个受治理的流程中都获得一致的无障碍体验。
 </Callout>
 
+干净通过时，受治理的动词不挂载任何东西（`mount: null`）；确认步骤由你的应用负责。
+参见[升级](/docs/concepts/escalation)。
+
 ## 展示模式
 
 真实的应用大部分时间都在*展示*内容。展示规则没有限额或审批，但它仍会检查**形状**
@@ -35,9 +39,11 @@ sourceHash: 334943597bf3
 SINA 就挂载一个展示型组件：`TransactionList`、`BalanceCard`、`PortfolioHoldings`
 及其同类，约两打，每种读取对应一个。
 
-两个属性完成安全工作。模型选择*展示什么*，但**由你的服务器提供数值**，因此它无法凭空
-捏造余额。而且读取是**只读的**：任何展示组件都不会渲染裸露的操作按钮。从列表中执行
-操作（对某笔扣款提出争议、支付账单）是一个新的意图，会重新进入关卡。
+两个属性完成安全工作。**展示来源**：模型只选择*展示什么*并发送选择提示；实际的行
+**由你的服务器从自身存储中解析**。模型编写的行即使能通过校验，也仍会违背初衷，因为
+SINA 检查的是形状，而非真实性。而且读取是**只读的**：任何展示组件都不会渲染裸露的
+操作按钮。从列表中执行操作（对某笔扣款提出争议、支付账单）是一个新的意图，会重新进入
+关卡。
 
 ## 意图注册表
 
@@ -54,7 +60,11 @@ SINA 就挂载一个展示型组件：`TransactionList`、`BalanceCard`、`Portf
 | `list_transactions` | 展示 | `TransactionList` |
 | `account_balance` | 展示 | `BalanceCard` |
 | `portfolio_holdings` | 展示 | `PortfolioHoldings` |
+| `clarify_choice` | 展示 | `ClarifyChoice` |
 | `spending_breakdown` · `budget_progress` · `list_cards` · `list_payees` · … | 展示 | 展示型读取 |
+
+此表展示的只是形状；随附的注册表共有 50 个动词，`fintechIntentManifest()` 会返回
+每一个动词及其以 JSON Schema 表示的 props。
 
 <Callout variant="note" title="未知动词一律拒绝">
   不在注册表中的意图会被拒绝为 `UNKNOWN_INTENT`，并且仍会被审计。默认是拒绝，而非

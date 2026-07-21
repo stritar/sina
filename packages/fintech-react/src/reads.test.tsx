@@ -57,6 +57,12 @@ describe("presentational reads — content", () => {
     expect(screen.getByText("Frozen")).toBeTruthy();
   });
 
+  it("CardList omits the network/expiry row for a sparse card (no placeholder text)", () => {
+    render(<CardList payload={cardFixtures.validSparseCard} />);
+    expect(screen.getByText("****3141")).toBeTruthy();
+    expect(screen.queryByText(/exp/)).toBeNull();
+  });
+
   it("BudgetProgress flags an over-budget category", () => {
     render(<BudgetProgress payload={budgetFixtures.validBudgets} />);
     expect(screen.getByText("over")).toBeTruthy();

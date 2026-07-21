@@ -1,6 +1,6 @@
 ---
 title: "Praxisbeispiel: die 60.000-$-Überweisung"
-sourceHash: 1ad48a792ac1
+sourceHash: c2caf486a669
 ---
 
 <YouWillLearn>
@@ -50,6 +50,15 @@ derjenige, der handelt. Er verweigert die einfache Bestätigung und benennt
 Audit-Ereignis ausgelöst, das den Zeitstempel, die Nutzlast, alle drei Verstöße und
 die entschiedene Komponente trägt. Die Blockade steht im Protokoll, bevor
 irgendetwas gerendert wird.
+
+<Callout variant="note" title="Die Bänder sind in USD definiert">
+  Jedes Band oben setzt `currency: "USD"` voraus. Eine Überweisung in einer
+  anderen Währung besteht die Strukturprüfung, überspringt die Bänder und trägt
+  ein `POLICY_BANDS_NOT_EVALUATED`-Flag in der Entscheidung und im Audit-Trail,
+  sodass der Durchlass niemals stillschweigend erfolgt. Um deine eigene Währung
+  in Bänder zu fassen, verkette eine eigene Regel: siehe
+  [Eine Governance-Regel schreiben](/docs/governance/writing-a-rule).
+</Callout>
 
 ## Der erzwungene Dialog
 

@@ -20,6 +20,7 @@ import { formatAmount } from "../format.js";
 import styles from "./CashflowSummary.module.css";
 
 export interface CashflowSummaryProps {
+  /** The server-validated `cashflow_summary` payload (`IntentProps<"cashflow_summary">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
 }

@@ -1,6 +1,6 @@
 ---
 title: Écrire une règle de gouvernance
-sourceHash: b78fbff0d2ec
+sourceHash: 03469e740360
 ---
 
 Une règle est un schéma Zod strict associé à une vérification de politique citée,
@@ -93,6 +93,18 @@ code, un résultat sûr.
 
   </Step>
 </Steps>
+
+## Ajoutez vos propres tranches de devise
+
+Les tranches d'origine ne couvrent que l'USD ; une charge utile non USD passe
+les vérifications de format et porte un indicateur `POLICY_BANDS_NOT_EVALUATED`
+au lieu de passer en silence. Pour découper une autre devise en tranches,
+chaînez une règle après la politique d'origine : appelez d'abord
+`makeWirePolicy` pour préserver le comportement USD, ajoutez vos tranches à
+partir des constantes de seuil exportées, et réutilisez `payloadHash` et
+`coreTerms` pour la liaison d'approbation. Citez l'écart dans le champ
+`standard` de chaque violation. Un intégrateur EUR a fait tout cela en une
+quarantaine de lignes.
 
 Avant de livrer, vérifiez que la règle répond aux bases en une phrase chacune : ce
 qu'elle est, le risque qu'elle supprime, une requête concrète qu'elle bloque, une

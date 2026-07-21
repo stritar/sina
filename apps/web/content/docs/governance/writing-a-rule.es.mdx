@@ -1,6 +1,6 @@
 ---
 title: Escribir una regla de gobernanza
-sourceHash: b78fbff0d2ec
+sourceHash: 03469e740360
 ---
 
 Una regla es un esquema Zod estricto más una comprobación de política citada, que
@@ -92,6 +92,18 @@ resultado seguro.
 
   </Step>
 </Steps>
+
+## Añade tus propias bandas de moneda
+
+Las bandas de serie son solo para USD; una carga útil en una moneda distinta del
+USD pasa las comprobaciones de formato y lleva una marca
+`POLICY_BANDS_NOT_EVALUATED` en lugar de pasar en silencio. Para poner bandas a
+otra moneda, encadena una regla después de la política de serie: llama primero a
+`makeWirePolicy` para que se conserve el comportamiento en USD, añade tus bandas
+a partir de las constantes de umbral exportadas y reutiliza `payloadHash` y
+`coreTerms` para la vinculación de la aprobación. Cita la desviación en el campo
+`standard` de cada infracción. Un integrador de EUR hizo todo esto en unas
+cuarenta líneas.
 
 Antes de publicar, comprueba que la regla responde a lo básico en una frase cada
 una: qué es, el riesgo que elimina, una solicitud concreta que bloquea, una que

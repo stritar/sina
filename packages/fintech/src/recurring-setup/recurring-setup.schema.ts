@@ -29,6 +29,7 @@ import {
   stepUpViolations,
   type ActionContext,
 } from "../formats/step-up.js";
+import { usdScopeFlag } from "../formats/usd-scope.js";
 import { RECURRING_CYCLE_CAP_MINOR, STRIPE_MAX_MINOR, STRIPE_MIN_MINOR } from "../thresholds.js";
 
 const recurringSetupBase = z
@@ -53,7 +54,7 @@ export const recurringSetupPayload = recurringSetupBase
 
 export type RecurringSetupPayload = z.infer<typeof recurringSetupPayload>;
 
-export const RECURRING_SETUP_VERSION = "1.0.0";
+export const RECURRING_SETUP_VERSION = "1.1.0";
 
 /** Never store prohibited card data; keep the approver identity out of the audit log in the clear. */
 export const RECURRING_SETUP_REDACTION: RedactionConfig = {
@@ -63,13 +64,17 @@ export const RECURRING_SETUP_REDACTION: RedactionConfig = {
 
 /**
  * Post-parse policy, curried over the server-supplied {@link ActionContext}. USD
- * bands only (FX equivalence deferred, by design — matches the sibling schemas).
+ * bands only (FX equivalence is out of scope — matches the sibling schemas); a
+ * non-USD pass carries a `POLICY_BANDS_NOT_EVALUATED` flag, never a silent skip.
  * A per-cycle amount above the standing-order cap requires authorization.
  */
 export function makeRecurringSetupPolicy(ctx: ActionContext) {
   return function recurringSetupPolicy(data: RecurringSetupPayload): Violation[] {
     const violations: Violation[] = [];
-    if (data.currency !== "USD") return violations;
+    if (data.currency !== "USD") {
+      violations.push(usdScopeFlag(data.currency));
+      return violations;
+    }
 
     const { amount } = data;
 

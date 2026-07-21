@@ -20,6 +20,7 @@ import { formatAmount, readSpendingBreakdown } from "../format.js";
 import styles from "./SpendingBreakdown.module.css";
 
 export interface SpendingBreakdownProps {
+  /** The server-validated `spending_breakdown` payload (`IntentProps<"spending_breakdown">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
 }

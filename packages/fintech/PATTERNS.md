@@ -60,6 +60,7 @@ test, and a playground scenario; display components pass jest-axe.
 | Net worth | `net_worth` | `NetWorth` | SummaryList | ✅ |
 | Alerts feed | `alerts_feed` | `AlertsFeed` | Stack, Alert, Badge | ✅ |
 | Search results | `search_results` | `SearchResults` | SummaryList, Combobox | ✅ |
+| Clarify / disambiguate | `clarify_choice` | `ClarifyChoice` | Stack, Button | ✅ |
 
 ¹ **Charts** — two `core` chart families back these reads. The interactive **Chart.js** primitives
 (`LineChart`, `BarChart`, `PieChart`, `DonutChart` — `role="img"` + label, canvas `aria-hidden`,

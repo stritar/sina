@@ -27,6 +27,7 @@ import { bic } from "../formats/bic.js";
 import { abaRouting } from "../formats/routing.js";
 import { PROHIBITED_CARD_FIELDS } from "../formats/card.js";
 import { coreTerms, payloadHash } from "../formats/canonical.js";
+import { usdScopeFlag } from "../formats/usd-scope.js";
 import {
   CTR_MINOR,
   SAR_MINOR,
@@ -36,12 +37,16 @@ import {
   WIRE_SECONDARY_APPROVAL_MINOR,
 } from "../thresholds.js";
 
-/** SEPA leg: IBAN + BIC (ISO 13616 / ISO 9362). */
+/**
+ * SEPA leg: IBAN (ISO 13616) + optional BIC (ISO 9362). The BIC is optional per
+ * the SEPA "IBAN-only" rule (Regulation (EU) 260/2012 — the IBAN identifies the
+ * account on its own); it is format-checked when present.
+ */
 const sepaAccount = z
   .object({
     scheme: z.literal("sepa"),
     iban,
-    bic,
+    bic: bic.optional(),
   })
   .strict();
 
@@ -136,9 +141,10 @@ export type WireViolationCode =
   | "CTR_REPORTABLE"
   | "AMOUNT_REQUIRES_APPROVAL"
   | "SELF_APPROVAL_FORBIDDEN"
-  | "APPROVAL_PAYLOAD_MISMATCH";
+  | "APPROVAL_PAYLOAD_MISMATCH"
+  | "POLICY_BANDS_NOT_EVALUATED";
 
-export const WIRE_CONSTITUTION_VERSION = "1.1.0";
+export const WIRE_CONSTITUTION_VERSION = "1.2.0";
 
 function hasTravelRuleInfo(p: Party): boolean {
   return Boolean(p.name && p.address);
@@ -147,12 +153,16 @@ function hasTravelRuleInfo(p: Party): boolean {
 /**
  * Post-parse policy, curried over the server-supplied {@link ApprovalContext}.
  * Bands are USD-only — a non-USD transfer passes format validation but is not
- * run through the USD thresholds (FX equivalence is deferred, by design).
+ * run through the USD thresholds (FX equivalence is out of scope). The skip is
+ * never silent: the pass carries a `POLICY_BANDS_NOT_EVALUATED` flag.
  */
 export function makeWirePolicy(ctx: ApprovalContext) {
   return function wirePolicy(data: ApprovedWireTransferPayload): Violation[] {
     const violations: Violation[] = [];
-    if (data.currency !== "USD") return violations;
+    if (data.currency !== "USD") {
+      violations.push(usdScopeFlag(data.currency));
+      return violations;
+    }
 
     const { amount } = data;
 

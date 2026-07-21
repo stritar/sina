@@ -27,6 +27,7 @@ import {
   stepUpViolations,
   type ActionContext,
 } from "../formats/step-up.js";
+import { usdScopeFlag } from "../formats/usd-scope.js";
 import { FX_AUTHORIZATION_MINOR, STRIPE_MAX_MINOR, STRIPE_MIN_MINOR } from "../thresholds.js";
 
 const base = z
@@ -46,7 +47,7 @@ export const fxConvertPayload = base.extend({ stepUp: stepUpApproval.optional() 
 
 export type FxConvertPayload = z.infer<typeof fxConvertPayload>;
 
-export const FX_CONVERT_VERSION = "1.0.0";
+export const FX_CONVERT_VERSION = "1.1.0";
 
 /** Never store prohibited card data; keep the approver identity out of the audit log. */
 export const FX_CONVERT_REDACTION: RedactionConfig = {
@@ -56,14 +57,18 @@ export const FX_CONVERT_REDACTION: RedactionConfig = {
 
 /**
  * Post-parse policy, curried over the server-supplied {@link ActionContext}. USD
- * bands only (FX equivalence of the *source* leg is deferred, by design — matches
- * the wire schema). Above the SINA FX authorization threshold an un-authorized
+ * bands only (FX equivalence of the *source* leg is out of scope — matches the
+ * wire schema); a non-USD source leg carries a `POLICY_BANDS_NOT_EVALUATED` flag,
+ * never a silent skip. Above the SINA FX authorization threshold an un-authorized
  * conversion escalates; an authorization-bearing one is bound to the exact terms.
  */
 export function makeFxConvertPolicy(ctx: ActionContext) {
   return function fxConvertPolicy(data: FxConvertPayload): Violation[] {
     const violations: Violation[] = [];
-    if (data.currency !== "USD") return violations;
+    if (data.currency !== "USD") {
+      violations.push(usdScopeFlag(data.currency));
+      return violations;
+    }
 
     const { amount } = data;
 

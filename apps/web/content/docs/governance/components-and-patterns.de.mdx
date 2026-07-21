@@ -1,6 +1,7 @@
 ---
 title: Geregelte Komponenten und Anzeigemuster
-sourceHash: 334943597bf3
+wordBudget: 780
+sourceHash: f755165da5a9
 ---
 
 Die Regeln der Verfassung lösen sich in zwei Arten von UI auf. **Geregelte
@@ -37,6 +38,10 @@ unterscheiden sich; die sicheren Ziele sind gemeinsam genutzt und praxiserprobt.
   ein barrierefreies Erlebnis über jeden geregelten Ablauf hinweg.
 </Callout>
 
+Bei einem sauberen Durchlauf mountet ein geregeltes Verb nichts (`mount: null`);
+der Bestätigungsschritt gehört Ihrer App. Siehe
+[Eskalation](/docs/concepts/escalation).
+
 ## Anzeigemuster
 
 Eine echte App verbringt die meiste Zeit damit, Dinge *anzuzeigen*. Eine Anzeigeregel
@@ -46,12 +51,14 @@ werden). Bestehen alle drei, mountet SINA eine präsentationale Komponente:
 `TransactionList`, `BalanceCard`, `PortfolioHoldings` und ihre Geschwister, etwa zwei
 Dutzend, eine pro Art von Lesevorgang.
 
-Zwei Eigenschaften leisten die Sicherheitsarbeit. Das Modell wählt aus, *was*
-angezeigt wird, aber **Ihr Server liefert die Werte**, sodass es keinen Kontostand
-erfinden kann. Und Lesevorgänge sind **schreibgeschützt**: keine Anzeigekomponente
-rendert einen rohen Aktionsbutton. Aus einer Liste heraus zu handeln (eine Buchung
-anfechten, eine Rechnung bezahlen) ist eine neue Absicht, die erneut in den
-Kontrollpunkt eintritt.
+Zwei Eigenschaften leisten die Sicherheitsarbeit. **Anzeige-Provenienz**: Das
+Modell wählt nur aus, *was* angezeigt wird, und sendet Auswahlhinweise; **Ihr
+Server löst die tatsächlichen Zeilen** aus seinem eigenen Datenbestand auf. Eine
+vom Modell verfasste Zeile würde die Validierung bestehen und den Zweck dennoch
+vereiteln, denn SINA prüft die Form, nicht die Wahrheit. Und Lesevorgänge sind
+**schreibgeschützt**: keine Anzeigekomponente rendert einen rohen Aktionsbutton.
+Aus einer Liste heraus zu handeln (eine Buchung anfechten, eine Rechnung bezahlen)
+ist eine neue Absicht, die erneut in den Kontrollpunkt eintritt.
 
 ## Das Absichts-Register
 
@@ -68,7 +75,12 @@ seiner Regel und seiner Komponente zu. Das Modell benennt niemals eine Komponent
 | `list_transactions` | Anzeige | `TransactionList` |
 | `account_balance` | Anzeige | `BalanceCard` |
 | `portfolio_holdings` | Anzeige | `PortfolioHoldings` |
+| `clarify_choice` | Anzeige | `ClarifyChoice` |
 | `spending_breakdown` · `budget_progress` · `list_cards` · `list_payees` · … | Anzeige | präsentationale Lesevorgänge |
+
+Die Tabelle zeigt die Form; das ausgelieferte Register umfasst 50 Verben, und
+`fintechIntentManifest()` gibt jedes davon mit seinen props als JSON Schema
+zurück.
 
 <Callout variant="note" title="Unbekannte Verben werden abgelehnt">
   Eine Absicht, die nicht im Register steht, wird als `UNKNOWN_INTENT` abgelehnt und

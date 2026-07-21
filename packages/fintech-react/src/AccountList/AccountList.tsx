@@ -14,7 +14,7 @@ import { formatAmount } from "../format.js";
 import styles from "./AccountList.module.css";
 
 export interface AccountListProps {
-  /** The server-validated `list_accounts` payload. */
+  /** The server-validated `list_accounts` payload (`IntentProps<"list_accounts">` in `@sina-design-system/fintech`). */
   payload: unknown;
   /** Emit a new intent for any action this display later offers (unused in the proving slice). */
   onIntent?: (envelope: IntentEnvelope) => void;

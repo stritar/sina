@@ -21,6 +21,7 @@ import { formatAmount, formatPct, readPortfolioHoldings } from "../format.js";
 import styles from "./PortfolioHoldings.module.css";
 
 export interface PortfolioHoldingsProps {
+  /** The server-validated `portfolio_holdings` payload (`IntentProps<"portfolio_holdings">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
 }

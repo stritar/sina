@@ -17,6 +17,7 @@ export * from "./formats/card.js";
 export * from "./formats/canonical.js";
 export * from "./formats/masked-account.js";
 export * from "./formats/step-up.js";
+export * from "./formats/usd-scope.js";
 
 // The cited numeric limits (the legible constitution).
 export * from "./thresholds.js";
@@ -78,9 +79,13 @@ export * from "./savings-goal/savings-goal.schema.js";
 export * from "./net-worth/net-worth.schema.js";
 export * from "./alerts-feed/alerts-feed.schema.js";
 export * from "./search-results/search-results.schema.js";
+export * from "./clarify-choice/clarify-choice.schema.js";
 
 // The intent router registry: verb → rule + mount, and the single gate entry point.
 export * from "./registry.js";
+
+// The verb → payload-type map (the registry's compile-time twin).
+export * from "./intent-props.js";
 
 // Canned compliant/adversarial payloads (consumed by the playground + tests).
 export * as wireFixtures from "./wire-transfer/fixtures.js";
@@ -132,3 +137,4 @@ export * as payeeFixtures from "./payee-list/fixtures.js";
 export * as upcomingFixtures from "./upcoming-payments/fixtures.js";
 export * as portfolioFixtures from "./portfolio-holdings/fixtures.js";
 export * as watchlistFixtures from "./watchlist/fixtures.js";
+export * as clarifyChoiceFixtures from "./clarify-choice/fixtures.js";

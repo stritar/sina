@@ -29,7 +29,7 @@ describe("HowItWorks redesign", () => {
     const ruled = container.querySelectorAll('[class*="ruled"]');
     expect(ruled).toHaveLength(1);
     const [headingRow] = container.querySelectorAll('[class*="frame"]');
-    expect(headingRow.className).not.toContain("ruled");
+    expect(headingRow!.className).not.toContain("ruled");
 
     // No per-item border any more: one mechanism owns the verticals.
     for (const step of container.querySelectorAll("ol > li")) {

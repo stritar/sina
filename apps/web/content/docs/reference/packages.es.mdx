@@ -1,6 +1,6 @@
 ---
 title: Paquetes y exports
-sourceHash: 2e1b381ebc4d
+sourceHash: 74e086fb0909
 ---
 
 > Referencia de mantenimiento manual. La autogeneración TSDoc→MDX está aplazada.
@@ -18,10 +18,12 @@ conocer las que están por debajo:
 
 ## `theme`
 
-Incluye `./reset.css` (en capas, así tus estilos siempre ganan) y `./css`, las
-propiedades personalizadas `--sina-*`. La gramática, los niveles y las escalas de
-los tokens están en [Tokens](/docs/theming/tokens); lo que puedes sobrescribir
-está en [Theming](/docs/theming).
+Incluye `./reset.css` (en capas, así tus estilos siempre ganan) y las
+propiedades personalizadas `--sina-*` en `./css`, también exportadas como
+`./theme.css` para que TypeScript acepte el import de efecto secundario. La
+gramática, los niveles y las escalas de los tokens están en
+[Tokens](/docs/theming/tokens); lo que puedes sobrescribir está en
+[Theming](/docs/theming).
 
 ## `core`
 
@@ -29,6 +31,11 @@ La biblioteca de primitivas. Cada export aparece con ejemplos en vivo en la
 [Galería de primitivas](/docs/primitives). Solo exports con nombre; los tipos de
 props por primitiva (`ButtonProps`, `GapStep`, `SummaryItem`, …) se incluyen junto
 a ellas.
+
+**Tamaño del bundle**: cada componente se publica como su propio módulo con las
+dependencias externas, así que un bundler que hace tree-shaking descarta
+`chart.js` y el set de iconos siempre que tu app no renderice ningún gráfico.
+Solo pagas por lo que importas.
 
 ## `governance`
 
@@ -55,5 +62,5 @@ visualización](/docs/governance/components-and-patterns); escribe tu propia reg
 
 ## Versiones
 
-Los cinco se publican en la **0.1.0**; consulta [Versiones y
+Los cinco paquetes versionan juntos, en sincronía; consulta [Versiones y
 estabilidad](/docs/reference/changelog).

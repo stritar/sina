@@ -12,6 +12,7 @@ import { formatDate } from "../format.js";
 import styles from "./AlertsFeed.module.css";
 
 export interface AlertsFeedProps {
+  /** The server-validated `alerts_feed` payload (`IntentProps<"alerts_feed">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
 }

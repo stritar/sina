@@ -11,6 +11,8 @@
  * never be frozen at import time, nor spoofed from the payload).
  */
 
+import type { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 import {
   dispatch,
   pattern,
@@ -19,32 +21,34 @@ import {
   type PatternRegistry,
 } from "@sina-design-system/governance";
 
+import type { IntentPropsMap } from "./intent-props.js";
 import {
   evaluateWireTransfer,
+  approvedWireTransferPayload,
   AGENT_INITIATOR_ID,
   type ApprovalContext,
 } from "./wire-transfer/wire-transfer.schema.js";
-import { evaluateAchTransfer } from "./ach-transfer/ach-transfer.schema.js";
-import { evaluateDisclosure } from "./disclosure/disclosure.schema.js";
-import { evaluateP2pPayment } from "./p2p-payment/p2p-payment.schema.js";
-import { evaluateBillPay } from "./bill-pay/bill-pay.schema.js";
-import { evaluateRecurringSetup } from "./recurring-setup/recurring-setup.schema.js";
-import { evaluateFxConvert } from "./fx-convert/fx-convert.schema.js";
-import { evaluateCryptoWithdraw } from "./crypto-withdraw/crypto-withdraw.schema.js";
-import { evaluateWithdraw } from "./withdraw/withdraw.schema.js";
-import { evaluateIssueCard } from "./issue-card/issue-card.schema.js";
-import { evaluateCardControl } from "./card-control/card-control.schema.js";
-import { evaluateChangeLimit } from "./change-limit/change-limit.schema.js";
-import { evaluateSecurityChange } from "./security-change/security-change.schema.js";
-import { evaluateAddUser } from "./add-user/add-user.schema.js";
-import { evaluateKyc } from "./kyc/kyc.schema.js";
-import { evaluateAddPayee } from "./add-payee/add-payee.schema.js";
-import { evaluateLinkAccount } from "./link-account/link-account.schema.js";
-import { evaluateDispute } from "./dispute/dispute.schema.js";
-import { evaluateCloseAccount } from "./close-account/close-account.schema.js";
-import { evaluatePlaceTrade } from "./place-trade/place-trade.schema.js";
-import { evaluateEnableMargin } from "./enable-margin/enable-margin.schema.js";
-import { evaluateCreditRequest } from "./credit-request/credit-request.schema.js";
+import { evaluateAchTransfer, achTransferPayload } from "./ach-transfer/ach-transfer.schema.js";
+import { evaluateDisclosure, disclosurePayload } from "./disclosure/disclosure.schema.js";
+import { evaluateP2pPayment, p2pPaymentPayload } from "./p2p-payment/p2p-payment.schema.js";
+import { evaluateBillPay, billPayPayload } from "./bill-pay/bill-pay.schema.js";
+import { evaluateRecurringSetup, recurringSetupPayload } from "./recurring-setup/recurring-setup.schema.js";
+import { evaluateFxConvert, fxConvertPayload } from "./fx-convert/fx-convert.schema.js";
+import { evaluateCryptoWithdraw, cryptoWithdrawPayload } from "./crypto-withdraw/crypto-withdraw.schema.js";
+import { evaluateWithdraw, withdrawPayload } from "./withdraw/withdraw.schema.js";
+import { evaluateIssueCard, issueCardPayload } from "./issue-card/issue-card.schema.js";
+import { evaluateCardControl, cardControlPayload } from "./card-control/card-control.schema.js";
+import { evaluateChangeLimit, changeLimitPayload } from "./change-limit/change-limit.schema.js";
+import { evaluateSecurityChange, securityChangePayload } from "./security-change/security-change.schema.js";
+import { evaluateAddUser, addUserPayload } from "./add-user/add-user.schema.js";
+import { evaluateKyc, kycPayload } from "./kyc/kyc.schema.js";
+import { evaluateAddPayee, addPayeePayload } from "./add-payee/add-payee.schema.js";
+import { evaluateLinkAccount, linkAccountPayload } from "./link-account/link-account.schema.js";
+import { evaluateDispute, disputePayload } from "./dispute/dispute.schema.js";
+import { evaluateCloseAccount, closeAccountPayload } from "./close-account/close-account.schema.js";
+import { evaluatePlaceTrade, placeTradePayload } from "./place-trade/place-trade.schema.js";
+import { evaluateEnableMargin, enableMarginPayload } from "./enable-margin/enable-margin.schema.js";
+import { evaluateCreditRequest, creditRequestPayload } from "./credit-request/credit-request.schema.js";
 import {
   transactionDetailPayload,
   TRANSACTION_DETAIL_VERSION,
@@ -111,6 +115,7 @@ import {
   PORTFOLIO_HOLDINGS_VERSION,
 } from "./portfolio-holdings/portfolio-holdings.schema.js";
 import { watchlistPayload, WATCHLIST_VERSION } from "./watchlist/watchlist.schema.js";
+import { clarifyChoicePayload, CLARIFY_CHOICE_VERSION } from "./clarify-choice/clarify-choice.schema.js";
 
 // Re-export the router's envelope/decision types so the fintech intent API is
 // self-contained — consumers never reach into `governance` directly for these.
@@ -167,9 +172,70 @@ export const INTENTS = {
   UPCOMING_PAYMENTS: "upcoming_payments",
   PORTFOLIO_HOLDINGS: "portfolio_holdings",
   WATCHLIST: "watchlist",
+  CLARIFY_CHOICE: "clarify_choice",
 } as const;
 
 export type FintechIntent = (typeof INTENTS)[keyof typeof INTENTS];
+
+/**
+ * Every verb's payload schema — the exact Zod object its registry entry gates
+ * (governed verbs carry the approval/step-up envelope, so a re-submission is
+ * covered too). The `satisfies` clause binds this map to {@link IntentPropsMap}
+ * both ways at compile time: a verb without a schema, a verb without a payload
+ * type, or a schema whose inferred type drifts from the map is a build error.
+ */
+export const INTENT_SCHEMAS = {
+  [INTENTS.WIRE_TRANSFER]: approvedWireTransferPayload,
+  [INTENTS.ACH_TRANSFER]: achTransferPayload,
+  [INTENTS.DISCLOSURE]: disclosurePayload,
+  [INTENTS.P2P_PAYMENT]: p2pPaymentPayload,
+  [INTENTS.BILL_PAY]: billPayPayload,
+  [INTENTS.RECURRING_SETUP]: recurringSetupPayload,
+  [INTENTS.FX_CONVERT]: fxConvertPayload,
+  [INTENTS.CRYPTO_WITHDRAW]: cryptoWithdrawPayload,
+  [INTENTS.WITHDRAW]: withdrawPayload,
+  [INTENTS.ISSUE_CARD]: issueCardPayload,
+  [INTENTS.CARD_CONTROL]: cardControlPayload,
+  [INTENTS.CHANGE_LIMIT]: changeLimitPayload,
+  [INTENTS.SECURITY_CHANGE]: securityChangePayload,
+  [INTENTS.ADD_USER]: addUserPayload,
+  [INTENTS.KYC]: kycPayload,
+  [INTENTS.ADD_PAYEE]: addPayeePayload,
+  [INTENTS.LINK_ACCOUNT]: linkAccountPayload,
+  [INTENTS.DISPUTE]: disputePayload,
+  [INTENTS.CLOSE_ACCOUNT]: closeAccountPayload,
+  [INTENTS.PLACE_TRADE]: placeTradePayload,
+  [INTENTS.ENABLE_MARGIN]: enableMarginPayload,
+  [INTENTS.CREDIT_REQUEST]: creditRequestPayload,
+  [INTENTS.LIST_TRANSACTIONS]: transactionListPayload,
+  [INTENTS.TRANSACTION_DETAIL]: transactionDetailPayload,
+  [INTENTS.LIST_ACCOUNTS]: accountListPayload,
+  [INTENTS.LIST_STATEMENTS]: statementListPayload,
+  [INTENTS.CASHFLOW_SUMMARY]: cashflowSummaryPayload,
+  [INTENTS.BALANCE_TREND]: balanceTrendPayload,
+  [INTENTS.ACTIVITY_FEED]: activityFeedPayload,
+  [INTENTS.INSIGHT]: insightPayload,
+  [INTENTS.LIST_RECURRING]: recurringListPayload,
+  [INTENTS.LIST_INVOICES]: invoiceListPayload,
+  [INTENTS.ASSET_DETAIL]: assetDetailPayload,
+  [INTENTS.ORDER_HISTORY]: orderHistoryPayload,
+  [INTENTS.FX_QUOTE]: fxQuotePayload,
+  [INTENTS.CRYPTO_HOLDINGS]: cryptoHoldingsPayload,
+  [INTENTS.SAVINGS_GOAL]: savingsGoalPayload,
+  [INTENTS.NET_WORTH]: netWorthPayload,
+  [INTENTS.ALERTS_FEED]: alertsFeedPayload,
+  [INTENTS.SEARCH_RESULTS]: searchResultsPayload,
+  [INTENTS.ACCOUNT_BALANCE]: accountBalancePayload,
+  [INTENTS.SPENDING_BREAKDOWN]: spendingBreakdownPayload,
+  [INTENTS.BUDGET_PROGRESS]: budgetProgressPayload,
+  [INTENTS.LIST_CARDS]: cardListPayload,
+  [INTENTS.REWARDS_SUMMARY]: rewardsSummaryPayload,
+  [INTENTS.LIST_PAYEES]: payeeListPayload,
+  [INTENTS.UPCOMING_PAYMENTS]: upcomingPaymentsPayload,
+  [INTENTS.PORTFOLIO_HOLDINGS]: portfolioHoldingsPayload,
+  [INTENTS.WATCHLIST]: watchlistPayload,
+  [INTENTS.CLARIFY_CHOICE]: clarifyChoicePayload,
+} satisfies { [K in FintechIntent]: z.ZodType<IntentPropsMap[K]> };
 
 /**
  * Build the fintech registry bound to a server-supplied {@link ApprovalContext}.
@@ -283,6 +349,14 @@ export function fintechRegistry(
         component: "Watchlist",
       },
     }),
+    // Disambiguation ("which Alex?"): server-resolved options, model sends hints.
+    [INTENTS.CLARIFY_CHOICE]: pattern({
+      rule: {
+        schema: clarifyChoicePayload,
+        version: CLARIFY_CHOICE_VERSION,
+        component: "ClarifyChoice",
+      },
+    }),
 
     // Expanded ungoverned read catalog — shape-only rules, presentational mounts.
     [INTENTS.TRANSACTION_DETAIL]: pattern({ rule: { schema: transactionDetailPayload, redaction: TRANSACTION_DETAIL_REDACTION, version: TRANSACTION_DETAIL_VERSION, component: "TransactionDetail" } }),
@@ -319,16 +393,34 @@ export interface IntentDescriptor {
   kind: "display" | "governed";
   component: string;
   summary: string;
+  /**
+   * The verb's payload as a self-contained JSON Schema (no `$ref`s), derived
+   * from the same Zod object the gate runs — drop it straight into an LLM tool
+   * definition instead of hand-authoring the props documentation.
+   */
+  propsSchema: Record<string, unknown>;
 }
 
+/** One manifest row before its `propsSchema` is derived from {@link INTENT_SCHEMAS}. */
+type IntentSummary = Omit<IntentDescriptor, "propsSchema"> & { intent: FintechIntent };
+
 /**
- * The intent manifest — which intents exist and what they render. This is what
- * tells a model which verbs it may emit. Per-intent prop JSON-schema attaches when
- * the repo moves to Zod 4's `z.toJSONSchema` (or adds `zod-to-json-schema`); until
- * then `gateLive` mirrors each prop schema in its tool definition. Advisory UX —
- * `evaluateFintechIntent` (the server gate) remains authoritative.
+ * The intent manifest — which intents exist, what they render, and each verb's
+ * payload as JSON Schema. This is what tells a model which verbs it may emit and
+ * what props each takes; `propsSchema` comes from the exact schema the registry
+ * gates, so a tool definition built from it can never drift from the gate.
+ * Advisory UX — `evaluateFintechIntent` (the server gate) remains authoritative.
  */
 export function fintechIntentManifest(): IntentDescriptor[] {
+  return intentSummaries().map((entry) => ({
+    ...entry,
+    propsSchema: zodToJsonSchema(INTENT_SCHEMAS[entry.intent], {
+      $refStrategy: "none",
+    }) as Record<string, unknown>,
+  }));
+}
+
+function intentSummaries(): IntentSummary[] {
   return [
     {
       intent: INTENTS.LIST_TRANSACTIONS,
@@ -389,6 +481,12 @@ export function fintechIntentManifest(): IntentDescriptor[] {
       kind: "display",
       component: "Watchlist",
       summary: "Show tracked instruments with price and day change.",
+    },
+    {
+      intent: INTENTS.CLARIFY_CHOICE,
+      kind: "display",
+      component: "ClarifyChoice",
+      summary: "Ask the user to pick between server-resolved options (disambiguation).",
     },
     {
       intent: INTENTS.WIRE_TRANSFER,

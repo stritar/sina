@@ -12,6 +12,7 @@ import { formatAmount, formatDate, readUpcomingPayments } from "../format.js";
 import styles from "./UpcomingPayments.module.css";
 
 export interface UpcomingPaymentsProps {
+  /** The server-validated `upcoming_payments` payload (`IntentProps<"upcoming_payments">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
 }

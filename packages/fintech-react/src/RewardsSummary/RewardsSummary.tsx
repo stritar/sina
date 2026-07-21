@@ -12,6 +12,7 @@ import { formatAmount, readRewards } from "../format.js";
 import styles from "./RewardsSummary.module.css";
 
 export interface RewardsSummaryProps {
+  /** The server-validated `rewards_summary` payload (`IntentProps<"rewards_summary">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
 }

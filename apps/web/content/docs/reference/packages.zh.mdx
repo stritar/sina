@@ -1,6 +1,6 @@
 ---
 title: 包与导出
-sourceHash: 2e1b381ebc4d
+sourceHash: 74e086fb0909
 ---
 
 > 手工维护的参考。TSDoc→MDX 自动生成已推迟。
@@ -17,11 +17,13 @@ SINA 由五个边界严格的小型包组成。每一层只能了解其下方的
 
 ## `theme`
 
-提供 `./reset.css`（分层，因此你的样式始终获胜）和 `./css`，即 `--sina-*` 自定义属性。令牌的语法、层级和刻度见 [Tokens](/docs/theming/tokens)；可覆盖的内容见 [Theming](/docs/theming)。
+提供 `./reset.css`（分层，因此你的样式始终获胜）以及位于 `./css` 的 `--sina-*` 自定义属性，后者同时以 `./theme.css` 导出，以便 TypeScript 接受副作用导入。令牌的语法、层级和刻度见 [Tokens](/docs/theming/tokens)；可覆盖的内容见 [Theming](/docs/theming)。
 
 ## `core`
 
 基础组件库。每个导出都在 [基础组件画廊](/docs/primitives) 中列出并附实时示例。仅具名导出；各基础组件的 prop 类型（`ButtonProps`、`GapStep`、`SummaryItem`、…）随附一起提供。
+
+**打包体积**：每个组件都作为独立模块发布，依赖项保持外部化，因此支持 tree-shaking 的打包器会在你的应用不渲染任何图表时去掉 `chart.js` 和图标集。你只为你导入的内容付出成本。
 
 ## `governance`
 
@@ -43,4 +45,4 @@ SINA 由五个边界严格的小型包组成。每一层只能了解其下方的
 
 ## 版本
 
-五个包全部发布为 **0.1.0**；见 [发布与稳定性](/docs/reference/changelog)。
+五个包全部同步、以同一节奏一起发布版本；见 [发布与稳定性](/docs/reference/changelog)。

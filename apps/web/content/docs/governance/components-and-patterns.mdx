@@ -1,5 +1,6 @@
 ---
 title: Governed components & display patterns
+wordBudget: 780
 ---
 
 The Constitution's rules resolve to two kinds of UI. **Governed components**
@@ -33,6 +34,9 @@ the safe destinations are shared and battle-tested.
   experience across every governed flow.
 </Callout>
 
+On a clean pass a governed verb mounts nothing (`mount: null`); your app owns
+the confirm step. See [Escalation](/docs/concepts/escalation).
+
 ## Display patterns
 
 A real app spends most of its time *showing* things. A display rule has no limits
@@ -41,10 +45,12 @@ are capped), and **privacy** (identifiers must be masked). Pass all three and
 SINA mounts a presentational component: `TransactionList`, `BalanceCard`,
 `PortfolioHoldings`, and their siblings, about two dozen, one per kind of read.
 
-Two properties do the safety work. The model picks *what* to show, but **your
-server supplies the values**, so it can't invent a balance. And reads are
-**read-only**: no display component renders a raw action button. Acting from a
-list (dispute a charge, pay a bill) is a new intent that re-enters the gate.
+Two properties do the safety work. **Display provenance**: the model only picks
+*what* to show and sends selection hints; **your server resolves the actual
+rows** from its own store. A model-authored row would validate and still defeat
+the purpose, because SINA checks shape, not truth. And reads are **read-only**:
+no display component renders a raw action button. Acting from a list (dispute a
+charge, pay a bill) is a new intent that re-enters the gate.
 
 ## The intent registry
 
@@ -61,7 +67,11 @@ to its rule and its component. The model never names a component.
 | `list_transactions` | Display | `TransactionList` |
 | `account_balance` | Display | `BalanceCard` |
 | `portfolio_holdings` | Display | `PortfolioHoldings` |
+| `clarify_choice` | Display | `ClarifyChoice` |
 | `spending_breakdown` · `budget_progress` · `list_cards` · `list_payees` · … | Display | presentational reads |
+
+The table shows the shape; the shipped registry has 50 verbs, and
+`fintechIntentManifest()` returns every one with its props as JSON Schema.
 
 <Callout variant="note" title="Unknown verbs are denied">
   An intent that isn't in the registry is rejected as `UNKNOWN_INTENT`, and

@@ -1,6 +1,6 @@
 ---
 title: Pakete & Exports
-sourceHash: 2e1b381ebc4d
+sourceHash: 74e086fb0909
 ---
 
 > Von Hand gepflegte Referenz. Die automatische TSDoc→MDX-Generierung ist zurückgestellt.
@@ -18,10 +18,11 @@ Schichten unter ihr kennen:
 
 ## `theme`
 
-Liefert `./reset.css` (in Layern, damit deine Styles immer gewinnen) und `./css`,
-die `--sina-*`-Custom-Properties. Grammatik, Stufen und Skalen der Tokens finden
-sich in [Tokens](/docs/theming/tokens); was du überschreiben darfst, steht in
-[Theming](/docs/theming).
+Liefert `./reset.css` (in Layern, damit deine Styles immer gewinnen) und die
+`--sina-*`-Custom-Properties unter `./css`, zusätzlich als `./theme.css`
+exportiert, damit TypeScript den Seiteneffekt-Import akzeptiert. Grammatik,
+Stufen und Skalen der Tokens finden sich in [Tokens](/docs/theming/tokens); was
+du überschreiben darfst, steht in [Theming](/docs/theming).
 
 ## `core`
 
@@ -29,6 +30,11 @@ Die Primitives-Bibliothek. Jeder Export ist mit Live-Beispielen in der
 [Primitives-Galerie](/docs/primitives) aufgeführt. Nur benannte Exports; die
 Prop-Typen je Primitive (`ButtonProps`, `GapStep`, `SummaryItem`, …) werden
 mitgeliefert.
+
+**Bundle-Größe**: Jede Komponente wird als eigenes Modul mit externen
+Abhängigkeiten ausgeliefert, sodass ein Bundler mit Tree-Shaking `chart.js` und
+das Icon-Set entfernt, wann immer deine App kein Diagramm rendert. Du zahlst nur
+für das, was du importierst.
 
 ## `governance`
 
@@ -57,5 +63,5 @@ schreiben](/docs/governance/writing-a-rule).
 
 ## Versionen
 
-Alle fünf sind unter **0.1.0** veröffentlicht; siehe [Releases &
+Alle fünf Pakete werden gemeinsam, im Gleichschritt versioniert; siehe [Releases &
 Stabilität](/docs/reference/changelog).

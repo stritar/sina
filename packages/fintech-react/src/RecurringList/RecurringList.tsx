@@ -23,7 +23,7 @@ import { formatAmount, formatDate } from "../format.js";
 import styles from "./RecurringList.module.css";
 
 export interface RecurringListProps {
-  /** The server-validated `list_recurring` payload. */
+  /** The server-validated `list_recurring` payload (`IntentProps<"list_recurring">` in `@sina-design-system/fintech`). */
   payload: unknown;
   /**
    * Emit a new intent for any action this display later offers (e.g. cancel a

@@ -23,6 +23,14 @@ export const validSmallTransfer: WireTransferPayload = {
   creditor: { name: "Beta LLC", account: { scheme: "sepa", iban: VALID_IBAN, bic: VALID_BIC } },
 };
 
+/** SEPA leg with no BIC — valid under the IBAN-only rule (Reg (EU) 260/2012). */
+export const validIbanOnly: WireTransferPayload = {
+  amount: usd(500),
+  currency: "USD",
+  debtor: { name: "Acme Corp", account: { scheme: "sepa", iban: VALID_IBAN } },
+  creditor: { name: "Beta LLC", account: { scheme: "sepa", iban: VALID_IBAN } },
+};
+
 /** The roadmap's compliant $5,000 transfer — Travel Rule satisfied, SAR flag only. */
 export const validFiveThousand: WireTransferPayload = {
   amount: usd(5_000),
@@ -39,7 +47,11 @@ export const validFiveThousand: WireTransferPayload = {
   },
 };
 
-/** €60,000 — format-valid, but non-USD: regulatory bands are NOT applied. */
+/**
+ * €60,000 — format-valid, but non-USD: the USD bands are not applied, and the
+ * pass must carry the POLICY_BANDS_NOT_EVALUATED flag (the review's "€60k wire,
+ * zero violations" silent pass is the regression this fixture now guards).
+ */
 export const validNonUsdLarge: WireTransferPayload = {
   amount: 6_000_000,
   currency: "EUR",

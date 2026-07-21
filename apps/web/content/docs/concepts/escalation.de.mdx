@@ -1,6 +1,6 @@
 ---
 title: Eskalation und Durchsetzung
-sourceHash: 66219ab514c7
+sourceHash: 96d3a941c558
 ---
 
 Wenn der Kontrollpunkt ein Problem findet, schlägt er nicht immer die Tür zu.
@@ -33,6 +33,21 @@ geschieht. Es gibt drei.
   welche Absichten du durch den Kontrollpunkt leitest. Das geschieht bewusst, im
   Code, wo es überprüfbar ist.
 </Callout>
+
+## Was bei einem sauberen Durchgang eingebunden wird
+
+Ein Anzeige-Verb, das besteht, bindet seine Präsentationskomponente ein. Ein
+**geregeltes** Verb, das sauber besteht, bindet nichts ein: die Entscheidung
+kommt mit `mount: null` zurück, und deine App liefert ihren eigenen
+Bestätigungsschritt, zusammengesetzt aus `core`-Primitiven. SINA entscheidet,
+was erlaubt ist; der Host besitzt den Happy Path.
+
+```ts
+{ intent: "wire_transfer", props, result: { valid: true /* … */ }, mount: null }
+```
+
+Eine geregelte Komponente wird nur eingebunden, wenn eine Eskalation sie
+erzwingt.
 
 Du musst nicht deine ganze App am ersten Tag regeln. Regeln sind unabhängig, du
 kannst also mit einer einzelnen Absicht beginnen und von dort erweitern. Siehe

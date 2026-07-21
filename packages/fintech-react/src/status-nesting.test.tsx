@@ -79,7 +79,7 @@ const CASES: Array<{ name: string; mount: () => Promise<void> }> = [
       render(
         <SecureWireDialog intent={wireIntent} violations={escalate} onSubmitApproval={noop()} />,
       );
-      await userEvent.click(screen.getByRole("button", { name: /open securewiredialog/i }));
+      await userEvent.click(screen.getByRole("button", { name: /review wire transfer/i }));
     },
   },
   {

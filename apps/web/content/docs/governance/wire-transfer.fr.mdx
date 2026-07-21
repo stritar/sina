@@ -1,6 +1,6 @@
 ---
 title: "Exemple concret : le virement de 60 000 $"
-sourceHash: 1ad48a792ac1
+sourceHash: c2caf486a669
 ---
 
 <YouWillLearn>
@@ -50,6 +50,15 @@ qui agit. Il refuse la confirmation simple et nomme
 [Escalade](/docs/concepts/escalation).) Un événement d'audit se déclenche ici aussi,
 portant l'horodatage, la charge utile, les trois violations et le composant décidé.
 Le blocage est inscrit au registre avant que quoi que ce soit ne s'affiche.
+
+<Callout variant="note" title="Les tranches sont définies en USD">
+  Chaque tranche ci-dessus suppose `currency: "USD"`. Un virement dans une autre
+  devise passe la vérification de structure, ignore les tranches et porte un flag
+  `POLICY_BANDS_NOT_EVALUATED` dans la décision et la piste d'audit, de sorte que
+  le passage n'est jamais silencieux. Pour définir des tranches pour votre propre
+  devise, chaînez une règle personnalisée : voir
+  [Écrire une règle de gouvernance](/docs/governance/writing-a-rule).
+</Callout>
 
 ## La boîte de dialogue forcée
 

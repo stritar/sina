@@ -12,6 +12,7 @@ import { formatDate, readPayeeList } from "../format.js";
 import styles from "./PayeeList.module.css";
 
 export interface PayeeListProps {
+  /** The server-validated `list_payees` payload (`IntentProps<"list_payees">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
 }

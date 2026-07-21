@@ -60,3 +60,4 @@ export { SavingsGoal, type SavingsGoalProps } from "./SavingsGoal/SavingsGoal.js
 export { NetWorth, type NetWorthProps } from "./NetWorth/NetWorth.js";
 export { AlertsFeed, type AlertsFeedProps } from "./AlertsFeed/AlertsFeed.js";
 export { SearchResults, type SearchResultsProps } from "./SearchResults/SearchResults.js";
+export { ClarifyChoice, type ClarifyChoiceProps } from "./ClarifyChoice/ClarifyChoice.js";

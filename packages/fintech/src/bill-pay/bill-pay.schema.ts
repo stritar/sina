@@ -28,6 +28,7 @@ import {
   stepUpViolations,
   type ActionContext,
 } from "../formats/step-up.js";
+import { usdScopeFlag } from "../formats/usd-scope.js";
 import {
   BILLPAY_AUTHORIZATION_MINOR,
   CTR_MINOR,
@@ -60,7 +61,7 @@ export const billPayPayload = billPayBase.extend({ stepUp: stepUpApproval.option
 
 export type BillPayPayload = z.infer<typeof billPayPayload>;
 
-export const BILL_PAY_VERSION = "1.0.0";
+export const BILL_PAY_VERSION = "1.1.0";
 
 /** Never store prohibited card data; keep the masked payee tail + approver identity out of the log. */
 export const BILL_PAY_REDACTION: RedactionConfig = {
@@ -71,12 +72,16 @@ export const BILL_PAY_REDACTION: RedactionConfig = {
 
 /**
  * Post-parse policy, curried over the server-supplied {@link ActionContext}. USD
- * bands only (FX equivalence deferred, by design — matches the wire/ACH schemas).
+ * bands only (FX equivalence is out of scope — matches the wire/ACH schemas); a
+ * non-USD pass carries a `POLICY_BANDS_NOT_EVALUATED` flag, never a silent skip.
  */
 export function makeBillPayPolicy(ctx: ActionContext) {
   return function billPayPolicy(data: BillPayPayload): Violation[] {
     const violations: Violation[] = [];
-    if (data.currency !== "USD") return violations;
+    if (data.currency !== "USD") {
+      violations.push(usdScopeFlag(data.currency));
+      return violations;
+    }
 
     const { amount } = data;
 

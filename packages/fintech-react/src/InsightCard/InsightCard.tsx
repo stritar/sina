@@ -53,7 +53,7 @@ function readInsight(payload: unknown): InsightView {
 }
 
 export interface InsightCardProps {
-  /** The server-validated `insight` payload. */
+  /** The server-validated `insight` payload (`IntentProps<"insight">` in `@sina-design-system/fintech`). */
   payload: unknown;
   /**
    * Emit a new intent for any action this display later offers. The host feeds

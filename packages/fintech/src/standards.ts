@@ -48,7 +48,7 @@ export const FINTECH_STANDARDS: Standard[] = [
     title: "BIC / SWIFT code",
     tier: "format",
     enforcement:
-      "Structural validation only: 8 or 11 characters, well-formed bank/country/location. No SWIFT directory lookup, and no SWIFT MT messaging.",
+      "Structural validation only: 8 or 11 characters, well-formed bank/country/location. Optional on the SEPA leg (the IBAN-only rule, Regulation (EU) 260/2012) and checked when present. No SWIFT directory lookup, and no SWIFT MT messaging.",
     citations: ["ISO 9362"],
     where: ["formats/bic", "wire_transfer (SEPA leg)"],
   },
@@ -226,6 +226,27 @@ export const FINTECH_STANDARDS: Standard[] = [
       "recurring_setup ($5k/cycle)",
       "change_limit ($10k)",
       "close_account",
+    ],
+  },
+  {
+    id: "sina-usd-scope",
+    name: "SINA USD-only bands",
+    authority: "SINA (product default)",
+    title: "Non-USD payloads are flagged, not banded",
+    tier: "policy",
+    enforcement:
+      "Every amount band above is defined in USD; no FX equivalence is computed. A non-USD payload passes format validation and carries a POLICY_BANDS_NOT_EVALUATED flag in the audit trail instead of silently passing. Integrators outside USD chain their own bands after the stock policy.",
+    citations: ["SINA policy — USD-only bands"],
+    where: [
+      "wire_transfer",
+      "ach_transfer",
+      "p2p_payment",
+      "bill_pay",
+      "recurring_setup",
+      "fx_convert",
+      "crypto_withdraw",
+      "withdraw",
+      "change_limit",
     ],
   },
   {

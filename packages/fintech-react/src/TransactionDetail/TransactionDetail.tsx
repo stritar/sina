@@ -27,7 +27,7 @@ import { formatAmount, formatDate } from "../format.js";
 import styles from "./TransactionDetail.module.css";
 
 export interface TransactionDetailProps {
-  /** The server-validated `transaction_detail` payload. */
+  /** The server-validated `transaction_detail` payload (`IntentProps<"transaction_detail">` in `@sina-design-system/fintech`). */
   payload: unknown;
   /**
    * Emit a new intent for any action this display later offers. The host feeds

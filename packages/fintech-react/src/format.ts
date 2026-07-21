@@ -368,3 +368,25 @@ export function readWatchlist(payload: unknown): WatchItemView[] {
     changePct: num(w.changePct),
   }));
 }
+
+// ── Clarify choice ────────────────────────────────────────────────────────────
+export interface ChoiceOptionView {
+  id: string;
+  label: string;
+  description: string;
+}
+export interface ClarifyChoiceView {
+  prompt: string;
+  options: ChoiceOptionView[];
+}
+export function readClarifyChoice(payload: unknown): ClarifyChoiceView {
+  const d = (payload ?? {}) as Record<string, unknown>;
+  return {
+    prompt: str(d.prompt),
+    options: rows(d.options).map((o, i) => ({
+      id: str(o.id, `opt_${i}`),
+      label: str(o.label, "—"),
+      description: str(o.description),
+    })),
+  };
+}

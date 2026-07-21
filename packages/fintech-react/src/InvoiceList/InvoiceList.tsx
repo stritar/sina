@@ -11,7 +11,7 @@ import { formatAmount, formatDate } from "../format.js";
 import styles from "./InvoiceList.module.css";
 
 export interface InvoiceListProps {
-  /** The server-validated `list_invoices` payload. */
+  /** The server-validated `list_invoices` payload (`IntentProps<"list_invoices">` in `@sina-design-system/fintech`). */
   payload: unknown;
   /**
    * Emit a new intent for any action this display later offers. The host feeds it

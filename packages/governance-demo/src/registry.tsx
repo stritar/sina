@@ -15,7 +15,7 @@
  * mount from the decision the gate already made.
  *
  * Every entry is `React.lazy`: a page that escalates a wire downloads the wire dialog
- * and nothing else — no chart.js, none of the 27 reads. The maps are built at MODULE
+ * and nothing else — no chart.js, none of the 28 reads. The maps are built at MODULE
  * scope on purpose; a `lazy()` created inside the resolver would mint a new component
  * type on every render and remount forever. Callers must render mounts inside a
  * `<Suspense>` boundary (an SSR suspend without one throws).
@@ -29,7 +29,7 @@ import type { GovernedComponentProps } from "./types.js";
 /** Presentational components take the validated payload and render it read-only. */
 type PresentationalProps = { payload: unknown };
 
-/** The 27 reads share one async chunk — see ./presentational.ts. */
+/** The 28 reads share one async chunk — see ./presentational.ts. */
 function read(name: keyof typeof Reads): ComponentType<PresentationalProps> {
   return lazy(() =>
     import("./presentational.js").then((m) => ({
@@ -81,6 +81,7 @@ const PRESENTATIONAL: Record<string, ComponentType<PresentationalProps>> = {
   NetWorth: read("NetWorth"),
   AlertsFeed: read("AlertsFeed"),
   SearchResults: read("SearchResults"),
+  ClarifyChoice: read("ClarifyChoice"),
 };
 
 /** Resolve the governed component the gate forces, or null if none is registered. */

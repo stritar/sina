@@ -1,6 +1,6 @@
 ---
 title: 编写治理规则
-sourceHash: b78fbff0d2ec
+sourceHash: 03469e740360
 ---
 
 一条规则是一个严格的 Zod 模式，加上一项带引用的策略检查，位于
@@ -74,6 +74,14 @@ decision.violations;        // includes AMOUNT_REQUIRES_APPROVAL (escalate)
 
   </Step>
 </Steps>
+
+## 添加你自己的货币区间
+
+原生的区间仅适用于美元；非美元的载荷会通过格式检查，并带上一个
+`POLICY_BANDS_NOT_EVALUATED` 标记，而不是悄然通过。要为另一种货币划分区间，请在原生策略之后链接一条规则：先调用
+`makeWirePolicy` 以保留美元行为，再基于导出的阈值常量添加你的区间，并复用
+`payloadHash` 和 `coreTerms` 完成审批绑定。在每条违规的 `standard`
+字段中引用这一偏离。一位 EUR 集成者用大约四十行代码就完成了这一切。
 
 在发布之前，检查这条规则能否各用一句话回答这些基本问题：它是什么、它消除了什么风险、它拦截的一个具体请求、它放行的一个请求，以及触发时会发生什么。如果任何答案含糊，那这条规则也一样含糊。
 

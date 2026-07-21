@@ -1,6 +1,6 @@
 ---
 title: "实战示例：6 万美元电汇"
-sourceHash: 1ad48a792ac1
+sourceHash: c2caf486a669
 ---
 
 <YouWillLearn>
@@ -38,6 +38,11 @@ schema 不认识的字段，例如夹带的 `confirmButton` 或多余的 `cvv`�
 
 这两个 flag 是信息性的：会被记录，但不会阻断。**escalate** 才是采取行动的那一个。它拒绝普通的确认，并指定
 `requiredComponent: "SecureWireDialog"`。（严重程度在[升级](/docs/concepts/escalation)中有介绍。）这里也会触发一次审计事件，携带时间戳、负载、全部三项违规以及决定的组件。在任何内容渲染之前，阻断就已经记录在案。
+
+<Callout variant="note" title="这些区间以美元定义">
+  上面的每个区间都假定 `currency: "USD"`。使用其他货币的电汇会通过结构检查，跳过这些区间，并在决定和审计追踪中携带
+  `POLICY_BANDS_NOT_EVALUATED` 标记，因此这次通过绝不会悄无声息。要为你自己的货币设定区间，请串接一条自定义规则：参见[编写治理规则](/docs/governance/writing-a-rule)。
+</Callout>
 
 ## 强制对话框
 

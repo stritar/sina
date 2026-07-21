@@ -1,6 +1,7 @@
 ---
 title: Composants gouvernés et modèles d'affichage
-sourceHash: 334943597bf3
+wordBudget: 780
+sourceHash: f755165da5a9
 ---
 
 Les règles de la Constitution se résolvent en deux types d'UI. Les **composants
@@ -37,6 +38,10 @@ Les règles diffèrent ; les destinations sûres sont partagées et éprouvées 
   tester, une seule expérience accessible pour chaque flux gouverné.
 </Callout>
 
+Lors d'un passage propre, un verbe gouverné ne monte rien (`mount: null`) ; l'étape
+de confirmation appartient à votre application. Voir
+[Escalade](/docs/concepts/escalation).
+
 ## Modèles d'affichage
 
 Une véritable application passe le plus clair de son temps à *montrer* des choses.
@@ -47,11 +52,14 @@ monte un composant de présentation : `TransactionList`, `BalanceCard`,
 `PortfolioHoldings` et leurs semblables, environ deux douzaines, un par type de
 lecture.
 
-Deux propriétés font le travail de sécurité. Le modèle choisit *quoi* montrer, mais
-**c'est votre serveur qui fournit les valeurs**, il ne peut donc pas inventer un
-solde. Et les lectures sont en **lecture seule** : aucun composant d'affichage ne rend
-un bouton d'action brut. Agir depuis une liste (contester un débit, payer une facture)
-est une nouvelle intention qui repasse par le contrôle.
+Deux propriétés font le travail de sécurité. **Provenance de l'affichage** : le
+modèle choisit seulement *quoi* montrer et envoie des indices de sélection ;
+**votre serveur résout les lignes réelles** depuis son propre magasin de données.
+Une ligne rédigée par le modèle passerait la validation tout en trahissant
+l'objectif, car SINA vérifie la forme, pas la vérité. Et les lectures sont en
+**lecture seule** : aucun composant d'affichage ne rend un bouton d'action brut.
+Agir depuis une liste (contester un débit, payer une facture) est une nouvelle
+intention qui repasse par le contrôle.
 
 ## Le registre des intentions
 
@@ -68,7 +76,12 @@ correspondre à sa règle et à son composant. Le modèle ne nomme jamais un com
 | `list_transactions` | Affichage | `TransactionList` |
 | `account_balance` | Affichage | `BalanceCard` |
 | `portfolio_holdings` | Affichage | `PortfolioHoldings` |
+| `clarify_choice` | Affichage | `ClarifyChoice` |
 | `spending_breakdown` · `budget_progress` · `list_cards` · `list_payees` · … | Affichage | lectures de présentation |
+
+Le tableau montre la forme ; le registre livré compte 50 verbes, et
+`fintechIntentManifest()` renvoie chacun d'eux avec ses props sous forme de JSON
+Schema.
 
 <Callout variant="note" title="Les verbes inconnus sont refusés">
   Une intention absente du registre est rejetée comme `UNKNOWN_INTENT`, et néanmoins

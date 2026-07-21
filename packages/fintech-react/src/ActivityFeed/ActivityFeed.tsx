@@ -12,6 +12,7 @@ import { formatDate } from "../format.js";
 import styles from "./ActivityFeed.module.css";
 
 export interface ActivityFeedProps {
+  /** The server-validated `activity_feed` payload (`IntentProps<"activity_feed">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
 }

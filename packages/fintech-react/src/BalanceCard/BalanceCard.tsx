@@ -14,7 +14,7 @@ import { formatAmount, readBalance } from "../format.js";
 import styles from "./BalanceCard.module.css";
 
 export interface BalanceCardProps {
-  /** The server-validated `account_balance` payload. */
+  /** The server-validated `account_balance` payload (`IntentProps<"account_balance">` in `@sina-design-system/fintech`). */
   payload: unknown;
   /** Emit a new intent for any action this display later offers (unused in the proving slice). */
   onIntent?: (envelope: IntentEnvelope) => void;

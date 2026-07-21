@@ -25,7 +25,7 @@ import { formatAmount, formatDate } from "../format.js";
 import styles from "./BalanceTrend.module.css";
 
 export interface BalanceTrendProps {
-  /** The server-validated `balance_trend` payload. */
+  /** The server-validated `balance_trend` payload (`IntentProps<"balance_trend">` in `@sina-design-system/fintech`). */
   payload: unknown;
   /**
    * Emit a new intent for any action this display later offers. The host feeds

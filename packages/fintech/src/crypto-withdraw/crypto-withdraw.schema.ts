@@ -28,6 +28,7 @@ import {
   stepUpViolations,
   type ActionContext,
 } from "../formats/step-up.js";
+import { usdScopeFlag } from "../formats/usd-scope.js";
 import { CRYPTO_TRAVEL_RULE_MINOR, STRIPE_MAX_MINOR, STRIPE_MIN_MINOR } from "../thresholds.js";
 
 const cryptoWithdrawBase = z
@@ -57,7 +58,7 @@ export const cryptoWithdrawPayload = cryptoWithdrawBase
 
 export type CryptoWithdrawPayload = z.infer<typeof cryptoWithdrawPayload>;
 
-export const CRYPTO_WITHDRAW_VERSION = "1.0.0";
+export const CRYPTO_WITHDRAW_VERSION = "1.1.0";
 
 /** Never store prohibited card data; keep the approver identity out of the audit log. */
 export const CRYPTO_WITHDRAW_REDACTION: RedactionConfig = {
@@ -67,14 +68,18 @@ export const CRYPTO_WITHDRAW_REDACTION: RedactionConfig = {
 
 /**
  * Post-parse policy, curried over the server-supplied {@link ActionContext}. USD
- * bands only (FX equivalence deferred, by design — matches the wire schema). Above
+ * bands only (FX equivalence is out of scope — matches the wire schema); a non-USD
+ * pass carries a `POLICY_BANDS_NOT_EVALUATED` flag, never a silent skip. Above
  * the FATF crypto Travel Rule threshold an un-authorized withdrawal escalates; an
  * authorization-bearing re-submission is bound to the terms + separation of duties.
  */
 export function makeCryptoWithdrawPolicy(ctx: ActionContext) {
   return function cryptoWithdrawPolicy(data: CryptoWithdrawPayload): Violation[] {
     const violations: Violation[] = [];
-    if (data.currency !== "USD") return violations;
+    if (data.currency !== "USD") {
+      violations.push(usdScopeFlag(data.currency));
+      return violations;
+    }
 
     const { amount } = data;
 

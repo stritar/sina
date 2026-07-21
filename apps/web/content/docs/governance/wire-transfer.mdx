@@ -48,6 +48,14 @@ one that acts. It refuses the plain confirm and names
 the timestamp, the payload, all three violations, and the decided component. The
 block is on the record before anything renders.
 
+<Callout variant="note" title="The bands are defined in USD">
+  Every band above assumes `currency: "USD"`. A wire in another currency passes
+  the structure check, skips the bands, and carries a
+  `POLICY_BANDS_NOT_EVALUATED` flag in the decision and the audit trail, so the
+  pass is never silent. To band your own currency, chain a custom rule: see
+  [Write a governance rule](/docs/governance/writing-a-rule).
+</Callout>
+
 ## The forced dialog
 
 SINA mounts `SecureWireDialog` instead of a confirm button. The dialog walks a

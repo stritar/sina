@@ -28,6 +28,19 @@ carries a **severity** that decides what happens next. There are three.
   the gate. That happens deliberately, in code, where it's reviewable.
 </Callout>
 
+## What mounts on a clean pass
+
+A display verb that passes mounts its presentational component. A **governed**
+verb that passes cleanly mounts nothing: the decision comes back with
+`mount: null`, and your app supplies its own confirm step, composed from `core`
+primitives. SINA decides what is allowed; the host owns the happy path.
+
+```ts
+{ intent: "wire_transfer", props, result: { valid: true /* … */ }, mount: null }
+```
+
+A governed component only mounts when an escalation forces it.
+
 You don't have to govern your whole app on day one. Rules are independent, so
 you can start with a single intent and expand from there. See [Adopt
 incrementally](/docs/guides/adopt-incrementally).

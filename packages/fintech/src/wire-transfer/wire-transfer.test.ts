@@ -17,6 +17,14 @@ describe("evaluateWireTransfer — compliant", () => {
     });
   });
 
+  it("passes a SEPA transfer without a BIC (IBAN-only rule — no synthesized BICs)", () => {
+    expect(evaluateWireTransfer(fx.validIbanOnly)).toEqual({
+      valid: true,
+      violations: [],
+      requiredComponent: null,
+    });
+  });
+
   it("passes the $5,000 transfer with a SAR flag (flags do not block)", () => {
     const result = evaluateWireTransfer(fx.validFiveThousand);
     expect(result.valid).toBe(true);
@@ -25,12 +33,20 @@ describe("evaluateWireTransfer — compliant", () => {
     expect(result.violations.every((v) => v.severity === "flag")).toBe(true);
   });
 
-  it("does not apply USD bands to a non-USD transfer (FX deferral is intentional)", () => {
-    expect(evaluateWireTransfer(fx.validNonUsdLarge)).toEqual({
-      valid: true,
-      violations: [],
-      requiredComponent: null,
+  it("flags — never silently passes — a non-USD transfer (USD bands not evaluated)", () => {
+    // The €60,000 wire from the integration review: format-valid, non-USD, over
+    // every USD band. It must stay valid (flag does not block) but the pass must
+    // be loud — exactly one POLICY_BANDS_NOT_EVALUATED flag with a citation.
+    const result = evaluateWireTransfer(fx.validNonUsdLarge);
+    expect(result.valid).toBe(true);
+    expect(result.requiredComponent).toBeNull();
+    expect(result.violations).toHaveLength(1);
+    expect(result.violations[0]).toMatchObject({
+      code: "POLICY_BANDS_NOT_EVALUATED",
+      severity: "flag",
+      standard: "SINA policy — USD-only bands",
     });
+    expect(result.violations[0]!.message).toContain("EUR");
   });
 });
 
@@ -143,7 +159,7 @@ describe("evaluateWireTransfer — audit", () => {
     setAuditSink(sink);
     evaluateWireTransfer(fx.overLimitTransfer);
     const event = sink.mock.calls[0]?.[0];
-    expect(event.version).toBe("1.1.0");
+    expect(event.version).toBe("1.2.0");
     expect(event.decidedComponent).toBe("SecureWireDialog");
     expect(typeof event.timestamp).toBe("string");
   });

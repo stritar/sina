@@ -12,6 +12,15 @@ export const validCards: CardListPayload = {
 
 export const validEmpty: CardListPayload = { cards: [] };
 
+/**
+ * A card with no network/expiry — an issuer whose data simply lacks them. Must
+ * validate as-is: forcing an integrator to synthesize values to satisfy the
+ * shape is the anti-pattern a provenance-first system exists to prevent.
+ */
+export const validSparseCard: CardListPayload = {
+  cards: [{ id: "c4", label: "Debit", maskedNumber: "****3141", status: "active" }],
+};
+
 /** A full, unmasked PAN → regex reject (a read must never carry one). */
 export const unmaskedPan: unknown = {
   cards: [

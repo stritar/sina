@@ -13,7 +13,7 @@ import { formatAmount, formatDate } from "../format.js";
 import styles from "./OrderHistory.module.css";
 
 export interface OrderHistoryProps {
-  /** The server-validated `order_history` payload. */
+  /** The server-validated `order_history` payload (`IntentProps<"order_history">` in `@sina-design-system/fintech`). */
   payload: unknown;
   /**
    * Emit a new intent for any action this display later offers (e.g. cancel an

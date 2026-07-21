@@ -16,7 +16,7 @@ import { formatAmount } from "../format.js";
 import styles from "./NetWorth.module.css";
 
 export interface NetWorthProps {
-  /** The server-validated `net_worth` payload. */
+  /** The server-validated `net_worth` payload (`IntentProps<"net_worth">` in `@sina-design-system/fintech`). */
   payload: unknown;
   /** Emit a new intent for any action this display later offers (unused in the proving slice). */
   onIntent?: (envelope: IntentEnvelope) => void;

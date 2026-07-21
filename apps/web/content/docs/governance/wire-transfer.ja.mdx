@@ -1,6 +1,6 @@
 ---
 title: "実践例：6 万ドルの電信送金"
-sourceHash: 1ad48a792ac1
+sourceHash: c2caf486a669
 ---
 
 <YouWillLearn>
@@ -40,6 +40,11 @@ AI は送金を提案します。送信するのはデータのみです。イ�
 **escalate** です。それは単純な確認を拒否し、`requiredComponent: "SecureWireDialog"`
 を指定します。（深刻度は[エスカレーション](/docs/concepts/escalation)で扱います。）ここでも監査イベントが発火し、タイムスタンプ、ペイロード、3
 件すべての違反、そして決定されたコンポーネントを伴います。何かがレンダリングされる前に、ブロックは記録に残ります。
+
+<Callout variant="note" title="バンドは米ドルで定義されている">
+  上記のすべてのバンドは `currency: "USD"` を前提としています。他の通貨での電信送金は構造チェックを通過し、バンドをスキップし、決定と監査証跡に
+  `POLICY_BANDS_NOT_EVALUATED` フラグを伴います。そのため、この通過が黙って行われることは決してありません。独自の通貨にバンドを設定するには、カスタムルールをチェーンしてください。[ガバナンスルールを書く](/docs/governance/writing-a-rule)を参照してください。
+</Callout>
 
 ## 強制されるダイアログ
 

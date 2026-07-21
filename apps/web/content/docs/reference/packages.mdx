@@ -17,8 +17,9 @@ about the ones below it:
 
 ## `theme`
 
-Ships `./reset.css` (layered, so your styles always win) and `./css`, the
-`--sina-*` custom properties. The token grammar, tiers, and scales live in
+Ships `./reset.css` (layered, so your styles always win) and the `--sina-*`
+custom properties at `./css`, also exported as `./theme.css` so TypeScript
+accepts the side-effect import. The token grammar, tiers, and scales live in
 [Tokens](/docs/theming/tokens); what you may override lives in
 [Theming](/docs/theming).
 
@@ -27,6 +28,10 @@ Ships `./reset.css` (layered, so your styles always win) and `./css`, the
 The primitive library. Every export is listed with live examples in the
 [Primitives gallery](/docs/primitives). Named exports only; per-primitive
 prop types (`ButtonProps`, `GapStep`, `SummaryItem`, …) ship alongside.
+
+**Bundle size**: every component ships as its own module with dependencies
+external, so a bundler that tree-shakes drops `chart.js` and the icon set
+whenever your app renders no chart. You pay only for what you import.
 
 ## `governance`
 
@@ -53,5 +58,5 @@ patterns](/docs/governance/components-and-patterns); write your own rule in
 
 ## Versions
 
-All five are published at **0.1.0**; see [Releases &
+All five packages version together, in lockstep; see [Releases &
 stability](/docs/reference/changelog).

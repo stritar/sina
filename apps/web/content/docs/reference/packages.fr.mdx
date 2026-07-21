@@ -1,6 +1,6 @@
 ---
 title: Paquets et exports
-sourceHash: 2e1b381ebc4d
+sourceHash: 74e086fb0909
 ---
 
 > Référence maintenue à la main. La génération automatique TSDoc→MDX est reportée.
@@ -19,9 +19,11 @@ connaître que celles situées en dessous d'elle :
 ## `theme`
 
 Fournit `./reset.css` (en couches, pour que vos styles l'emportent toujours) et
-`./css`, les propriétés personnalisées `--sina-*`. La grammaire, les paliers et les
-échelles des tokens se trouvent dans [Tokens](/docs/theming/tokens) ; ce que vous
-pouvez surcharger se trouve dans [Theming](/docs/theming).
+les propriétés personnalisées `--sina-*` sous `./css`, également exportées en
+`./theme.css` pour que TypeScript accepte l'import à effet de bord. La grammaire,
+les paliers et les échelles des tokens se trouvent dans
+[Tokens](/docs/theming/tokens) ; ce que vous pouvez surcharger se trouve dans
+[Theming](/docs/theming).
 
 ## `core`
 
@@ -29,6 +31,11 @@ La bibliothèque de primitives. Chaque export est répertorié avec des exemples
 direct dans la [galerie des primitives](/docs/primitives). Exports nommés
 uniquement ; les types de props par primitive (`ButtonProps`, `GapStep`,
 `SummaryItem`, …) sont livrés avec.
+
+**Taille du bundle** : chaque composant est livré comme son propre module avec les
+dépendances externalisées, si bien qu'un bundler qui fait du tree-shaking élimine
+`chart.js` et le jeu d'icônes dès que votre app ne rend aucun graphique. Vous ne
+payez que ce que vous importez.
 
 ## `governance`
 
@@ -55,5 +62,5 @@ dans [Écrire une règle de gouvernance](/docs/governance/writing-a-rule).
 
 ## Versions
 
-Les cinq sont publiés en **0.1.0** ; voir [Versions et
-stabilité](/docs/reference/changelog).
+Les cinq paquets sont versionnés ensemble, en parfaite synchronisation ; voir
+[Versions et stabilité](/docs/reference/changelog).

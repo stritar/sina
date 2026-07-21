@@ -12,6 +12,7 @@ import { formatDate } from "../format.js";
 import styles from "./FxQuote.module.css";
 
 export interface FxQuoteProps {
+  /** The server-validated `fx_quote` payload (`IntentProps<"fx_quote">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
 }

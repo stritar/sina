@@ -72,7 +72,7 @@ export function SecureWireDialog({
   violations = [],
   onSubmitApproval,
   onApproved,
-  triggerLabel = "Open SecureWireDialog",
+  triggerLabel = "Review wire transfer",
 }: SecureWireDialogProps) {
   const [open, setOpen] = useState(false);
   const [phase, setPhase] = useState<Phase>("review");

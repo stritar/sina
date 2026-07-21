@@ -14,6 +14,7 @@ import { formatAmount, formatPct } from "../format.js";
 import styles from "./CryptoHoldings.module.css";
 
 export interface CryptoHoldingsProps {
+  /** The server-validated `crypto_holdings` payload (`IntentProps<"crypto_holdings">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
 }

@@ -29,6 +29,7 @@ import {
   stepUpViolations,
   type ActionContext,
 } from "../formats/step-up.js";
+import { usdScopeFlag } from "../formats/usd-scope.js";
 import {
   ACH_AUTHORIZATION_MINOR,
   ACH_MAX_MINOR,
@@ -68,7 +69,7 @@ export const achTransferPayload = achTransferBase
 
 export type AchTransferPayload = z.infer<typeof achTransferPayload>;
 
-export const ACH_TRANSFER_VERSION = "1.0.0";
+export const ACH_TRANSFER_VERSION = "1.1.0";
 
 /** Never store prohibited card data; keep raw account identifiers out of the audit log. */
 export const ACH_TRANSFER_REDACTION: RedactionConfig = {
@@ -78,12 +79,16 @@ export const ACH_TRANSFER_REDACTION: RedactionConfig = {
 
 /**
  * Post-parse policy, curried over the server-supplied {@link ActionContext}. USD
- * bands only (FX equivalence deferred, by design — matches the wire schema).
+ * bands only (FX equivalence is out of scope — matches the wire schema); a
+ * non-USD pass carries a `POLICY_BANDS_NOT_EVALUATED` flag, never a silent skip.
  */
 export function makeAchPolicy(ctx: ActionContext) {
   return function achPolicy(data: AchTransferPayload): Violation[] {
     const violations: Violation[] = [];
-    if (data.currency !== "USD") return violations;
+    if (data.currency !== "USD") {
+      violations.push(usdScopeFlag(data.currency));
+      return violations;
+    }
 
     const { amount } = data;
 

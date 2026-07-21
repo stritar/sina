@@ -87,6 +87,16 @@ normal summary mounts. Same code, safe outcome.
   </Step>
 </Steps>
 
+## Add your own currency bands
+
+The stock bands are USD only; a non-USD payload passes format checks and carries
+a `POLICY_BANDS_NOT_EVALUATED` flag instead of silently passing. To band another
+currency, chain a rule after the stock policy: call `makeWirePolicy` first so
+USD behavior is preserved, add your bands from the exported threshold constants,
+and reuse `payloadHash` and `coreTerms` for the approval binding. Cite the
+deviation in each violation's `standard` field. One EUR integrator did all of
+this in about forty lines.
+
 Before you ship, check the rule answers the basics in one sentence each: what it
 is, the risk it removes, a concrete request it blocks, one it passes, and what
 happens on trigger. If any answer is fuzzy, the rule is too.

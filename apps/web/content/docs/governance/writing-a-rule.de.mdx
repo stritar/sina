@@ -1,6 +1,6 @@
 ---
 title: Eine Governance-Regel schreiben
-sourceHash: b78fbff0d2ec
+sourceHash: 03469e740360
 ---
 
 Eine Regel ist ein striktes Zod-Schema plus eine belegte Richtlinienprüfung,
@@ -94,6 +94,18 @@ Derselbe Code, ein sicheres Ergebnis.
 
   </Step>
 </Steps>
+
+## Eigene Währungsbänder hinzufügen
+
+Die mitgelieferten Bänder gelten nur für USD; ein Nicht-USD-Payload besteht die
+Formatprüfungen und trägt eine `POLICY_BANDS_NOT_EVALUATED`-Markierung, statt
+stillschweigend zu passieren. Um eine andere Währung mit Bändern zu versehen,
+verkette eine Regel nach der mitgelieferten Richtlinie: Rufe zuerst
+`makeWirePolicy` auf, damit das USD-Verhalten erhalten bleibt, füge deine Bänder
+aus den exportierten Schwellenwert-Konstanten hinzu und verwende `payloadHash`
+und `coreTerms` für die Genehmigungsbindung wieder. Belege die Abweichung im
+Feld `standard` jedes Verstoßes. Ein EUR-Integrator hat all das in etwa vierzig
+Zeilen erledigt.
 
 Bevor du auslieferst, prüfe, ob die Regel die Grundfragen in je einem Satz
 beantwortet: was sie ist, das Risiko, das sie beseitigt, eine konkrete Anfrage,

@@ -11,6 +11,7 @@ import { formatAmount, formatPct, readWatchlist } from "../format.js";
 import styles from "./Watchlist.module.css";
 
 export interface WatchlistProps {
+  /** The server-validated `watchlist` payload (`IntentProps<"watchlist">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
 }

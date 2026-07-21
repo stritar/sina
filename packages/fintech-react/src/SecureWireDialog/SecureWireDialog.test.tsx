@@ -38,7 +38,7 @@ const violations = [
 
 async function open() {
   const user = userEvent.setup();
-  await user.click(screen.getByRole("button", { name: /open securewiredialog/i }));
+  await user.click(screen.getByRole("button", { name: /review wire transfer/i }));
   return user;
 }
 

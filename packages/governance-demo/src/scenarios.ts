@@ -37,6 +37,7 @@ import {
   netWorthFixtures,
   alertsFeedFixtures,
   searchResultsFixtures,
+  clarifyChoiceFixtures,
   achFixtures,
   disclosureFixtures,
   p2pFixtures,
@@ -383,6 +384,8 @@ export const SCENARIOS: Scenario[] = [
   { id: "alerts-feed-reject", label: "Alerts · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.ALERTS_FEED, props: alertsFeedFixtures.adversarial }, expectation: "reject" },
   { id: "search-results", label: "Search results", description: "Unified search results → SearchResults.", group: "read", envelope: { intent: INTENTS.SEARCH_RESULTS, props: searchResultsFixtures.valid }, expectation: "pass" },
   { id: "search-results-reject", label: "Search results · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.SEARCH_RESULTS, props: searchResultsFixtures.adversarial }, expectation: "reject" },
+  { id: "clarify-choice", label: "Which Alex? (disambiguation)", description: "Server-resolved candidates for an ambiguous payee → ClarifyChoice; a selection is a hint, the follow-up intent is gated on its own.", group: "read", envelope: { intent: INTENTS.CLARIFY_CHOICE, props: clarifyChoiceFixtures.validWhichAlex }, expectation: "pass", prompt: "Transfer €250 to Alex." },
+  { id: "clarify-choice-reject", label: "Disambiguation · smuggled option action", description: "An execute-on-click smuggled inside an option → nested .strict() reject.", group: "read", envelope: { intent: INTENTS.CLARIFY_CHOICE, props: clarifyChoiceFixtures.smuggledOptionAction }, expectation: "reject" },
 
   // ── Expanded governed family (Phase 6.5) — escalate (money-shot) + adversarial ──
   { id: "ach-over-limit", label: "ACH $60k — over the $25k limit", description: "Above the ACH authorization threshold → escalate to GovernedActionDialog.", group: "governed", envelope: { intent: INTENTS.ACH_TRANSFER, props: achFixtures.overLimit }, expectation: "escalate" },

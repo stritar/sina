@@ -50,7 +50,8 @@
   },
   "dependencies": {
     "@sina-design-system/governance": "workspace:*",
-    "zod": "^3.24.1"
+    "zod": "^3.24.1",
+    "zod-to-json-schema": "^3.24.1"
   },
   "devDependencies": {
     "@sina-design-system/config": "workspace:*",

@@ -17,7 +17,7 @@ import { formatAmount } from "../format.js";
 import styles from "./SearchResults.module.css";
 
 export interface SearchResultsProps {
-  /** The server-validated `search_results` payload. */
+  /** The server-validated `search_results` payload (`IntentProps<"search_results">` in `@sina-design-system/fintech`). */
   payload: unknown;
   /**
    * Emit a new intent for any action a result later offers. The host feeds it

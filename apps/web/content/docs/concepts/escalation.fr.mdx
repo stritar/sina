@@ -1,6 +1,6 @@
 ---
 title: Escalade et application
-sourceHash: 66219ab514c7
+sourceHash: 96d3a941c558
 ---
 
 Quand le contrôle trouve un problème, il ne claque pas toujours la porte. Chaque
@@ -32,6 +32,20 @@ violation porte une **sévérité** qui décide de la suite. Il y en a trois.
   changez la règle, ou les intentions que vous routez à travers le contrôle.
   Cela se fait délibérément, dans le code, où c'est vérifiable.
 </Callout>
+
+## Ce qui se monte lors d'un passage net
+
+Un verbe d'affichage qui passe monte son composant de présentation. Un verbe
+**gouverné** qui passe proprement ne monte rien : la décision revient avec
+`mount: null`, et votre application fournit sa propre étape de confirmation,
+composée à partir de primitives de `core`. SINA décide ce qui est autorisé ;
+l'hôte possède le chemin nominal.
+
+```ts
+{ intent: "wire_transfer", props, result: { valid: true /* … */ }, mount: null }
+```
+
+Un composant gouverné ne se monte que lorsqu'une escalade le force.
 
 Vous n'avez pas à gouverner toute votre application dès le premier jour. Les
 règles sont indépendantes, vous pouvez donc commencer par une seule intention et

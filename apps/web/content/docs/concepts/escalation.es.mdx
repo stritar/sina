@@ -1,6 +1,6 @@
 ---
 title: Escalado y aplicación
-sourceHash: 66219ab514c7
+sourceHash: 96d3a941c558
 ---
 
 Cuando el control encuentra un problema, no siempre cierra la puerta de golpe.
@@ -33,6 +33,20 @@ Hay tres.
   qué intenciones enrutas a través del control. Eso ocurre de forma deliberada,
   en el código, donde es revisable.
 </Callout>
+
+## Qué se monta cuando pasa limpiamente
+
+Un verbo de visualización que pasa monta su componente presentacional. Un verbo
+**gobernado** que pasa limpiamente no monta nada: la decisión vuelve con
+`mount: null`, y tu aplicación aporta su propio paso de confirmación, compuesto
+a partir de primitivas de `core`. SINA decide qué está permitido; el host es
+dueño del camino feliz.
+
+```ts
+{ intent: "wire_transfer", props, result: { valid: true /* … */ }, mount: null }
+```
+
+Un componente gobernado solo se monta cuando un escalado lo fuerza.
 
 No tienes que gobernar toda tu aplicación el primer día. Las reglas son
 independientes, así que puedes empezar con una sola intención y expandir desde

@@ -164,6 +164,7 @@ describe("emulator gate seam — full read catalog (Phase 6.5)", () => {
     ["net-worth", "NetWorth"],
     ["alerts-feed", "AlertsFeed"],
     ["search-results", "SearchResults"],
+    ["clarify-choice", "ClarifyChoice"],
   ])("%s validates, mounts %s, and audits it", (scenarioId, component) => {
     const { result, mount, audit } = runGate(envelopeOf(scenarioId));
     expect(result.valid).toBe(true);
@@ -189,6 +190,7 @@ describe("emulator gate seam — full read catalog (Phase 6.5)", () => {
     "net-worth-reject",
     "alerts-feed-reject",
     "search-results-reject",
+    "clarify-choice-reject",
   ])("rejects the adversarial read %s and mounts nothing", (scenarioId) => {
     const { result, mount } = runGate(envelopeOf(scenarioId));
     expect(result.valid).toBe(false);

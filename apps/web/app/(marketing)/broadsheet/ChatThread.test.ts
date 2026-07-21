@@ -15,7 +15,7 @@ function block(selector: string): string {
   const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const match = CSS.match(new RegExp(`${escaped}\\s*\\{([^}]*)\\}`));
   if (!match) throw new Error(`no ${selector} rule in ChatThread.module.css`);
-  return match[1].replace(/\/\*[\s\S]*?\*\//g, "");
+  return match[1]!.replace(/\/\*[\s\S]*?\*\//g, "");
 }
 
 describe("ChatThread scroll box", () => {

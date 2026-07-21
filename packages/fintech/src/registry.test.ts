@@ -1,7 +1,14 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, expectTypeOf, it, vi } from "vitest";
 import { resetAuditSink, setAuditSink } from "@sina-design-system/governance";
 
-import { evaluateFintechIntent, fintechIntentManifest, INTENTS } from "./registry.js";
+import {
+  evaluateFintechIntent,
+  fintechIntentManifest,
+  INTENT_SCHEMAS,
+  INTENTS,
+  type FintechIntent,
+} from "./registry.js";
+import type { IntentPropsMap } from "./intent-props.js";
 import { evaluateWireTransfer } from "./wire-transfer/wire-transfer.schema.js";
 import * as txnFx from "./transaction-list/fixtures.js";
 import * as balFx from "./account-balance/fixtures.js";
@@ -141,6 +148,15 @@ describe("evaluateFintechIntent — the expanded read catalog", () => {
     expect(fail.result.valid).toBe(false);
     expect(fail.mount).toBeNull();
   });
+
+  it("accepts a card with no network/expiry (optional fields are never synthesized)", () => {
+    const decision = evaluateFintechIntent({
+      intent: INTENTS.LIST_CARDS,
+      props: cardFx.validSparseCard,
+    });
+    expect(decision.result.valid).toBe(true);
+    expect(decision.mount).toBe("CardList");
+  });
 });
 
 describe("fintechIntentManifest", () => {
@@ -151,5 +167,35 @@ describe("fintechIntentManifest", () => {
     expect(intents).toContain(INTENTS.WIRE_TRANSFER);
     expect(manifest.find((entry) => entry.intent === INTENTS.WIRE_TRANSFER)?.kind).toBe("governed");
     expect(manifest.find((entry) => entry.intent === INTENTS.LIST_TRANSACTIONS)?.kind).toBe("display");
+  });
+
+  it("covers exactly the INTENTS verbs — no missing rows, no strays", () => {
+    const manifest = fintechIntentManifest();
+    const listed = manifest.map((entry) => entry.intent).sort();
+    expect(listed).toEqual(Object.values(INTENTS).sort());
+  });
+
+  it("attaches a self-contained propsSchema to every entry", () => {
+    for (const entry of fintechIntentManifest()) {
+      expect(entry.propsSchema, `${entry.intent} has no propsSchema`).toBeTruthy();
+      expect(JSON.stringify(entry.propsSchema)).not.toContain('"$ref"');
+    }
+  });
+
+  it("surfaces the closed-world property: strict schemas emit additionalProperties: false", () => {
+    // The whole pitch rests on `.strict()` — a fabricated Confirm button is a
+    // reject. The JSON Schema a model sees must carry the same closed world.
+    const wire = fintechIntentManifest().find((entry) => entry.intent === INTENTS.WIRE_TRANSFER);
+    expect(wire?.propsSchema).toMatchObject({ additionalProperties: false });
+  });
+});
+
+describe("INTENT_SCHEMAS / IntentPropsMap — the compile-time bind", () => {
+  it("keys IntentPropsMap by exactly the FintechIntent verbs", () => {
+    expectTypeOf<keyof IntentPropsMap>().toEqualTypeOf<FintechIntent>();
+  });
+
+  it("has a schema for every verb (runtime mirror of the satisfies clause)", () => {
+    expect(Object.keys(INTENT_SCHEMAS).sort()).toEqual(Object.values(INTENTS).sort());
   });
 });

@@ -14,6 +14,7 @@ import { readCardList } from "../format.js";
 import styles from "./CardList.module.css";
 
 export interface CardListProps {
+  /** The server-validated `list_cards` payload (`IntentProps<"list_cards">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
 }
@@ -59,10 +60,13 @@ export function CardList({ payload }: CardListProps) {
             </Badge>
           </Stack>
           <span className={styles.maskedNumber}>{c.maskedNumber}</span>
-          <Stack direction="row" justify="between" align="center" gap={2}>
-            <span className={styles.network}>{c.network}</span>
-            <span className={styles.expiry}>exp {c.expiry}</span>
-          </Stack>
+          {/* network/expiry are optional in the schema — omit the slot, never render a placeholder. */}
+          {(c.network || c.expiry) && (
+            <Stack direction="row" justify="between" align="center" gap={2}>
+              {c.network ? <span className={styles.network}>{c.network}</span> : <span />}
+              {c.expiry ? <span className={styles.expiry}>exp {c.expiry}</span> : null}
+            </Stack>
+          )}
         </Stack>
       ))}
     </Grid>

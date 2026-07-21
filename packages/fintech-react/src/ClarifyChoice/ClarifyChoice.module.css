@@ -1,0 +1,60 @@
+/* @sina-design-system/fintech-react — ClarifyChoice */
+
+:root {
+  --sina-clarify-choice-surface: var(--sina-color-surface, #ffffff);
+  --sina-clarify-choice-border: var(--sina-color-border-subtle, #e9ece8);
+  --sina-clarify-choice-text: var(--sina-color-text, #353b31);
+  --sina-clarify-choice-text-muted: var(--sina-color-text-muted, #52564e);
+}
+
+.card {
+  border-radius: var(--sina-radius--lg, 8px);
+  border-width: var(--sina-border-width--1, 1px);
+  border-style: solid;
+  border-color: var(--sina-clarify-choice-border, #e9ece8);
+  background: var(--sina-clarify-choice-surface, #ffffff);
+  padding: var(--sina-space--3, 0.75rem);
+}
+
+.prompt {
+  margin: 0;
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium, 500);
+  color: var(--sina-clarify-choice-text, #353b31);
+}
+
+.empty {
+  padding-block: var(--sina-space--6, 1.5rem);
+  text-align: center;
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-clarify-choice-text-muted, #52564e);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+}
+
+.option {
+  width: 100%;
+  justify-content: flex-start;
+  gap: var(--sina-space--2, 0.5rem);
+}
+
+.optionLabel {
+  font-weight: var(--sina-font-weight--medium, 500);
+}
+
+.optionDescription {
+  font-size: var(--sina-text--xs, 0.75rem);
+  color: var(--sina-clarify-choice-text-muted, #52564e);
+}

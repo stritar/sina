@@ -1,6 +1,6 @@
 ---
 title: "Ejemplo práctico: la transferencia de 60.000 $"
-sourceHash: 1ad48a792ac1
+sourceHash: c2caf486a669
 ---
 
 <YouWillLearn>
@@ -49,6 +49,15 @@ que actúa. Rechaza la confirmación simple y nombra
 [Escalado](/docs/concepts/escalation).) Aquí también se dispara un evento de
 auditoría, que lleva la marca de tiempo, la carga útil, las tres infracciones y el
 componente decidido. El bloqueo queda registrado antes de que se renderice nada.
+
+<Callout variant="note" title="Las bandas están definidas en USD">
+  Cada banda de arriba asume `currency: "USD"`. Una transferencia en otra divisa
+  supera la comprobación de estructura, omite las bandas y lleva un flag
+  `POLICY_BANDS_NOT_EVALUATED` en la decisión y en el registro de auditoría, de
+  modo que el paso nunca es silencioso. Para poner bandas a tu propia divisa,
+  encadena una regla personalizada: consulta
+  [Escribir una regla de gobernanza](/docs/governance/writing-a-rule).
+</Callout>
 
 ## El diálogo forzado
 

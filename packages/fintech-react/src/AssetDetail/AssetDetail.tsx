@@ -25,7 +25,7 @@ import { formatAmount, formatPct } from "../format.js";
 import styles from "./AssetDetail.module.css";
 
 export interface AssetDetailProps {
-  /** The server-validated `asset_detail` payload. */
+  /** The server-validated `asset_detail` payload (`IntentProps<"asset_detail">` in `@sina-design-system/fintech`). */
   payload: unknown;
   /**
    * Emit a new intent for any action this display later offers. The host feeds

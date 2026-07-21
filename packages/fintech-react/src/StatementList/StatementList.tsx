@@ -14,7 +14,7 @@ import { formatAmount, formatDate } from "../format.js";
 import styles from "./StatementList.module.css";
 
 export interface StatementListProps {
-  /** The server-validated `list_statements` payload. */
+  /** The server-validated `list_statements` payload (`IntentProps<"list_statements">` in `@sina-design-system/fintech`). */
   payload: unknown;
   /**
    * Emit a new intent for any action this display later offers (e.g. download a
