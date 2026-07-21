@@ -4,13 +4,13 @@ title: Releases & stability
 
 ## Current versions
 
-All five public packages are published at **0.1.0**:
+All five public packages are published at **0.2.0**:
 
 `@sina-design-system/theme` · `core` · `governance` · `fintech` ·
 `fintech-react`.
 
 ```bash
-pnpm add @sina-design-system/core@0.1.0
+pnpm add @sina-design-system/core@0.2.0
 ```
 
 ## Stability & versioning
@@ -29,6 +29,19 @@ SINA is early. Versions follow semver, released via Changesets.
   Below 1.0, minor versions may carry breaking changes. Pin your versions and read
   the release notes before upgrading.
 </Callout>
+
+## 0.2.0: integration-review hardening
+
+Refinements from a real integration review. Non-USD money-movement payloads no
+longer pass silently: every policy attaches an informational
+`POLICY_BANDS_NOT_EVALUATED` flag when the currency is not USD, so a caller sees
+that the amount bands went unchecked (the pass still holds, because a flag never
+blocks). Each intent-manifest entry now carries a `propsSchema`, a self-contained
+JSON Schema you can drop straight into an LLM tool definition, alongside new
+`IntentPropsMap` types that bind every verb to its payload. A new ungoverned
+`clarify_choice` verb (with a `ClarifyChoice` component) covers disambiguation.
+The `list_cards` shape relaxed its required fields, wire transfers accept a SEPA
+IBAN without a BIC, and `theme` gained a `./theme.css` export alias.
 
 ## 0.1.0: first public release
 

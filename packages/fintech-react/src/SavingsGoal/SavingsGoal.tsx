@@ -10,12 +10,15 @@ import { Badge, Progress, Stack, SummaryList } from "@sina-design-system/core";
 import type { SummaryItem } from "@sina-design-system/core";
 
 import { formatAmount, formatDate } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./SavingsGoal.module.css";
 
 export interface SavingsGoalProps {
   /** The server-validated `savings_goal` payload (`IntentProps<"savings_goal">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 interface GoalView {
@@ -59,7 +62,8 @@ function readSavingsGoal(payload: unknown): SavingsGoalView {
   };
 }
 
-export function SavingsGoal({ payload }: SavingsGoalProps) {
+export function SavingsGoal({ payload, locale: localeProp }: SavingsGoalProps) {
+  const locale = useFintechLocale(localeProp);
   const { currency, goals } = readSavingsGoal(payload);
 
   return (
@@ -76,11 +80,11 @@ export function SavingsGoal({ payload }: SavingsGoalProps) {
             const pct = goal.target > 0 ? Math.round((goal.saved / goal.target) * 100) : 0;
             const reached = goal.saved >= goal.target && goal.target > 0;
             const items: SummaryItem[] = [
-              { label: "Saved", value: formatAmount(goal.saved, currency), emphasis: true },
-              { label: "Target", value: formatAmount(goal.target, currency) },
+              { label: "Saved", value: formatAmount(goal.saved, currency, locale), emphasis: true },
+              { label: "Target", value: formatAmount(goal.target, currency, locale) },
             ];
             if (goal.dueAt) {
-              items.push({ label: "Due", value: formatDate(goal.dueAt) });
+              items.push({ label: "Due", value: formatDate(goal.dueAt, locale) });
             }
             return (
               <Stack as="li" key={goal.id} gap={2}>

@@ -9,12 +9,15 @@ import { Badge, Stack } from "@sina-design-system/core";
 import type { BadgeProps } from "@sina-design-system/core";
 
 import { formatAmount, formatDate, readUpcomingPayments } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./UpcomingPayments.module.css";
 
 export interface UpcomingPaymentsProps {
   /** The server-validated `upcoming_payments` payload (`IntentProps<"upcoming_payments">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 const STATUS_INTENT: Record<string, NonNullable<BadgeProps["intent"]>> = {
@@ -23,7 +26,8 @@ const STATUS_INTENT: Record<string, NonNullable<BadgeProps["intent"]>> = {
   overdue: "danger",
 };
 
-export function UpcomingPayments({ payload }: UpcomingPaymentsProps) {
+export function UpcomingPayments({ payload, locale: localeProp }: UpcomingPaymentsProps) {
+  const locale = useFintechLocale(localeProp);
   const { currency, payments } = readUpcomingPayments(payload);
 
   return (
@@ -44,10 +48,10 @@ export function UpcomingPayments({ payload }: UpcomingPaymentsProps) {
             >
               <span className={styles.info}>
                 <span className={styles.payee}>{p.payee}</span>
-                <span className={styles.due}>due {formatDate(p.dueAt)}</span>
+                <span className={styles.due}>due {formatDate(p.dueAt, locale)}</span>
               </span>
               <span className={styles.meta}>
-                <span className={styles.amount}>{formatAmount(p.amount, currency)}</span>
+                <span className={styles.amount}>{formatAmount(p.amount, currency, locale)}</span>
                 <Badge intent={STATUS_INTENT[p.status] ?? "neutral"} size="sm">
                   {p.status}
                 </Badge>

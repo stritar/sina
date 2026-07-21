@@ -1,9 +1,10 @@
 ---
 title: Combobox
-sourceHash: 19fb4c750726
+sourceHash: 6e543ead7645
 ---
 
 import { ComboboxHero, ComboboxExamples } from "@/app/components/docs/demos/primitives/combobox";
+import { comboboxPropRows } from "@/app/components/docs/props/combobox.props.mjs";
 
 <ComboboxHero />
 
@@ -33,14 +34,7 @@ import { Combobox } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "options", type: "ComboboxOption[]", description: "Les éléments { value, label } parmi lesquels choisir." },
-    { prop: "value", type: "string", description: "La valeur sélectionnée (contrôlée)." },
-    { prop: "onValueChange", type: "(value: string) => void", description: "Se déclenche à la sélection." },
-    { prop: "placeholder", type: "string", description: "Texte d'état vide dans le champ de saisie." },
-  ]}
-/>
+<PropsTable rows={comboboxPropRows("fr")} />
 
 ## Accessibilité
 

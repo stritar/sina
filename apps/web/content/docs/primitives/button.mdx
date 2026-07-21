@@ -3,6 +3,7 @@ title: Button
 ---
 
 import { ButtonHero, ButtonExamples } from "@/app/components/docs/demos/primitives/button";
+import { buttonPropRows } from "@/app/components/docs/props/button.props.mjs";
 
 <ButtonHero />
 
@@ -23,15 +24,7 @@ import { Button } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "variant", type: '"primary" | "secondary" | "danger" | "ghost"', default: '"primary"', description: "Visual weight and intent." },
-    { prop: "size", type: '"sm" | "md" | "lg" | "xl"', default: '"md"', description: "Control height." },
-    { prop: "iconLeft / iconRight", type: "ReactNode", description: "A leading or trailing glyph." },
-    { prop: "loading", type: "boolean", default: "false", description: "Shows a spinner and disables the button." },
-    { prop: "asChild", type: "boolean", default: "false", description: "Render as the child element (e.g. a link) while keeping button styling." },
-  ]}
-/>
+<PropsTable rows={buttonPropRows()} />
 
 ## Accessibility
 

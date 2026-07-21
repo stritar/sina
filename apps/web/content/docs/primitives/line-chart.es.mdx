@@ -1,9 +1,10 @@
 ---
 title: LineChart
-sourceHash: 89173318aea6
+sourceHash: 95089ffadc5d
 ---
 
 import { LineChartHero, LineChartExamples } from "@/app/components/docs/demos/primitives/line-chart";
+import { lineChartPropRows } from "@/app/components/docs/props/line-chart.props.mjs";
 
 <LineChartHero />
 
@@ -29,14 +30,7 @@ import { LineChart } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "string", description: "Nombre accesible obligatorio para el gráfico." },
-    { prop: "data", type: "ChartData", description: "Series y puntos (formato de Chart.js)." },
-    { prop: "valueFormatter", type: "(n: number) => string", description: "Da formato a los valores del tooltip y del eje. Mantiene el gráfico independiente del dominio." },
-    { prop: "fill", type: "boolean", default: "false", description: "Renderiza como un gráfico de área." },
-  ]}
-/>
+<PropsTable rows={lineChartPropRows("es")} />
 
 ## Accesibilidad
 

@@ -1,9 +1,10 @@
 ---
 title: BarChart
-sourceHash: 81bb0ce7f3af
+sourceHash: 3bdac680cbce
 ---
 
 import { BarChartHero, BarChartExamples } from "@/app/components/docs/demos/primitives/bar-chart";
+import { barChartPropRows } from "@/app/components/docs/props/bar-chart.props.mjs";
 
 <BarChartHero />
 
@@ -28,15 +29,7 @@ import { BarChart } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "string", description: "必需的无障碍名称。" },
-    { prop: "data", type: "ChartData", description: "类别和系列（Chart.js 结构）。" },
-    { prop: "horizontal", type: "boolean", default: "false", description: "条形从左到右延伸。" },
-    { prop: "stacked", type: "boolean", default: "false", description: "将各系列堆叠到一个条形中。" },
-    { prop: "valueFormatter", type: "(n: number) => string", description: "格式化提示框和坐标轴的数值。" },
-  ]}
-/>
+<PropsTable rows={barChartPropRows("zh")} />
 
 ## 无障碍
 

@@ -1,9 +1,10 @@
 ---
 title: Field
-sourceHash: 3149887e8df2
+sourceHash: 8cf74be58006
 ---
 
 import { FieldHero, FieldExamples } from "@/app/components/docs/demos/primitives/field";
+import { fieldPropRows } from "@/app/components/docs/props/field.props.mjs";
 
 <FieldHero />
 
@@ -29,13 +30,7 @@ import { Field } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "ReactNode", description: "Das Label des Felds (mit dem Steuerelement verknüpft)." },
-    { prop: "description", type: "ReactNode", description: "Hilfetext unter dem Label." },
-    { prop: "error", type: "ReactNode", description: "Eine Fehlermeldung. Setzt aria-invalid und zeigt ein fettes Warnglyph an." },
-  ]}
-/>
+<PropsTable rows={fieldPropRows("de")} />
 
 <Callout variant="note" title="Fehler tragen ein Glyph">
   Wenn `error` gesetzt ist, rendert Field das obligatorische fette Warnglyph neben

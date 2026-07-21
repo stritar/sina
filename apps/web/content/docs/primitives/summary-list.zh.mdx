@@ -1,9 +1,10 @@
 ---
 title: SummaryList
-sourceHash: 4b44c8a631e1
+sourceHash: e3e6cbc6d9ea
 ---
 
 import { SummaryListHero, SummaryListExamples } from "@/app/components/docs/demos/primitives/summary-list";
+import { summaryListPropRows } from "@/app/components/docs/props/summary-list.props.mjs";
 
 <SummaryListHero />
 
@@ -29,12 +30,7 @@ import { SummaryList } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "items", type: "SummaryItem[]", description: "{ label, value, emphasis? } 各行。" },
-    { prop: "emphasis (per item)", type: "boolean", description: "突出显示某个关键行，例如金额。" },
-  ]}
-/>
+<PropsTable rows={summaryListPropRows("zh")} />
 
 ## 无障碍
 

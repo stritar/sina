@@ -3,6 +3,7 @@ title: Checkbox
 ---
 
 import { CheckboxHero, CheckboxExamples } from "@/app/components/docs/demos/primitives/checkbox";
+import { checkboxPropRows } from "@/app/components/docs/props/checkbox.props.mjs";
 
 <CheckboxHero />
 
@@ -24,13 +25,7 @@ import { Checkbox } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "checked", type: 'boolean | "indeterminate"', description: "Controlled checked state. Pass \"indeterminate\" for the mixed state." },
-    { prop: "onCheckedChange", type: '(checked: boolean | "indeterminate") => void', description: "Fires on toggle." },
-    { prop: "label", type: "ReactNode", description: "Associated label." },
-  ]}
-/>
+<PropsTable rows={checkboxPropRows()} />
 
 ## Accessibility
 

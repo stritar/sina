@@ -70,8 +70,17 @@ Point a coding assistant here and it can consume the docs directly:
 |---|---|
 | `/llms.txt` | A curated index of every page, for an LLM to crawl. |
 | Per-page `.md` | Every page has a raw-Markdown twin under `/llms/docs/…`. |
+| `/dsds/manifest.dsds.json` | The whole system as structured JSON: components, tokens, patterns, guides. |
 
 The index leads with an agent-facing preamble in SINA's own spirit: emit UI as
 **intent**, a verb and props, never a fabricated component; send it to the
 server-side gate; prefer the registered intents, because anything else is
 denied.
+
+The JSON catalog follows the draft
+[Design System Documentation Schema](https://designsystemdocspec.org) (DSDS
+0.15.2). One manifest links an entity file for every primitive (props
+included), every design token (values in a W3C Design Tokens file), every
+fintech intent, and every guide. Pattern entities carry the exact JSON Schema
+an intent's props must satisfy, so a tool can load the menu of verbs straight
+into its own definitions instead of scraping pages.

@@ -1,9 +1,10 @@
 ---
 title: Icono
-sourceHash: dd59c4ec8596
+sourceHash: 01b363ca9ec5
 ---
 
 import { IconHero, IconExamples } from "@/app/components/docs/demos/primitives/icon-demo";
+import { iconPropRows } from "@/app/components/docs/props/icon.props.mjs";
 
 <IconHero />
 
@@ -27,12 +28,7 @@ import { ShieldCheck } from "@phosphor-icons/react";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "string", description: "Se anuncia a los lectores de pantalla. Úsalo cuando el icono transmite significado." },
-    { prop: "decorative", type: "boolean", description: "Oculta el icono a la tecnología de asistencia (aria-hidden)." },
-  ]}
-/>
+<PropsTable rows={iconPropRows("es")} />
 
 ## Accesibilidad
 

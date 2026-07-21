@@ -15,6 +15,12 @@
  */
 
 export {
+  FintechLocaleProvider,
+  useFintechLocale,
+  type FintechLocaleProviderProps,
+} from "./locale.js";
+
+export {
   SecureWireDialog,
   type SecureWireDialogProps,
   type WireApprovalEvidence,

@@ -9,12 +9,15 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack } from "@sina-design-system/core";
 
 import { formatDate } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./AlertsFeed.module.css";
 
 export interface AlertsFeedProps {
   /** The server-validated `alerts_feed` payload (`IntentProps<"alerts_feed">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 type Severity = "info" | "warning" | "critical";
@@ -60,7 +63,8 @@ function readAlerts(payload: unknown): AlertRowView[] {
   });
 }
 
-export function AlertsFeed({ payload }: AlertsFeedProps) {
+export function AlertsFeed({ payload, locale: localeProp }: AlertsFeedProps) {
+  const locale = useFintechLocale(localeProp);
   const alerts = readAlerts(payload);
 
   return (
@@ -96,7 +100,7 @@ export function AlertsFeed({ payload }: AlertsFeedProps) {
                     <span className={styles.body}>{a.body}</span>
                   ) : null}
                 </span>
-                <span className={styles.date}>{formatDate(a.at)}</span>
+                <span className={styles.date}>{formatDate(a.at, locale)}</span>
               </Stack>
             );
           })}

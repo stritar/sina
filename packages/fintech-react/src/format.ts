@@ -5,15 +5,28 @@
  */
 
 import type { SummaryItem } from "@sina-design-system/core";
-import { MINOR_UNIT_EXPONENT, type CurrencyCode } from "@sina-design-system/fintech";
+import {
+  MINOR_UNIT_EXPONENT,
+  type CurrencyCode,
+} from "@sina-design-system/fintech";
 
-export function formatAmount(minor: number, currency: string): string {
+/** The default locale when a host sets none. See {@link FintechLocaleProvider}. */
+export const DEFAULT_LOCALE = "en-US";
+
+export function formatAmount(
+  minor: number,
+  currency: string,
+  locale: string = DEFAULT_LOCALE,
+): string {
   const exponent = MINOR_UNIT_EXPONENT[currency as CurrencyCode] ?? 2;
   const major = minor / 10 ** exponent;
   try {
-    return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(major);
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency,
+    }).format(major);
   } catch {
-    return `${major.toLocaleString("en-US")} ${currency}`;
+    return `${major.toLocaleString(locale)} ${currency}`;
   }
 }
 
@@ -27,6 +40,12 @@ export interface WireView {
   currency: string;
   debtor: WireParty;
   creditor: WireParty;
+  /**
+   * Required terms that could not be read off the payload (`"amount"`, `"currency"`).
+   * A governed dialog approves *money*, so a missing amount/currency is an error, not
+   * a `$0.00` default to silently render. Empty when the terms read cleanly.
+   */
+  missing: string[];
 }
 
 function readParty(value: unknown): WireParty {
@@ -42,20 +61,34 @@ function readParty(value: unknown): WireParty {
   };
 }
 
-/** Read the human-facing terms off an intent payload, tolerating a hostile shape. */
+/**
+ * Read the human-facing terms off an intent payload, tolerating a hostile shape.
+ * Required money terms (`amount`, `currency`) are reported in `missing` when absent
+ * rather than silently defaulted, so an approval surface can fail loud instead of
+ * rendering a plausible-wrong `$0.00`. Cosmetic party fields stay tolerant.
+ */
 export function readWire(intent: unknown): WireView {
   const wire = (intent ?? {}) as Record<string, unknown>;
+  const hasAmount = typeof wire.amount === "number";
+  const hasCurrency =
+    typeof wire.currency === "string" && wire.currency.length > 0;
+  const missing: string[] = [];
+  if (!hasAmount) missing.push("amount");
+  if (!hasCurrency) missing.push("currency");
   return {
-    amount: typeof wire.amount === "number" ? wire.amount : 0,
-    currency: typeof wire.currency === "string" ? wire.currency : "USD",
+    amount: hasAmount ? (wire.amount as number) : 0,
+    currency: hasCurrency ? (wire.currency as string) : "USD",
     debtor: readParty(wire.debtor),
     creditor: readParty(wire.creditor),
+    missing,
   };
 }
 
 /** camelCase / snake_case → "Title Case" for a human-facing field label. */
 function humanizeKey(key: string): string {
-  const spaced = key.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/[_-]+/g, " ");
+  const spaced = key
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/[_-]+/g, " ");
   return spaced.charAt(0).toUpperCase() + spaced.slice(1);
 }
 
@@ -69,23 +102,35 @@ const TERMS_HIDDEN_KEYS = new Set(["stepUp", "approval", "payloadHash"]);
  * primitive fields; a nested object contributes its `name`/`label`. Presentation
  * only — never feeds the gate.
  */
-export function deriveActionTerms(payload: unknown): SummaryItem[] {
+export function deriveActionTerms(
+  payload: unknown,
+  locale: string = DEFAULT_LOCALE,
+): SummaryItem[] {
   const data = (payload ?? {}) as Record<string, unknown>;
   const currency = typeof data.currency === "string" ? data.currency : "USD";
   const items: SummaryItem[] = [];
 
   if (typeof data.amount === "number") {
-    items.push({ label: "Amount", value: formatAmount(data.amount, currency), emphasis: true });
+    items.push({
+      label: "Amount",
+      value: formatAmount(data.amount, currency, locale),
+      emphasis: true,
+    });
   }
 
   for (const [key, value] of Object.entries(data)) {
     if (key === "amount" || TERMS_HIDDEN_KEYS.has(key)) continue;
-    if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+    if (
+      typeof value === "string" ||
+      typeof value === "number" ||
+      typeof value === "boolean"
+    ) {
       items.push({ label: humanizeKey(key), value: String(value) });
     } else if (value && typeof value === "object" && !Array.isArray(value)) {
       const nested = value as Record<string, unknown>;
       const name = nested.name ?? nested.label;
-      if (typeof name === "string") items.push({ label: humanizeKey(key), value: name });
+      if (typeof name === "string")
+        items.push({ label: humanizeKey(key), value: name });
     }
   }
 
@@ -93,10 +138,13 @@ export function deriveActionTerms(payload: unknown): SummaryItem[] {
 }
 
 /** Format an ISO-8601 timestamp for display (UTC, so output is deterministic). */
-export function formatDate(iso: string): string {
+export function formatDate(
+  iso: string,
+  locale: string = DEFAULT_LOCALE,
+): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return iso;
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat(locale, {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -119,7 +167,10 @@ interface MaskedAccountView {
 
 function readAccount(value: unknown): MaskedAccountView {
   const account = (value ?? {}) as Record<string, unknown>;
-  return { label: str(account.label, "—"), maskedNumber: str(account.maskedNumber) };
+  return {
+    label: str(account.label, "—"),
+    maskedNumber: str(account.maskedNumber),
+  };
 }
 
 export interface TransactionRowView {
@@ -181,13 +232,22 @@ function bool(value: unknown): boolean {
 }
 
 function rows(value: unknown): Record<string, unknown>[] {
-  return Array.isArray(value) ? value.map((row) => (row ?? {}) as Record<string, unknown>) : [];
+  return Array.isArray(value)
+    ? value.map((row) => (row ?? {}) as Record<string, unknown>)
+    : [];
 }
 
 /** Format a signed percent for display, e.g. `+2.4%` / `−1.1%` (sign carries meaning, not color). */
-export function formatPct(pct: number): string {
+export function formatPct(
+  pct: number,
+  locale: string = DEFAULT_LOCALE,
+): string {
   const sign = pct > 0 ? "+" : pct < 0 ? "−" : "";
-  return `${sign}${Math.abs(pct).toFixed(1)}%`;
+  const magnitude = Math.abs(pct).toLocaleString(locale, {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+  return `${sign}${magnitude}%`;
 }
 
 // ── Spending breakdown ────────────────────────────────────────────────────────
@@ -207,7 +267,10 @@ export function readSpendingBreakdown(payload: unknown): SpendingBreakdownView {
     period: str(d.period, "—"),
     currency: str(d.currency, "USD"),
     total: num(d.total),
-    categories: rows(d.categories).map((c) => ({ label: str(c.label, "—"), amount: num(c.amount) })),
+    categories: rows(d.categories).map((c) => ({
+      label: str(c.label, "—"),
+      amount: num(c.amount),
+    })),
   };
 }
 
@@ -272,7 +335,8 @@ export function readRewards(payload: unknown): RewardsView {
     points: num(d.points),
     tier: str(d.tier, "—"),
     nextTier: typeof d.nextTier === "string" ? d.nextTier : undefined,
-    pointsToNextTier: typeof d.pointsToNextTier === "number" ? d.pointsToNextTier : undefined,
+    pointsToNextTier:
+      typeof d.pointsToNextTier === "number" ? d.pointsToNextTier : undefined,
     cashback: typeof d.cashback === "number" ? d.cashback : undefined,
   };
 }

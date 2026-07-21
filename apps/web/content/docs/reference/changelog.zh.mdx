@@ -1,17 +1,17 @@
 ---
 title: 发布与稳定性
-sourceHash: 1e8cf8ee7f32
+sourceHash: 95f23c1ea4b5
 ---
 
 ## 当前版本
 
-全部五个公开包均已发布为 **0.1.0**：
+全部五个公开包均已发布为 **0.2.0**：
 
 `@sina-design-system/theme` · `core` · `governance` · `fintech` ·
 `fintech-react`.
 
 ```bash
-pnpm add @sina-design-system/core@0.1.0
+pnpm add @sina-design-system/core@0.2.0
 ```
 
 ## 稳定性与版本管理
@@ -26,6 +26,14 @@ SINA 尚处于早期阶段。版本遵循 semver，通过 Changesets 发布。
 <Callout variant="note" title="0.x 意味着预期会有变化">
   在 1.0 之前，次要版本可能带来破坏性变更。请固定你的版本，并在升级前阅读发布说明。
 </Callout>
+
+## 0.2.0：集成评审加固
+
+来自一次真实集成评审的改进。非 USD 的资金转移负载不再静默通过：当币种不是 USD 时，每条策略都会附加一个信息性的
+`POLICY_BANDS_NOT_EVALUATED` 标记，让调用方看到金额区间未被评估（结果仍然有效，因为标记从不阻断）。每个意图清单条目现在都带有
+`propsSchema`，即一个自包含的 JSON Schema，可以直接放入 LLM 的工具定义中；同时还新增了 `IntentPropsMap`
+类型，将每个动词与其负载绑定。一个新的未受治理动词 `clarify_choice`（配套 `ClarifyChoice` 组件）用于消歧。`list_cards`
+的结构放宽了必填字段，电汇可接受不含 BIC 的 SEPA IBAN，`theme` 新增了 `./theme.css` 导出别名。
 
 ## 0.1.0：首个公开发布
 

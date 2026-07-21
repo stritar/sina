@@ -10,6 +10,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack, type BadgeProps } from "@sina-design-system/core";
 
 import { formatAmount, formatDate } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./OrderHistory.module.css";
 
 export interface OrderHistoryProps {
@@ -21,6 +22,8 @@ export interface OrderHistoryProps {
    * slice — the display stays read-only until an action intent exists.
    */
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 interface OrderRowView {
@@ -69,7 +72,8 @@ const STATUS_INTENT: Record<string, NonNullable<BadgeProps["intent"]>> = {
   canceled: "neutral",
 };
 
-export function OrderHistory({ payload }: OrderHistoryProps) {
+export function OrderHistory({ payload, locale: localeProp }: OrderHistoryProps) {
+  const locale = useFintechLocale(localeProp);
   const orders = readOrderHistory(payload);
 
   return (
@@ -102,12 +106,12 @@ export function OrderHistory({ payload }: OrderHistoryProps) {
                     </Badge>
                   </span>
                   <span className={styles.meta}>
-                    {o.quantity} · {formatDate(o.filledAt)}
+                    {o.quantity} · {formatDate(o.filledAt, locale)}
                   </span>
                 </span>
                 <span className={styles.priceCol}>
                   <span className={styles.price}>
-                    {formatAmount(o.price, o.currency)}
+                    {formatAmount(o.price, o.currency, locale)}
                   </span>
                   <Badge intent={statusIntent} size="sm">
                     {o.status}

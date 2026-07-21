@@ -129,19 +129,19 @@ await write(
 // 2. favicon.ico — the legacy fallback, and what a browser requests before it has
 //    parsed any HTML.
 //
-//    THE ONE DELIBERATE DEVIATION FROM FIGMA: the design is transparent, this is
-//    on an opaque light plate. An .ico has no way to express a media query, so it
-//    gets exactly one ink — and Safari, which falls back to .ico rather than using
-//    the SVG, has a dark tab strip in dark mode where bare #353b31 would vanish.
-//    The plate is what keeps the mark visible; the theme-aware design intent is
-//    carried by icon.svg above.
+//    Transparent, matching the Figma design. An .ico has no way to express a media
+//    query, so it carries exactly one ink (INK_LIGHT, the dark mark) which reads on
+//    a light tab strip; the theme-aware version is icon.svg above, which every
+//    modern browser prefers. TRADE-OFF: Safari falls back to .ico rather than the
+//    SVG, so on its dark tab strip in dark mode the bare #353b31 mark loses contrast
+//    — the cost of honoring the transparent design over the old opaque light plate.
 await write(
   join(PUBLIC, "favicon.ico"),
   buildIco(
     await Promise.all(
       [16, 32, 48].map(async (size) => ({
         size,
-        data: await png(markSvg({ size, ink: INK_LIGHT, bg: BG_LIGHT, inset: 0.82 }), size),
+        data: await png(markSvg({ size, ink: INK_LIGHT, inset: 0.82 }), size),
       })),
     ),
   ),

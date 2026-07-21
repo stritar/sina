@@ -8,6 +8,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack, SummaryList } from "@sina-design-system/core";
 
 import { formatAmount, formatDate } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./InvoiceList.module.css";
 
 export interface InvoiceListProps {
@@ -19,6 +20,8 @@ export interface InvoiceListProps {
    * read-only until an action intent exists.
    */
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 interface InvoiceRowView {
@@ -81,7 +84,8 @@ function titleCase(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-export function InvoiceList({ payload }: InvoiceListProps) {
+export function InvoiceList({ payload, locale: localeProp }: InvoiceListProps) {
+  const locale = useFintechLocale(localeProp);
   const { currency, invoices } = readInvoiceList(payload);
 
   return (
@@ -105,9 +109,9 @@ export function InvoiceList({ payload }: InvoiceListProps) {
               <span className={styles.valueGroup}>
                 <span className={styles.amountCol}>
                   <span className={styles.amount}>
-                    {formatAmount(inv.amount, currency)}
+                    {formatAmount(inv.amount, currency, locale)}
                   </span>
-                  <span className={styles.due}>{formatDate(inv.dueAt)}</span>
+                  <span className={styles.due}>{formatDate(inv.dueAt, locale)}</span>
                 </span>
                 <Badge intent={statusIntent(inv.status)} size="sm">
                   {titleCase(inv.status)}

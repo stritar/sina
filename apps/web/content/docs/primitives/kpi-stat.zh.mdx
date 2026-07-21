@@ -1,9 +1,10 @@
 ---
 title: KpiStat
-sourceHash: 435e274ef4a2
+sourceHash: e174baf80bc3
 ---
 
 import { KpiStatHero, KpiStatExamples } from "@/app/components/docs/demos/primitives/kpi-stat";
+import { kpiStatPropRows } from "@/app/components/docs/props/kpi-stat.props.mjs";
 
 <KpiStatHero />
 
@@ -28,17 +29,7 @@ import { KpiStat } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "value", type: "number | null", description: "主要数字；null 会渲染 displayNullAs。" },
-    { prop: "valueFormatter", type: "(value: number) => string", description: "格式化数值和差值（货币等）。" },
-    { prop: "comparisonValue", type: "number", description: "先前的数值。渲染趋势胶囊标签。" },
-    { prop: "comparisonLabel", type: "string", description: "胶囊标签下方的上下文，例如“较上一周期”。" },
-    { prop: "showChangeAsPercentage", type: "boolean", default: "false", description: "以百分比形式显示差值。" },
-    { prop: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "卡片尺寸。" },
-    { prop: "invertChangeColors", type: "boolean", default: "false", description: "当下降为好时（例如支出）。" },
-  ]}
-/>
+<PropsTable rows={kpiStatPropRows("zh")} />
 
 ## 无障碍
 

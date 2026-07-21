@@ -8,15 +8,19 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Progress, Stack } from "@sina-design-system/core";
 
 import { formatAmount, readBudgetProgress } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./BudgetProgress.module.css";
 
 export interface BudgetProgressProps {
   /** The server-validated `budget_progress` payload (`IntentProps<"budget_progress">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
-export function BudgetProgress({ payload }: BudgetProgressProps) {
+export function BudgetProgress({ payload, locale: localeProp }: BudgetProgressProps) {
+  const locale = useFintechLocale(localeProp);
   const { currency, budgets } = readBudgetProgress(payload);
 
   return (
@@ -38,7 +42,7 @@ export function BudgetProgress({ payload }: BudgetProgressProps) {
                   <span className={styles.budgetLabel}>{b.label}</span>
                   <span className={styles.budgetMeta}>
                     <span className={styles.budgetAmount}>
-                      {formatAmount(b.spent, currency)} / {formatAmount(b.limit, currency)}
+                      {formatAmount(b.spent, currency, locale)} / {formatAmount(b.limit, currency, locale)}
                     </span>
                     {over ? (
                       <Badge intent="danger" size="sm">

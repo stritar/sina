@@ -1,9 +1,10 @@
 ---
 title: Field
-sourceHash: 3149887e8df2
+sourceHash: 8cf74be58006
 ---
 
 import { FieldHero, FieldExamples } from "@/app/components/docs/demos/primitives/field";
+import { fieldPropRows } from "@/app/components/docs/props/field.props.mjs";
 
 <FieldHero />
 
@@ -28,13 +29,7 @@ import { Field } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "ReactNode", description: "La etiqueta del campo (asociada con el control)." },
-    { prop: "description", type: "ReactNode", description: "Texto de ayuda debajo de la etiqueta." },
-    { prop: "error", type: "ReactNode", description: "Un mensaje de error. Establece aria-invalid y muestra un glifo de advertencia en negrita." },
-  ]}
-/>
+<PropsTable rows={fieldPropRows("es")} />
 
 <Callout variant="note" title="Los errores llevan un glifo">
   Cuando se establece `error`, Field renderiza el glifo de advertencia en negrita

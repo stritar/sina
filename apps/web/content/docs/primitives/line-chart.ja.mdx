@@ -1,9 +1,10 @@
 ---
 title: LineChart
-sourceHash: 89173318aea6
+sourceHash: 95089ffadc5d
 ---
 
 import { LineChartHero, LineChartExamples } from "@/app/components/docs/demos/primitives/line-chart";
+import { lineChartPropRows } from "@/app/components/docs/props/line-chart.props.mjs";
 
 <LineChartHero />
 
@@ -28,14 +29,7 @@ import { LineChart } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "string", description: "チャートに必須のアクセシブルな名前。" },
-    { prop: "data", type: "ChartData", description: "系列と点（Chart.js の形式）。" },
-    { prop: "valueFormatter", type: "(n: number) => string", description: "ツールチップと軸の値をフォーマットします。チャートをドメインに依存しないまま保ちます。" },
-    { prop: "fill", type: "boolean", default: "false", description: "エリアチャートとしてレンダリングします。" },
-  ]}
-/>
+<PropsTable rows={lineChartPropRows("ja")} />
 
 ## アクセシビリティ
 

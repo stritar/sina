@@ -1,7 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { resetAuditSink, setAuditSink } from "@sina-design-system/governance";
 
-import { evaluateWireTransfer } from "./wire-transfer.schema.js";
+import { coreTerms, payloadHash } from "../formats/canonical.js";
+import {
+  approvalViolations,
+  evaluateWireTransfer,
+} from "./wire-transfer.schema.js";
 import * as fx from "./fixtures.js";
 
 afterEach(() => {
@@ -56,7 +60,9 @@ describe("evaluateWireTransfer — adversarial", () => {
     expect(result.valid).toBe(false);
     expect(result.requiredComponent).toBe("SecureWireDialog");
     expect(
-      result.violations.some((v) => v.code === "AMOUNT_REQUIRES_APPROVAL" && Boolean(v.standard)),
+      result.violations.some(
+        (v) => v.code === "AMOUNT_REQUIRES_APPROVAL" && Boolean(v.standard),
+      ),
     ).toBe(true);
   });
 
@@ -64,7 +70,9 @@ describe("evaluateWireTransfer — adversarial", () => {
     const result = evaluateWireTransfer(fx.travelRuleMissingInfo);
     expect(result.valid).toBe(false);
     expect(result.requiredComponent).toBe("SecureWireDialog");
-    expect(result.violations.some((v) => v.code === "TRAVEL_RULE_INFO_MISSING")).toBe(true);
+    expect(
+      result.violations.some((v) => v.code === "TRAVEL_RULE_INFO_MISSING"),
+    ).toBe(true);
   });
 
   it("rejects a malformed IBAN with no governed component", () => {
@@ -114,19 +122,25 @@ describe("evaluateWireTransfer — secondary approval (Phase 5)", () => {
     const result = evaluateWireTransfer(fx.selfApprovedSixtyThousand);
     expect(result.valid).toBe(false);
     expect(result.requiredComponent).toBeNull();
-    expect(result.violations.some((v) => v.code === "SELF_APPROVAL_FORBIDDEN")).toBe(true);
+    expect(
+      result.violations.some((v) => v.code === "SELF_APPROVAL_FORBIDDEN"),
+    ).toBe(true);
   });
 
   it("rejects a fabricated approval whose hash binds nothing", () => {
     const result = evaluateWireTransfer(fx.fabricatedApprovalFlag);
     expect(result.valid).toBe(false);
-    expect(result.violations.some((v) => v.code === "APPROVAL_PAYLOAD_MISMATCH")).toBe(true);
+    expect(
+      result.violations.some((v) => v.code === "APPROVAL_PAYLOAD_MISMATCH"),
+    ).toBe(true);
   });
 
   it("rejects approve-$5k-execute-$60k (payload-binding mismatch)", () => {
     const result = evaluateWireTransfer(fx.approveFiveExecuteSixty);
     expect(result.valid).toBe(false);
-    expect(result.violations.some((v) => v.code === "APPROVAL_PAYLOAD_MISMATCH")).toBe(true);
+    expect(
+      result.violations.some((v) => v.code === "APPROVAL_PAYLOAD_MISMATCH"),
+    ).toBe(true);
   });
 
   it("rejects a key smuggled inside the approval envelope (.strict())", () => {
@@ -137,9 +151,13 @@ describe("evaluateWireTransfer — secondary approval (Phase 5)", () => {
     // The self-approval payload is only self-approval relative to the default
     // agent initiator. A different server-known initiator makes it valid — proof
     // the check can't be satisfied from the stream.
-    expect(evaluateWireTransfer(fx.selfApprovedSixtyThousand).valid).toBe(false);
+    expect(evaluateWireTransfer(fx.selfApprovedSixtyThousand).valid).toBe(
+      false,
+    );
     expect(
-      evaluateWireTransfer(fx.selfApprovedSixtyThousand, { initiatorId: "mgr:someone-else" }).valid,
+      evaluateWireTransfer(fx.selfApprovedSixtyThousand, {
+        initiatorId: "mgr:someone-else",
+      }).valid,
     ).toBe(true);
   });
 
@@ -147,9 +165,81 @@ describe("evaluateWireTransfer — secondary approval (Phase 5)", () => {
     const sink = vi.fn();
     setAuditSink(sink);
     evaluateWireTransfer(fx.validApprovedSixtyThousand);
-    const logged = sink.mock.calls[0]?.[0].payload as { approval?: Record<string, unknown> };
+    const logged = sink.mock.calls[0]?.[0].payload as {
+      approval?: Record<string, unknown>;
+    };
     expect(logged.approval?.secondFactor).toBeUndefined(); // dropped
     expect(logged.approval?.approverId).not.toBe("mgr:dana"); // hashed, not raw
+  });
+});
+
+describe("evaluateWireTransfer — non-USD bands (opt-in dual control)", () => {
+  const ctx = { initiatorId: "agent:opus" };
+  // A €50,000 par for the €60,000 review wire (`fx.validNonUsdLarge` = 6_000_000 minor EUR).
+  const eurBand = { currency: "EUR", secondaryApprovalMinor: 5_000_000 };
+
+  it("still flags USD bands as not evaluated AND escalates a non-USD wire over the opt-in band", () => {
+    const result = evaluateWireTransfer(fx.validNonUsdLarge, {
+      ...ctx,
+      bands: [eurBand],
+    });
+    expect(result.valid).toBe(false);
+    expect(result.requiredComponent).toBe("SecureWireDialog");
+    expect(
+      result.violations.some((v) => v.code === "POLICY_BANDS_NOT_EVALUATED"),
+    ).toBe(true);
+    expect(
+      result.violations.some((v) => v.code === "AMOUNT_REQUIRES_APPROVAL"),
+    ).toBe(true);
+  });
+
+  it("passes (flag only) a non-USD wire under the opt-in band", () => {
+    const result = evaluateWireTransfer(fx.validNonUsdLarge, {
+      ...ctx,
+      bands: [{ currency: "EUR", secondaryApprovalMinor: 7_000_000 }],
+    });
+    expect(result.valid).toBe(true);
+    expect(result.violations.map((v) => v.code)).toEqual([
+      "POLICY_BANDS_NOT_EVALUATED",
+    ]);
+  });
+
+  it("leaves the non-USD pass unchanged when no band matches the currency", () => {
+    const result = evaluateWireTransfer(fx.validNonUsdLarge, {
+      ...ctx,
+      bands: [{ currency: "GBP", secondaryApprovalMinor: 100 }],
+    });
+    expect(result.violations.map((v) => v.code)).toEqual([
+      "POLICY_BANDS_NOT_EVALUATED",
+    ]);
+  });
+
+  it("passes a banded non-USD wire approved by a distinct manager, bound to the exact terms", () => {
+    const approvedEur = {
+      ...(fx.validNonUsdLarge as object),
+      approval: {
+        approverId: "mgr:dana",
+        approverName: "Dana Approver",
+        secondFactor: "246810",
+        payloadHash: payloadHash(coreTerms(fx.validNonUsdLarge)),
+      },
+    };
+    const result = evaluateWireTransfer(approvedEur, {
+      ...ctx,
+      bands: [eurBand],
+    });
+    expect(result.valid).toBe(true);
+    expect(
+      result.violations.some(
+        (v) => v.severity === "reject" || v.severity === "escalate",
+      ),
+    ).toBe(false);
+  });
+
+  it("exports approvalViolations as the reusable un-bypassable core", () => {
+    expect(typeof approvalViolations).toBe("function");
+    const vs = approvalViolations(fx.validNonUsdLarge, ctx);
+    expect(vs.some((v) => v.code === "AMOUNT_REQUIRES_APPROVAL")).toBe(true);
   });
 });
 

@@ -3,6 +3,7 @@ title: DonutChart
 ---
 
 import { DonutChartHero, DonutChartExamples } from "@/app/components/docs/demos/primitives/donut-chart";
+import { donutChartPropRows } from "@/app/components/docs/props/donut-chart.props.mjs";
 
 <DonutChartHero />
 
@@ -23,13 +24,7 @@ import { DonutChart } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "string", description: "Required accessible name." },
-    { prop: "data", type: "ChartData", description: "The parts to plot (Chart.js shape)." },
-    { prop: "centerLabel", type: "ReactNode", description: "Content shown in the cutout." },
-  ]}
-/>
+<PropsTable rows={donutChartPropRows()} />
 
 ## Accessibility
 

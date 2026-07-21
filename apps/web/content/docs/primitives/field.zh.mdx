@@ -1,9 +1,10 @@
 ---
 title: Field
-sourceHash: 3149887e8df2
+sourceHash: 8cf74be58006
 ---
 
 import { FieldHero, FieldExamples } from "@/app/components/docs/demos/primitives/field";
+import { fieldPropRows } from "@/app/components/docs/props/field.props.mjs";
 
 <FieldHero />
 
@@ -26,13 +27,7 @@ import { Field } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "ReactNode", description: "字段标签（与控件关联）。" },
-    { prop: "description", type: "ReactNode", description: "标签下方的帮助文本。" },
-    { prop: "error", type: "ReactNode", description: "错误消息。设置 aria-invalid 并显示一个加粗的警告字形。" },
-  ]}
-/>
+<PropsTable rows={fieldPropRows("zh")} />
 
 <Callout variant="note" title="错误会带有一个字形">
   当设置了 `error` 时，Field 会在消息旁边渲染强制的加粗警告字形，绝不仅靠颜色。这是 SINA

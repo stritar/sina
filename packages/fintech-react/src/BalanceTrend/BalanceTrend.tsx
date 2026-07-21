@@ -22,6 +22,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { KpiStat, LineChart, Stack } from "@sina-design-system/core";
 
 import { formatAmount, formatDate } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./BalanceTrend.module.css";
 
 export interface BalanceTrendProps {
@@ -33,6 +34,8 @@ export interface BalanceTrendProps {
    * read-only until an action intent exists.
    */
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 interface TrendPointView {
@@ -69,7 +72,8 @@ function readBalanceTrend(payload: unknown): BalanceTrendView {
   };
 }
 
-export function BalanceTrend({ payload }: BalanceTrendProps) {
+export function BalanceTrend({ payload, locale: localeProp }: BalanceTrendProps) {
+  const locale = useFintechLocale(localeProp);
   const { account, currency, points } = readBalanceTrend(payload);
   const latest = points.length > 0 ? points[points.length - 1] : undefined;
   const first = points.length > 0 ? points[0] : undefined;
@@ -95,16 +99,16 @@ export function BalanceTrend({ payload }: BalanceTrendProps) {
             comparisonValue={first?.balance}
             comparisonLabel="since start of period"
             showChangeAsPercentage
-            valueFormatter={(v) => formatAmount(v, currency)}
+            valueFormatter={(v) => formatAmount(v, currency, locale)}
           />
           <div className={styles.chart}>
             <LineChart
               data={{
-                labels: points.map((point) => formatDate(point.date)),
+                labels: points.map((point) => formatDate(point.date, locale)),
                 datasets: [{ label: "Balance", data: points.map((point) => point.balance) }],
               }}
               label={`Balance trend, ${points.length} points`}
-              valueFormatter={(v) => formatAmount(v, currency)}
+              valueFormatter={(v) => formatAmount(v, currency, locale)}
             />
           </div>
         </>

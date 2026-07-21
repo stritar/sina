@@ -1,9 +1,10 @@
 ---
 title: PieChart
-sourceHash: 04cd69ecc19c
+sourceHash: 46260193ea74
 ---
 
 import { PieChartHero, PieChartExamples } from "@/app/components/docs/demos/primitives/pie-chart";
+import { pieChartPropRows } from "@/app/components/docs/props/pie-chart.props.mjs";
 
 <PieChartHero />
 
@@ -26,13 +27,7 @@ import { PieChart } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "string", description: "必須のアクセシブルな名前。" },
-    { prop: "data", type: "ChartData", description: "プロットする各部分（Chart.js の形式）。" },
-    { prop: "valueFormatter", type: "(n: number) => string", description: "ツールチップの値をフォーマットします。" },
-  ]}
-/>
+<PropsTable rows={pieChartPropRows("ja")} />
 
 ## アクセシビリティ
 

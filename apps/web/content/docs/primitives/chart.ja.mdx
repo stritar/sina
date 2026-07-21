@@ -1,9 +1,10 @@
 ---
 title: Chart
-sourceHash: beb3dd64a19b
+sourceHash: 314c926e4429
 ---
 
 import { ChartHero, ChartExamples } from "@/app/components/docs/demos/primitives/chart";
+import { chartPropRows } from "@/app/components/docs/props/chart.props.mjs";
 
 <ChartHero />
 
@@ -25,12 +26,7 @@ import { Chart } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "variant", type: '"line" | "area" | "bar"', default: '"line"', description: "スパークラインのスタイル。" },
-    { prop: "data", type: "number[]", description: "プロットする系列。" },
-  ]}
-/>
+<PropsTable rows={chartPropRows("ja")} />
 
 ## アクセシビリティ
 

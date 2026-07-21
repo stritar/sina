@@ -1,9 +1,10 @@
 ---
 title: LineChart
-sourceHash: 89173318aea6
+sourceHash: 95089ffadc5d
 ---
 
 import { LineChartHero, LineChartExamples } from "@/app/components/docs/demos/primitives/line-chart";
+import { lineChartPropRows } from "@/app/components/docs/props/line-chart.props.mjs";
 
 <LineChartHero />
 
@@ -29,14 +30,7 @@ import { LineChart } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "string", description: "图表必需的无障碍名称。" },
-    { prop: "data", type: "ChartData", description: "序列与数据点（Chart.js 结构）。" },
-    { prop: "valueFormatter", type: "(n: number) => string", description: "格式化提示框与坐标轴的数值。使图表保持与领域无关。" },
-    { prop: "fill", type: "boolean", default: "false", description: "渲染为面积图。" },
-  ]}
-/>
+<PropsTable rows={lineChartPropRows("zh")} />
 
 ## 无障碍
 

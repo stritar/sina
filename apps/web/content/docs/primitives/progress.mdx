@@ -3,6 +3,7 @@ title: Progress
 ---
 
 import { ProgressHero, ProgressExamples } from "@/app/components/docs/demos/primitives/progress";
+import { progressPropRows } from "@/app/components/docs/props/progress.props.mjs";
 
 <ProgressHero />
 
@@ -24,12 +25,7 @@ import { Progress } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "value", type: "number", description: "0 to 100. Omit for an indeterminate bar." },
-    { prop: "label", type: "string", description: "Accessible name for the progressbar." },
-  ]}
-/>
+<PropsTable rows={progressPropRows()} />
 
 ## Accessibility
 

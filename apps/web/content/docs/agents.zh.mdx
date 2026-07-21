@@ -1,6 +1,6 @@
 ---
 title: 面向 AI 智能体
-sourceHash: b4a9cbbe19d0
+sourceHash: f2849e973ec5
 ---
 
 AI 可以读取你的风格指南然后无视它。但它无法无视一条在其请求与屏幕之间作为代码运行的
@@ -60,7 +60,15 @@ SINA 为模型提供一份意图动词的菜单，即一份清单：
 |---|---|
 | `/llms.txt` | 每一页的精选索引，供 LLM 抓取。 |
 | 每页 `.md` | 每一页在 `/llms/docs/…` 下都有一个原始 Markdown 的孪生版本。 |
+| `/dsds/manifest.dsds.json` | 整个系统的结构化 JSON：组件、令牌、模式、指南。 |
 
 该索引以一段面向智能体的前言开头，秉承 SINA 自身的精神：将 UI 作为**意图**发出，即一个
 动词加 props，绝不是一个伪造的组件；把它发送到服务器端的关卡；优先使用已注册的意图，
 因为其他任何东西都会被拒绝。
+
+这份 JSON 目录遵循草案标准
+[Design System Documentation Schema](https://designsystemdocspec.org)（DSDS
+0.15.2）。一个清单文件链接到每个原语的实体文件（含 props）、每个设计令牌（值存放在
+W3C Design Tokens 文件中）、每个金融科技意图以及每份指南。模式实体携带该意图的 props
+必须满足的确切 JSON Schema，因此工具可以把这份动词菜单直接加载进自己的定义中，而无需
+抓取页面。

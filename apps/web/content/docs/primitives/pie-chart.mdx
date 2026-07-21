@@ -3,6 +3,7 @@ title: PieChart
 ---
 
 import { PieChartHero, PieChartExamples } from "@/app/components/docs/demos/primitives/pie-chart";
+import { pieChartPropRows } from "@/app/components/docs/props/pie-chart.props.mjs";
 
 <PieChartHero />
 
@@ -24,13 +25,7 @@ import { PieChart } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "string", description: "Required accessible name." },
-    { prop: "data", type: "ChartData", description: "The parts to plot (Chart.js shape)." },
-    { prop: "valueFormatter", type: "(n: number) => string", description: "Formats tooltip values." },
-  ]}
-/>
+<PropsTable rows={pieChartPropRows()} />
 
 ## Accessibility
 

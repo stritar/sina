@@ -47,6 +47,6 @@ describe("WhySina redesign", () => {
     const tones = [...container.querySelectorAll("[data-tone]")].map((n) =>
       n.getAttribute("data-tone"),
     );
-    expect(tones).toEqual(["blue", "violet", "pink"]);
+    expect(tones).toEqual(["yellow", "orange", "amber"]);
   });
 });

@@ -1,9 +1,10 @@
 ---
 title: Alert
-sourceHash: 4b6702614a41
+sourceHash: 8dc9a7aeb54e
 ---
 
 import { AlertHero, AlertExamples } from "@/app/components/docs/demos/primitives/alert";
+import { alertPropRows } from "@/app/components/docs/props/alert.props.mjs";
 
 <AlertHero />
 
@@ -25,13 +26,7 @@ import { Alert } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "variant", type: '"info" | "success" | "warning" | "danger"', default: '"info"', description: "严重程度。同时选择状态字形。" },
-    { prop: "title", type: "ReactNode", description: "警报的粗体标题。" },
-    { prop: "icon", type: "ReactNode | false", description: "替换字形，或为 info/success 隐藏它（切勿为 warning/danger 隐藏）。" },
-  ]}
-/>
+<PropsTable rows={alertPropRows("zh")} />
 
 <Callout variant="warning" title="状态的两条规则">
   warning 和 danger 警报**始终**渲染粗体字形。你可以替换它，但不能移除它。并且切勿将一个状态元素嵌套在另一个之内：Badge 应*位于* Alert 旁边，而不是在其内部。

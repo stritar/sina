@@ -1,9 +1,10 @@
 ---
 title: CurrencyField
-sourceHash: c10a09a690cc
+sourceHash: a87e1548f216
 ---
 
 import { CurrencyFieldHero, CurrencyFieldExamples } from "@/app/components/docs/demos/primitives/currency-field";
+import { currencyFieldPropRows } from "@/app/components/docs/props/currency-field.props.mjs";
 
 <CurrencyFieldHero />
 
@@ -25,12 +26,7 @@ import { CurrencyField } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "currencySymbol", type: "string", default: '"$"', description: "Das vor dem Betrag angezeigte Symbol." },
-    { prop: "label / description / error", type: "ReactNode", description: "Wird an das umschließende Field durchgereicht." },
-  ]}
-/>
+<PropsTable rows={currencyFieldPropRows("de")} />
 
 <Callout variant="governance" title="Formatierung, keine Durchsetzung">
   Dies dient nur der Anzeige. Es stoppt keinen Betrag über dem Limit; das ist

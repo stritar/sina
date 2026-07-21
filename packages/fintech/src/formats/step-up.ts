@@ -54,7 +54,10 @@ export const stepUpApproval = z
     approverId: z.string().min(1).optional(),
     approverName: z.string().min(1).optional(),
     /** A 6-digit one-time code (approval / second-factor modes). */
-    secondFactor: z.string().regex(/^\d{6}$/, "second factor must be a 6-digit code").optional(),
+    secondFactor: z
+      .string()
+      .regex(/^\d{6}$/, "second factor must be a 6-digit code")
+      .optional(),
     /** The actor has read + accepted the required disclosure (acknowledge mode). */
     acknowledged: z.literal(true).optional(),
     /** Binds this authorization to the exact action terms; recomputed server-side, never trusted. */
@@ -107,7 +110,9 @@ function providesMode(s: StepUpApproval, mode: StepUpMode): boolean {
   if (mode === "acknowledge") return s.acknowledged === true;
   if (mode === "second-factor") return typeof s.secondFactor === "string";
   // approval: a second party, a one-time code, AND a binding hash.
-  return Boolean(s.approverId && s.approverName && s.secondFactor && s.payloadHash);
+  return Boolean(
+    s.approverId && s.approverName && s.secondFactor && s.payloadHash,
+  );
 }
 
 /**
@@ -115,8 +120,18 @@ function providesMode(s: StepUpApproval, mode: StepUpMode): boolean {
  * over its threshold:
  *   - no (or insufficient) step-up → a single `escalate` violation (forces the
  *     governed component),
- *   - approval mode with a step-up → verify the binding hash + separation of
- *     duties, each a hard `reject` on failure (the un-bypassable moment).
+ *   - a sufficient step-up → verify whatever authorization evidence it carries,
+ *     each a hard `reject` on failure (the un-bypassable moment).
+ *
+ * The binding + separation-of-duties checks run in **every** mode, guarded on the
+ * evidence actually supplied — a `payloadHash` is verified whenever one is present,
+ * and `approverId` is checked against the initiator whenever one is present. This is
+ * defense in depth: a UI that collects an authorizer id (e.g. `GovernedActionDialog`)
+ * and promises "binds to the exact terms" / "must differ from the initiator" is now
+ * backed by the gate regardless of `mode`, so the copy can never over-promise. A bare
+ * `second-factor` (only a one-time code, no approver, no hash) still passes — that is
+ * the lightweight self-re-authentication path. `acknowledge` supplies neither and is
+ * unaffected.
  */
 export function stepUpViolations(
   data: Record<string, unknown> & { stepUp?: StepUpApproval },
@@ -126,16 +141,25 @@ export function stepUpViolations(
   const { stepUp } = data;
 
   if (!stepUp || !providesMode(stepUp, req.mode)) {
-    return [{ code: req.code, message: req.message, standard: req.standard, severity: "escalate" }];
+    return [
+      {
+        code: req.code,
+        message: req.message,
+        standard: req.standard,
+        severity: "escalate",
+      },
+    ];
   }
-
-  if (req.mode !== "approval") return [];
 
   const violations: Violation[] = [];
 
-  // (a) Binding: the authorization must be for these exact terms. Recomputed
-  // server-side — the streamed `payloadHash` is never trusted.
-  if (stepUp.payloadHash !== actionHash(data)) {
+  // (a) Binding: an authorization that supplies a hash must bind to these exact
+  // terms. Recomputed server-side — the streamed `payloadHash` is never trusted.
+  // Absent a hash (e.g. `acknowledge`, or a bare second factor) there is nothing to bind.
+  if (
+    stepUp.payloadHash !== undefined &&
+    stepUp.payloadHash !== actionHash(data)
+  ) {
     violations.push({
       code: "APPROVAL_PAYLOAD_MISMATCH",
       message: "authorization does not bind to the submitted action terms",
@@ -144,8 +168,12 @@ export function stepUpViolations(
     });
   }
 
-  // (b) Separation of duties: the approver cannot be the initiator (four-eyes).
-  if (stepUp.approverId && stepUp.approverId === ctx.initiatorId) {
+  // (b) Separation of duties: when an authorizer id is supplied, it cannot be the
+  // initiator (four-eyes). The initiator identity is server-known, never from the payload.
+  if (
+    stepUp.approverId !== undefined &&
+    stepUp.approverId === ctx.initiatorId
+  ) {
     violations.push({
       code: "SELF_APPROVAL_FORBIDDEN",
       message: "the initiator cannot approve their own action",

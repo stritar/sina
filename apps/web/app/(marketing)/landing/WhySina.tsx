@@ -2,7 +2,7 @@ import { why } from "./copy";
 import styles from "./WhySina.module.css";
 
 /** The audience tab colours, in reading order (PM / designer / engineer). */
-const TONES = ["blue", "violet", "pink"] as const;
+const TONES = ["yellow", "orange", "amber"] as const;
 
 /**
  * Three value cards, one per audience lens, laid out on the same ruled

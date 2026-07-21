@@ -1,9 +1,10 @@
 ---
 title: Progress
-sourceHash: 538c1101fa22
+sourceHash: 2fb1a506beff
 ---
 
 import { ProgressHero, ProgressExamples } from "@/app/components/docs/demos/primitives/progress";
+import { progressPropRows } from "@/app/components/docs/props/progress.props.mjs";
 
 <ProgressHero />
 
@@ -25,12 +26,7 @@ import { Progress } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "value", type: "number", description: "De 0 à 100. Omettez-la pour une barre indéterminée." },
-    { prop: "label", type: "string", description: "Nom accessible pour la barre de progression." },
-  ]}
-/>
+<PropsTable rows={progressPropRows("fr")} />
 
 ## Accessibilité
 

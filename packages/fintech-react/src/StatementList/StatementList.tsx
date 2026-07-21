@@ -11,6 +11,7 @@ import { Badge, Chart, Stack, SummaryList } from "@sina-design-system/core";
 import type { SummaryItem } from "@sina-design-system/core";
 
 import { formatAmount, formatDate } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./StatementList.module.css";
 
 export interface StatementListProps {
@@ -22,6 +23,8 @@ export interface StatementListProps {
    * slice — the display stays read-only until an action intent exists.
    */
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 interface MaskedAccountView {
@@ -72,7 +75,8 @@ function readStatementList(payload: unknown): StatementListView {
   };
 }
 
-export function StatementList({ payload }: StatementListProps) {
+export function StatementList({ payload, locale: localeProp }: StatementListProps) {
+  const locale = useFintechLocale(localeProp);
   const { account, statements } = readStatementList(payload);
 
   // Oldest → newest, so the sparkline reads left-to-right chronologically.
@@ -80,9 +84,9 @@ export function StatementList({ payload }: StatementListProps) {
 
   const items: SummaryItem[] = statements.map((s) => {
     const negative = s.closingBalance < 0;
-    const amount = formatAmount(s.closingBalance, s.currency);
+    const amount = formatAmount(s.closingBalance, s.currency, locale);
     return {
-      label: `${formatDate(s.periodStart)} – ${formatDate(s.periodEnd)}`,
+      label: `${formatDate(s.periodStart, locale)} – ${formatDate(s.periodEnd, locale)}`,
       value: negative ? (
         <Badge intent="danger" size="sm">
           {amount}

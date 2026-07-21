@@ -1,9 +1,10 @@
 ---
 title: Stack
-sourceHash: 9856ac9abe5a
+sourceHash: aade83d5cb46
 ---
 
 import { StackHero, StackExamples } from "@/app/components/docs/demos/primitives/stack";
+import { stackPropRows } from "@/app/components/docs/props/stack.props.mjs";
 
 <StackHero />
 
@@ -28,14 +29,7 @@ import { Stack } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "direction", type: '"row" | "column"', default: '"column"', description: "Axe de mise en page." },
-    { prop: "gap", type: "GapStep", description: "Espacement entre les enfants (depuis l'échelle de 8 pt)." },
-    { prop: "align / justify", type: "string", description: "Alignement flex le long de chaque axe." },
-    { prop: "as", type: "ElementType", description: "Rend un élément différent (polymorphe)." },
-  ]}
-/>
+<PropsTable rows={stackPropRows("fr")} />
 
 ## Accessibilité
 

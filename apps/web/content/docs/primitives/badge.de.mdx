@@ -1,9 +1,10 @@
 ---
 title: Badge
-sourceHash: 4d4d24138038
+sourceHash: f7e0d525c5ef
 ---
 
 import { BadgeHero, BadgeExamples } from "@/app/components/docs/demos/primitives/badge";
+import { badgePropRows } from "@/app/components/docs/props/badge.props.mjs";
 
 <BadgeHero />
 
@@ -25,14 +26,7 @@ import { Badge } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "intent", type: '"neutral" | "info" | "success" | "warning" | "danger"', default: '"neutral"', description: "Farbe und Bedeutung." },
-    { prop: "size", type: '"sm" | "md"', default: '"md"', description: "Chip-Größe." },
-    { prop: "icon", type: "ReactNode", description: "Ein vorangestelltes Glyph (erbt die Beschriftungsfarbe)." },
-    { prop: "dot", type: "boolean", default: "false", description: "Ein vorangestellter Statuspunkt." },
-  ]}
-/>
+<PropsTable rows={badgePropRows("de")} />
 
 <Callout variant="note" title="Statusregeln gelten">
   Ein `danger`- oder `warning`-Badge rendert automatisch ein fettes Glyph. Und ein Badge ist ein

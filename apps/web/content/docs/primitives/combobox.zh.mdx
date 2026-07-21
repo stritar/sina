@@ -1,9 +1,10 @@
 ---
 title: Combobox
-sourceHash: 19fb4c750726
+sourceHash: 6e543ead7645
 ---
 
 import { ComboboxHero, ComboboxExamples } from "@/app/components/docs/demos/primitives/combobox";
+import { comboboxPropRows } from "@/app/components/docs/props/combobox.props.mjs";
 
 <ComboboxHero />
 
@@ -31,14 +32,7 @@ import { Combobox } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "options", type: "ComboboxOption[]", description: "可供选择的 { value, label } 项。" },
-    { prop: "value", type: "string", description: "选中的值（受控）。" },
-    { prop: "onValueChange", type: "(value: string) => void", description: "选择时触发。" },
-    { prop: "placeholder", type: "string", description: "输入框中的空状态文本。" },
-  ]}
-/>
+<PropsTable rows={comboboxPropRows("zh")} />
 
 ## 无障碍
 

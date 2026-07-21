@@ -14,6 +14,7 @@ import type { SummaryItem } from "@sina-design-system/core";
 import { Badge, Stack, SummaryList } from "@sina-design-system/core";
 
 import { formatAmount } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./SearchResults.module.css";
 
 export interface SearchResultsProps {
@@ -24,6 +25,8 @@ export interface SearchResultsProps {
    * back through the gate. Unused while the display stays read-only.
    */
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 type BadgeIntent = "danger" | "success" | "warning" | "info" | "neutral";
@@ -75,7 +78,8 @@ function readSearchResults(payload: unknown): SearchResultsView {
   };
 }
 
-export function SearchResults({ payload }: SearchResultsProps) {
+export function SearchResults({ payload, locale: localeProp }: SearchResultsProps) {
+  const locale = useFintechLocale(localeProp);
   const { query, results } = readSearchResults(payload);
 
   const items: SummaryItem[] = results.map((r) => {
@@ -98,7 +102,7 @@ export function SearchResults({ payload }: SearchResultsProps) {
       value:
         r.amount != null ? (
           <span className={styles.amount}>
-            {formatAmount(r.amount, r.currency ?? "USD")}
+            {formatAmount(r.amount, r.currency ?? "USD", locale)}
           </span>
         ) : null,
     };

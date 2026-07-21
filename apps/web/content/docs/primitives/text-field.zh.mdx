@@ -1,9 +1,10 @@
 ---
 title: TextField
-sourceHash: bea988c70ac4
+sourceHash: 19f078173084
 ---
 
 import { TextFieldHero, TextFieldExamples } from "@/app/components/docs/demos/primitives/text-field";
+import { textFieldPropRows } from "@/app/components/docs/props/text-field.props.mjs";
 
 <TextFieldHero />
 
@@ -25,11 +26,6 @@ import { TextField } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "multiline", type: "boolean", default: "false", description: "渲染一个 textarea 而非 input。" },
-    { prop: "label / description / error", type: "ReactNode", description: "透传给包裹它的 Field。" },
-  ]}
-/>
+<PropsTable rows={textFieldPropRows("zh")} />
 
 它接受常见的原生 input/textarea 属性（`placeholder`、`value`、`onChange` 等）。

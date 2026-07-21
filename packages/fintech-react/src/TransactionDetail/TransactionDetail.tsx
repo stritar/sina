@@ -24,6 +24,7 @@ import { Badge, Separator, Stack, SummaryList } from "@sina-design-system/core";
 import type { SummaryItem } from "@sina-design-system/core";
 
 import { formatAmount, formatDate } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./TransactionDetail.module.css";
 
 export interface TransactionDetailProps {
@@ -35,6 +36,8 @@ export interface TransactionDetailProps {
    * read-only until an action intent exists.
    */
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 interface TransactionDetailView {
@@ -84,11 +87,12 @@ function titleCase(value: string): string {
   return value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
 }
 
-export function TransactionDetail({ payload }: TransactionDetailProps) {
+export function TransactionDetail({ payload, locale: localeProp }: TransactionDetailProps) {
+  const locale = useFintechLocale(localeProp);
   const detail = readTransactionDetail(payload);
   const isEmpty = !detail.id && !detail.description;
   const credit = detail.direction === "credit";
-  const amount = formatAmount(detail.amount, detail.currency);
+  const amount = formatAmount(detail.amount, detail.currency, locale);
 
   const items: SummaryItem[] = [
     { label: "Amount", value: `${credit ? "+" : "−"}${amount}`, emphasis: true },
@@ -108,7 +112,7 @@ export function TransactionDetail({ payload }: TransactionDetailProps) {
         </Badge>
       ),
     },
-    { label: "Posted", value: formatDate(detail.postedAt) },
+    { label: "Posted", value: formatDate(detail.postedAt, locale) },
     ...(detail.category ? [{ label: "Category", value: detail.category }] : []),
   ];
 

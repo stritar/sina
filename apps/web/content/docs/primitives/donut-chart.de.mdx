@@ -1,9 +1,10 @@
 ---
 title: DonutChart
-sourceHash: c6fcde610388
+sourceHash: d4691f5cb4d0
 ---
 
 import { DonutChartHero, DonutChartExamples } from "@/app/components/docs/demos/primitives/donut-chart";
+import { donutChartPropRows } from "@/app/components/docs/props/donut-chart.props.mjs";
 
 <DonutChartHero />
 
@@ -24,13 +25,7 @@ import { DonutChart } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "string", description: "Erforderlicher zugänglicher Name." },
-    { prop: "data", type: "ChartData", description: "Die zu zeichnenden Teile (Chart.js-Form)." },
-    { prop: "centerLabel", type: "ReactNode", description: "Inhalt, der in der Aussparung angezeigt wird." },
-  ]}
-/>
+<PropsTable rows={donutChartPropRows("de")} />
 
 ## Barrierefreiheit
 

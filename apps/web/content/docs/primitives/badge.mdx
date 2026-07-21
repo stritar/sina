@@ -3,6 +3,7 @@ title: Badge
 ---
 
 import { BadgeHero, BadgeExamples } from "@/app/components/docs/demos/primitives/badge";
+import { badgePropRows } from "@/app/components/docs/props/badge.props.mjs";
 
 <BadgeHero />
 
@@ -24,14 +25,7 @@ import { Badge } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "intent", type: '"neutral" | "info" | "success" | "warning" | "danger"', default: '"neutral"', description: "Color and meaning." },
-    { prop: "size", type: '"sm" | "md"', default: '"md"', description: "Chip size." },
-    { prop: "icon", type: "ReactNode", description: "A leading glyph (inherits the label color)." },
-    { prop: "dot", type: "boolean", default: "false", description: "A leading status dot." },
-  ]}
-/>
+<PropsTable rows={badgePropRows()} />
 
 <Callout variant="note" title="Status rules apply">
   A `danger` or `warning` Badge renders a bold glyph automatically. And a Badge is a

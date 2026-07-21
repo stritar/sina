@@ -29,6 +29,10 @@ export function GET() {
       return `- [${title}](${page.url})${description} — raw: ${raw}`;
     }),
     "",
+    "## Machine-readable",
+    "",
+    "- [DSDS catalog](/dsds/manifest.dsds.json): the whole system (components, tokens, patterns, guides) as Design System Documentation Schema JSON — see https://designsystemdocspec.org",
+    "",
   ];
 
   return new Response(lines.join("\n"), {

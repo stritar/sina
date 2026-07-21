@@ -1,9 +1,10 @@
 ---
 title: BarChart
-sourceHash: 81bb0ce7f3af
+sourceHash: 3bdac680cbce
 ---
 
 import { BarChartHero, BarChartExamples } from "@/app/components/docs/demos/primitives/bar-chart";
+import { barChartPropRows } from "@/app/components/docs/props/bar-chart.props.mjs";
 
 <BarChartHero />
 
@@ -29,15 +30,7 @@ import { BarChart } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "string", description: "Nombre accesible obligatorio." },
-    { prop: "data", type: "ChartData", description: "Categorías y series (forma de Chart.js)." },
-    { prop: "horizontal", type: "boolean", default: "false", description: "Las barras van de izquierda a derecha." },
-    { prop: "stacked", type: "boolean", default: "false", description: "Apila las series en una sola barra." },
-    { prop: "valueFormatter", type: "(n: number) => string", description: "Formatea los valores del tooltip y del eje." },
-  ]}
-/>
+<PropsTable rows={barChartPropRows("es")} />
 
 ## Accesibilidad
 

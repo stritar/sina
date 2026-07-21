@@ -1,9 +1,10 @@
 ---
 title: 图标
-sourceHash: dd59c4ec8596
+sourceHash: 01b363ca9ec5
 ---
 
 import { IconHero, IconExamples } from "@/app/components/docs/demos/primitives/icon-demo";
+import { iconPropRows } from "@/app/components/docs/props/icon.props.mjs";
 
 <IconHero />
 
@@ -27,12 +28,7 @@ import { ShieldCheck } from "@phosphor-icons/react";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "string", description: "向屏幕阅读器播报。当图标传达含义时使用。" },
-    { prop: "decorative", type: "boolean", description: "对辅助技术隐藏图标（aria-hidden）。" },
-  ]}
-/>
+<PropsTable rows={iconPropRows("zh")} />
 
 ## 无障碍
 

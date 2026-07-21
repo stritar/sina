@@ -1,17 +1,17 @@
 ---
 title: Releases und Stabilität
-sourceHash: 1e8cf8ee7f32
+sourceHash: 95f23c1ea4b5
 ---
 
 ## Aktuelle Versionen
 
-Alle fünf öffentlichen Pakete sind unter **0.1.0** veröffentlicht:
+Alle fünf öffentlichen Pakete sind unter **0.2.0** veröffentlicht:
 
 `@sina-design-system/theme` · `core` · `governance` · `fintech` ·
 `fintech-react`.
 
 ```bash
-pnpm add @sina-design-system/core@0.1.0
+pnpm add @sina-design-system/core@0.2.0
 ```
 
 ## Stabilität und Versionierung
@@ -32,6 +32,21 @@ veröffentlicht.
   Unterhalb von 1.0 können Minor-Versionen Breaking Changes enthalten. Fixiere deine
   Versionen und lies die Release Notes, bevor du aktualisierst.
 </Callout>
+
+## 0.2.0: Härtung aus einer Integrationsprüfung
+
+Verbesserungen aus einer echten Integrationsprüfung. Nicht-USD-Zahlungslasten
+passieren nicht mehr stillschweigend: Jede Richtlinie hängt ein informatives
+`POLICY_BANDS_NOT_EVALUATED`-Flag an, wenn die Währung nicht USD ist, sodass der
+Aufrufer sieht, dass die Betragsbänder nicht geprüft wurden (das Ergebnis bleibt
+gültig, weil ein Flag niemals blockiert). Jeder Eintrag des Intent-Manifests trägt
+jetzt ein `propsSchema`, ein eigenständiges JSON Schema, das du direkt in die
+Definition eines LLM-Tools einsetzen kannst, zusammen mit den neuen
+`IntentPropsMap`-Typen, die jedes Verb an seine Nutzlast binden. Ein neues
+ungeregeltes Verb `clarify_choice` (mit einer `ClarifyChoice`-Komponente) deckt die
+Begriffsklärung ab. Die Form von `list_cards` hat ihre Pflichtfelder gelockert,
+Überweisungen akzeptieren eine SEPA-IBAN ohne BIC, und `theme` erhielt einen
+`./theme.css`-Export-Alias.
 
 ## 0.1.0: erstes öffentliches Release
 

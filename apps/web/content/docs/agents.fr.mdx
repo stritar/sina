@@ -1,6 +1,6 @@
 ---
 title: Pour les agents IA
-sourceHash: b4a9cbbe19d0
+sourceHash: f2849e973ec5
 ---
 
 Une IA peut lire votre guide de style et l'ignorer. Elle ne peut pas ignorer une
@@ -78,8 +78,18 @@ documentation directement :
 |---|---|
 | `/llms.txt` | Un index sélectionné de chaque page, pour qu'un LLM l'explore. |
 | `.md` par page | Chaque page a un jumeau en Markdown brut sous `/llms/docs/…`. |
+| `/dsds/manifest.dsds.json` | Tout le système en JSON structuré : composants, tokens, patterns, guides. |
 
 L'index s'ouvre sur un préambule destiné aux agents, dans l'esprit propre à
 SINA : émettez l'UI sous forme d'**intention**, un verbe et des props, jamais un
 composant fabriqué ; envoyez-la au contrôle côté serveur ; préférez les
 intentions enregistrées, car tout le reste est refusé.
+
+Le catalogue JSON suit le standard en brouillon
+[Design System Documentation Schema](https://designsystemdocspec.org) (DSDS
+0.15.2). Un manifeste unique relie un fichier d'entité pour chaque primitive
+(props comprises), chaque token de design (les valeurs vivent dans un fichier
+W3C Design Tokens), chaque intention fintech et chaque guide. Les entités de
+pattern portent le JSON Schema exact que les props d'une intention doivent
+satisfaire : un outil peut donc charger le menu de verbes directement dans ses
+propres définitions au lieu de moissonner des pages.

@@ -20,6 +20,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack } from "@sina-design-system/core";
 
 import { formatAmount, formatDate } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./RecurringList.module.css";
 
 export interface RecurringListProps {
@@ -31,6 +32,8 @@ export interface RecurringListProps {
    * slice — the display stays read-only until an action intent exists.
    */
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 type Cadence = "weekly" | "monthly" | "quarterly" | "yearly";
@@ -102,7 +105,8 @@ const CADENCE_LABEL: Record<Cadence, string> = {
   yearly: "Yearly",
 };
 
-export function RecurringList({ payload }: RecurringListProps) {
+export function RecurringList({ payload, locale: localeProp }: RecurringListProps) {
+  const locale = useFintechLocale(localeProp);
   const { currency, subscriptions } = readRecurringList(payload);
 
   return (
@@ -134,12 +138,12 @@ export function RecurringList({ payload }: RecurringListProps) {
                 <span className={styles.merchant}>{sub.merchant}</span>
                 <span className={styles.cadence}>
                   {CADENCE_LABEL[sub.cadence]}
-                  {sub.nextChargeAt ? ` · Next ${formatDate(sub.nextChargeAt)}` : ""}
+                  {sub.nextChargeAt ? ` · Next ${formatDate(sub.nextChargeAt, locale)}` : ""}
                 </span>
               </span>
               <span className={styles.amountGroup}>
                 <span className={styles.amount}>
-                  {formatAmount(sub.amount, currency)}
+                  {formatAmount(sub.amount, currency, locale)}
                 </span>
                 <Badge intent={STATUS_INTENT[sub.status]} size="sm">
                   {STATUS_LABEL[sub.status]}

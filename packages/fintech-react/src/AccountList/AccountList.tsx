@@ -11,6 +11,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack, SummaryList } from "@sina-design-system/core";
 
 import { formatAmount } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./AccountList.module.css";
 
 export interface AccountListProps {
@@ -18,6 +19,8 @@ export interface AccountListProps {
   payload: unknown;
   /** Emit a new intent for any action this display later offers (unused in the proving slice). */
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 type BadgeIntent = "info" | "success" | "warning" | "danger" | "neutral";
@@ -66,7 +69,8 @@ function readAccountList(payload: unknown): AccountRowView[] {
   });
 }
 
-export function AccountList({ payload }: AccountListProps) {
+export function AccountList({ payload, locale: localeProp }: AccountListProps) {
+  const locale = useFintechLocale(localeProp);
   const accounts = readAccountList(payload);
 
   // Only sum a total when every account shares one currency (mixed-currency
@@ -107,7 +111,7 @@ export function AccountList({ payload }: AccountListProps) {
                     ) : null}
                   </span>
                   <span className={styles.balance}>
-                    {formatAmount(account.balance, account.currency)}
+                    {formatAmount(account.balance, account.currency, locale)}
                   </span>
                 </Stack>
               );
@@ -115,7 +119,7 @@ export function AccountList({ payload }: AccountListProps) {
           </Stack>
           {total !== null && uniformCurrency ? (
             <SummaryList
-              items={[{ label: "Total", value: formatAmount(total, uniformCurrency), emphasis: true }]}
+              items={[{ label: "Total", value: formatAmount(total, uniformCurrency, locale), emphasis: true }]}
             />
           ) : null}
         </>

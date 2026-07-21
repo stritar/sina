@@ -9,19 +9,26 @@ import { Badge, Progress, Stack, SummaryList } from "@sina-design-system/core";
 import type { SummaryItem } from "@sina-design-system/core";
 
 import { formatAmount, readRewards } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./RewardsSummary.module.css";
 
 export interface RewardsSummaryProps {
   /** The server-validated `rewards_summary` payload (`IntentProps<"rewards_summary">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
-export function RewardsSummary({ payload }: RewardsSummaryProps) {
+export function RewardsSummary({
+  payload,
+  locale: localeProp,
+}: RewardsSummaryProps) {
+  const locale = useFintechLocale(localeProp);
   const r = readRewards(payload);
 
   const items: SummaryItem[] = [
-    { label: "Points", value: r.points.toLocaleString("en-US"), emphasis: true },
+    { label: "Points", value: r.points.toLocaleString(locale), emphasis: true },
     {
       label: "Tier",
       value: (
@@ -31,7 +38,12 @@ export function RewardsSummary({ payload }: RewardsSummaryProps) {
       ),
     },
     ...(r.cashback !== undefined
-      ? [{ label: "Cashback", value: formatAmount(r.cashback, r.currency) }]
+      ? [
+          {
+            label: "Cashback",
+            value: formatAmount(r.cashback, r.currency, locale),
+          },
+        ]
       : []),
   ];
 
@@ -41,17 +53,13 @@ export function RewardsSummary({ payload }: RewardsSummaryProps) {
       : null;
 
   return (
-    <Stack
-      gap={3}
-      aria-label={`${r.program} rewards`}
-      className={styles.card}
-    >
+    <Stack gap={3} aria-label={`${r.program} rewards`} className={styles.card}>
       <span className={styles.program}>{r.program}</span>
       <SummaryList items={items} />
       {pct !== null && r.nextTier ? (
         <Stack gap={1}>
           <span className={styles.nextTier}>
-            {r.pointsToNextTier?.toLocaleString("en-US")} points to {r.nextTier}
+            {r.pointsToNextTier?.toLocaleString(locale)} points to {r.nextTier}
           </span>
           <Progress value={pct} label={`Progress to ${r.nextTier}`} />
         </Stack>

@@ -18,22 +18,26 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, DonutChart, Stack } from "@sina-design-system/core";
 
 import { formatAmount, formatPct, readPortfolioHoldings } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./PortfolioHoldings.module.css";
 
 export interface PortfolioHoldingsProps {
   /** The server-validated `portfolio_holdings` payload (`IntentProps<"portfolio_holdings">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
-export function PortfolioHoldings({ payload }: PortfolioHoldingsProps) {
+export function PortfolioHoldings({ payload, locale: localeProp }: PortfolioHoldingsProps) {
+  const locale = useFintechLocale(localeProp);
   const { currency, totalValue, holdings } = readPortfolioHoldings(payload);
 
   return (
     <Stack gap={3} aria-label="Portfolio holdings" className={styles.card}>
       <Stack direction="row" justify="between" align="center" gap={2}>
         <span className={styles.title}>Portfolio</span>
-        <span className={styles.amount}>{formatAmount(totalValue, currency)}</span>
+        <span className={styles.amount}>{formatAmount(totalValue, currency, locale)}</span>
       </Stack>
 
       {holdings.length === 0 ? (
@@ -47,9 +51,9 @@ export function PortfolioHoldings({ payload }: PortfolioHoldingsProps) {
                 datasets: [{ data: holdings.map((h) => h.value) }],
               }}
               label="Portfolio allocation by holding value"
-              centerLabel={formatAmount(totalValue, currency)}
+              centerLabel={formatAmount(totalValue, currency, locale)}
               centerSubLabel="Total"
-              valueFormatter={(v) => formatAmount(v, currency)}
+              valueFormatter={(v) => formatAmount(v, currency, locale)}
               showLegend={false}
             />
           </div>
@@ -74,9 +78,9 @@ export function PortfolioHoldings({ payload }: PortfolioHoldingsProps) {
                     </span>
                   </span>
                   <span className={styles.meta}>
-                    <span className={styles.amount}>{formatAmount(h.value, currency)}</span>
+                    <span className={styles.amount}>{formatAmount(h.value, currency, locale)}</span>
                     <Badge intent={up ? "success" : "danger"} size="sm">
-                      {formatPct(h.changePct)}
+                      {formatPct(h.changePct, locale)}
                     </Badge>
                   </span>
                 </Stack>

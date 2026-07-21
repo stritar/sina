@@ -1,9 +1,10 @@
 ---
 title: Icon
-sourceHash: dd59c4ec8596
+sourceHash: 01b363ca9ec5
 ---
 
 import { IconHero, IconExamples } from "@/app/components/docs/demos/primitives/icon-demo";
+import { iconPropRows } from "@/app/components/docs/props/icon.props.mjs";
 
 <IconHero />
 
@@ -27,12 +28,7 @@ import { ShieldCheck } from "@phosphor-icons/react";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "string", description: "Wird an Screenreader angesagt. Verwende es, wenn das Icon eine Bedeutung transportiert." },
-    { prop: "decorative", type: "boolean", description: "Blendet das Icon vor assistiven Technologien aus (aria-hidden)." },
-  ]}
-/>
+<PropsTable rows={iconPropRows("de")} />
 
 ## Barrierefreiheit
 

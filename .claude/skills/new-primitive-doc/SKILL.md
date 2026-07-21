@@ -35,16 +35,28 @@ per page).
    → `## Props` (`<PropsTable>`) → optional `## Do & don't` → `## Accessibility`.
    The intro, the `## Accessibility` note, **and the `PropsTable` `description`
    strings** are reader-facing prose: no em-dashes, per `/human-prose`.
-3. Add the slug to `primitives/meta.json` and a card (with a tiny inert
+3. **Props rows live in a data module, never inline in the MDX.** Create
+   `apps/web/app/components/docs/props/<slug>.props.mjs` (mirror
+   `badge.props.mjs`): a `PropDoc` with the English `props` rows plus
+   `i18n.{es,zh,fr,de,ja}` description maps (keys = prop names), and a
+   `<camel>PropRows(locale)` helper via `rowsFor`. The English page imports it
+   and renders `<PropsTable rows={<camel>PropRows()} />`; each locale sibling
+   uses the **byte-identical import line** and passes its locale
+   (`<camel>PropRows("es")`). This module is also what `generate-dsds.mjs`
+   reads for the primitive's DSDS `api` block — one source, no drift. The
+   `dsds.test.ts` guard fails on inline rows, missing locale keys, or a dash
+   in an English description.
+4. Add the slug to `primitives/meta.json` and a card (with a tiny inert
    specimen) to the gallery
    (`apps/web/app/components/docs/demos/primitives/gallery.tsx`).
-4. If the export is a subcomponent documented on its parent's page (e.g.
+5. If the export is a subcomponent documented on its parent's page (e.g.
    `DialogTrigger`), add it to `EXCLUDE` in
-   `apps/web/content/primitive-docs.test.ts` instead.
-5. Verify: `pnpm --filter web test` — `primitive-docs.test.ts` is the
-   acceptance test — then `pnpm --filter web build` (cwd `apps/web`, sandbox
-   off). If the demo shows a stale primitive, rebuild core first
-   (`/preview-change`).
+   `apps/web/content/core-slugs.ts` (shared by the `primitive-docs` and
+   `dsds` guards) instead.
+6. Verify: `pnpm --filter web test` — `primitive-docs.test.ts` and
+   `dsds.test.ts` are the acceptance tests — then `pnpm --filter web build`
+   (cwd `apps/web`, sandbox off). If the demo shows a stale primitive, rebuild
+   core first (`/preview-change`).
 
 ## Reuses
 
@@ -52,10 +64,15 @@ per page).
 - The playground stories — `apps/playground/app/primitives/<slug>/page.tsx`
   (demos are **copied**, not shared — when a primitive's prop surface changes,
   update both; `/primitive-figma-sync` covers the Figma side)
-- Guard — `apps/web/content/primitive-docs.test.ts`
+- Guards — `apps/web/content/primitive-docs.test.ts` +
+  `apps/web/content/dsds.test.ts` (slug universe shared via
+  `apps/web/content/core-slugs.ts`)
+- Props module helper — `apps/web/app/components/docs/props/prop-docs.mjs`
+  (`rowsFor`; reference implementation `badge.props.mjs`)
 - Reference implementation — `button.tsx` + `button.mdx`
 
 ## Scaffolds
 
 - `apps/web/app/components/docs/demos/primitives/<slug>.tsx`
+- `apps/web/app/components/docs/props/<slug>.props.mjs`
 - `apps/web/content/docs/primitives/<slug>.mdx`

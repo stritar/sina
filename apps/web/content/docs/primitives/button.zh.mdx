@@ -1,9 +1,10 @@
 ---
 title: Button
-sourceHash: 7de5af4b2e5a
+sourceHash: be613beaf3a0
 ---
 
 import { ButtonHero, ButtonExamples } from "@/app/components/docs/demos/primitives/button";
+import { buttonPropRows } from "@/app/components/docs/props/button.props.mjs";
 
 <ButtonHero />
 
@@ -24,15 +25,7 @@ import { Button } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "variant", type: '"primary" | "secondary" | "danger" | "ghost"', default: '"primary"', description: "视觉权重与意图。" },
-    { prop: "size", type: '"sm" | "md" | "lg" | "xl"', default: '"md"', description: "控件高度。" },
-    { prop: "iconLeft / iconRight", type: "ReactNode", description: "位于前方或后方的图标。" },
-    { prop: "loading", type: "boolean", default: "false", description: "显示加载指示器并禁用该按钮。" },
-    { prop: "asChild", type: "boolean", default: "false", description: "渲染为子元素（例如一个链接），同时保留按钮样式。" },
-  ]}
-/>
+<PropsTable rows={buttonPropRows("zh")} />
 
 ## 无障碍
 

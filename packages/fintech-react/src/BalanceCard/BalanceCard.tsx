@@ -11,6 +11,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Stack, SummaryList } from "@sina-design-system/core";
 
 import { formatAmount, readBalance } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./BalanceCard.module.css";
 
 export interface BalanceCardProps {
@@ -18,9 +19,12 @@ export interface BalanceCardProps {
   payload: unknown;
   /** Emit a new intent for any action this display later offers (unused in the proving slice). */
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
-export function BalanceCard({ payload }: BalanceCardProps) {
+export function BalanceCard({ payload, locale: localeProp }: BalanceCardProps) {
+  const locale = useFintechLocale(localeProp);
   const { account, available, current, currency } = readBalance(payload);
 
   return (
@@ -37,8 +41,12 @@ export function BalanceCard({ payload }: BalanceCardProps) {
       </Stack>
       <SummaryList
         items={[
-          { label: "Available", value: formatAmount(available, currency), emphasis: true },
-          { label: "Current", value: formatAmount(current, currency) },
+          {
+            label: "Available",
+            value: formatAmount(available, currency, locale),
+            emphasis: true,
+          },
+          { label: "Current", value: formatAmount(current, currency, locale) },
         ]}
       />
     </Stack>

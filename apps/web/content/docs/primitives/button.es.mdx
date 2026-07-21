@@ -1,9 +1,10 @@
 ---
 title: Button
-sourceHash: 7de5af4b2e5a
+sourceHash: be613beaf3a0
 ---
 
 import { ButtonHero, ButtonExamples } from "@/app/components/docs/demos/primitives/button";
+import { buttonPropRows } from "@/app/components/docs/props/button.props.mjs";
 
 <ButtonHero />
 
@@ -24,15 +25,7 @@ import { Button } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "variant", type: '"primary" | "secondary" | "danger" | "ghost"', default: '"primary"', description: "Peso visual e intención." },
-    { prop: "size", type: '"sm" | "md" | "lg" | "xl"', default: '"md"', description: "Altura del control." },
-    { prop: "iconLeft / iconRight", type: "ReactNode", description: "Un glifo al inicio o al final." },
-    { prop: "loading", type: "boolean", default: "false", description: "Muestra un spinner y desactiva el botón." },
-    { prop: "asChild", type: "boolean", default: "false", description: "Se renderiza como el elemento hijo (p. ej. un enlace) conservando el estilo del botón." },
-  ]}
-/>
+<PropsTable rows={buttonPropRows("es")} />
 
 ## Accesibilidad
 

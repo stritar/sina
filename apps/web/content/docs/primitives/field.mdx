@@ -3,6 +3,7 @@ title: Field
 ---
 
 import { FieldHero, FieldExamples } from "@/app/components/docs/demos/primitives/field";
+import { fieldPropRows } from "@/app/components/docs/props/field.props.mjs";
 
 <FieldHero />
 
@@ -27,13 +28,7 @@ import { Field } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "label", type: "ReactNode", description: "The field label (associated with the control)." },
-    { prop: "description", type: "ReactNode", description: "Helper text below the label." },
-    { prop: "error", type: "ReactNode", description: "An error message. Sets aria-invalid and shows a bold warning glyph." },
-  ]}
-/>
+<PropsTable rows={fieldPropRows()} />
 
 <Callout variant="note" title="Errors carry a glyph">
   When `error` is set, Field renders the mandatory bold warning glyph beside the

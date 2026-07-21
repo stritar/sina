@@ -3,6 +3,7 @@ title: SummaryList
 ---
 
 import { SummaryListHero, SummaryListExamples } from "@/app/components/docs/demos/primitives/summary-list";
+import { summaryListPropRows } from "@/app/components/docs/props/summary-list.props.mjs";
 
 <SummaryListHero />
 
@@ -29,12 +30,7 @@ import { SummaryList } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "items", type: "SummaryItem[]", description: "The { label, value, emphasis? } rows." },
-    { prop: "emphasis (per item)", type: "boolean", description: "Highlight a key row, like the amount." },
-  ]}
-/>
+<PropsTable rows={summaryListPropRows()} />
 
 ## Accessibility
 

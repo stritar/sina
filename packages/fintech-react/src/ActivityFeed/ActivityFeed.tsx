@@ -9,12 +9,15 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack } from "@sina-design-system/core";
 
 import { formatDate } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./ActivityFeed.module.css";
 
 export interface ActivityFeedProps {
   /** The server-validated `activity_feed` payload (`IntentProps<"activity_feed">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 type ActivityKind = "login" | "payment" | "transfer" | "alert" | "statement" | "card";
@@ -74,7 +77,8 @@ function readActivityFeed(payload: unknown): ActivityItemView[] {
   });
 }
 
-export function ActivityFeed({ payload }: ActivityFeedProps) {
+export function ActivityFeed({ payload, locale: localeProp }: ActivityFeedProps) {
+  const locale = useFintechLocale(localeProp);
   const items = readActivityFeed(payload);
 
   return (
@@ -113,7 +117,7 @@ export function ActivityFeed({ payload }: ActivityFeedProps) {
                   ) : null}
                 </span>
                 <span className={styles.date}>
-                  {formatDate(item.at)}
+                  {formatDate(item.at, locale)}
                 </span>
               </Stack>
             );

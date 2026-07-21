@@ -24,6 +24,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Stack } from "@sina-design-system/core";
 
 import { formatAmount, formatDate, readTransactionList } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./TransactionList.module.css";
 
 export interface TransactionListProps {
@@ -35,9 +36,12 @@ export interface TransactionListProps {
    * slice — the display stays read-only until an action intent exists.
    */
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
-export function TransactionList({ payload }: TransactionListProps) {
+export function TransactionList({ payload, locale: localeProp }: TransactionListProps) {
+  const locale = useFintechLocale(localeProp);
   const { account, transactions } = readTransactionList(payload);
 
   return (
@@ -59,7 +63,7 @@ export function TransactionList({ payload }: TransactionListProps) {
         <Stack as="ul" gap={0} className={styles.list}>
           {transactions.map((tx) => {
             const credit = tx.direction === "credit";
-            const amount = formatAmount(tx.amount, tx.currency);
+            const amount = formatAmount(tx.amount, tx.currency, locale);
             return (
               <Stack
                 as="li"
@@ -85,7 +89,7 @@ export function TransactionList({ payload }: TransactionListProps) {
                     {credit ? "+" : "−"}
                     {amount}
                   </span>
-                  <span className={styles.date}>{formatDate(tx.postedAt)}</span>
+                  <span className={styles.date}>{formatDate(tx.postedAt, locale)}</span>
                 </span>
               </Stack>
             );

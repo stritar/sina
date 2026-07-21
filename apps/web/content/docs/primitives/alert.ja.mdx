@@ -1,9 +1,10 @@
 ---
 title: Alert
-sourceHash: 4b6702614a41
+sourceHash: 8dc9a7aeb54e
 ---
 
 import { AlertHero, AlertExamples } from "@/app/components/docs/demos/primitives/alert";
+import { alertPropRows } from "@/app/components/docs/props/alert.props.mjs";
 
 <AlertHero />
 
@@ -25,13 +26,7 @@ import { Alert } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "variant", type: '"info" | "success" | "warning" | "danger"', default: '"info"', description: "重大度。ステータスの字形も選択します。" },
-    { prop: "title", type: "ReactNode", description: "アラートの太字の見出し。" },
-    { prop: "icon", type: "ReactNode | false", description: "字形を差し替えるか、info/success では非表示にします（warning/danger では決して非表示にしません）。" },
-  ]}
-/>
+<PropsTable rows={alertPropRows("ja")} />
 
 <Callout variant="warning" title="ステータスに関する 2 つのルール">
   warning と danger のアラートは**常に**太字の字形を表示します。差し替えることはできますが、削除はできません。そして、ステータス要素を別のステータス要素の中に入れ子にしては決していけません。Badge は Alert の*隣*に置くものであり、内部ではありません。

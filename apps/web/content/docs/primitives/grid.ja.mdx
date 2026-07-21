@@ -1,9 +1,10 @@
 ---
 title: Grid
-sourceHash: 1699dd9105fc
+sourceHash: 711dc0cabec9
 ---
 
 import { GridHero, GridExamples } from "@/app/components/docs/demos/primitives/grid";
+import { gridPropRows } from "@/app/components/docs/props/grid.props.mjs";
 
 <GridHero />
 
@@ -25,13 +26,7 @@ import { Grid } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "cols", type: "GridCols", description: "列の数。" },
-    { prop: "gap", type: "GapStep", description: "セル間の間隔（8pt スケールから）。" },
-    { prop: "as", type: "ElementType", description: "別の要素としてレンダリングします（ポリモーフィック）。" },
-  ]}
-/>
+<PropsTable rows={gridPropRows("ja")} />
 
 ## アクセシビリティ
 

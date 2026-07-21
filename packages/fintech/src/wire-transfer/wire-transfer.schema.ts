@@ -55,7 +55,9 @@ const achAccount = z
   .object({
     scheme: z.literal("ach"),
     routingNumber: abaRouting,
-    accountNumber: z.string().regex(/^\d{4,17}$/, "account number must be 4–17 digits"),
+    accountNumber: z
+      .string()
+      .regex(/^\d{4,17}$/, "account number must be 4–17 digits"),
   })
   .strict();
 
@@ -79,7 +81,10 @@ export const wireTransferPayload = z
     currency: currencyCode,
     debtor: party,
     creditor: party,
-    reference: z.string().max(140, "reference exceeds 140 chars (ISO 20022 / SEPA)").optional(),
+    reference: z
+      .string()
+      .max(140, "reference exceeds 140 chars (ISO 20022 / SEPA)")
+      .optional(),
   })
   .strict();
 
@@ -101,7 +106,10 @@ export const wireApproval = z
   .object({
     approverId: z.string().min(1, "approver id is required"),
     approverName: z.string().min(1, "approver name is required"),
-    secondFactor: z.string().regex(/^\d{6}$/, "second factor must be a 6-digit code").optional(),
+    secondFactor: z
+      .string()
+      .regex(/^\d{6}$/, "second factor must be a 6-digit code")
+      .optional(),
     payloadHash: z.string().min(1, "approval must bind to the transfer terms"),
     /** Reserved for Phase 10 freshness/replay checks (no server challenge store yet). */
     challengeId: z.string().optional(),
@@ -119,7 +127,9 @@ export const approvedWireTransferPayload = wireTransferPayload
   .extend({ approval: wireApproval.optional() })
   .strict();
 
-export type ApprovedWireTransferPayload = z.infer<typeof approvedWireTransferPayload>;
+export type ApprovedWireTransferPayload = z.infer<
+  typeof approvedWireTransferPayload
+>;
 
 /**
  * Server-supplied evaluation context. The initiator identity is **never** taken
@@ -129,6 +139,24 @@ export type ApprovedWireTransferPayload = z.infer<typeof approvedWireTransferPay
  */
 export interface ApprovalContext {
   initiatorId: string;
+}
+
+/**
+ * An opt-in secondary-approval band at a non-USD par. The cited USD bands (Travel
+ * Rule / SAR / CTR) stay USD-only — FX equivalence is out of scope — but a non-USD
+ * integrator can reuse the dual-control gate at a par they choose instead of
+ * re-implementing the binding-hash + self-approval checks by hand.
+ */
+export interface WireBand {
+  /** ISO 4217 code this band applies to (e.g. `"EUR"`). */
+  currency: string;
+  /** Amount (minor units, in that currency) above which secondary approval is required. */
+  secondaryApprovalMinor: number;
+}
+
+/** {@link makeWirePolicy} context: the server-known initiator plus any non-USD bands. */
+export interface WirePolicyContext extends ApprovalContext {
+  bands?: WireBand[];
 }
 
 /** The emulator's stand-in initiator — the agent that emitted the intent. */
@@ -151,25 +179,36 @@ function hasTravelRuleInfo(p: Party): boolean {
 }
 
 /**
- * Post-parse policy, curried over the server-supplied {@link ApprovalContext}.
- * Bands are USD-only — a non-USD transfer passes format validation but is not
- * run through the USD thresholds (FX equivalence is out of scope). The skip is
- * never silent: the pass carries a `POLICY_BANDS_NOT_EVALUATED` flag.
+ * Post-parse policy, curried over the server-supplied {@link WirePolicyContext}.
+ * The cited bands are USD-only — a non-USD transfer passes format validation but is
+ * not run through the USD thresholds (FX equivalence is out of scope). The skip is
+ * never silent: the pass carries a `POLICY_BANDS_NOT_EVALUATED` flag. A non-USD
+ * integrator may opt into the dual-control gate at their own par via `ctx.bands`.
  */
-export function makeWirePolicy(ctx: ApprovalContext) {
+export function makeWirePolicy(ctx: WirePolicyContext) {
   return function wirePolicy(data: ApprovedWireTransferPayload): Violation[] {
     const violations: Violation[] = [];
     if (data.currency !== "USD") {
+      // The USD-cited bands (Travel Rule / SAR / CTR) are not evaluated for a
+      // non-USD transfer — always flag that. An opt-in band still gates dual control.
       violations.push(usdScopeFlag(data.currency));
+      const band = ctx.bands?.find((b) => b.currency === data.currency);
+      if (band && data.amount > band.secondaryApprovalMinor) {
+        violations.push(...approvalViolations(data, ctx));
+      }
       return violations;
     }
 
     const { amount } = data;
 
-    if (amount >= TRAVEL_RULE_MINOR && !(hasTravelRuleInfo(data.debtor) && hasTravelRuleInfo(data.creditor))) {
+    if (
+      amount >= TRAVEL_RULE_MINOR &&
+      !(hasTravelRuleInfo(data.debtor) && hasTravelRuleInfo(data.creditor))
+    ) {
       violations.push({
         code: "TRAVEL_RULE_INFO_MISSING",
-        message: "transfers ≥ $3,000 require originator and beneficiary name + address",
+        message:
+          "transfers ≥ $3,000 require originator and beneficiary name + address",
         standard: "31 CFR 1010.410(e) / 1020.320",
         severity: "escalate",
       });
@@ -187,7 +226,8 @@ export function makeWirePolicy(ctx: ApprovalContext) {
     if (amount > CTR_MINOR) {
       violations.push({
         code: "CTR_REPORTABLE",
-        message: "currency transaction > $10,000 — Currency Transaction Report applies",
+        message:
+          "currency transaction > $10,000 — Currency Transaction Report applies",
         standard: "31 CFR 1010.311",
         severity: "flag",
       });
@@ -202,19 +242,25 @@ export function makeWirePolicy(ctx: ApprovalContext) {
 }
 
 /**
- * The dual-control gate for wires above the approval threshold. No approval ⇒
- * escalate (force the SecureWireDialog). An approval-bearing re-submission is
- * accepted only if it (a) binds to the exact terms and (b) is not self-approved.
- * Both failures are hard rejects — the un-bypassable moment.
+ * The dual-control gate for wires above the approval threshold — the un-bypassable
+ * core, exported so a non-USD integrator can reuse it (with their own
+ * {@link WireBand}) instead of re-implementing the binding-hash + self-approval
+ * checks. No approval ⇒ escalate (force the SecureWireDialog). An approval-bearing
+ * re-submission is accepted only if it (a) binds to the exact terms and (b) is not
+ * self-approved. Both failures are hard rejects.
  */
-function approvalViolations(data: ApprovedWireTransferPayload, ctx: ApprovalContext): Violation[] {
+export function approvalViolations(
+  data: ApprovedWireTransferPayload,
+  ctx: ApprovalContext,
+): Violation[] {
   const { approval } = data;
 
   if (!approval) {
     return [
       {
         code: "AMOUNT_REQUIRES_APPROVAL",
-        message: "wire above $50,000 requires secondary managerial approval",
+        message:
+          "wire exceeds the secondary-approval threshold and requires managerial approval",
         standard: "SINA dual-control — secondary approval",
         severity: "escalate",
       },
@@ -272,7 +318,7 @@ const WIRE_REDACTION: RedactionConfig = {
  */
 export function evaluateWireTransfer(
   payload: unknown,
-  ctx: ApprovalContext = { initiatorId: AGENT_INITIATOR_ID },
+  ctx: WirePolicyContext = { initiatorId: AGENT_INITIATOR_ID },
 ): InterceptionResult {
   return intercept(
     {

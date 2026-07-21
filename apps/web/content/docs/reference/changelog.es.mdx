@@ -1,17 +1,17 @@
 ---
 title: Versiones y estabilidad
-sourceHash: 1e8cf8ee7f32
+sourceHash: 95f23c1ea4b5
 ---
 
 ## Versiones actuales
 
-Los cinco paquetes públicos se publican en la versión **0.1.0**:
+Los cinco paquetes públicos se publican en la versión **0.2.0**:
 
 `@sina-design-system/theme` · `core` · `governance` · `fintech` ·
 `fintech-react`.
 
 ```bash
-pnpm add @sina-design-system/core@0.1.0
+pnpm add @sina-design-system/core@0.2.0
 ```
 
 ## Estabilidad y versionado
@@ -33,6 +33,21 @@ SINA es reciente. Las versiones siguen semver y se publican mediante Changesets.
   Por debajo de 1.0, las versiones menores pueden incluir cambios incompatibles.
   Fija tus versiones y lee las notas de la versión antes de actualizar.
 </Callout>
+
+## 0.2.0: refuerzo por revisión de integración
+
+Mejoras surgidas de una revisión de integración real. Las cargas de movimiento de
+dinero que no son en USD ya no pasan en silencio: cada política adjunta una marca
+informativa `POLICY_BANDS_NOT_EVALUATED` cuando la moneda no es USD, de modo que
+quien llama ve que las bandas de importe no se evaluaron (el resultado sigue siendo
+válido, porque una marca nunca bloquea). Cada entrada del manifiesto de intenciones
+ahora incluye un `propsSchema`, un JSON Schema autónomo que puedes colocar
+directamente en la definición de una herramienta para un LLM, junto con los nuevos
+tipos `IntentPropsMap` que vinculan cada verbo con su carga. Un nuevo verbo no
+gobernado `clarify_choice` (con un componente `ClarifyChoice`) cubre la
+desambiguación. La forma de `list_cards` relajó sus campos obligatorios, las
+transferencias aceptan un IBAN SEPA sin BIC, y `theme` incorporó un alias de
+exportación `./theme.css`.
 
 ## 0.1.0: primera versión pública
 

@@ -1,9 +1,10 @@
 ---
 title: TextField
-sourceHash: bea988c70ac4
+sourceHash: 19f078173084
 ---
 
 import { TextFieldHero, TextFieldExamples } from "@/app/components/docs/demos/primitives/text-field";
+import { textFieldPropRows } from "@/app/components/docs/props/text-field.props.mjs";
 
 <TextFieldHero />
 
@@ -25,12 +26,7 @@ import { TextField } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "multiline", type: "boolean", default: "false", description: "Rend un textarea au lieu d'un input." },
-    { prop: "label / description / error", type: "ReactNode", description: "Transmis au Field qui l'enveloppe." },
-  ]}
-/>
+<PropsTable rows={textFieldPropRows("fr")} />
 
 Il accepte les attributs natifs habituels d'input/textarea (`placeholder`,
 `value`, `onChange`, etc.).

@@ -17,15 +17,19 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { PieChart, Stack } from "@sina-design-system/core";
 
 import { formatAmount, readSpendingBreakdown } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./SpendingBreakdown.module.css";
 
 export interface SpendingBreakdownProps {
   /** The server-validated `spending_breakdown` payload (`IntentProps<"spending_breakdown">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
-export function SpendingBreakdown({ payload }: SpendingBreakdownProps) {
+export function SpendingBreakdown({ payload, locale: localeProp }: SpendingBreakdownProps) {
+  const locale = useFintechLocale(localeProp);
   const { period, currency, total, categories } = readSpendingBreakdown(payload);
 
   return (
@@ -36,7 +40,7 @@ export function SpendingBreakdown({ payload }: SpendingBreakdownProps) {
     >
       <Stack direction="row" justify="between" align="center" gap={2}>
         <span className={styles.period}>{period}</span>
-        <span className={styles.total}>{formatAmount(total, currency)}</span>
+        <span className={styles.total}>{formatAmount(total, currency, locale)}</span>
       </Stack>
 
       {categories.length === 0 ? (
@@ -50,7 +54,7 @@ export function SpendingBreakdown({ payload }: SpendingBreakdownProps) {
                 datasets: [{ data: categories.map((c) => c.amount) }],
               }}
               label={`Spending for ${period} by category`}
-              valueFormatter={(v) => formatAmount(v, currency)}
+              valueFormatter={(v) => formatAmount(v, currency, locale)}
               showLegend={false}
             />
           </div>
@@ -58,7 +62,7 @@ export function SpendingBreakdown({ payload }: SpendingBreakdownProps) {
             {categories.map((c, i) => (
               <Stack key={i} direction="row" justify="between" align="center" gap={2}>
                 <span className={styles.categoryLabel}>{c.label}</span>
-                <span className={styles.categoryAmount}>{formatAmount(c.amount, currency)}</span>
+                <span className={styles.categoryAmount}>{formatAmount(c.amount, currency, locale)}</span>
               </Stack>
             ))}
           </Stack>

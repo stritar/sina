@@ -137,58 +137,57 @@
   line-height: var(--sina-leading--relaxed);
 }
 
-/* Cool trio, one hue per audience. In light these --solid pairs land at 5.4:1
-   (blue), 6.5:1 (violet) and 4.9:1 (pink) against the white ink, all clear of
-   the AA 4.5 bar that both themes are held to. */
-.tab[data-tone="blue"] {
-  background: var(--sinamk-color-badge-blue-bg--solid, #2563eb);
-  color: var(--sinamk-color-badge-blue-fg--solid, #ffffff);
+/* Same warm family as the HowItWorks ladder, one hue per audience (Figma runs
+   yellow / orange / amber in reading order). The --solid fg tokens are the
+   contrast-tuned near-blacks (#422006 etc.), not the pure black Figma drew. */
+.tab[data-tone="yellow"] {
+  background: var(--sinamk-color-badge-yellow-bg--solid, #eab308);
+  color: var(--sinamk-color-badge-yellow-fg--solid, #422006);
 }
 
-.tab[data-tone="violet"] {
-  background: var(--sinamk-color-badge-violet-bg--solid, #7c3aed);
-  color: var(--sinamk-color-badge-violet-fg--solid, #ffffff);
+.tab[data-tone="orange"] {
+  background: var(--sinamk-color-badge-orange-bg--solid, #f97316);
+  color: var(--sinamk-color-badge-orange-fg--solid, #431407);
 }
 
-.tab[data-tone="pink"] {
-  background: var(--sinamk-color-badge-pink-bg--solid, #db2777);
-  color: var(--sinamk-color-badge-pink-fg--solid, #ffffff);
+.tab[data-tone="amber"] {
+  background: var(--sinamk-color-badge-amber-bg--solid, #f59e0b);
+  color: var(--sinamk-color-badge-amber-fg--solid, #451a03);
 }
 
 /* Dark: the --solid badge fills are theme-invariant by design, and at full
-   strength three saturated tabs glare against the near-black page. Bank each
-   fill 45% toward the page ground and switch to the dark --soft ink, exactly as
-   the HowItWorks warm ladder directly above does, so the two sections read as
-   one system. 45% lands the trio at 5.5 to 6.9:1 across all three industry dark
-   grounds, clear of the AA 4.5 bar that both themes are held to (the tab label
-   is bold 12px, so it does not qualify as large text). Mixing against
-   --sina-color-bg rather than black means the tabs follow the per-industry dark
-   ground instead of drifting off it. */
-[data-theme="dark"] .tab[data-tone="blue"] {
+   strength three vivid tabs glare against the near-black page. Bank each fill
+   45% toward the page ground and switch to the dark --soft ink, exactly as the
+   HowItWorks warm ladder directly above does, so the two sections read as one
+   system. 45% lands the trio at 5.1 to 5.2:1, clear of the AA 4.5 bar that
+   both themes are held to (the tab label is bold 12px, so it does not qualify
+   as large text). Mixing against --sina-color-bg rather than black means the
+   tabs follow the per-industry dark ground instead of drifting off it. */
+[data-theme="dark"] .tab[data-tone="yellow"] {
   background: color-mix(
     in srgb,
-    var(--sinamk-color-badge-blue-bg--solid, #2563eb) 45%,
+    var(--sinamk-color-badge-yellow-bg--solid, #eab308) 45%,
     var(--sina-color-bg, #0b0c0b)
   );
-  color: var(--sinamk-color-badge-blue-fg--soft, #93c5fd);
+  color: var(--sinamk-color-badge-yellow-fg--soft, #fde047);
 }
 
-[data-theme="dark"] .tab[data-tone="violet"] {
+[data-theme="dark"] .tab[data-tone="orange"] {
   background: color-mix(
     in srgb,
-    var(--sinamk-color-badge-violet-bg--solid, #7c3aed) 45%,
+    var(--sinamk-color-badge-orange-bg--solid, #f97316) 45%,
     var(--sina-color-bg, #0b0c0b)
   );
-  color: var(--sinamk-color-badge-violet-fg--soft, #c4b5fd);
+  color: var(--sinamk-color-badge-orange-fg--soft, #fdba74);
 }
 
-[data-theme="dark"] .tab[data-tone="pink"] {
+[data-theme="dark"] .tab[data-tone="amber"] {
   background: color-mix(
     in srgb,
-    var(--sinamk-color-badge-pink-bg--solid, #db2777) 45%,
+    var(--sinamk-color-badge-amber-bg--solid, #f59e0b) 45%,
     var(--sina-color-bg, #0b0c0b)
   );
-  color: var(--sinamk-color-badge-pink-fg--soft, #f9a8d4);
+  color: var(--sinamk-color-badge-amber-fg--soft, #fcd34d);
 }
 
 .cardTitle {

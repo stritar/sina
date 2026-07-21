@@ -1,9 +1,10 @@
 ---
 title: Alert
-sourceHash: 4b6702614a41
+sourceHash: 8dc9a7aeb54e
 ---
 
 import { AlertHero, AlertExamples } from "@/app/components/docs/demos/primitives/alert";
+import { alertPropRows } from "@/app/components/docs/props/alert.props.mjs";
 
 <AlertHero />
 
@@ -26,13 +27,7 @@ import { Alert } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "variant", type: '"info" | "success" | "warning" | "danger"', default: '"info"', description: "Severidad. También selecciona el glifo de estado." },
-    { prop: "title", type: "ReactNode", description: "Encabezado en negrita de la alerta." },
-    { prop: "icon", type: "ReactNode | false", description: "Cambia el glifo, u ocúltalo para info/success (nunca para warning/danger)." },
-  ]}
-/>
+<PropsTable rows={alertPropRows("es")} />
 
 <Callout variant="warning" title="Dos reglas para el estado">
   Las alertas warning y danger **siempre** renderizan un glifo en negrita. Puedes

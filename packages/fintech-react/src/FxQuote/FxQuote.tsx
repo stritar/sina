@@ -9,12 +9,15 @@ import { Badge, Stack, SummaryList } from "@sina-design-system/core";
 import type { SummaryItem } from "@sina-design-system/core";
 
 import { formatDate } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./FxQuote.module.css";
 
 export interface FxQuoteProps {
   /** The server-validated `fx_quote` payload (`IntentProps<"fx_quote">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 interface FxQuoteView {
@@ -37,7 +40,8 @@ function readFxQuote(payload: unknown): FxQuoteView {
   };
 }
 
-export function FxQuote({ payload }: FxQuoteProps) {
+export function FxQuote({ payload, locale: localeProp }: FxQuoteProps) {
+  const locale = useFintechLocale(localeProp);
   const q = readFxQuote(payload);
   const hasQuote = q.base !== "" && q.quote !== "";
   const pair = hasQuote ? `${q.base} / ${q.quote}` : "—";
@@ -46,10 +50,10 @@ export function FxQuote({ payload }: FxQuoteProps) {
     { label: "Pair", value: pair },
     {
       label: "Rate",
-      value: q.rate.toLocaleString("en-US", { maximumFractionDigits: 6 }),
+      value: q.rate.toLocaleString(locale, { maximumFractionDigits: 6 }),
       emphasis: true,
     },
-    { label: "As of", value: formatDate(q.asOf) },
+    { label: "As of", value: formatDate(q.asOf, locale) },
     ...(q.spreadBps !== undefined
       ? [
           {

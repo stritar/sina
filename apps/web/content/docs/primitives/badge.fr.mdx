@@ -1,9 +1,10 @@
 ---
 title: Badge
-sourceHash: 4d4d24138038
+sourceHash: f7e0d525c5ef
 ---
 
 import { BadgeHero, BadgeExamples } from "@/app/components/docs/demos/primitives/badge";
+import { badgePropRows } from "@/app/components/docs/props/badge.props.mjs";
 
 <BadgeHero />
 
@@ -25,14 +26,7 @@ import { Badge } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "intent", type: '"neutral" | "info" | "success" | "warning" | "danger"', default: '"neutral"', description: "Couleur et signification." },
-    { prop: "size", type: '"sm" | "md"', default: '"md"', description: "Taille de la puce." },
-    { prop: "icon", type: "ReactNode", description: "Un glyphe en tête (hérite de la couleur du libellé)." },
-    { prop: "dot", type: "boolean", default: "false", description: "Un point de statut en tête." },
-  ]}
-/>
+<PropsTable rows={badgePropRows("fr")} />
 
 <Callout variant="note" title="Les règles de statut s'appliquent">
   Un Badge `danger` ou `warning` affiche automatiquement un glyphe en gras. Et un Badge est un

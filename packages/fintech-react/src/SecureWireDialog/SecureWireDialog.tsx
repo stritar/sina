@@ -35,6 +35,7 @@ import {
 import type { Violation } from "@sina-design-system/governance";
 
 import { formatAmount, readWire } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./SecureWireDialog.module.css";
 
 /** What the approver contributes. The initiator identity is server-known, never here. */
@@ -56,11 +57,20 @@ export interface SecureWireDialogProps {
   /** The blocking violations the gate returned — shown as citations in review. */
   violations?: Violation[];
   /** Submit the approver's evidence to the SERVER re-gate. Returns the new decision. */
-  onSubmitApproval: (evidence: WireApprovalEvidence) => Promise<SecureWireRegateResult>;
+  onSubmitApproval: (
+    evidence: WireApprovalEvidence,
+  ) => Promise<SecureWireRegateResult>;
   /** Fired when the re-gate approves — lets a host swap the reply to the governed summary. */
   onApproved?: (result: SecureWireRegateResult) => void;
   /** Label for the trigger button. */
   triggerLabel?: ReactNode;
+  /**
+   * How to name the approval threshold in the fallback review copy (e.g. `"€50,000"`).
+   * When omitted, the copy stays currency-neutral rather than assuming USD dollars.
+   */
+  thresholdLabel?: string;
+  /** BCP-47 locale for money formatting. Overrides {@link FintechLocaleProvider}; defaults to `en-US`. */
+  locale?: string;
 }
 
 type Phase = "review" | "collect" | "pending" | "approved" | "denied" | "error";
@@ -73,7 +83,10 @@ export function SecureWireDialog({
   onSubmitApproval,
   onApproved,
   triggerLabel = "Review wire transfer",
+  thresholdLabel,
+  locale: localeProp,
 }: SecureWireDialogProps) {
+  const locale = useFintechLocale(localeProp);
   const [open, setOpen] = useState(false);
   const [phase, setPhase] = useState<Phase>("review");
   const [approverId, setApproverId] = useState("");
@@ -83,7 +96,10 @@ export function SecureWireDialog({
   const [denials, setDenials] = useState<Violation[]>([]);
 
   const wire = readWire(intent);
-  const blocking = violations.filter((v) => v.severity === "reject" || v.severity === "escalate");
+  const unreadable = wire.missing.length > 0;
+  const blocking = violations.filter(
+    (v) => v.severity === "reject" || v.severity === "escalate",
+  );
 
   function reset() {
     setPhase("review");
@@ -111,7 +127,11 @@ export function SecureWireDialog({
         setPhase("approved");
         onApproved?.(result);
       } else {
-        setDenials(result.violations.filter((v) => v.severity === "reject" || v.severity === "escalate"));
+        setDenials(
+          result.violations.filter(
+            (v) => v.severity === "reject" || v.severity === "escalate",
+          ),
+        );
         setPhase("denied");
       }
     } catch {
@@ -124,7 +144,11 @@ export function SecureWireDialog({
   const terms = (
     <SummaryList
       items={[
-        { label: "Amount", value: formatAmount(wire.amount, wire.currency), emphasis: true },
+        {
+          label: "Amount",
+          value: formatAmount(wire.amount, wire.currency, locale),
+          emphasis: true,
+        },
         { label: "Currency", value: wire.currency },
         { label: "From", value: wire.debtor.name ?? "—" },
         { label: "To", value: wire.creditor.name ?? "—" },
@@ -133,10 +157,18 @@ export function SecureWireDialog({
     />
   );
 
+  const thresholdCopy = thresholdLabel
+    ? `Wires above ${thresholdLabel} require secondary managerial approval.`
+    : "Wires above the approval threshold require secondary managerial approval.";
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="sm" iconLeft={<Lock className={styles.icon} />}>
+        <Button
+          variant="secondary"
+          size="sm"
+          iconLeft={<Lock className={styles.icon} />}
+        >
           {triggerLabel}
         </Button>
       </DialogTrigger>
@@ -144,144 +176,184 @@ export function SecureWireDialog({
       <DialogContent>
         <DialogTitle>Secondary approval required</DialogTitle>
         <DialogDescription>
-          This wire exceeds the approval threshold. A second party must approve it before SINA will
-          mount the transfer — the initiator cannot approve their own wire.
+          This wire exceeds the approval threshold. A second party must approve
+          it before SINA will mount the transfer — the initiator cannot approve
+          their own wire.
         </DialogDescription>
 
         <Stack direction="col" gap={3} className={styles.body}>
-          {terms}
-
-          {phase === "review" && (
+          {unreadable ? (
+            // A governed dialog approves money — a payload missing its amount/currency
+            // is an error, not a $0.00 to render. Fail loud; the wire stays blocked.
             <>
-              <Alert variant="warning" title="Why this is blocked">
-                {blocking.length > 0
-                  ? "This wire exceeds the approval threshold and requires secondary approval before it can proceed."
-                  : "Wires above $50,000 require secondary managerial approval."}
+              <Alert variant="danger" title="This wire could not be read">
+                Required terms ({wire.missing.join(", ")}) are missing from the
+                payload, so SINA cannot show what would be approved. The wire
+                stays blocked.
               </Alert>
-              {blocking.length > 0 && (
-                // Severity Badges are SIBLINGS of the Alert, never nested inside it —
-                // status elements never wrap other status elements (mirrors BlockedState).
-                // See CLAUDE.md "Never nest status elements inside one another".
-                <Stack direction="col" gap={2} as="ul" className={styles.violations}>
-                  {blocking.map((v, i) => (
-                    <li key={i} className={styles.violationRow}>
-                      <Badge intent="danger" size="sm">
-                        <span className={styles.severity}>{v.severity}</span>
-                      </Badge>
-                      <span>{v.message}</span>
-                    </li>
-                  ))}
-                </Stack>
+              <Footer>
+                <DialogClose asChild>
+                  <Button variant="secondary">Close</Button>
+                </DialogClose>
+              </Footer>
+            </>
+          ) : (
+            <>
+              {terms}
+
+              {phase === "review" && (
+                <>
+                  <Alert variant="warning" title="Why this is blocked">
+                    {blocking.length > 0
+                      ? "This wire exceeds the approval threshold and requires secondary approval before it can proceed."
+                      : thresholdCopy}
+                  </Alert>
+                  {blocking.length > 0 && (
+                    // Severity Badges are SIBLINGS of the Alert, never nested inside it —
+                    // status elements never wrap other status elements (mirrors BlockedState).
+                    // See CLAUDE.md "Never nest status elements inside one another".
+                    <Stack
+                      direction="col"
+                      gap={2}
+                      as="ul"
+                      className={styles.violations}
+                    >
+                      {blocking.map((v, i) => (
+                        <li key={i} className={styles.violationRow}>
+                          <Badge intent="danger" size="sm">
+                            <span className={styles.severity}>
+                              {v.severity}
+                            </span>
+                          </Badge>
+                          <span>{v.message}</span>
+                        </li>
+                      ))}
+                    </Stack>
+                  )}
+                  <Footer>
+                    <DialogClose asChild>
+                      <Button variant="secondary">Close</Button>
+                    </DialogClose>
+                    <Button onClick={() => setPhase("collect")}>
+                      Request approval
+                    </Button>
+                  </Footer>
+                </>
               )}
-              <Footer>
-                <DialogClose asChild>
-                  <Button variant="secondary">Close</Button>
-                </DialogClose>
-                <Button onClick={() => setPhase("collect")}>Request approval</Button>
-              </Footer>
-            </>
-          )}
 
-          {phase === "collect" && (
-            <>
-              <TextField
-                label="Approver ID"
-                description="The manager approving this wire. Must differ from the initiator."
-                value={approverId}
-                onChange={(e) => setApproverId(e.target.value)}
-              />
-              <TextField
-                label="Approver name"
-                value={approverName}
-                onChange={(e) => setApproverName(e.target.value)}
-              />
-              <Footer>
-                <Button variant="secondary" onClick={() => setPhase("review")}>
-                  Back
-                </Button>
-                <Button
-                  disabled={!approverId.trim() || !approverName.trim()}
-                  onClick={() => setPhase("pending")}
-                >
-                  Send for approval
-                </Button>
-              </Footer>
-            </>
-          )}
+              {phase === "collect" && (
+                <>
+                  <TextField
+                    label="Approver ID"
+                    description="The manager approving this wire. Must differ from the initiator."
+                    value={approverId}
+                    onChange={(e) => setApproverId(e.target.value)}
+                  />
+                  <TextField
+                    label="Approver name"
+                    value={approverName}
+                    onChange={(e) => setApproverName(e.target.value)}
+                  />
+                  <Footer>
+                    <Button
+                      variant="secondary"
+                      onClick={() => setPhase("review")}
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      disabled={!approverId.trim() || !approverName.trim()}
+                      onClick={() => setPhase("pending")}
+                    >
+                      Send for approval
+                    </Button>
+                  </Footer>
+                </>
+              )}
 
-          {phase === "pending" && (
-            <>
-              <Stack direction="col" gap={2}>
-                <span className={styles.fieldLabel}>Approver second factor</span>
-                <CredentialOTP
-                  length={OTP_LENGTH}
-                  value={secondFactor}
-                  onChange={setSecondFactor}
-                  aria-label="Approver one-time code"
-                />
-                <span className={styles.hint}>
-                  Approving binds to the exact terms above; SINA re-verifies server-side.
-                </span>
-              </Stack>
-              <Footer>
-                <Button variant="secondary" onClick={() => setPhase("collect")} disabled={busy}>
-                  Back
-                </Button>
-                <Button
-                  loading={busy}
-                  disabled={secondFactor.length !== OTP_LENGTH}
-                  onClick={submit}
-                >
-                  Approve
-                </Button>
-              </Footer>
-            </>
-          )}
+              {phase === "pending" && (
+                <>
+                  <Stack direction="col" gap={2}>
+                    <span className={styles.fieldLabel}>
+                      Approver second factor
+                    </span>
+                    <CredentialOTP
+                      length={OTP_LENGTH}
+                      value={secondFactor}
+                      onChange={setSecondFactor}
+                      aria-label="Approver one-time code"
+                    />
+                    <span className={styles.hint}>
+                      Approving binds to the exact terms above; SINA re-verifies
+                      server-side.
+                    </span>
+                  </Stack>
+                  <Footer>
+                    <Button
+                      variant="secondary"
+                      onClick={() => setPhase("collect")}
+                      disabled={busy}
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      loading={busy}
+                      disabled={secondFactor.length !== OTP_LENGTH}
+                      onClick={submit}
+                    >
+                      Approve
+                    </Button>
+                  </Footer>
+                </>
+              )}
 
-          {phase === "approved" && (
-            <>
-              <Alert variant="success" title="Approved & governed">
-                Approved by {approverName || approverId}. SINA re-verified the terms server-side and
-                mounted the transfer.
-              </Alert>
-              <Footer>
-                <DialogClose asChild>
-                  <Button>Done</Button>
-                </DialogClose>
-              </Footer>
-            </>
-          )}
+              {phase === "approved" && (
+                <>
+                  <Alert variant="success" title="Approved & governed">
+                    Approved by {approverName || approverId}. SINA re-verified
+                    the terms server-side and mounted the transfer.
+                  </Alert>
+                  <Footer>
+                    <DialogClose asChild>
+                      <Button>Done</Button>
+                    </DialogClose>
+                  </Footer>
+                </>
+              )}
 
-          {phase === "denied" && (
-            <>
-              <Alert variant="danger" title="Approval rejected">
-                <Stack direction="col" gap={1} as="ul">
-                  {denials.map((v, i) => (
-                    <li key={i}>{v.message}</li>
-                  ))}
-                </Stack>
-              </Alert>
-              <Footer>
-                <DialogClose asChild>
-                  <Button variant="secondary">Close</Button>
-                </DialogClose>
-                <Button onClick={reset}>Back to review</Button>
-              </Footer>
-            </>
-          )}
+              {phase === "denied" && (
+                <>
+                  <Alert variant="danger" title="Approval rejected">
+                    <Stack direction="col" gap={1} as="ul">
+                      {denials.map((v, i) => (
+                        <li key={i}>{v.message}</li>
+                      ))}
+                    </Stack>
+                  </Alert>
+                  <Footer>
+                    <DialogClose asChild>
+                      <Button variant="secondary">Close</Button>
+                    </DialogClose>
+                    <Button onClick={reset}>Back to review</Button>
+                  </Footer>
+                </>
+              )}
 
-          {phase === "error" && (
-            <>
-              <Alert variant="danger" title="Could not reach the gate">
-                The approval could not be submitted. This is a transport error, not a governance
-                decision — the wire is still blocked.
-              </Alert>
-              <Footer>
-                <DialogClose asChild>
-                  <Button variant="secondary">Close</Button>
-                </DialogClose>
-                <Button onClick={() => setPhase("pending")}>Retry</Button>
-              </Footer>
+              {phase === "error" && (
+                <>
+                  <Alert variant="danger" title="Could not reach the gate">
+                    The approval could not be submitted. This is a transport
+                    error, not a governance decision — the wire is still
+                    blocked.
+                  </Alert>
+                  <Footer>
+                    <DialogClose asChild>
+                      <Button variant="secondary">Close</Button>
+                    </DialogClose>
+                    <Button onClick={() => setPhase("pending")}>Retry</Button>
+                  </Footer>
+                </>
+              )}
             </>
           )}
         </Stack>

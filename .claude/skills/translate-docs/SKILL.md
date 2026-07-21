@@ -25,11 +25,17 @@ in the first place.
    `apps/web/lib/i18n/locales.ts` (`TRANSLATED_LOCALE_CODES`).
 2. **Translate prose only.** Frontmatter `title` + `description`, body prose,
    and prose-bearing JSX text (element children, `<Callout>`/`<Card>` `title`
-   attrs, `PropsTable` `description`, `<Term>` visible text). **Never** touch:
+   attrs, `<Term>` visible text). **Never** touch:
    `import` lines, component names, non-prose attributes (`term=`, `href=`,
    `variant=`, `slug=`, `code=`, `eyebrow` stays but IS prose), code fences,
    inline code, or `/docs/...` link targets. The `docs-i18n` guard fails if the
    translation's import lines or JSX component tag counts differ from the source.
+   **Props tables are NOT translated in the MDX.** A primitive page's
+   `<PropsTable>` rows live in `apps/web/app/components/docs/props/<slug>.props.mjs`;
+   the sibling keeps the byte-identical import line and passes its locale to the
+   helper (`<PropsTable rows={<x>PropRows("es")} />`), and the translated
+   `description` strings go into that module's `i18n.<locale>` map (keys = prop
+   names; the `dsds.test.ts` guard enforces key parity with the English rows).
 3. **Use the glossary.** `apps/web/lib/i18n/glossary.ts` fixes the rendering of
    load-bearing terms (intent, governance, escalation, constitution,
    validate-then-mount, primitive) per locale and lists terms to keep in English

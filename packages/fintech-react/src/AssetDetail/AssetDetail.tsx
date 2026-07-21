@@ -22,6 +22,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { LineChart, Stack, SummaryList, type SummaryItem } from "@sina-design-system/core";
 
 import { formatAmount, formatPct } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./AssetDetail.module.css";
 
 export interface AssetDetailProps {
@@ -32,6 +33,8 @@ export interface AssetDetailProps {
    * it back through the gate. Unused in the read-only slice.
    */
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 interface AssetDetailView {
@@ -65,14 +68,15 @@ function readAssetDetail(payload: unknown): AssetDetailView {
   };
 }
 
-export function AssetDetail({ payload }: AssetDetailProps) {
+export function AssetDetail({ payload, locale: localeProp }: AssetDetailProps) {
+  const locale = useFintechLocale(localeProp);
   const { symbol, name, price, currency, changePct, points } = readAssetDetail(payload);
 
   const items: SummaryItem[] = [
     { label: "Symbol", value: symbol },
     { label: "Name", value: name },
-    { label: "Price", value: formatAmount(price, currency), emphasis: true },
-    { label: "Day change", value: formatPct(changePct) },
+    { label: "Price", value: formatAmount(price, currency, locale), emphasis: true },
+    { label: "Day change", value: formatPct(changePct, locale) },
   ];
 
   return (
@@ -93,7 +97,7 @@ export function AssetDetail({ payload }: AssetDetailProps) {
               datasets: [{ label: `${symbol} price`, data: points }],
             }}
             label={`${symbol} price trend, ${points.length} points`}
-            valueFormatter={(v) => formatAmount(v, currency)}
+            valueFormatter={(v) => formatAmount(v, currency, locale)}
             fill
           />
         </div>

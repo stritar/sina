@@ -1,9 +1,10 @@
 ---
 title: Stack
-sourceHash: 9856ac9abe5a
+sourceHash: aade83d5cb46
 ---
 
 import { StackHero, StackExamples } from "@/app/components/docs/demos/primitives/stack";
+import { stackPropRows } from "@/app/components/docs/props/stack.props.mjs";
 
 <StackHero />
 
@@ -27,14 +28,7 @@ import { Stack } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "direction", type: '"row" | "column"', default: '"column"', description: "布局轴。" },
-    { prop: "gap", type: "GapStep", description: "子元素之间的间距（取自 8pt 刻度）。" },
-    { prop: "align / justify", type: "string", description: "沿每个轴的 Flex 对齐方式。" },
-    { prop: "as", type: "ElementType", description: "渲染为不同的元素（多态）。" },
-  ]}
-/>
+<PropsTable rows={stackPropRows("zh")} />
 
 ## 无障碍
 

@@ -3,6 +3,7 @@ title: Grid
 ---
 
 import { GridHero, GridExamples } from "@/app/components/docs/demos/primitives/grid";
+import { gridPropRows } from "@/app/components/docs/props/grid.props.mjs";
 
 <GridHero />
 
@@ -26,13 +27,7 @@ import { Grid } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "cols", type: "GridCols", description: "Number of columns." },
-    { prop: "gap", type: "GapStep", description: "Spacing between cells (from the 8pt scale)." },
-    { prop: "as", type: "ElementType", description: "Render as a different element (polymorphic)." },
-  ]}
-/>
+<PropsTable rows={gridPropRows()} />
 
 ## Accessibility
 

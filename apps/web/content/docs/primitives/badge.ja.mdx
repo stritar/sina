@@ -1,9 +1,10 @@
 ---
 title: Badge
-sourceHash: 4d4d24138038
+sourceHash: f7e0d525c5ef
 ---
 
 import { BadgeHero, BadgeExamples } from "@/app/components/docs/demos/primitives/badge";
+import { badgePropRows } from "@/app/components/docs/props/badge.props.mjs";
 
 <BadgeHero />
 
@@ -24,14 +25,7 @@ import { Badge } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "intent", type: '"neutral" | "info" | "success" | "warning" | "danger"', default: '"neutral"', description: "色と意味。" },
-    { prop: "size", type: '"sm" | "md"', default: '"md"', description: "チップのサイズ。" },
-    { prop: "icon", type: "ReactNode", description: "先頭の字形（ラベルの色を継承します）。" },
-    { prop: "dot", type: "boolean", default: "false", description: "先頭のステータスドット。" },
-  ]}
-/>
+<PropsTable rows={badgePropRows("ja")} />
 
 <Callout variant="note" title="ステータスのルールが適用されます">
   `danger` または `warning` の Badge は、太字の字形を自動的にレンダリングします。また Badge は

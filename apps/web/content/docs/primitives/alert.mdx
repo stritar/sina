@@ -3,6 +3,7 @@ title: Alert
 ---
 
 import { AlertHero, AlertExamples } from "@/app/components/docs/demos/primitives/alert";
+import { alertPropRows } from "@/app/components/docs/props/alert.props.mjs";
 
 <AlertHero />
 
@@ -25,13 +26,7 @@ import { Alert } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "variant", type: '"info" | "success" | "warning" | "danger"', default: '"info"', description: "Severity. Also selects the status glyph." },
-    { prop: "title", type: "ReactNode", description: "Bold heading for the alert." },
-    { prop: "icon", type: "ReactNode | false", description: "Swap the glyph, or hide it for info/success (never for warning/danger)." },
-  ]}
-/>
+<PropsTable rows={alertPropRows()} />
 
 <Callout variant="warning" title="Two rules for status">
   Warning and danger alerts **always** render a bold glyph. You can swap it but

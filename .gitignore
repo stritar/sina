@@ -138,6 +138,9 @@ dist
 # generated per-page raw markdown for agents (apps/web/scripts/generate-llms.mjs)
 apps/web/public/llms/docs/
 
+# generated DSDS catalog (apps/web/scripts/generate-dsds.mjs)
+apps/web/public/dsds/
+
 # pnpm
 .pnpm-store
 

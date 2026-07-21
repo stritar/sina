@@ -17,12 +17,15 @@ import { BarChart, Stack, SummaryList } from "@sina-design-system/core";
 import type { SummaryItem } from "@sina-design-system/core";
 
 import { formatAmount } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./CashflowSummary.module.css";
 
 export interface CashflowSummaryProps {
   /** The server-validated `cashflow_summary` payload (`IntentProps<"cashflow_summary">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 interface CashflowView {
@@ -48,14 +51,15 @@ function readCashflow(payload: unknown): CashflowView {
   };
 }
 
-export function CashflowSummary({ payload }: CashflowSummaryProps) {
+export function CashflowSummary({ payload, locale: localeProp }: CashflowSummaryProps) {
+  const locale = useFintechLocale(localeProp);
   const { period, currency, inflow, outflow, net } = readCashflow(payload);
   const isEmpty = inflow === 0 && outflow === 0 && net === 0;
 
   const items: SummaryItem[] = [
-    { label: "Inflow", value: formatAmount(inflow, currency) },
-    { label: "Outflow", value: formatAmount(outflow, currency) },
-    { label: "Net", value: formatAmount(net, currency), emphasis: true },
+    { label: "Inflow", value: formatAmount(inflow, currency, locale) },
+    { label: "Outflow", value: formatAmount(outflow, currency, locale) },
+    { label: "Net", value: formatAmount(net, currency, locale), emphasis: true },
   ];
 
   return (
@@ -78,7 +82,7 @@ export function CashflowSummary({ payload }: CashflowSummaryProps) {
                 datasets: [{ label: period, data: [inflow, outflow, net] }],
               }}
               label={`Cashflow for ${period}: inflow, outflow, and net`}
-              valueFormatter={(v) => formatAmount(v, currency)}
+              valueFormatter={(v) => formatAmount(v, currency, locale)}
             />
           </div>
         </Stack>

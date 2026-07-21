@@ -47,6 +47,11 @@
             "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/broadsheet-figma-sync-reminder.mjs\"",
             "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/release-changelog-reminder.mjs\"",
+            "timeout": 30
           }
         ]
       }

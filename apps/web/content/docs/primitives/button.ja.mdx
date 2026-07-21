@@ -1,9 +1,10 @@
 ---
 title: Button
-sourceHash: 7de5af4b2e5a
+sourceHash: be613beaf3a0
 ---
 
 import { ButtonHero, ButtonExamples } from "@/app/components/docs/demos/primitives/button";
+import { buttonPropRows } from "@/app/components/docs/props/button.props.mjs";
 
 <ButtonHero />
 
@@ -24,15 +25,7 @@ import { Button } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "variant", type: '"primary" | "secondary" | "danger" | "ghost"', default: '"primary"', description: "視覚的な重みとインテント。" },
-    { prop: "size", type: '"sm" | "md" | "lg" | "xl"', default: '"md"', description: "コントロールの高さ。" },
-    { prop: "iconLeft / iconRight", type: "ReactNode", description: "先頭または末尾のグリフ。" },
-    { prop: "loading", type: "boolean", default: "false", description: "スピナーを表示し、ボタンを無効にします。" },
-    { prop: "asChild", type: "boolean", default: "false", description: "ボタンのスタイルを保ちつつ、子要素（例：リンク）としてレンダリングします。" },
-  ]}
-/>
+<PropsTable rows={buttonPropRows("ja")} />
 
 ## アクセシビリティ
 

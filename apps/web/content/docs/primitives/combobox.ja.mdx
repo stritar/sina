@@ -1,9 +1,10 @@
 ---
 title: Combobox
-sourceHash: 19fb4c750726
+sourceHash: 6e543ead7645
 ---
 
 import { ComboboxHero, ComboboxExamples } from "@/app/components/docs/demos/primitives/combobox";
+import { comboboxPropRows } from "@/app/components/docs/props/combobox.props.mjs";
 
 <ComboboxHero />
 
@@ -31,14 +32,7 @@ import { Combobox } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "options", type: "ComboboxOption[]", description: "選択する { value, label } の項目。" },
-    { prop: "value", type: "string", description: "選択されている値（制御された状態）。" },
-    { prop: "onValueChange", type: "(value: string) => void", description: "選択時に発火します。" },
-    { prop: "placeholder", type: "string", description: "入力欄の空状態テキスト。" },
-  ]}
-/>
+<PropsTable rows={comboboxPropRows("ja")} />
 
 ## アクセシビリティ
 

@@ -1,9 +1,10 @@
 ---
 title: Checkbox
-sourceHash: 897c9affa3b4
+sourceHash: 5ad4cc09f477
 ---
 
 import { CheckboxHero, CheckboxExamples } from "@/app/components/docs/demos/primitives/checkbox";
+import { checkboxPropRows } from "@/app/components/docs/props/checkbox.props.mjs";
 
 <CheckboxHero />
 
@@ -24,13 +25,7 @@ import { Checkbox } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "checked", type: 'boolean | "indeterminate"', description: "制御された選択状態。混在状態には \"indeterminate\" を渡します。" },
-    { prop: "onCheckedChange", type: '(checked: boolean | "indeterminate") => void', description: "切り替え時に発火します。" },
-    { prop: "label", type: "ReactNode", description: "関連付けられたラベル。" },
-  ]}
-/>
+<PropsTable rows={checkboxPropRows("ja")} />
 
 ## アクセシビリティ
 

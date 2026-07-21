@@ -1,9 +1,10 @@
 ---
 title: KpiStat
-sourceHash: 435e274ef4a2
+sourceHash: e174baf80bc3
 ---
 
 import { KpiStatHero, KpiStatExamples } from "@/app/components/docs/demos/primitives/kpi-stat";
+import { kpiStatPropRows } from "@/app/components/docs/props/kpi-stat.props.mjs";
 
 <KpiStatHero />
 
@@ -29,17 +30,7 @@ import { KpiStat } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "value", type: "number | null", description: "La cifra principal; null renderiza displayNullAs." },
-    { prop: "valueFormatter", type: "(value: number) => string", description: "Formatea el valor y el delta (moneda, etc.)." },
-    { prop: "comparisonValue", type: "number", description: "Un valor anterior. Renderiza la píldora de tendencia." },
-    { prop: "comparisonLabel", type: "string", description: "Contexto bajo la píldora, p. ej. “frente al período anterior”." },
-    { prop: "showChangeAsPercentage", type: "boolean", default: "false", description: "Muestra el delta como porcentaje." },
-    { prop: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Escala del recuadro." },
-    { prop: "invertChangeColors", type: "boolean", default: "false", description: "Cuando bajar es bueno (p. ej. el gasto)." },
-  ]}
-/>
+<PropsTable rows={kpiStatPropRows("es")} />
 
 ## Accesibilidad
 

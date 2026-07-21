@@ -1,9 +1,10 @@
 ---
 title: CurrencyField
-sourceHash: c10a09a690cc
+sourceHash: a87e1548f216
 ---
 
 import { CurrencyFieldHero, CurrencyFieldExamples } from "@/app/components/docs/demos/primitives/currency-field";
+import { currencyFieldPropRows } from "@/app/components/docs/props/currency-field.props.mjs";
 
 <CurrencyFieldHero />
 
@@ -25,12 +26,7 @@ import { CurrencyField } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "currencySymbol", type: "string", default: '"$"', description: "Le symbole affiché avant le montant." },
-    { prop: "label / description / error", type: "ReactNode", description: "Transmis au Field englobant." },
-  ]}
-/>
+<PropsTable rows={currencyFieldPropRows("fr")} />
 
 <Callout variant="governance" title="Mise en forme, pas application">
   Ceci est purement visuel. Cela n'arrêtera pas un montant supérieur à la

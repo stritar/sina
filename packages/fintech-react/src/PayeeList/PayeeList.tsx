@@ -9,15 +9,19 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack } from "@sina-design-system/core";
 
 import { formatDate, readPayeeList } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./PayeeList.module.css";
 
 export interface PayeeListProps {
   /** The server-validated `list_payees` payload (`IntentProps<"list_payees">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
-export function PayeeList({ payload }: PayeeListProps) {
+export function PayeeList({ payload, locale: localeProp }: PayeeListProps) {
+  const locale = useFintechLocale(localeProp);
   const payees = readPayeeList(payload);
 
   return (
@@ -45,7 +49,7 @@ export function PayeeList({ payload }: PayeeListProps) {
                   {p.verified ? "verified" : "unverified"}
                 </Badge>
                 {p.lastPaidAt ? (
-                  <span className={styles.lastPaid}>last {formatDate(p.lastPaidAt)}</span>
+                  <span className={styles.lastPaid}>last {formatDate(p.lastPaidAt, locale)}</span>
                 ) : null}
               </span>
             </Stack>

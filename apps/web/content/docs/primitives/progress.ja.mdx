@@ -1,9 +1,10 @@
 ---
 title: Progress
-sourceHash: 538c1101fa22
+sourceHash: 2fb1a506beff
 ---
 
 import { ProgressHero, ProgressExamples } from "@/app/components/docs/demos/primitives/progress";
+import { progressPropRows } from "@/app/components/docs/props/progress.props.mjs";
 
 <ProgressHero />
 
@@ -25,12 +26,7 @@ import { Progress } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "value", type: "number", description: "0 から 100。不確定なバーの場合は省略します。" },
-    { prop: "label", type: "string", description: "プログレスバーのアクセシブルな名前。" },
-  ]}
-/>
+<PropsTable rows={progressPropRows("ja")} />
 
 ## アクセシビリティ
 

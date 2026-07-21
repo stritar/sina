@@ -11,12 +11,15 @@ import type { SummaryItem } from "@sina-design-system/core";
 import { Badge, Chart, Stack, SummaryList } from "@sina-design-system/core";
 
 import { formatAmount, formatPct } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./CryptoHoldings.module.css";
 
 export interface CryptoHoldingsProps {
   /** The server-validated `crypto_holdings` payload (`IntentProps<"crypto_holdings">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 interface CryptoHoldingView {
@@ -61,7 +64,8 @@ function readCryptoHoldings(payload: unknown): CryptoHoldingsView {
   };
 }
 
-export function CryptoHoldings({ payload }: CryptoHoldingsProps) {
+export function CryptoHoldings({ payload, locale: localeProp }: CryptoHoldingsProps) {
+  const locale = useFintechLocale(localeProp);
   const { currency, totalValue, holdings } = readCryptoHoldings(payload);
 
   const items: SummaryItem[] = holdings.map((h) => {
@@ -77,9 +81,9 @@ export function CryptoHoldings({ payload }: CryptoHoldingsProps) {
       ),
       value: (
         <span className={styles.valueCol}>
-          <span className={styles.value}>{formatAmount(h.value, currency)}</span>
+          <span className={styles.value}>{formatAmount(h.value, currency, locale)}</span>
           <Badge intent={up ? "success" : "danger"} size="sm">
-            {formatPct(h.changePct)}
+            {formatPct(h.changePct, locale)}
           </Badge>
         </span>
       ),
@@ -95,7 +99,7 @@ export function CryptoHoldings({ payload }: CryptoHoldingsProps) {
       <Stack direction="row" justify="between" align="center" gap={2}>
         <span className={styles.title}>Crypto holdings</span>
         <span className={styles.total}>
-          {formatAmount(totalValue, currency)}
+          {formatAmount(totalValue, currency, locale)}
         </span>
       </Stack>
 

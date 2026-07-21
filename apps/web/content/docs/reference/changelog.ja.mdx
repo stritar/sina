@@ -1,17 +1,17 @@
 ---
 title: リリースと安定性
-sourceHash: 1e8cf8ee7f32
+sourceHash: 95f23c1ea4b5
 ---
 
 ## 現在のバージョン
 
-5 つの公開パッケージはすべて **0.1.0** で公開されています。
+5 つの公開パッケージはすべて **0.2.0** で公開されています。
 
 `@sina-design-system/theme` · `core` · `governance` · `fintech` ·
 `fintech-react`.
 
 ```bash
-pnpm add @sina-design-system/core@0.1.0
+pnpm add @sina-design-system/core@0.2.0
 ```
 
 ## 安定性とバージョン管理
@@ -26,6 +26,14 @@ SINA はまだ初期段階です。バージョンは semver に従い、Changes
 <Callout variant="note" title="0.x は変更を見込むという意味">
   1.0 未満では、マイナーバージョンが破壊的変更を含むことがあります。バージョンを固定し、アップグレードの前にリリースノートを読んでください。
 </Callout>
+
+## 0.2.0：統合レビューによる強化
+
+実際の統合レビューから得られた改善です。USD 以外の送金ペイロードはもう黙って通過しません。通貨が USD でない場合、各ポリシーは情報提供用の
+`POLICY_BANDS_NOT_EVALUATED` フラグを付与するため、呼び出し側は金額バンドが評価されなかったことを確認できます（フラグは決してブロックしないので、結果は有効なままです）。各インテントマニフェストのエントリには
+`propsSchema` が付くようになりました。これは自己完結型の JSON Schema で、LLM のツール定義にそのまま組み込めます。あわせて、各動詞をそのペイロードに結び付ける新しい
+`IntentPropsMap` 型が追加されました。新しい未統制の動詞 `clarify_choice`（`ClarifyChoice` コンポーネント付き）が曖昧さの解消をカバーします。`list_cards`
+の形状は必須フィールドを緩和し、送金は BIC なしの SEPA IBAN を受け入れ、`theme` に `./theme.css` エクスポートのエイリアスが追加されました。
 
 ## 0.1.0：初の公開リリース
 

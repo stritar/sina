@@ -8,15 +8,19 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Stack } from "@sina-design-system/core";
 
 import { formatAmount, formatPct, readWatchlist } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./Watchlist.module.css";
 
 export interface WatchlistProps {
   /** The server-validated `watchlist` payload (`IntentProps<"watchlist">` in `@sina-design-system/fintech`). */
   payload: unknown;
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
-export function Watchlist({ payload }: WatchlistProps) {
+export function Watchlist({ payload, locale: localeProp }: WatchlistProps) {
+  const locale = useFintechLocale(localeProp);
   const items = readWatchlist(payload);
 
   return (
@@ -42,9 +46,9 @@ export function Watchlist({ payload }: WatchlistProps) {
                   <span className={styles.sub}>{w.name}</span>
                 </span>
                 <span className={styles.meta}>
-                  <span className={styles.price}>{formatAmount(w.price, w.currency)}</span>
+                  <span className={styles.price}>{formatAmount(w.price, w.currency, locale)}</span>
                   <Badge intent={up ? "success" : "danger"} size="sm">
-                    {formatPct(w.changePct)}
+                    {formatPct(w.changePct, locale)}
                   </Badge>
                 </span>
               </Stack>

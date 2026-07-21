@@ -37,6 +37,7 @@ import {
 import type { Violation } from "@sina-design-system/governance";
 
 import { deriveActionTerms } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./GovernedActionDialog.module.css";
 
 /** What the authorizer contributes. The initiator identity is server-known, never here. */
@@ -62,11 +63,15 @@ export interface GovernedActionDialogProps {
   /** Sub-heading explaining why the action is gated. */
   description?: string;
   /** Submit the authorizer's evidence to the SERVER re-gate. Returns the new decision. */
-  onSubmitApproval: (evidence: GovernedActionEvidence) => Promise<GovernedActionRegateResult>;
+  onSubmitApproval: (
+    evidence: GovernedActionEvidence,
+  ) => Promise<GovernedActionRegateResult>;
   /** Fired when the re-gate approves — lets a host swap the reply to the governed summary. */
   onApproved?: (result: GovernedActionRegateResult) => void;
   /** Label for the trigger button. */
   triggerLabel?: ReactNode;
+  /** BCP-47 locale for money formatting. Overrides {@link FintechLocaleProvider}; defaults to `en-US`. */
+  locale?: string;
 }
 
 type Phase = "review" | "collect" | "pending" | "approved" | "denied" | "error";
@@ -81,7 +86,9 @@ export function GovernedActionDialog({
   onSubmitApproval,
   onApproved,
   triggerLabel = "Review & authorize",
+  locale: localeProp,
 }: GovernedActionDialogProps) {
+  const locale = useFintechLocale(localeProp);
   const [open, setOpen] = useState(false);
   const [phase, setPhase] = useState<Phase>("review");
   const [approverId, setApproverId] = useState("");
@@ -90,8 +97,10 @@ export function GovernedActionDialog({
   const [busy, setBusy] = useState(false);
   const [denials, setDenials] = useState<Violation[]>([]);
 
-  const terms = deriveActionTerms(intent);
-  const blocking = violations.filter((v) => v.severity === "reject" || v.severity === "escalate");
+  const terms = deriveActionTerms(intent, locale);
+  const blocking = violations.filter(
+    (v) => v.severity === "reject" || v.severity === "escalate",
+  );
 
   function reset() {
     setPhase("review");
@@ -120,7 +129,9 @@ export function GovernedActionDialog({
         onApproved?.(result);
       } else {
         setDenials(
-          result.violations.filter((v) => v.severity === "reject" || v.severity === "escalate"),
+          result.violations.filter(
+            (v) => v.severity === "reject" || v.severity === "escalate",
+          ),
         );
         setPhase("denied");
       }
@@ -134,7 +145,11 @@ export function GovernedActionDialog({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="sm" iconLeft={<Lock className={styles.icon} />}>
+        <Button
+          variant="secondary"
+          size="sm"
+          iconLeft={<Lock className={styles.icon} />}
+        >
           {triggerLabel}
         </Button>
       </DialogTrigger>
@@ -157,7 +172,12 @@ export function GovernedActionDialog({
                 // Severity Badges are SIBLINGS of the Alert, never nested inside it —
                 // status elements never wrap other status elements (mirrors BlockedState).
                 // See CLAUDE.md "Never nest status elements inside one another".
-                <Stack direction="col" gap={2} as="ul" className={styles.violations}>
+                <Stack
+                  direction="col"
+                  gap={2}
+                  as="ul"
+                  className={styles.violations}
+                >
                   {blocking.map((v, i) => (
                     <li key={i} className={styles.violationRow}>
                       <Badge intent="danger" size="sm">
@@ -172,7 +192,9 @@ export function GovernedActionDialog({
                 <DialogClose asChild>
                   <Button variant="secondary">Close</Button>
                 </DialogClose>
-                <Button onClick={() => setPhase("collect")}>Request authorization</Button>
+                <Button onClick={() => setPhase("collect")}>
+                  Request authorization
+                </Button>
               </Footer>
             </>
           )}
@@ -207,7 +229,9 @@ export function GovernedActionDialog({
           {phase === "pending" && (
             <>
               <Stack direction="col" gap={2}>
-                <span className={styles.fieldLabel}>Authorizer second factor</span>
+                <span className={styles.fieldLabel}>
+                  Authorizer second factor
+                </span>
                 <CredentialOTP
                   length={OTP_LENGTH}
                   value={secondFactor}
@@ -215,14 +239,23 @@ export function GovernedActionDialog({
                   aria-label="Authorizer one-time code"
                 />
                 <span className={styles.hint}>
-                  Authorizing binds to the exact terms above; SINA re-verifies server-side.
+                  Authorizing binds to the exact terms above; SINA re-verifies
+                  server-side.
                 </span>
               </Stack>
               <Footer>
-                <Button variant="secondary" onClick={() => setPhase("collect")} disabled={busy}>
+                <Button
+                  variant="secondary"
+                  onClick={() => setPhase("collect")}
+                  disabled={busy}
+                >
                   Back
                 </Button>
-                <Button loading={busy} disabled={secondFactor.length !== OTP_LENGTH} onClick={submit}>
+                <Button
+                  loading={busy}
+                  disabled={secondFactor.length !== OTP_LENGTH}
+                  onClick={submit}
+                >
                   Authorize
                 </Button>
               </Footer>
@@ -232,8 +265,8 @@ export function GovernedActionDialog({
           {phase === "approved" && (
             <>
               <Alert variant="success" title="Authorized & governed">
-                Authorized by {approverName || approverId}. SINA re-verified the terms server-side and
-                mounted the action.
+                Authorized by {approverName || approverId}. SINA re-verified the
+                terms server-side and mounted the action.
               </Alert>
               <Footer>
                 <DialogClose asChild>
@@ -264,8 +297,8 @@ export function GovernedActionDialog({
           {phase === "error" && (
             <>
               <Alert variant="danger" title="Could not reach the gate">
-                The authorization could not be submitted. This is a transport error, not a governance
-                decision — the action is still blocked.
+                The authorization could not be submitted. This is a transport
+                error, not a governance decision — the action is still blocked.
               </Alert>
               <Footer>
                 <DialogClose asChild>

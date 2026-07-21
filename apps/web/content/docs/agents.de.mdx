@@ -1,6 +1,6 @@
 ---
 title: Für KI-Agenten
-sourceHash: b4a9cbbe19d0
+sourceHash: f2849e973ec5
 ---
 
 Eine KI kann deinen Styleguide lesen und ignorieren. Sie kann eine Regel nicht
@@ -79,8 +79,18 @@ konsumieren:
 |---|---|
 | `/llms.txt` | Ein kuratierter Index jeder Seite, damit ein LLM ihn crawlen kann. |
 | `.md` pro Seite | Jede Seite hat einen Roh-Markdown-Zwilling unter `/llms/docs/…`. |
+| `/dsds/manifest.dsds.json` | Das ganze System als strukturiertes JSON: Komponenten, Tokens, Patterns, Guides. |
 
 Der Index beginnt mit einer an Agenten gerichteten Präambel im ureigenen Geist
 von SINA: Gib UI als **Absicht** aus, ein Verb und props, niemals eine gefälschte
 Komponente; sende sie an den serverseitigen Kontrollpunkt; bevorzuge die
 registrierten Absichten, denn alles andere wird abgelehnt.
+
+Der JSON-Katalog folgt dem Entwurfsstandard
+[Design System Documentation Schema](https://designsystemdocspec.org) (DSDS
+0.15.2). Ein einziges Manifest verknüpft eine Entitätsdatei für jedes Primitiv
+(samt props), jedes Design-Token (die Werte liegen in einer W3C-Design-Tokens-
+Datei), jede Fintech-Absicht und jeden Guide. Pattern-Entitäten tragen das
+exakte JSON Schema, das die props einer Absicht erfüllen müssen. Ein Werkzeug
+kann das Verben-Menü also direkt in seine eigenen Definitionen laden, statt
+Seiten abzugrasen.

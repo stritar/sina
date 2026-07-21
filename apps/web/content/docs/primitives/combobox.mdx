@@ -3,6 +3,7 @@ title: Combobox
 ---
 
 import { ComboboxHero, ComboboxExamples } from "@/app/components/docs/demos/primitives/combobox";
+import { comboboxPropRows } from "@/app/components/docs/props/combobox.props.mjs";
 
 <ComboboxHero />
 
@@ -31,14 +32,7 @@ import { Combobox } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "options", type: "ComboboxOption[]", description: "The { value, label } items to choose from." },
-    { prop: "value", type: "string", description: "The selected value (controlled)." },
-    { prop: "onValueChange", type: "(value: string) => void", description: "Fires on selection." },
-    { prop: "placeholder", type: "string", description: "Empty-state text in the input." },
-  ]}
-/>
+<PropsTable rows={comboboxPropRows()} />
 
 ## Accessibility
 

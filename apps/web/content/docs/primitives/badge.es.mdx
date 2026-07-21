@@ -1,9 +1,10 @@
 ---
 title: Badge
-sourceHash: 4d4d24138038
+sourceHash: f7e0d525c5ef
 ---
 
 import { BadgeHero, BadgeExamples } from "@/app/components/docs/demos/primitives/badge";
+import { badgePropRows } from "@/app/components/docs/props/badge.props.mjs";
 
 <BadgeHero />
 
@@ -25,14 +26,7 @@ import { Badge } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "intent", type: '"neutral" | "info" | "success" | "warning" | "danger"', default: '"neutral"', description: "Color y significado." },
-    { prop: "size", type: '"sm" | "md"', default: '"md"', description: "Tamaño del chip." },
-    { prop: "icon", type: "ReactNode", description: "Un glifo inicial (hereda el color de la etiqueta)." },
-    { prop: "dot", type: "boolean", default: "false", description: "Un punto de estado inicial." },
-  ]}
-/>
+<PropsTable rows={badgePropRows("es")} />
 
 <Callout variant="note" title="Se aplican las reglas de estado">
   Un Badge `danger` o `warning` renderiza un glifo en negrita automáticamente. Y un Badge es un

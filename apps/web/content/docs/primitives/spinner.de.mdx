@@ -1,9 +1,10 @@
 ---
 title: Spinner
-sourceHash: e45c315d4436
+sourceHash: 9497fbda82d1
 ---
 
 import { SpinnerHero, SpinnerExamples } from "@/app/components/docs/demos/primitives/spinner";
+import { spinnerPropRows } from "@/app/components/docs/props/spinner.props.mjs";
 
 <SpinnerHero />
 
@@ -24,12 +25,7 @@ import { Spinner } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "size", type: '"sm" | "md" | "lg"', default: '"md"', description: "Größe des Indikators." },
-    { prop: "label", type: "string", description: "Wird Screenreadern angesagt (visuell verborgen)." },
-  ]}
-/>
+<PropsTable rows={spinnerPropRows("de")} />
 
 ## Barrierefreiheit
 

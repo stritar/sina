@@ -13,6 +13,7 @@ import type { IntentEnvelope } from "@sina-design-system/governance";
 import { Badge, Chart, Stack, SummaryList } from "@sina-design-system/core";
 
 import { formatAmount } from "../format.js";
+import { useFintechLocale } from "../locale.js";
 import styles from "./NetWorth.module.css";
 
 export interface NetWorthProps {
@@ -20,6 +21,8 @@ export interface NetWorthProps {
   payload: unknown;
   /** Emit a new intent for any action this display later offers (unused in the proving slice). */
   onIntent?: (envelope: IntentEnvelope) => void;
+  /** BCP-47 locale for money/date formatting. Overrides `FintechLocaleProvider`; defaults to `en-US`. */
+  locale?: string;
 }
 
 interface NetWorthLineView {
@@ -56,7 +59,8 @@ function readNetWorth(payload: unknown): NetWorthView {
   };
 }
 
-export function NetWorth({ payload }: NetWorthProps) {
+export function NetWorth({ payload, locale: localeProp }: NetWorthProps) {
+  const locale = useFintechLocale(localeProp);
   const { currency, assets, liabilities, net, breakdown } = readNetWorth(payload);
 
   return (
@@ -67,9 +71,9 @@ export function NetWorth({ payload }: NetWorthProps) {
     >
       <SummaryList
         items={[
-          { label: "Assets", value: formatAmount(assets, currency) },
-          { label: "Liabilities", value: formatAmount(liabilities, currency) },
-          { label: "Net worth", value: formatAmount(net, currency), emphasis: true },
+          { label: "Assets", value: formatAmount(assets, currency, locale) },
+          { label: "Liabilities", value: formatAmount(liabilities, currency, locale) },
+          { label: "Net worth", value: formatAmount(net, currency, locale), emphasis: true },
         ]}
       />
 
@@ -107,7 +111,7 @@ export function NetWorth({ payload }: NetWorthProps) {
                   <span className={styles.label}>{line.label}</span>
                 </span>
                 <span className={styles.amount}>
-                  {formatAmount(line.amount, currency)}
+                  {formatAmount(line.amount, currency, locale)}
                 </span>
               </Stack>
             ))}

@@ -3,6 +3,7 @@ title: Chart
 ---
 
 import { ChartHero, ChartExamples } from "@/app/components/docs/demos/primitives/chart";
+import { chartPropRows } from "@/app/components/docs/props/chart.props.mjs";
 
 <ChartHero />
 
@@ -25,12 +26,7 @@ import { Chart } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "variant", type: '"line" | "area" | "bar"', default: '"line"', description: "Sparkline style." },
-    { prop: "data", type: "number[]", description: "The series to plot." },
-  ]}
-/>
+<PropsTable rows={chartPropRows()} />
 
 ## Accessibility
 

@@ -1,9 +1,10 @@
 ---
 title: Alert
-sourceHash: 4b6702614a41
+sourceHash: 8dc9a7aeb54e
 ---
 
 import { AlertHero, AlertExamples } from "@/app/components/docs/demos/primitives/alert";
+import { alertPropRows } from "@/app/components/docs/props/alert.props.mjs";
 
 <AlertHero />
 
@@ -26,13 +27,7 @@ import { Alert } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "variant", type: '"info" | "success" | "warning" | "danger"', default: '"info"', description: "Gravité. Sélectionne aussi le glyphe de statut." },
-    { prop: "title", type: "ReactNode", description: "Titre en gras de l'alerte." },
-    { prop: "icon", type: "ReactNode | false", description: "Remplacez le glyphe, ou masquez-le pour info/success (jamais pour warning/danger)." },
-  ]}
-/>
+<PropsTable rows={alertPropRows("fr")} />
 
 <Callout variant="warning" title="Deux règles pour le statut">
   Les alertes warning et danger affichent **toujours** un glyphe en gras. Vous

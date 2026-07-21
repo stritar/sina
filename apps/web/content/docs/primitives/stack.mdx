@@ -3,6 +3,7 @@ title: Stack
 ---
 
 import { StackHero, StackExamples } from "@/app/components/docs/demos/primitives/stack";
+import { stackPropRows } from "@/app/components/docs/props/stack.props.mjs";
 
 <StackHero />
 
@@ -27,14 +28,7 @@ import { Stack } from "@sina-design-system/core";
 
 ## Props
 
-<PropsTable
-  rows={[
-    { prop: "direction", type: '"row" | "column"', default: '"column"', description: "Layout axis." },
-    { prop: "gap", type: "GapStep", description: "Spacing between children (from the 8pt scale)." },
-    { prop: "align / justify", type: "string", description: "Flex alignment along each axis." },
-    { prop: "as", type: "ElementType", description: "Render as a different element (polymorphic)." },
-  ]}
-/>
+<PropsTable rows={stackPropRows()} />
 
 ## Accessibility
 
