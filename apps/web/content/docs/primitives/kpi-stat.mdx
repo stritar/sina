@@ -1,0 +1,38 @@
+---
+title: KpiStat
+---
+
+import { KpiStatHero, KpiStatExamples } from "@/app/components/docs/demos/primitives/kpi-stat";
+import { kpiStatPropRows } from "@/app/components/docs/props/kpi-stat.props.mjs";
+
+<KpiStatHero />
+
+`KpiStat` shows one important number, big, with an optional comparison that
+renders as a trend badge (up is good by default).
+
+## Usage
+
+```tsx
+import { KpiStat } from "@sina-design-system/core";
+
+<KpiStat
+  value={12500}
+  comparisonValue={11800}
+  valueFormatter={(v) => `$${v.toLocaleString("en-US")}`}
+  comparisonLabel="vs last month"
+/>
+```
+
+## Examples
+
+<KpiStatExamples />
+
+## Props
+
+<PropsTable rows={kpiStatPropRows()} />
+
+## Accessibility
+
+A falling trend uses a danger badge with a bold down-glyph, so meaning never rests
+on color alone. Everything is real text (no image, no canvas), and it's
+server-mountable (no client JS).

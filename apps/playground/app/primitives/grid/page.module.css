@@ -1,0 +1,32 @@
+/* playground — Grid story */
+
+.cell {
+  height: var(--sina-space--12);
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-surface-raised);
+}
+
+.stack {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: var(--sina-space--4);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--2);
+}
+
+.caption {
+  font-family: var(--sina-font--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: var(--sina-tracking--wide);
+  color: var(--sina-color-text-subtle);
+}
+
+.gridFull {
+  width: 100%;
+}

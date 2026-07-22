@@ -1,0 +1,72 @@
+/*
+ * Theme switcher — a segmented control wearing the secondary button's skin.
+ * The track is the sage secondary-fill surface; the active segment is a raised
+ * surface chip. Sizes (sm/md/lg) reuse the secondary button's height + icon
+ * scale so the control lines up with a `ButtonSecondary` beside it. The
+ * keyboard focus outline is the global `[data-broadsheet]` rule — never authored
+ * here.
+ */
+
+.root {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  padding: 2px;
+  border-radius: var(--sinamk-radius--md, 6px);
+  background: var(--sinamk-color-secondary-fill, #e9ece8);
+}
+
+.root[data-size="sm"] {
+  height: var(--sinamk-control-height--sm, 28px);
+  --_icon: var(--sinamk-icon--sm, 14px);
+}
+
+.root[data-size="md"] {
+  height: var(--sinamk-control-height--md, 32px);
+  --_icon: var(--sinamk-icon--md, 16px);
+}
+
+.root[data-size="lg"] {
+  height: var(--sinamk-control-height--lg, 40px);
+  --_icon: var(--sinamk-icon--lg, 20px);
+}
+
+.segment {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  aspect-ratio: 1;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--sinamk-radius--sm, 4px);
+  color: var(--sinamk-color-text-muted, #6b7268);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease),
+    color var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease);
+}
+
+.icon {
+  display: block;
+  width: var(--_icon);
+  height: var(--_icon);
+}
+
+/* Hover an inactive segment: hint with the secondary hover fill. */
+.segment:hover:not([data-active]) {
+  color: var(--sinamk-color-text, #353b31);
+  background: var(--sinamk-color-secondary-fill--hover, #dfe4de);
+}
+
+/* The chosen segment: a raised surface chip (inset shadow, so no layout shift). */
+.segment[data-active] {
+  color: var(--sinamk-color-text, #353b31);
+  background: var(--sinamk-color-surface, #ffffff);
+  box-shadow: inset 0 0 0 1px var(--sinamk-color-border, #dfe4de);
+}

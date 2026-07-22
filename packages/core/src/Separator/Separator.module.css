@@ -1,0 +1,20 @@
+/* @sina-design-system/core — Separator */
+
+:root {
+  --sina-separator-color: var(--sina-color-border, #dde0d9);
+}
+
+.root {
+  flex-shrink: 0;
+  background: var(--sina-separator-color, #dde0d9);
+}
+
+.horizontal {
+  height: 1px;
+  width: 100%;
+}
+
+.vertical {
+  width: 1px;
+  align-self: stretch;
+}

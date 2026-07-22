@@ -1,0 +1,87 @@
+/* @sina-design-system/core — Alert */
+
+:root {
+  --sina-alert-bg--info: var(--sina-color-info-fill, #88baf1);
+  --sina-alert-bg--success: var(--sina-color-success-fill, #66d091);
+  --sina-alert-bg--warning: var(--sina-color-warning-fill, #fcb737);
+  --sina-alert-bg--danger: var(--sina-color-danger-fill, #ff7e48);
+
+  /* Per-status ink on the vivid fill — each intent class resolves --sina-alert-fg,
+     which title, message + icon all inherit. */
+  --sina-alert-fg--info: var(--sina-color-status-fg--info, #000000);
+  --sina-alert-fg--success: var(--sina-color-status-fg--success, #000000);
+  --sina-alert-fg--warning: var(--sina-color-status-fg--warning, #000000);
+  --sina-alert-fg--danger: var(--sina-color-status-fg--danger, #000000);
+  --sina-alert-title: var(--sina-alert-fg, #000000);
+  --sina-alert-message: var(--sina-alert-fg, #000000);
+
+  /* Placeholder border — present but invisible: 1px black at 0 alpha, per status.
+     A themer reveals one status's border by raising that color's alpha; each
+     intent class resolves --sina-alert-border-color. */
+  --sina-alert-border-color--info: var(--sina-color-status-border--info, #00000000);
+  --sina-alert-border-color--success: var(--sina-color-status-border--success, #00000000);
+  --sina-alert-border-color--warning: var(--sina-color-status-border--warning, #00000000);
+  --sina-alert-border-color--danger: var(--sina-color-status-border--danger, #00000000);
+  --sina-alert-border-width: var(--sina-border-width--1, 1px);
+}
+
+.root {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sina-space--2_5, 0.625rem);
+  border-radius: var(--sina-radius--md, 6px);
+  border: var(--sina-alert-border-width, 0) solid
+    var(--sina-alert-border-color, transparent);
+  padding: var(--sina-space--3, 0.75rem);
+}
+
+/* Intent surfaces — vivid saturated fill; each resolves the per-status ink +
+   border that .icon/.title/.message inherit (see --sina-alert-fg). */
+.info {
+  background: var(--sina-alert-bg--info, #88baf1);
+  --sina-alert-fg: var(--sina-alert-fg--info, #000000);
+  --sina-alert-border-color: var(--sina-alert-border-color--info, #00000000);
+}
+.success {
+  background: var(--sina-alert-bg--success, #66d091);
+  --sina-alert-fg: var(--sina-alert-fg--success, #000000);
+  --sina-alert-border-color: var(--sina-alert-border-color--success, #00000000);
+}
+.warning {
+  background: var(--sina-alert-bg--warning, #fcb737);
+  --sina-alert-fg: var(--sina-alert-fg--warning, #000000);
+  --sina-alert-border-color: var(--sina-alert-border-color--warning, #00000000);
+}
+.danger {
+  background: var(--sina-alert-bg--danger, #ff7e48);
+  --sina-alert-fg: var(--sina-alert-fg--danger, #000000);
+  --sina-alert-border-color: var(--sina-alert-border-color--danger, #00000000);
+}
+
+.icon {
+  width: var(--sina-size--xs, 1rem);
+  height: var(--sina-size--xs, 1rem);
+  flex-shrink: 0;
+  color: var(--sina-alert-fg, #000000);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--1, 0.25rem);
+}
+
+.title {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium, 500);
+  color: var(--sina-alert-title, #000000);
+}
+
+.message {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-alert-message, #000000);
+}

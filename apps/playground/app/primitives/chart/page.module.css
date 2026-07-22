@@ -1,0 +1,30 @@
+/* Playground — Chart (sparkline) story */
+
+.line {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--6);
+}
+.spark {
+  height: var(--sina-space--10);
+  width: 8rem;
+}
+.wide {
+  height: var(--sina-space--12);
+  width: 12rem;
+}
+.success {
+  color: var(--sina-color-success);
+}
+.danger {
+  color: var(--sina-color-danger);
+}
+.subtle {
+  color: var(--sina-color-text-subtle);
+}
+.primary {
+  color: var(--sina-color-primary);
+}
+.info {
+  color: var(--sina-color-info);
+}

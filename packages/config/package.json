@@ -1,0 +1,28 @@
+{
+  "name": "@sina-design-system/config",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared TypeScript, ESLint, and Prettier presets for the SINA monorepo.",
+  "license": "MIT",
+  "files": [
+    "tsconfig.base.json",
+    "eslint.preset.cjs",
+    "prettier.preset.cjs"
+  ],
+  "exports": {
+    "./tsconfig.base.json": "./tsconfig.base.json",
+    "./eslint": "./eslint.preset.cjs",
+    "./prettier": "./prettier.preset.cjs"
+  },
+  "scripts": {
+    "lint": "echo \"(config) no lint\" && exit 0",
+    "typecheck": "echo \"(config) no typecheck\" && exit 0",
+    "build": "echo \"(config) no build\" && exit 0",
+    "test": "echo \"(config) no tests\" && exit 0"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.18.0",
+    "globals": "^15.14.0",
+    "typescript-eslint": "^8.20.0"
+  }
+}

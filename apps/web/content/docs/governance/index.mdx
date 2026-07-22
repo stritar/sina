@@ -1,0 +1,73 @@
+---
+title: Governance in practice
+---
+
+[How it works](/docs/how-it-works) explains the mechanism. This section covers
+the rules that actually ship today, which are fintech-specific.
+
+The Constitution splits into two kinds of rule, and every intent is one or the
+other:
+
+- **Governed** rules cover actions: moving money, opening accounts, issuing
+  cards. They carry policy (limits, approvals, disclosures) and can escalate
+  to a stricter component.
+- **Display** rules cover reads: balances, transactions, holdings. They check
+  the shape of the data (and require masked identifiers), then mount a
+  presentational component. They never escalate.
+
+The catalog of intents and what each one mounts is
+[Governed components & display patterns](/docs/governance/components-and-patterns).
+
+<BeforeAfter>
+<Before title="Prompt-based rules">
+"Never move more than $10,000 without approval" lives in a system prompt. The
+model can misread it, forget it, or be steered around it.
+</Before>
+<After title="Constitution rules">
+The $10,000 limit is a Zod check that runs server-side on every request,
+regardless of what the model understood.
+</After>
+</BeforeAfter>
+
+## Every threshold has a source
+
+Each rule carries its source: when the gate blocks a request, the violation
+includes a `standard` naming the regulation or policy behind it, and the
+citation lands in the [audit record](/docs/concepts/audit-trail).
+
+The code separates three tiers: **format** standards (ISO 4217, IBAN
+checksums, Luhn), **regulatory** thresholds from real financial regulation
+(FinCEN's CTR, SAR, and Travel Rule bands; FATF; Nacha), and **SINA policy**
+defaults you are expected to tune to your own risk appetite (the $50,000 wire
+dual-control threshold, per-rail authorization caps). The full list, with
+what the code actually checks for each, is
+[Standards & citations](/docs/governance/standards).
+
+## The threat model
+
+The design assumption is that the model producing intents can be wrong or
+adversarial, so each rule is written against a concrete misuse and tested with
+a hostile fixture:
+
+| The attack | What it tries | The mechanism that stops it |
+|---|---|---|
+| **Fabricated control** | Smuggle a `confirmButton` into the payload | Strict schema: unknown fields fail parsing before any value is read |
+| **Smuggled card data** | Include a `cvv` or full PAN | Same strict parse; audit redaction drops or masks the field |
+| **Over-limit action** | A $60,000 wire with no approval | Policy escalates; only `SecureWireDialog` can continue the flow |
+| **Self-approval** | Approve your own transfer | The approver must differ from the initiator id, which your server supplies |
+| **Bait-and-switch** | Approve $5,000, then execute $60,000 | The approval binds to a hash of the exact terms, recomputed server-side |
+| **Fabricated data** | Invent a balance or transaction | For reads, your server supplies the values; the model only picks the verb |
+| **Data exfiltration** | Return an unmasked account number | Display schemas require masked identifiers |
+| **Flooding** | Send 10,000 rows to freeze the client | Array lengths are bounded in the schemas |
+
+<Callout variant="enforced" title="Each row is a test fixture">
+  Every attack above exists as an adversarial payload in the fintech test
+  suite, so a rule that stops blocking its fixture fails the build.
+</Callout>
+
+These mechanisms hold for requests that go through the gate; routing every
+agent-produced intent through it is the integration step your app owns.
+
+See several of these attacks on one request in
+[the $60k wire, end to end](/docs/governance/wire-transfer), then
+[write a rule of your own](/docs/governance/writing-a-rule).

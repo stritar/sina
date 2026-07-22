@@ -1,0 +1,43 @@
+---
+title: Escalation & enforcement
+---
+
+Each violation carries a severity that decides what happens next. There are
+three, and only two of them block.
+
+<EnforcementLadder />
+
+- **`flag`** is informational. It is recorded on the decision for review and
+  reporting, but blocks nothing. A $5,000 transfer is flagged for SAR review
+  and still goes through.
+- **`escalate`** blocks the standard render and names a stricter component in
+  `requiredComponent`. The over-limit wire escalates to `SecureWireDialog`,
+  which collects a second approver. The request is redirected, not refused.
+- **`reject`** is a hard block: nothing mounts. A fabricated field, smuggled
+  card data, or a self-approved transfer gets this.
+
+<Callout variant="note" title="A decision can carry several">
+  One intent can trip multiple violations. The unapproved $60,000 wire carries
+  two flags (CTR-reportable, SAR review) and one escalation. The flags are
+  recorded; the escalation is what forces the dialog.
+</Callout>
+
+Severity is a property of each rule's code, not a global switch. Loosening
+enforcement means editing a rule or routing fewer intents through the gate,
+which happens in code review rather than in a runtime setting.
+
+## What mounts on a clean pass
+
+A display verb that passes mounts its registered presentational component. A
+governed verb that passes cleanly mounts nothing: the decision returns
+`mount: null` and your app supplies its own confirm step, composed from `core`
+primitives. A governed component only mounts when an escalation names it.
+
+```ts
+{ intent: "wire_transfer", props, result: { valid: true /* … */ }, mount: null }
+```
+
+Rules are independent, so you can route a single intent through the gate and
+expand later. See [Adopt incrementally](/docs/guides/adopt-incrementally).
+
+Next: [The audit trail](/docs/concepts/audit-trail).

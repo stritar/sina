@@ -1,0 +1,37 @@
+---
+title: Stack
+---
+
+import { StackHero, StackExamples } from "@/app/components/docs/demos/primitives/stack";
+import { stackPropRows } from "@/app/components/docs/props/stack.props.mjs";
+
+<StackHero />
+
+`Stack` lays out its children along a single axis with a `gap` drawn from the
+spacing scale. It's the everyday layout primitive; reach for
+[Grid](/docs/primitives/grid) when you need wrapping columns.
+
+## Usage
+
+```tsx
+import { Stack } from "@sina-design-system/core";
+
+<Stack direction="row" gap={3} align="center">
+  <Badge>Draft</Badge>
+  <span>Invoice #204</span>
+</Stack>
+```
+
+## Examples
+
+<StackExamples />
+
+## Props
+
+<PropsTable rows={stackPropRows()} />
+
+## Accessibility
+
+Purely presentational. It renders a plain `div` with no added semantics. When the
+children form a real structure, pass `as` to keep it (e.g. `as="ul"` with `li`
+children keeps a list a list).

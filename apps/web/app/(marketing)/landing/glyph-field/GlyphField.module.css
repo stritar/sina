@@ -1,0 +1,48 @@
+/*
+ * The glyph-field background. Absolutely positioned to fill its container (the
+ * hero's left text box) and painted behind that box's content (z-index 0; the
+ * text sits at z-index 1). It never intercepts input; its only motion is a slow
+ * horizontal drift driven on the GPU.
+ *
+ * The `background` is a safety net: if the canvas is hidden (no WebGL2 and no 2D,
+ * or forced-colors), the box still sits on the field's ground color rather than
+ * a bare surface. The opaque canvas covers it whenever the field actually renders.
+ *
+ * COLOR PALETTE — the three `--sina-glyphfield-*` values are read by the WebGL
+ * canvas at runtime (`getComputedStyle` on the canvas in GlyphField.tsx), not
+ * consumed through the normal token cascade, so they are decorative values that
+ * cannot pass through the `--sina-*` / `--sinamk-*` systems.
+ *
+ * They are NOT declared here. The landing tints them per industry, and a custom
+ * property set on this element would always beat one inherited from the landing
+ * scope, so a local `.root { --sina-glyphfield-*: … }` block would silently pin
+ * the canvas to sage for every industry. All six variants (3 industries x light
+ * and dark) are generated into `../industry-tint.css` and inherit down to here.
+ * They must stay LITERAL HEX there: `parseColor` in `gl/color.ts` understands
+ * only hex and rgb(), and falls back silently on anything else.
+ *
+ * The `var(…, <fallback>)` reads below keep this component renderable on its own
+ * (outside the landing scope) without reintroducing that cascade problem.
+ */
+
+.root {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--sina-glyphfield-bg, #f5f6f4);
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Decorative texture has no place in a forced high-contrast palette. */
+@media (forced-colors: active) {
+  .root {
+    display: none;
+  }
+}

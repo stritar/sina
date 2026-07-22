@@ -1,0 +1,11 @@
+/* Playground — Combobox story */
+
+.field {
+  width: 18rem;
+}
+.hint {
+  margin-top: var(--sina-space--3);
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-subtle);
+}

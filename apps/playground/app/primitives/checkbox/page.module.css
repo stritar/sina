@@ -1,0 +1,17 @@
+/* Playground — Checkbox story */
+
+/* Static focus ring, mirroring the house focus style so the "focus" specimen
+   reads as focused without keyboard interaction. */
+.focusRing {
+  box-shadow: var(--sina-shadow--focus-ring);
+}
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sina-space--6);
+}
+.rowWide {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sina-space--8);
+}

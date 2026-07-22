@@ -1,0 +1,203 @@
+/* The centered content column, sitting to the right of the flush-left sidebar.
+   The cap is border-box (see theme/reset.css), so it has to cover the gutters
+   too: 5rem padding + 15rem TOC + 2.5rem gap + 46rem prose = 68.5rem. That
+   leaves the prose track at 46rem (736px) — the shadcn measure. */
+.page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 15rem;
+  gap: var(--sina-space--10);
+  max-width: 68.5rem;
+  margin-inline: auto;
+  padding: var(--sina-space--8) var(--sina-space--10) var(--sina-space--24);
+}
+
+@media (max-width: 76rem) {
+  .page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 60rem) {
+  .page {
+    padding: var(--sina-space--6) var(--sina-space--5) var(--sina-space--20);
+  }
+}
+
+.title {
+  margin: 0;
+  font-size: var(--sina-text--4xl);
+  font-weight: var(--sina-font-weight--bold);
+  letter-spacing: var(--sina-tracking--tight);
+  line-height: var(--sina-leading--tight);
+}
+
+.lead {
+  margin: var(--sina-space--3) 0 var(--sina-space--6);
+  font-size: var(--sina-text--lg);
+  line-height: var(--sina-leading--relaxed);
+  color: var(--sina-color-text-muted);
+}
+
+/* Shown on machine-translated (non-English) pages: a quiet, bordered aside. */
+.machineNote {
+  margin: 0 0 var(--sina-space--6);
+  padding: var(--sina-space--2) var(--sina-space--3);
+  border-left: var(--sina-border-width--2) solid var(--sina-color-border);
+  background: var(--sina-color-surface-sunken);
+  border-radius: var(--sina-radius--sm);
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}
+
+/* The article column: base typography, plus the grid child's min-width guard
+   (without it the track can't shrink below its content). Chrome — toolbar,
+   title, pager — lives here, OUTSIDE `.prose`. */
+.column {
+  min-width: 0;
+  font-size: var(--sina-text--base);
+  line-height: var(--sina-leading--relaxed);
+  color: var(--sina-color-text);
+}
+
+/* Prose: style MDX-rendered elements as descendants (no per-element mapping).
+   These are element selectors (0,1,1), so they outrank a component's own
+   single-class rules — only ever wrap the MDX body in this, never chrome. */
+.prose {
+  min-width: 0;
+}
+
+.prose h2 {
+  margin: var(--sina-space--10) 0 var(--sina-space--3);
+  font-size: var(--sina-text--2xl);
+  font-weight: var(--sina-font-weight--semibold);
+  letter-spacing: var(--sina-tracking--tight);
+  scroll-margin-top: var(--sina-space--20);
+}
+
+.prose h3 {
+  margin: var(--sina-space--8) 0 var(--sina-space--2);
+  font-size: var(--sina-text--xl);
+  font-weight: var(--sina-font-weight--semibold);
+  scroll-margin-top: var(--sina-space--20);
+}
+
+.prose h4 {
+  margin: var(--sina-space--6) 0 var(--sina-space--2);
+  font-size: var(--sina-text--lg);
+  font-weight: var(--sina-font-weight--semibold);
+  scroll-margin-top: var(--sina-space--20);
+}
+
+.prose p {
+  margin: var(--sina-space--4) 0;
+}
+
+.prose ul,
+.prose ol {
+  margin: var(--sina-space--4) 0;
+  padding-left: var(--sina-space--6);
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li {
+  margin: var(--sina-space--2) 0;
+  padding-left: var(--sina-space--1);
+}
+
+.prose li::marker {
+  color: var(--sina-color-text-muted);
+}
+
+.prose a {
+  color: var(--sina-color-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.prose a:hover {
+  color: var(--sina-color-primary--hover);
+}
+
+.prose a:focus-visible {
+  outline: none;
+  border-radius: var(--sina-radius--xs);
+  box-shadow: var(--sina-shadow--focus-ring);
+}
+
+.prose strong {
+  font-weight: var(--sina-font-weight--semibold);
+}
+
+/* Inline code (block code is framed by CodePre). */
+.prose :not(pre) > code {
+  padding: 0.15em 0.4em;
+  font-family: var(--sina-font--mono);
+  font-size: 0.875em;
+  color: var(--sina-color-text);
+  background: var(--sina-color-surface-sunken);
+  border: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+  border-radius: var(--sina-radius--sm);
+}
+
+.prose blockquote {
+  margin: var(--sina-space--5) 0;
+  padding: var(--sina-space--1) var(--sina-space--5);
+  border-left: var(--sina-border-width--2) solid var(--sina-color-border);
+  color: var(--sina-color-text-muted);
+}
+
+.prose hr {
+  margin: var(--sina-space--10) 0;
+  border: 0;
+  border-top: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+}
+
+.prose table {
+  width: 100%;
+  margin: var(--sina-space--5) 0;
+  border-collapse: collapse;
+  font-size: var(--sina-text--sm);
+}
+
+.prose th,
+.prose td {
+  padding: var(--sina-space--2) var(--sina-space--3);
+  text-align: left;
+  border-bottom: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+}
+
+.prose th {
+  font-weight: var(--sina-font-weight--semibold);
+  color: var(--sina-color-text);
+}
+
+/* Prose reset boundary — live primitive demos render inside the MDX `.prose`
+   body, whose bare element selectors (`.prose p`, `.prose ul`, `.prose li` at
+   0,1,1) outrank a primitive's own single-class rules (0,1,0) AND the layered
+   theme reset — e.g. Alert's title <p> picking up a 16px margin, which shoves
+   the text off the icon. The demo shell tags each preview surface with
+   `data-demo-surface`; these rules restore the theme/reset.css baseline inside
+   it so a primitive renders as it does in a bare app. Specificity
+   .prose + [data-demo-surface] + type = (0,2,1) beats every `.prose <el>`
+   (0,1,1); mirrors the `.section .demoLabel` defense in shell.module.css. */
+.prose [data-demo-surface] {
+  font-size: var(--sina-text--base);
+  line-height: var(--sina-leading--normal); /* drop the inherited .column relaxed (1.7) leading */
+}
+.prose [data-demo-surface] :is(p, ul, ol, li) {
+  margin: 0;
+}
+.prose [data-demo-surface] :is(ul, ol) {
+  padding-left: 0;
+  list-style: none;
+}
+.prose [data-demo-surface] li {
+  padding-left: 0;
+}

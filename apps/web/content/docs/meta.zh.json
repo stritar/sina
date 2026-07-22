@@ -1,0 +1,15 @@
+{
+  "title": "文档",
+  "pages": [
+    "index",
+    "how-it-works",
+    "quickstart",
+    "concepts",
+    "governance",
+    "agents",
+    "primitives",
+    "theming",
+    "guides",
+    "reference"
+  ]
+}

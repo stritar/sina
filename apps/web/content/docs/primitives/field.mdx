@@ -1,0 +1,37 @@
+---
+title: Field
+---
+
+import { FieldHero, FieldExamples } from "@/app/components/docs/demos/primitives/field";
+import { fieldPropRows } from "@/app/components/docs/props/field.props.mjs";
+
+<FieldHero />
+
+`Field` is the wrapper every input uses. It renders a label, an optional
+description and error, and clones its child to connect them with the right `id`,
+`aria-describedby`, and `aria-invalid`. You get correct form accessibility without
+threading IDs by hand.
+
+## Usage
+
+```tsx
+import { Field } from "@sina-design-system/core";
+
+<Field label="Email" description="We'll never share it." error={errors.email}>
+  <input type="email" name="email" />
+</Field>
+```
+
+## Examples
+
+<FieldExamples />
+
+## Props
+
+<PropsTable rows={fieldPropRows()} />
+
+<Callout variant="note" title="Errors carry a glyph">
+  When `error` is set, Field renders the mandatory bold warning glyph beside the
+  message, never color alone. That's a SINA-wide rule for error and warning
+  states.
+</Callout>

@@ -1,0 +1,11 @@
+/* GovernedWireSummary — pass-state governed wire card */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--3);
+  border-radius: var(--sina-radius--lg);
+  border: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+  background: var(--sina-color-surface-secure);
+  padding: var(--sina-space--3);
+}

@@ -1,0 +1,42 @@
+/* playground — Field story */
+
+.fieldWrap {
+  width: 18rem;
+}
+
+/* Shared control chrome for the demo inputs/select/textarea. */
+.control {
+  width: 100%;
+  border-radius: var(--sina-radius--md);
+  border: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+  background: var(--sina-color-surface);
+  padding-inline: var(--sina-space--2_5);
+  font-size: var(--sina-text--ui);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-color-text);
+}
+
+.control::placeholder {
+  color: var(--sina-color-text-subtle);
+}
+
+.control:focus-visible {
+  outline: none;
+  border-color: var(--sina-color-focus-ring);
+  box-shadow: 0 0 0 1px var(--sina-color-focus-ring);
+}
+
+.control[aria-invalid="true"] {
+  border-color: var(--sina-color-danger);
+}
+
+/* Fixed-height inputs/select. */
+.input {
+  height: var(--sina-space--7);
+}
+
+/* Multi-line control carries vertical padding instead of a fixed height. */
+.textarea {
+  padding-block: var(--sina-space--1_5);
+}

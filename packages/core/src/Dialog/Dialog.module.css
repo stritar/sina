@@ -1,0 +1,85 @@
+/* @sina-design-system/core — Dialog */
+
+:root {
+  --sina-dialog-overlay: var(--sina-overlay--scrim, color-mix(in srgb, #21251e 40%, transparent));
+  --sina-dialog-surface: var(--sina-color-surface-raised, #ffffff);
+  --sina-dialog-border: var(--sina-color-border-subtle, #e9ece8);
+  --sina-dialog-title: var(--sina-color-text, #353b31);
+  --sina-dialog-description: var(--sina-color-text-muted, #52564e);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--sina-z--overlay, 1300);
+  background: var(--sina-dialog-overlay, color-mix(in srgb, #21251e 40%, transparent));
+}
+.overlay[data-state="open"] {
+  animation: sinaDialogOverlayIn var(--sina-duration--base, 200ms) var(--sina-ease--out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.overlay[data-state="closed"] {
+  animation: sinaDialogOverlayIn var(--sina-duration--base, 200ms) var(--sina-ease--out, cubic-bezier(0.16, 1, 0.3, 1)) reverse;
+}
+
+.content {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: var(--sina-z--modal, 1400);
+  width: 100%;
+  max-width: 28rem;
+  /* The centered element already owns `transform`, so animations fade only —
+     a zoom/translate keyframe would fight this centering. */
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--3, 0.75rem);
+  border-radius: var(--sina-radius--lg, 8px);
+  border: var(--sina-border-width--1, 1px) solid var(--sina-dialog-border, #e9ece8);
+  background: var(--sina-dialog-surface, #ffffff);
+  padding: var(--sina-space--5, 1.25rem);
+  box-shadow: var(--sina-shadow--lg, 0 12px 24px color-mix(in srgb, #383e33 10%, transparent),
+    0 4px 8px color-mix(in srgb, #383e33 6%, transparent));
+}
+.content:focus-visible {
+  outline: none;
+}
+.content[data-state="open"] {
+  animation: sinaDialogContentIn var(--sina-duration--base, 200ms) var(--sina-ease--out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.content[data-state="closed"] {
+  animation: sinaDialogContentIn var(--sina-duration--base, 200ms) var(--sina-ease--out, cubic-bezier(0.16, 1, 0.3, 1)) reverse;
+}
+
+.title {
+  font-size: var(--sina-text--base, 1rem);
+  font-weight: var(--sina-font-weight--semibold, 600);
+  color: var(--sina-dialog-title, #353b31);
+}
+
+.description {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-dialog-description, #52564e);
+}
+
+/* Radix Presence waits for animationend, so both open + closed need a real
+   animation or exit won't be delayed. Reduced-motion is handled at the token
+   layer (--sina-duration--* → 0ms). */
+@keyframes sinaDialogOverlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes sinaDialogContentIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

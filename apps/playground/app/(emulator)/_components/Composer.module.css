@@ -1,0 +1,30 @@
+/* Composer — chat input panel */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--3);
+  border-radius: var(--sina-radius--xl);
+  border: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+  background: var(--sina-color-surface-raised);
+  padding: var(--sina-space--3);
+  box-shadow: var(--sina-shadow--sm);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sina-space--3);
+}
+
+.hint {
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-subtle);
+}
+
+.sendIcon {
+  width: var(--sina-size--xs);
+  height: var(--sina-size--xs);
+}

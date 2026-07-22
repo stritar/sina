@@ -1,0 +1,64 @@
+/* @sina-design-system/core — Field */
+
+:root {
+  --sina-field-fg: var(--sina-color-text, #353b31);
+  --sina-field-description-fg: var(--sina-color-text-muted, #52564e);
+  /* Required asterisk + invalid border stay on the AA-safe dark coral (ink on white). */
+  --sina-field-fg--danger: var(--sina-color-danger, #c43a00);
+  /* Error message is a filled coral container — vivid-fill + black status ink,
+     converged with Badge/Alert/Toast (the vivid coral is only legible as a fill). */
+  --sina-field-error-bg--danger: var(--sina-color-danger-fill, #ff7e48);
+  --sina-field-error-fg--danger: var(--sina-color-status-fg--danger, #000000);
+  --sina-field-error-border--danger: var(--sina-color-status-border--danger, #00000000);
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--1_5, 0.375rem);
+}
+
+.label {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium, 500);
+  color: var(--sina-field-fg, #353b31);
+}
+
+.required {
+  color: var(--sina-field-fg--danger, #c43a00);
+}
+
+.description {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-field-description-fg, #52564e);
+}
+
+.error {
+  /* Pull the error pill up so it sits snug under the input: 6px .root gap - 4px = ~2px seam. */
+  margin-top: calc(-1 * var(--sina-space--1, 0.25rem));
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sina-space--1_5, 0.375rem);
+  padding: var(--sina-space--1_5, 0.375rem) var(--sina-space--2, 0.5rem);
+  border: var(--sina-border-width--1, 1px) solid
+    var(--sina-field-error-border--danger, #00000000);
+  border-radius: var(--sina-radius--sm, 4px);
+  background: var(--sina-field-error-bg--danger, #ff7e48);
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-field-error-fg--danger, #000000);
+}
+
+/* Mandatory filled error glyph — inherits the error text color (currentColor).
+   Nudged down to optically center on the first line of the message. */
+.errorIcon {
+  flex-shrink: 0;
+  width: var(--sina-size--icon-sm, 0.875rem);
+  height: var(--sina-size--icon-sm, 0.875rem);
+  margin-top: var(--sina-space--0_5, 0.125rem);
+}

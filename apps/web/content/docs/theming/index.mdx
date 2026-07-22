@@ -1,0 +1,98 @@
+---
+title: Theming
+---
+
+A theme in SINA is the same tokens with different values: you redefine the
+`--sina-*` custom properties and every component pointing at them updates,
+with no component edits and no rebuild. The cascade contract makes overrides
+predictable: SINA's reset lives in `@layer reset`, while component and app CSS
+are unlayered, so your app's CSS wins by plain source order. Import your theme
+block after SINA's styles and it takes effect.
+
+## Build a brand theme
+
+<Steps>
+  <Step title="Override the roles that carry your brand">
+
+Usually `primary`, its readable foreground, hover, and maybe radius. Everything
+else inherits.
+
+```css
+:root {
+  --sina-color-primary: #6d28d9;
+  --sina-color-primary-fg: #ffffff;
+  --sina-color-primary--hover: #5b21b6;
+  --sina-radius--md: 0.5rem; /* softer corners, brand-wide */
+}
+```
+
+  </Step>
+  <Step title="Or let the typed helper emit it">
+
+`createTheme()` in `@sina-design-system/theme` generates the block and
+type-checks which roles you're allowed to touch:
+
+```ts
+import { createTheme } from "@sina-design-system/theme";
+
+const acme = createTheme(
+  { colors: { primary: "#7c3aed" }, radius: { md: "0.5rem" } },
+  { selector: '[data-theme="acme"]' },
+);
+```
+
+  </Step>
+  <Step title="Scope it">
+
+Put the block on `:root` for one brand, or under `[data-theme="acme"]` for
+several. Scoped brands compose with dark mode. For a local override,
+`themeVars()` returns the same tokens as an inline-style object for `style={}`.
+
+  </Step>
+</Steps>
+
+<Callout variant="tip" title="Start small">
+  Most brands override a handful of roles (`primary`, the surfaces, maybe
+  radius) and inherit the rest.
+</Callout>
+
+## Dark mode
+
+`theme.css` ships a `[data-theme="dark"]` block that reassigns the same roles.
+Flip `data-theme` on `<html>` and the whole UI recolors; a light / dark /
+system toggle is just writing that attribute and remembering the choice in
+`localStorage`. Both palettes are held to WCAG AA contrast by build guards in
+the theme package.
+
+## The locked boundary
+
+Not every token is yours to change, and that boundary is itself a governance
+decision.
+
+| | Roles | |
+|---|---|---|
+| **Brand-open** | `bg` / `surface*` / `text*` / `border*`, `primary*` / `secondary*`, `success` / `warning` / `info`, chart series, `radius` / `space` / `text` / `font` | Yours. Rebrand freely. |
+| **Governance-locked** | `danger*`, the secure-surface tint, the focus ring, the `intent-*` aliases | Reserved. The typed API refuses them. |
+
+<Callout variant="governance" title="Why lock anything?">
+  A brand theme must never make an error look calm, hide the focus ring from
+  keyboard users, or disguise a secure-action affordance. Those aren't style;
+  they're safety and accessibility signals. `createTheme()` rejects a locked
+  role at compile time. (Raw CSS can still force a variable by specificity. The
+  API simply won't help you do it.)
+</Callout>
+
+<DoDont
+  do={[
+    "Override primary, surfaces, and radius to match your brand",
+    "Use createTheme() so locked roles are caught at compile time",
+    "Re-check contrast after a heavy rebrand",
+  ]}
+  dont={[
+    "Restyle danger to look friendly; errors must read as errors",
+    "Remove or dim the focus ring",
+    "Hard-code hex in a component to dodge the token system",
+  ]}
+/>
+
+Next: [Tokens](/docs/theming/tokens), the vocabulary every theme re-values.

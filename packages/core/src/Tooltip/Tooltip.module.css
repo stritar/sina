@@ -1,0 +1,39 @@
+/* @sina-design-system/core — Tooltip */
+
+:root {
+  --sina-tooltip-bg: var(--sina-color-text, #353b31);
+  --sina-tooltip-fg: var(--sina-color-bg, #f5f6f4);
+}
+
+.content {
+  z-index: var(--sina-z--dropdown, 1000);
+  max-width: 20rem;
+  border-radius: var(--sina-radius--sm, 4px);
+  background: var(--sina-tooltip-bg, #353b31);
+  padding-inline: var(--sina-space--2, 0.5rem);
+  padding-block: var(--sina-space--1_5, 0.375rem);
+  font-size: var(--sina-text--xs, 0.75rem);
+  color: var(--sina-tooltip-fg, #f5f6f4);
+  box-shadow: var(--sina-shadow--sm, 0 1px 3px color-mix(in srgb, #383e33 8%, transparent),
+    0 1px 2px color-mix(in srgb, #383e33 6%, transparent));
+}
+.content[data-state="delayed-open"] {
+  animation: sinaTooltipContentIn var(--sina-duration--base, 200ms) var(--sina-ease--out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.content[data-state="closed"] {
+  animation: sinaTooltipContentIn var(--sina-duration--base, 200ms) var(--sina-ease--out, cubic-bezier(0.16, 1, 0.3, 1)) reverse;
+}
+
+/* Radix Presence waits for animationend, so both open + closed need a real
+   animation or exit won't be delayed. Reduced-motion is handled at the token
+   layer (--sina-duration--* → 0ms). */
+@keyframes sinaTooltipContentIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

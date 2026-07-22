@@ -1,0 +1,92 @@
+---
+title: The interception contract
+---
+
+Every rule in the Constitution returns the same shape, defined in
+`@sina-design-system/governance`. Input: an unknown payload. Output: this.
+It runs wherever you call it, which for enforcement should be your server.
+
+```ts
+interface InterceptionResult {
+  valid: boolean;
+  violations: Violation[];
+  requiredComponent: string | null;
+}
+
+interface Violation {
+  code: string;                  // machine-readable, e.g. "AMOUNT_REQUIRES_APPROVAL"
+  message: string;
+  path?: (string | number)[];    // where in the payload
+  standard?: string;             // the regulation or policy the rule cites
+  severity: "reject" | "escalate" | "flag";
+}
+```
+
+- **`valid`** is `true` when no violation has severity `reject` or `escalate`.
+  A `flag` never makes a result invalid.
+- **`violations`** lists what the rule found, blocking or not. The optional
+  `standard` names the source of the threshold, so a block can be traced to a
+  written rule.
+- **`requiredComponent`** is the one component allowed to continue the flow
+  when a rule escalates (for the wire rule, `"SecureWireDialog"`). Otherwise
+  `null`.
+
+## How the result is produced: shape, then values
+
+**Layer 1: structure.** The payload must parse against a strict Zod schema, so
+any field the schema doesn't declare fails parsing. A fabricated
+`confirmButton` or a smuggled `cvv` is an extra field, rejected before any
+value is read.
+
+<BeforeAfter>
+  <Before title="What a hostile stream sends">
+    <code>{`{ amount: 500, confirmButton: true, cvv: "123" }`}</code>: a real
+    amount, plus a fake button and smuggled card data.
+  </Before>
+  <After title="What the schema accepts">
+    <code>{`{ amount: 500 }`}</code>: the extra fields are rejected. The fake
+    button can't render; the card data never reaches the log.
+  </After>
+</BeforeAfter>
+
+**Layer 2: policy.** If the shape parses, the values are checked against the
+rule's thresholds:
+
+```ts
+// From the wire-transfer rule (simplified):
+if (amount > WIRE_SECONDARY_APPROVAL_MINOR /* $50,000 */) {
+  violation("AMOUNT_REQUIRES_APPROVAL", "escalate"); // → SecureWireDialog
+}
+```
+
+Money is counted in integer minor units (cents), per ISO 4217. No floating
+point, so amounts either match exactly or they don't.
+
+## Pass vs. fail
+
+```ts
+// A clean request:
+{ valid: true, violations: [], requiredComponent: null }
+
+// An over-limit wire:
+{
+  valid: false,
+  violations: [
+    { code: "AMOUNT_REQUIRES_APPROVAL", severity: "escalate",
+      message: "wire above the approval threshold requires secondary approval",
+      standard: "SINA dual-control policy" },
+  ],
+  requiredComponent: "SecureWireDialog",
+}
+```
+
+Your render code reads this and mounts `SecureWireDialog` instead of a plain
+confirm step.
+
+Governed rules (actions, which can escalate) and ungoverned display rules
+(reads, which only check shape and never set `requiredComponent`) both return
+this contract, so the code that renders a decision is the same everywhere.
+To author a rule that returns it, see
+[Write a governance rule](/docs/governance/writing-a-rule).
+
+Next: [Escalation & enforcement](/docs/concepts/escalation).

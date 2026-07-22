@@ -1,0 +1,393 @@
+/*
+ * PER-INDUSTRY TINT — GENERATED FILE, DO NOT EDIT BY HAND.
+ *
+ * Regenerate with `node scripts/gen-industry-tints.mjs`; the generator owns the
+ * derivation and `industry-tint.test.ts` fails the build if this file drifts
+ * from it or if a hand-edit breaks luminance parity across industries.
+ *
+ * Each industry is the sage anchor with ONLY its OKLCH hue replaced (fintech
+ * ~133 sage, healthcare 250 clinical azure, defense 65 desert sand). Lightness
+ * and chroma are identical across the three, so all three land within ~0.003
+ * relative luminance of each other and every WCAG ratio holds for all of them.
+ *
+ * The `--sinamk-color-gate-*` verdict palette is the one exception, and it moves
+ * less: its FILLS are blended only partway toward the industry hue (so pass,
+ * escalate and reject stay distinguishable rather than collapsing onto one hue),
+ * and its INKS are emitted verbatim, identical across all three industries.
+ *
+ * `--sina-industry-tag-bg` (the hero emulator's industry chip) takes the plain
+ * hue replacement but skips the light chroma boost: it is a chromatic fill
+ * signed off at its Figma value, not a near-neutral awaiting a wash. Its ink is
+ * white in every industry and both themes.
+ *
+ * Raw hex is authored here on purpose. This is the third such exception on the
+ * marketing side, alongside `wireframe.css` and `GlyphField.module.css` (the
+ * glyph-field values in particular MUST stay literal hex — the WebGL canvas
+ * parses them with `parseColor`, which understands only hex and rgb()).
+ */
+
+html:not([data-theme="dark"])[data-industry="fintech"] body:has(.sina-wireframe),
+html:not([data-theme="dark"])[data-industry="fintech"] body:has(.sina-wireframe) .broadsheet {
+  --sinamk-color-secondary-fill: #e9ece7;
+  --sinamk-color-secondary-fill--hover: #dee4dd;
+  --sinamk-color-secondary-fill--pressed: #d5dbd3;
+  --sinamk-color-secondary-fill--disabled: #eef0eb;
+  --sinamk-color-secondary--hover: #dde0d8;
+  --sinamk-color-primary-fill: #343b2f;
+  --sinamk-color-primary-fill--hover: #434e38;
+  --sinamk-color-primary-fill--pressed: #2a3027;
+  --sinamk-color-primary-fill--disabled: #c0cec3;
+  --sinamk-color-primary-fg: #ffffff;
+  --sinamk-color-primary-fg--disabled: #889b8a;
+  --sinamk-color-text: #343b2f;
+  --sinamk-color-text-strong: #52564d;
+  --sinamk-color-text-muted: #6a7366;
+  --sinamk-color-text-subtle: #83897c;
+  --sinamk-color-text--disabled: #a2aa9b;
+  --sinamk-color-bg: #f5f6f4;
+  --sinamk-color-surface: #ffffff;
+  --sinamk-color-border: #dee4dd;
+  --sinamk-color-field-bg: #ffffff;
+  --sinamk-color-field-bg--disabled: #f0f2ec;
+  --sinamk-color-field-border: #ccd5c7;
+  --sinamk-color-field-border--hover: #b5c0af;
+  --sinamk-color-field-placeholder: #89937d;
+  --sinamk-color-code-bg: #eef1eb;
+  --sinamk-color-popover-surface: #ffffff;
+  --sina-color-bg: #f5f6f4;
+  --sina-color-surface: #ffffff;
+  --sina-color-surface-emulator: #fafbf9;
+  --sina-color-surface-raised: #ffffff;
+  --sina-color-surface-sunken: #f4f4f3;
+  --sina-color-text: #0f120c;
+  --sina-color-text-muted: #40473c;
+  --sina-color-text-subtle: #6d7468;
+  --sina-color-border: #c6cbc4;
+  --sina-color-border-subtle: #e3e5e2;
+  --sina-color-primary: #0d1309;
+  --sina-color-primary--hover: #2f362a;
+  --sina-color-primary--active: #000000;
+  --sina-color-secondary: #eeefee;
+  --sina-color-secondary--hover: #e1e3e0;
+  --sina-color-neutral-bg: #f4f4f3;
+  --sina-glyphfield-bg: #f5f6f4;
+  --sina-glyphfield-primary: #cdd3c6;
+  --sina-glyphfield-accent: #a3a6a0;
+  --sinamk-color-gate-pass-bg--solid: #1d6835;
+  --sinamk-color-gate-pass-fg--solid: #ffffff;
+  --sinamk-color-gate-escalate-bg--solid: #7d4b00;
+  --sinamk-color-gate-escalate-fg--solid: #ffffff;
+  --sinamk-color-gate-reject-bg--solid: #8b3b36;
+  --sinamk-color-gate-reject-fg--solid: #ffffff;
+  --sinamk-color-gate-flag-bg--solid: #555a52;
+  --sinamk-color-gate-flag-fg--solid: #ffffff;
+  --sina-industry-tag-bg: #0f766e;
+  --sina-industry-tag-fg: #ffffff;
+  --sinamk-color-segment-fill--active: #0f766e;
+  --sinamk-color-segment-fg--active: #ffffff;
+}
+
+html:not([data-theme="dark"])[data-industry="healthcare"] body:has(.sina-wireframe),
+html:not([data-theme="dark"])[data-industry="healthcare"] body:has(.sina-wireframe) .broadsheet {
+  --sinamk-color-secondary-fill: #e7ebf0;
+  --sinamk-color-secondary-fill--hover: #dce3ea;
+  --sinamk-color-secondary-fill--pressed: #d3dae2;
+  --sinamk-color-secondary-fill--disabled: #eceff4;
+  --sinamk-color-secondary--hover: #d9dfe7;
+  --sinamk-color-primary-fill: #303a44;
+  --sinamk-color-primary-fill--hover: #3b4d5f;
+  --sinamk-color-primary-fill--pressed: #282f38;
+  --sinamk-color-primary-fill--disabled: #c0ccd7;
+  --sinamk-color-primary-fg: #ffffff;
+  --sinamk-color-primary-fg--disabled: #8798aa;
+  --sinamk-color-text: #303a44;
+  --sinamk-color-text-strong: #4e565e;
+  --sinamk-color-text-muted: #67727c;
+  --sinamk-color-text-subtle: #7e8893;
+  --sinamk-color-text--disabled: #9da8b5;
+  --sinamk-color-bg: #f4f6f8;
+  --sinamk-color-surface: #ffffff;
+  --sinamk-color-border: #dce3ea;
+  --sinamk-color-field-bg: #ffffff;
+  --sinamk-color-field-bg--disabled: #edf2f6;
+  --sinamk-color-field-border: #c9d3df;
+  --sinamk-color-field-border--hover: #b1bfcd;
+  --sinamk-color-field-placeholder: #8191a4;
+  --sinamk-color-code-bg: #ecf0f6;
+  --sinamk-color-popover-surface: #ffffff;
+  --sina-color-bg: #f4f6f8;
+  --sina-color-surface: #ffffff;
+  --sina-color-surface-emulator: #f9fafd;
+  --sina-color-surface-raised: #ffffff;
+  --sina-color-surface-sunken: #f4f4f5;
+  --sina-color-text: #0c1217;
+  --sina-color-text-muted: #3c464f;
+  --sina-color-text-subtle: #69727d;
+  --sina-color-border: #c5cad1;
+  --sina-color-border-subtle: #e2e5e7;
+  --sina-color-primary: #0a121b;
+  --sina-color-primary--hover: #2b343f;
+  --sina-color-primary--active: #000000;
+  --sina-color-secondary: #eeeff0;
+  --sina-color-secondary--hover: #e0e2e5;
+  --sina-color-neutral-bg: #f4f4f5;
+  --sina-glyphfield-bg: #f4f6f8;
+  --sina-glyphfield-primary: #c8d2de;
+  --sina-glyphfield-accent: #a1a5ab;
+  --sinamk-color-gate-pass-bg--solid: #006949;
+  --sinamk-color-gate-pass-fg--solid: #ffffff;
+  --sinamk-color-gate-escalate-bg--solid: #7e4a02;
+  --sinamk-color-gate-escalate-fg--solid: #ffffff;
+  --sinamk-color-gate-reject-bg--solid: #8a3a48;
+  --sinamk-color-gate-reject-fg--solid: #ffffff;
+  --sinamk-color-gate-flag-bg--solid: #535b54;
+  --sinamk-color-gate-flag-fg--solid: #ffffff;
+  --sina-industry-tag-bg: #406c99;
+  --sina-industry-tag-fg: #ffffff;
+  --sinamk-color-segment-fill--active: #406c99;
+  --sinamk-color-segment-fg--active: #ffffff;
+}
+
+html:not([data-theme="dark"])[data-industry="defense"] body:has(.sina-wireframe),
+html:not([data-theme="dark"])[data-industry="defense"] body:has(.sina-wireframe) .broadsheet {
+  --sinamk-color-secondary-fill: #efebe6;
+  --sinamk-color-secondary-fill--hover: #e8e1db;
+  --sinamk-color-secondary-fill--pressed: #dfd8d0;
+  --sinamk-color-secondary-fill--disabled: #f3eeeb;
+  --sinamk-color-secondary--hover: #e5ded7;
+  --sinamk-color-primary-fill: #41372d;
+  --sinamk-color-primary-fill--hover: #5a4735;
+  --sinamk-color-primary-fill--pressed: #352c24;
+  --sinamk-color-primary-fill--disabled: #d5c8bd;
+  --sinamk-color-primary-fg: #ffffff;
+  --sinamk-color-primary-fg--disabled: #a59382;
+  --sinamk-color-text: #41372d;
+  --sinamk-color-text-strong: #5c544c;
+  --sinamk-color-text-muted: #7a6f64;
+  --sinamk-color-text-subtle: #90857b;
+  --sinamk-color-text--disabled: #b2a69a;
+  --sinamk-color-bg: #f8f6f4;
+  --sinamk-color-surface: #ffffff;
+  --sinamk-color-border: #e8e1db;
+  --sinamk-color-field-bg: #ffffff;
+  --sinamk-color-field-bg--disabled: #f6f0ec;
+  --sinamk-color-field-border: #ddd0c5;
+  --sinamk-color-field-border--hover: #cabaac;
+  --sinamk-color-field-placeholder: #9f8d7b;
+  --sinamk-color-code-bg: #f5efea;
+  --sinamk-color-popover-surface: #ffffff;
+  --sina-color-bg: #f8f6f4;
+  --sina-color-surface: #ffffff;
+  --sina-color-surface-emulator: #fdfbf9;
+  --sina-color-surface-raised: #ffffff;
+  --sina-color-surface-sunken: #f4f4f3;
+  --sina-color-text: #16100a;
+  --sina-color-text-muted: #4d443a;
+  --sina-color-text-subtle: #7b7066;
+  --sina-color-border: #cfc8c3;
+  --sina-color-border-subtle: #e7e4e1;
+  --sina-color-primary: #190f07;
+  --sina-color-primary--hover: #3d3228;
+  --sina-color-primary--active: #000000;
+  --sina-color-secondary: #f0efed;
+  --sina-color-secondary--hover: #e5e2df;
+  --sina-color-neutral-bg: #f4f4f3;
+  --sina-glyphfield-bg: #f8f6f4;
+  --sina-glyphfield-primary: #dbcfc5;
+  --sina-glyphfield-accent: #aaa49f;
+  --sinamk-color-gate-pass-bg--solid: #3d651e;
+  --sinamk-color-gate-pass-fg--solid: #ffffff;
+  --sinamk-color-gate-escalate-bg--solid: #7d4b00;
+  --sinamk-color-gate-escalate-fg--solid: #ffffff;
+  --sinamk-color-gate-reject-bg--solid: #8a3c2a;
+  --sinamk-color-gate-reject-fg--solid: #ffffff;
+  --sinamk-color-gate-flag-bg--solid: #575a51;
+  --sinamk-color-gate-flag-fg--solid: #ffffff;
+  --sina-industry-tag-bg: #8d6031;
+  --sina-industry-tag-fg: #ffffff;
+  --sinamk-color-segment-fill--active: #8d6031;
+  --sinamk-color-segment-fg--active: #ffffff;
+}
+
+html[data-theme="dark"][data-industry="fintech"] body:has(.sina-wireframe),
+html[data-theme="dark"][data-industry="fintech"] body:has(.sina-wireframe) .broadsheet {
+  --sinamk-color-secondary-fill: #2b312a;
+  --sinamk-color-secondary-fill--hover: #333a31;
+  --sinamk-color-secondary-fill--pressed: #232821;
+  --sinamk-color-secondary-fill--disabled: #21261f;
+  --sinamk-color-secondary--hover: #313830;
+  --sinamk-color-primary-fill: #b9c4b1;
+  --sinamk-color-primary-fill--hover: #94a389;
+  --sinamk-color-primary-fill--pressed: #6f7e63;
+  --sinamk-color-primary-fill--disabled: #2b312a;
+  --sinamk-color-primary-fg: #21251e;
+  --sinamk-color-primary-fg--disabled: #767c71;
+  --sinamk-color-text: #e7ebe3;
+  --sinamk-color-text-strong: #c8cdc1;
+  --sinamk-color-text-muted: #a3a99d;
+  --sinamk-color-text-subtle: #8b917f;
+  --sinamk-color-text--disabled: #767c71;
+  --sinamk-color-bg: #0b0c0b;
+  --sinamk-color-surface: #1c1f1a;
+  --sinamk-color-border: #333a31;
+  --sinamk-color-field-bg: #1c1f1a;
+  --sinamk-color-field-bg--disabled: #21261f;
+  --sinamk-color-field-border: #414a3d;
+  --sinamk-color-field-border--hover: #4d5648;
+  --sinamk-color-field-placeholder: #7c8377;
+  --sinamk-color-code-bg: #141712;
+  --sinamk-color-popover-surface: #22261f;
+  --sina-color-bg: #0b0c0b;
+  --sina-color-surface: #151615;
+  --sina-color-surface-emulator: #1c1c1b;
+  --sina-color-surface-raised: #1e1f1e;
+  --sina-color-surface-sunken: #090a09;
+  --sina-color-text: #f5f5f4;
+  --sina-color-text-muted: #bcc3b8;
+  --sina-color-text-subtle: #868d82;
+  --sina-color-border: #3b3e39;
+  --sina-color-border-subtle: #292b27;
+  --sina-color-primary: #f4f6f3;
+  --sina-color-primary--hover: #dadfd8;
+  --sina-color-primary--active: #ffffff;
+  --sina-color-secondary: #232521;
+  --sina-color-secondary--hover: #2e312d;
+  --sina-color-neutral-bg: #232522;
+  --sina-glyphfield-bg: #0b0c0b;
+  --sina-glyphfield-primary: #2c332c;
+  --sina-glyphfield-accent: #363e35;
+  --sinamk-color-gate-pass-bg--solid: #8ec899;
+  --sinamk-color-gate-pass-fg--solid: #21251e;
+  --sinamk-color-gate-escalate-bg--solid: #dbae76;
+  --sinamk-color-gate-escalate-fg--solid: #21251e;
+  --sinamk-color-gate-reject-bg--solid: #eca199;
+  --sinamk-color-gate-reject-fg--solid: #21251e;
+  --sinamk-color-gate-flag-bg--solid: #b4b9b1;
+  --sinamk-color-gate-flag-fg--solid: #21251e;
+  --sina-industry-tag-bg: #7bd2c8;
+  --sina-industry-tag-fg: #21251e;
+  --sinamk-color-segment-fill--active: #7bd2c8;
+  --sinamk-color-segment-fg--active: #21251e;
+}
+
+html[data-theme="dark"][data-industry="healthcare"] body:has(.sina-wireframe),
+html[data-theme="dark"][data-industry="healthcare"] body:has(.sina-wireframe) .broadsheet {
+  --sinamk-color-secondary-fill: #2a3037;
+  --sinamk-color-secondary-fill--hover: #313841;
+  --sinamk-color-secondary-fill--pressed: #21272e;
+  --sinamk-color-secondary-fill--disabled: #1f252c;
+  --sinamk-color-secondary--hover: #2f373e;
+  --sinamk-color-primary-fill: #b3c3d3;
+  --sinamk-color-primary-fill--hover: #8ba0b7;
+  --sinamk-color-primary-fill--pressed: #667c93;
+  --sinamk-color-primary-fill--disabled: #2a3037;
+  --sinamk-color-primary-fg: #1f242b;
+  --sinamk-color-primary-fg--disabled: #737b85;
+  --sinamk-color-text: #e4eaf1;
+  --sinamk-color-text-strong: #c3ccd6;
+  --sinamk-color-text-muted: #9fa8b2;
+  --sinamk-color-text-subtle: #83909f;
+  --sinamk-color-text--disabled: #737b85;
+  --sinamk-color-bg: #0b0c0d;
+  --sinamk-color-surface: #1a1f23;
+  --sinamk-color-border: #313841;
+  --sinamk-color-field-bg: #1a1f23;
+  --sinamk-color-field-bg--disabled: #1f252c;
+  --sinamk-color-field-border: #3e4954;
+  --sinamk-color-field-border--hover: #495461;
+  --sinamk-color-field-placeholder: #78828c;
+  --sinamk-color-code-bg: #12171b;
+  --sinamk-color-popover-surface: #20252c;
+  --sina-color-bg: #0b0c0d;
+  --sina-color-surface: #141617;
+  --sina-color-surface-emulator: #1b1c1d;
+  --sina-color-surface-raised: #1d1f20;
+  --sina-color-surface-sunken: #080a0b;
+  --sina-color-text: #f4f5f6;
+  --sina-color-text-muted: #b8c2cb;
+  --sina-color-text-subtle: #838c95;
+  --sina-color-border: #393e42;
+  --sina-color-border-subtle: #272a2e;
+  --sina-color-primary: #f4f6f7;
+  --sina-color-primary--hover: #d9dee5;
+  --sina-color-primary--active: #ffffff;
+  --sina-color-secondary: #212528;
+  --sina-color-secondary--hover: #2d3134;
+  --sina-color-neutral-bg: #222527;
+  --sina-glyphfield-bg: #0b0c0d;
+  --sina-glyphfield-primary: #2b3139;
+  --sina-glyphfield-accent: #343d45;
+  --sinamk-color-gate-pass-bg--solid: #7bcaab;
+  --sinamk-color-gate-pass-fg--solid: #21251e;
+  --sinamk-color-gate-escalate-bg--solid: #daae76;
+  --sinamk-color-gate-escalate-fg--solid: #21251e;
+  --sinamk-color-gate-reject-bg--solid: #eb9fa9;
+  --sinamk-color-gate-reject-fg--solid: #21251e;
+  --sinamk-color-gate-flag-bg--solid: #b2b9b3;
+  --sinamk-color-gate-flag-fg--solid: #21251e;
+  --sina-industry-tag-bg: #98c7f9;
+  --sina-industry-tag-fg: #21251e;
+  --sinamk-color-segment-fill--active: #98c7f9;
+  --sinamk-color-segment-fg--active: #21251e;
+}
+
+html[data-theme="dark"][data-industry="defense"] body:has(.sina-wireframe),
+html[data-theme="dark"][data-industry="defense"] body:has(.sina-wireframe) .broadsheet {
+  --sinamk-color-secondary-fill: #352e28;
+  --sinamk-color-secondary-fill--hover: #3f372f;
+  --sinamk-color-secondary-fill--pressed: #2c251f;
+  --sinamk-color-secondary-fill--disabled: #2a231d;
+  --sinamk-color-secondary--hover: #3c342d;
+  --sinamk-color-primary-fill: #cebdae;
+  --sinamk-color-primary-fill--hover: #b29b85;
+  --sinamk-color-primary-fill--pressed: #8c755f;
+  --sinamk-color-primary-fill--disabled: #352e28;
+  --sinamk-color-primary-fg: #29221d;
+  --sinamk-color-primary-fg--disabled: #827970;
+  --sinamk-color-text: #f0e8e2;
+  --sinamk-color-text-strong: #d4c9c0;
+  --sinamk-color-text-muted: #b0a59c;
+  --sinamk-color-text-subtle: #9c8c7f;
+  --sinamk-color-text--disabled: #827970;
+  --sinamk-color-bg: #0d0b0b;
+  --sinamk-color-surface: #221e19;
+  --sinamk-color-border: #3f372f;
+  --sinamk-color-field-bg: #221e19;
+  --sinamk-color-field-bg--disabled: #2a231d;
+  --sinamk-color-field-border: #51463a;
+  --sinamk-color-field-border--hover: #5e5146;
+  --sinamk-color-field-placeholder: #897f75;
+  --sinamk-color-code-bg: #1a1611;
+  --sinamk-color-popover-surface: #2a231e;
+  --sina-color-bg: #0d0b0b;
+  --sina-color-surface: #171614;
+  --sina-color-surface-emulator: #1c1c1b;
+  --sina-color-surface-raised: #201e1d;
+  --sina-color-surface-sunken: #0b0a08;
+  --sina-color-text: #f6f5f3;
+  --sina-color-text-muted: #c9bfb6;
+  --sina-color-text-subtle: #938a81;
+  --sina-color-border: #413c38;
+  --sina-color-border-subtle: #2d2a26;
+  --sina-color-primary: #f7f6f4;
+  --sina-color-primary--hover: #e3ddd7;
+  --sina-color-primary--active: #ffffff;
+  --sina-color-secondary: #272320;
+  --sina-color-secondary--hover: #332f2c;
+  --sina-color-neutral-bg: #272421;
+  --sina-glyphfield-bg: #0d0b0b;
+  --sina-glyphfield-primary: #372f29;
+  --sina-glyphfield-accent: #433b32;
+  --sinamk-color-gate-pass-bg--solid: #a1c58a;
+  --sinamk-color-gate-pass-fg--solid: #21251e;
+  --sinamk-color-gate-escalate-bg--solid: #dcad77;
+  --sinamk-color-gate-escalate-fg--solid: #21251e;
+  --sinamk-color-gate-reject-bg--solid: #eba390;
+  --sinamk-color-gate-reject-fg--solid: #21251e;
+  --sinamk-color-gate-flag-bg--solid: #b6b8b0;
+  --sinamk-color-gate-flag-fg--solid: #21251e;
+  --sina-industry-tag-bg: #ecba89;
+  --sina-industry-tag-fg: #21251e;
+  --sinamk-color-segment-fill--active: #ecba89;
+  --sinamk-color-segment-fg--active: #21251e;
+}

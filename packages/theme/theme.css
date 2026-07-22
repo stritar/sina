@@ -1,0 +1,502 @@
+/**
+ * SINA design tokens — the runtime source of truth.
+ *
+ * Every value lives here as a `--sina-*` CSS custom property; component and app
+ * CSS Modules consume these vars, so changing one line here propagates
+ * everywhere. No React, no JS — tokens only.
+ *
+ * Naming grammar (full spec: `packages/theme/TOKEN_NAMING.md`):
+ *   - `--sina-` prefix on every token.
+ *   - Single `-` joins the IDENTITY path — category, semantic role & sub-role
+ *     (`text-muted`, `surface-raised`, `primary-fg`, `focus-ring`), and
+ *     multi-word property names (`border-color`).
+ *   - Double `--` precedes a LEAF MODIFIER — a scale step, variant, size, or
+ *     STATE — and modifiers come AFTER the property:
+ *       `--sina-space--4`, `--sina-radius--lg`, `--sina-color-neutral--500`,
+ *       `--sina-color-primary--hover`, `--sina-overlay--pressed`.
+ *   - Roles (a fixed slot the token always is) stay single-dash; only values on
+ *     a runtime axis (variant/state) get `--`. `focus-ring` is an atomic role.
+ *   - Colors are authored in HEX (`#rrggbb`, or `#rrggbbaa` for baked alpha).
+ *
+ * Apps consume this via `@import "@sina-design-system/theme/css";`.
+ */
+
+:root {
+  /* Tell the UA which palette its own chrome should wear. Without this, native
+     scrollbars, form-control internals, autofill, the caret and date pickers
+     stay LIGHT on a dark page. Flipped in the dark block below. */
+  color-scheme: light;
+
+  /* ===================================================================== */
+  /* Color primitives — hex                                                */
+  /* ===================================================================== */
+
+  /* Neutral (warm sage) — the workhorse ramp, anchored on the Figma frame */
+  --sina-color-neutral--50: #f5f6f4;
+  --sina-color-neutral--100: #e9ece8;
+  --sina-color-neutral--200: #dde0d9;
+  --sina-color-neutral--300: #cbd0c5;
+  --sina-color-neutral--400: #a7ada0;
+  --sina-color-neutral--500: #84897e;
+  --sina-color-neutral--600: #696c66;
+  --sina-color-neutral--700: #52564e;
+  --sina-color-neutral--800: #434841;
+  --sina-color-neutral--900: #353b31;
+  --sina-color-neutral--950: #21251e;
+
+  /* Brand (sage green) — brand--700 is the primary action color           */
+  --sina-color-brand--50: #eef1ec;
+  --sina-color-brand--100: #d9e0d4;
+  --sina-color-brand--200: #b9c4b1;
+  --sina-color-brand--300: #94a389;
+  --sina-color-brand--400: #6f7e63;
+  --sina-color-brand--500: #545f49;
+  --sina-color-brand--600: #444d3b;
+  --sina-color-brand--700: #353b31;
+  --sina-color-brand--800: #2b3028;
+  --sina-color-brand--900: #21251e;
+  --sina-color-brand--950: #161913;
+
+  /* Danger — vivid coral (anchored on the Badge/Alert/Toast fill at --300;   */
+  /* solid at --600 keeps AA vs white fg 4.5:1)                              */
+  --sina-color-danger--50: #faf0ed;
+  --sina-color-danger--100: #f7d9cd;
+  --sina-color-danger--200: #f9b091;
+  --sina-color-danger--300: #ff7e48;
+  --sina-color-danger--400: #ff5b17;
+  --sina-color-danger--500: #eb4500;
+  --sina-color-danger--600: #c43a00;
+  --sina-color-danger--700: #9d2e00;
+  --sina-color-danger--800: #7b2400;
+  --sina-color-danger--900: #5b1c02;
+
+  /* Success — mint green (anchored on the Badge/Alert/Toast fill at --300;   */
+  /* solid at --700 keeps AA vs white fg 4.5:1)                              */
+  --sina-color-success--50: #eef6f1;
+  --sina-color-success--100: #d3ebdd;
+  --sina-color-success--200: #a2deba;
+  --sina-color-success--300: #66d091;
+  --sina-color-success--400: #3fc977;
+  --sina-color-success--500: #2fb163;
+  --sina-color-success--600: #279353;
+  --sina-color-success--700: #217443;
+  --sina-color-success--800: #1b5934;
+  --sina-color-success--900: #164228;
+
+  /* Warning — bright gold/amber (anchored on the Badge/Alert/Toast fill at   */
+  /* --300; solid at --400 stays bright and pairs with dark fg)              */
+  --sina-color-warning--50: #f9f4eb;
+  --sina-color-warning--100: #f5e5c8;
+  --sina-color-warning--200: #f7d087;
+  --sina-color-warning--300: #fcb737;
+  --sina-color-warning--400: #ffa806;
+  --sina-color-warning--500: #dd9000;
+  --sina-color-warning--600: #b87800;
+  --sina-color-warning--700: #936000;
+  --sina-color-warning--800: #714a02;
+  --sina-color-warning--900: #543803;
+
+  /* Info — sky azure (anchored on the Badge/Alert/Toast fill at --300;       */
+  /* solid at --600 keeps AA vs white fg 4.5:1)                              */
+  --sina-color-info--50: #f3f6fa;
+  --sina-color-info--100: #dee9f6;
+  --sina-color-info--200: #b7d4f3;
+  --sina-color-info--300: #88baf1;
+  --sina-color-info--400: #519cf0;
+  --sina-color-info--500: #2083ef;
+  --sina-color-info--600: #0f6cd3;
+  --sina-color-info--700: #0f57a6;
+  --sina-color-info--800: #0f447e;
+  --sina-color-info--900: #0d345e;
+
+  /* ===================================================================== */
+  /* Color — semantic roles (LIGHT). Components reference these, not ramps. */
+  /* ===================================================================== */
+
+  /* Surfaces */
+  --sina-color-bg: #f5f6f4; /* neutral--50  — page background            */
+  --sina-color-surface: #ffffff; /* cards, panels                        */
+  --sina-color-surface-raised: #ffffff; /* popovers, dialogs              */
+  --sina-color-surface-sunken: #f5f6f4; /* wells, code blocks             */
+
+  /* Text */
+  --sina-color-text: #353b31; /* neutral--900 — headings & body           */
+  --sina-color-text-muted: #52564e; /* neutral--700 — secondary text      */
+  --sina-color-text-subtle: #84897e; /* neutral--500 — decorative/large; ≥3:1 */
+  --sina-color-text-inverse: #ffffff; /* text on dark surfaces            */
+
+  /* Borders */
+  --sina-color-border: #dde0d9; /* neutral--200                           */
+  --sina-color-border-subtle: #e9ece8; /* neutral--100 — hairlines        */
+
+  /* Actions */
+  --sina-color-primary: #353b31; /* brand--700                            */
+  --sina-color-primary--hover: #444d3b; /* brand--600                     */
+  --sina-color-primary--active: #2b3028; /* brand--800 — pressed           */
+  --sina-color-primary-fg: #ffffff;
+  --sina-color-secondary: #e5e7e2;
+  --sina-color-secondary--hover: #dde0d9;
+  --sina-color-secondary-fg: #353b31;
+
+  /* Status */
+  --sina-color-danger: #c43a00; /* danger--600 — dark coral, AA vs white fg */
+  --sina-color-danger-fg: #ffffff;
+  --sina-color-danger-bg: #faf0ed; /* danger--50 */
+  --sina-color-success: #217443; /* success--700 — AA vs white fg */
+  --sina-color-success-fg: #ffffff;
+  --sina-color-success-bg: #eef6f1; /* success--50 */
+  --sina-color-warning: #ffa806; /* warning--400 — bright gold, pairs with dark fg */
+  --sina-color-warning-fg: #21251e;
+  --sina-color-warning-bg: #f9f4eb; /* warning--50 */
+  --sina-color-warning-text: #714a02; /* warning--800 — amber legible on -bg tint (AA); base amber fails contrast */
+  --sina-color-info: #0f6cd3; /* info--600 — AA vs white fg */
+  --sina-color-info-fg: #ffffff;
+  --sina-color-info-bg: #f3f6fa; /* info--50 */
+  --sina-color-neutral-bg: #f5f6f4; /* neutral--50 — badge/chip tint */
+
+  /* Status fills (vivid, saturated) + per-status ink & border — the "0000 dark
+     on vivid fill" language. Consumed by Badge/Alert/Toast. DISTINCT from the
+     pale `-bg` tints (KpiStat's surface, kept). Theme-invariant: each surface
+     carries its own fill, so black-on-fill contrast holds in light AND dark (all
+     AAA; guarded in tokens.test.ts). */
+  --sina-color-neutral-fill: #e6e9e3;
+  --sina-color-info-fill: #88baf1; /* = info--300 */
+  --sina-color-success-fill: #66d091; /* = success--300 */
+  --sina-color-warning-fill: #fcb737; /* = warning--300 */
+  --sina-color-danger-fill: #ff7e48; /* = danger--300 */
+
+  /* Per-status ink on the vivid fill — one knob per status so an adopter can
+     rebrand (e.g.) danger ink without touching the others. Default "0000 dark"
+     across all, holding AAA on every fill (guarded in tokens.test.ts). */
+  --sina-color-status-fg--neutral: #000000;
+  --sina-color-status-fg--info: #000000;
+  --sina-color-status-fg--success: #000000;
+  --sina-color-status-fg--warning: #000000;
+  --sina-color-status-fg--danger: #000000;
+
+  /* Per-status placeholder border — black at 0 alpha; a themer raises the alpha
+     per status to reveal it (or overrides the color outright). */
+  --sina-color-status-border--neutral: #00000000;
+  --sina-color-status-border--info: #00000000;
+  --sina-color-status-border--success: #00000000;
+  --sina-color-status-border--warning: #00000000;
+  --sina-color-status-border--danger: #00000000;
+
+  /* Per-variant placeholder border for Button's vivid fills — black at 0 alpha;
+     raise the alpha (or override) to reveal. Decoupled from
+     --sina-color-status-border--* so revealing a button border does not touch
+     Badge/Alert/Toast. */
+  --sina-color-button-border--primary: #00000000;
+  --sina-color-button-border--danger: #00000000;
+
+  /* Accessibility */
+  --sina-color-focus-ring: #545f49; /* brand--500 — focus-visible ring     */
+
+  /* Dataviz — categorical series palette. Series i wears chart--((i-1 mod 8)+1);
+     assigned in fixed order, never cycled or re-ranked. Hues follow the SINA
+     ramps (chroma-lifted where a ramp step reads as gray) plus three new
+     dataviz-only hues (violet/plum/teal). Slot order is the CVD-safety
+     mechanism — validated (Machado-2009 protan/deutan) against this exact
+     sequence; do not reorder. Steps are deliberately distinct from the status
+     roles so a series never impersonates danger/success/warning. */
+  --sina-color-chart--1: #5c9e2e; /* olive-green (brand hue) */
+  --sina-color-chart--2: #1785d6; /* azure (edra #0099ff)   */
+  --sina-color-chart--3: #16a34a; /* green (success family) */
+  --sina-color-chart--4: #7c5cff; /* violet                 */
+  --sina-color-chart--5: #f2600c; /* orange                 */
+  --sina-color-chart--6: #c026a8; /* magenta/plum           */
+  --sina-color-chart--7: #bf8300; /* amber/gold             */
+  --sina-color-chart--8: #0d9488; /* teal                   */
+
+  /* Governance-flavored aliases (ROADMAP §1) — semantic, not new colors   */
+  --sina-color-intent-danger: var(--sina-color-danger);
+  --sina-color-intent-safe: var(--sina-color-success);
+  --sina-color-surface-secure: #eef1ec; /* brand--50 tinted surface        */
+
+  /* Interaction overlays — the one hover/pressed/selected system. Composed  */
+  /* with color-mix (like the shadow tokens) so they composite over any      */
+  /* surface and auto-invert in dark mode (they track text / primary).       */
+  /* Named --sina-overlay--* (not --sina-color-*) so they read as overlays.  */
+  --sina-overlay--hover: color-mix(
+    in srgb,
+    var(--sina-color-text) 5%,
+    transparent
+  );
+  --sina-overlay--pressed: color-mix(
+    in srgb,
+    var(--sina-color-text) 9%,
+    transparent
+  );
+  --sina-overlay--selected: color-mix(
+    in srgb,
+    var(--sina-color-primary) 12%,
+    transparent
+  );
+  /* Modal scrim. Unlike the three above, this one must NOT track a semantic role:
+     a scrim always DARKENS, so tracking `text` would invert it into a white wash
+     the moment the theme flips. Anchored on the neutral ramp (theme-constant),
+     and taken to true black in dark — where the page is already neutral--950. */
+  --sina-overlay--scrim: color-mix(
+    in srgb,
+    var(--sina-color-neutral--950) 40%,
+    transparent
+  );
+
+  /* ===================================================================== */
+  /* Typography                                                            */
+  /* ===================================================================== */
+  --sina-font--sans:
+    "Rubik", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --sina-font--mono:
+    "IBM Plex Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  /* Font size — t-shirt scale (rem on a 16px base) */
+  --sina-text--xs: 0.75rem; /* 12 */
+  --sina-text--ui: 0.8125rem; /* 13 — dense UI: controls, menus, labels */
+  --sina-text--sm: 0.875rem; /* 14 */
+  --sina-text--base: 1rem; /* 16 */
+  --sina-text--lg: 1.125rem; /* 18 */
+  --sina-text--xl: 1.25rem; /* 20 */
+  --sina-text--2xl: 1.5rem; /* 24 */
+  --sina-text--3xl: 1.875rem; /* 30 */
+  --sina-text--4xl: 2.25rem; /* 36 */
+  --sina-text--5xl: 2.5rem; /* 40 — Figma hero */
+
+  /* Font weight */
+  --sina-font-weight--regular: 400;
+  --sina-font-weight--medium: 500;
+  --sina-font-weight--semibold: 600;
+  --sina-font-weight--bold: 700;
+
+  /* Line height */
+  --sina-leading--none: 1;
+  --sina-leading--tight: 1.1;
+  --sina-leading--snug: 1.3;
+  --sina-leading--normal: 1.5;
+  --sina-leading--relaxed: 1.7;
+
+  /* Letter spacing */
+  --sina-tracking--tight: -0.01em;
+  --sina-tracking--normal: 0em;
+  --sina-tracking--wide: 0.02em;
+
+  /* ===================================================================== */
+  /* Spacing — 8pt grid (4px base). step N = N x 4px.                      */
+  /* Dense-UI micro-grid (2px base) — half-steps + 28px for Linear-style   */
+  /* control internals (button height, tight gaps). Use the 4px primary    */
+  /* grid by default; reach for these only inside dense controls.          */
+  /* ===================================================================== */
+  --sina-space--0: 0rem;
+  --sina-space--0_5: 0.125rem; /* 2  — micro */
+  --sina-space--1: 0.25rem; /* 4  */
+  --sina-space--1_5: 0.375rem; /* 6  — micro */
+  --sina-space--2: 0.5rem; /* 8  */
+  --sina-space--2_5: 0.625rem; /* 10 — micro */
+  --sina-space--3: 0.75rem; /* 12 */
+  --sina-space--4: 1rem; /* 16 */
+  --sina-space--5: 1.25rem; /* 20 */
+  --sina-space--6: 1.5rem; /* 24 */
+  --sina-space--7: 1.75rem; /* 28 — Linear control height (h-7) */
+  --sina-space--8: 2rem; /* 32 */
+  --sina-space--10: 2.5rem; /* 40 */
+  --sina-space--12: 3rem; /* 48 */
+  --sina-space--16: 4rem; /* 64 */
+  --sina-space--20: 5rem; /* 80 */
+  --sina-space--24: 6rem; /* 96 */
+
+  /* ===================================================================== */
+  /* Radius — t-shirt                                                      */
+  /* ===================================================================== */
+  --sina-radius--none: 0px;
+  --sina-radius--xs: 2px;
+  --sina-radius--sm: 4px;
+  --sina-radius--md: 6px;
+  --sina-radius--lg: 8px; /* overlays / cards */
+  --sina-radius--xl: 12px;
+  --sina-radius--2xl: 16px;
+  --sina-radius--full: 9999px;
+
+  /* ===================================================================== */
+  /* Border width — outlined-control hook; 0 by default                    */
+  /* ===================================================================== */
+  --sina-border-width--0: 0px;
+  --sina-border-width--1: 1px; /* hairline / default */
+  --sina-border-width--2: 2px;
+  --sina-border-width--4: 4px; /* keep Toast's border-l-4 on-system */
+
+  /* ===================================================================== */
+  /* Size — control heights / icon dims (t-shirt)                         */
+  /* ===================================================================== */
+  --sina-size--icon-sm: 0.875rem; /* 14 — inline / badge icon */
+  --sina-size--xs: 1rem; /* 16 — icon          */
+  --sina-size--sm: 1.5rem; /* 24 — small control */
+  --sina-size--md: 2rem; /* 32 — control       */
+  --sina-size--lg: 2.5rem; /* 40 — button (Figma)*/
+  --sina-size--xl: 3rem; /* 48 — large control  */
+
+  /* ===================================================================== */
+  /* Shadow — composed from the Figma shadow color. Alpha via color-mix     */
+  /* so the shadow color stays a single hex token.                          */
+  /* ===================================================================== */
+  --sina-shadow-color: #383e33;
+  --sina-shadow--xs: 0 1px 2px
+    color-mix(in srgb, var(--sina-shadow-color) 6%, transparent);
+  --sina-shadow--sm:
+    0 1px 3px color-mix(in srgb, var(--sina-shadow-color) 8%, transparent),
+    0 1px 2px color-mix(in srgb, var(--sina-shadow-color) 6%, transparent);
+  --sina-shadow--md:
+    0 4px 8px color-mix(in srgb, var(--sina-shadow-color) 8%, transparent),
+    0 2px 4px color-mix(in srgb, var(--sina-shadow-color) 6%, transparent);
+  --sina-shadow--lg:
+    0 12px 24px color-mix(in srgb, var(--sina-shadow-color) 10%, transparent),
+    0 4px 8px color-mix(in srgb, var(--sina-shadow-color) 6%, transparent);
+  --sina-shadow--xl:
+    0 30px 60px color-mix(in srgb, var(--sina-shadow-color) 15%, transparent),
+    0 50px 100px
+      color-mix(in srgb, var(--sina-shadow-color) 12%, transparent); /* Figma card */
+  --sina-shadow--focus: 0 0 0 3px
+    color-mix(in srgb, var(--sina-color-focus-ring) 45%, transparent);
+  /* Focus-visible ring for controls: 1px surface offset + 2px ring (was Tailwind
+     ring-2 ring-offset-1 ring-offset-bg). Tracks bg + focus-ring across themes. */
+  --sina-shadow--focus-ring: 0 0 0 1px var(--sina-color-bg),
+    0 0 0 3px var(--sina-color-focus-ring);
+
+  /* ===================================================================== */
+  /* Z-index                                                               */
+  /* ===================================================================== */
+  --sina-z--base: 0;
+  --sina-z--dropdown: 1000;
+  --sina-z--overlay: 1300;
+  --sina-z--modal: 1400;
+  --sina-z--toast: 1600;
+
+  /* ===================================================================== */
+  /* Motion                                                                */
+  /* ===================================================================== */
+  --sina-duration--instant: 80ms;
+  --sina-duration--fast: 120ms;
+  --sina-duration--base: 200ms;
+  --sina-duration--slow: 320ms;
+  --sina-ease--standard: cubic-bezier(0.2, 0, 0, 1);
+  --sina-ease--out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ======================================================================= */
+/* Dark theme. Overrides SEMANTIC ROLES only (ramps are constant). Every    */
+/* role declared in `:root` must be redefined here, alias a role that is,   */
+/* or be listed as theme-invariant — a role that silently keeps its light   */
+/* value in dark is a bug. Guarded by the light/dark parity + dark-contrast */
+/* suites in `src/tokens.test.ts`.                                          */
+/* ======================================================================= */
+.dark,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --sina-color-bg: #21251e; /* neutral--950 */
+  --sina-color-surface: #353b31; /* neutral--900 */
+  --sina-color-surface-raised: #434841; /* neutral--800 */
+  --sina-color-surface-sunken: #21251e;
+
+  --sina-color-text: #f5f6f4; /* neutral--50  */
+  --sina-color-text-muted: #cbd0c5; /* neutral--300 */
+  --sina-color-text-subtle: #84897e; /* neutral--500 */
+  --sina-color-text-inverse: #353b31;
+
+  --sina-color-border: #434841; /* neutral--800 */
+  --sina-color-border-subtle: #52564e; /* neutral--700 */
+
+  --sina-color-primary: #b9c4b1; /* brand--200 */
+  --sina-color-primary--hover: #94a389; /* brand--300 */
+  --sina-color-primary--active: #6f7e63; /* brand--400 — pressed */
+  --sina-color-primary-fg: #21251e;
+  --sina-color-secondary: #434841;
+  --sina-color-secondary--hover: #52564e;
+  --sina-color-secondary-fg: #f5f6f4;
+
+  /* Status — the light values are ink-on-WHITE (dark coral, forest green, deep
+     azure), and these roles are consumed as foreground and border color, not as
+     fills: Field's error text, the invalid TextField/CurrencyField/
+     CredentialField border, TransactionList's credit amount. Left at their light
+     values they land at ~2:1 on the dark surface. Lifted to the light steps of
+     the same ramps, and the paired `-fg` inks flip to dark to match. */
+  --sina-color-danger: #f9b091; /* danger--200 — 6.4:1 on surface */
+  --sina-color-danger-fg: #21251e;
+  --sina-color-success: #66d091; /* success--300 — 6.0:1 */
+  --sina-color-success-fg: #21251e;
+  --sina-color-warning: #fcb737; /* warning--300 */
+  --sina-color-warning-fg: #21251e;
+  --sina-color-info: #88baf1; /* info--300 — 5.7:1 */
+  --sina-color-info-fg: #21251e;
+
+  --sina-color-danger-bg: #5b1c02; /* danger--900 */
+  --sina-color-success-bg: #164228; /* success--900 */
+  --sina-color-warning-bg: #543803; /* warning--900 */
+  --sina-color-info-bg: #0d345e; /* info--900 */
+  --sina-color-neutral-bg: #434841; /* neutral--800 — raised grey chip on dark */
+  --sina-color-warning-text: #fcb737; /* warning--300 — bright amber legible on the dark warning tint */
+
+  --sina-color-focus-ring: #94a389; /* brand--300 */
+  --sina-color-surface-secure: #2b3028; /* brand--800 */
+
+  /* Elevation. The light shadow color is a dark sage at 6–15% alpha — over a
+     neutral--950 page that is a no-op, so every floating surface (Dialog,
+     Select, DropdownMenu, Combobox, Toast, Tooltip) loses its lift. A shadow has
+     to be darker than the darkest surface: true black, at ~4–5x the alpha. */
+  --sina-shadow-color: #000000;
+  --sina-shadow--xs: 0 1px 2px
+    color-mix(in srgb, var(--sina-shadow-color) 40%, transparent);
+  --sina-shadow--sm:
+    0 1px 3px color-mix(in srgb, var(--sina-shadow-color) 48%, transparent),
+    0 1px 2px color-mix(in srgb, var(--sina-shadow-color) 40%, transparent);
+  --sina-shadow--md:
+    0 4px 8px color-mix(in srgb, var(--sina-shadow-color) 48%, transparent),
+    0 2px 4px color-mix(in srgb, var(--sina-shadow-color) 40%, transparent);
+  --sina-shadow--lg:
+    0 12px 24px color-mix(in srgb, var(--sina-shadow-color) 56%, transparent),
+    0 4px 8px color-mix(in srgb, var(--sina-shadow-color) 40%, transparent);
+  --sina-shadow--xl:
+    0 30px 60px color-mix(in srgb, var(--sina-shadow-color) 64%, transparent),
+    0 50px 100px color-mix(in srgb, var(--sina-shadow-color) 56%, transparent);
+
+  /* The page is already neutral--950, so a scrim mixed from it would not dim at
+     all — dark needs true black, and more of it. */
+  --sina-overlay--scrim: color-mix(in srgb, #000000 60%, transparent);
+
+  /* Dataviz — same hues stepped lighter for the dark surface; same fixed
+     order (validated as a set against dark surface #353b31). */
+  --sina-color-chart--1: #7cbf46;
+  --sina-color-chart--2: #3f9fe6;
+  --sina-color-chart--3: #34c266;
+  --sina-color-chart--4: #9a80ff;
+  --sina-color-chart--5: #ff7a33;
+  --sina-color-chart--6: #d94fbf;
+  --sina-color-chart--7: #e0a520;
+  --sina-color-chart--8: #17b3a5;
+}
+
+/* Respect reduced-motion at the token layer. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --sina-duration--instant: 0ms;
+    --sina-duration--fast: 0ms;
+    --sina-duration--base: 0ms;
+    --sina-duration--slow: 0ms;
+  }
+}
+
+/*
+ * Base styles: apps inherit the SINA look without re-declaring it. An unlayered
+ * plain element selector — it sits above the reset (which is in @layer reset) and
+ * below component/app CSS Modules, which override it on source order/specificity.
+ */
+body {
+  background-color: var(--sina-color-bg);
+  color: var(--sina-color-text);
+  font-family: var(--sina-font--sans);
+  /* Crisp, sharp glyphs: grayscale (not subpixel) AA on macOS/WebKit & Firefox. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}

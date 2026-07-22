@@ -1,0 +1,13 @@
+packages:
+  - "packages/*"
+  - "apps/*"
+allowBuilds:
+  esbuild: true
+  sharp: true
+  # workerd (wrangler dep) builds a platform binary; only needed for local
+  # `wrangler pages dev`. Off by default — flip to true when running the
+  # Cloudflare Pages preview locally.
+  workerd: false
+onlyBuiltDependencies:
+  - sharp
+  - esbuild

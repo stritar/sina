@@ -1,0 +1,131 @@
+"use client";
+
+import {
+  Button,
+  Toast,
+  ToastAction,
+  ToastClose,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
+} from "@sina-design-system/core";
+import { useState } from "react";
+import { Demo, StoryShell } from "../_components/StoryShell";
+import styles from "./page.module.css";
+
+type Variant = "success" | "danger" | "info";
+
+type ToastKey =
+  | "success"
+  | "danger"
+  | "info"
+  | "with-action"
+  | "no-action"
+  | "title-only";
+
+type ToastSpec = {
+  variant: Variant;
+  title: string;
+  description?: string;
+  action?: string;
+};
+
+const SPECS: Record<ToastKey, ToastSpec> = {
+  success: {
+    variant: "success",
+    title: "Saved",
+    description: "Your changes were stored.",
+    action: "View",
+  },
+  danger: {
+    variant: "danger",
+    title: "Action blocked",
+    description: "The request did not pass validation.",
+    action: "Retry",
+  },
+  info: {
+    variant: "info",
+    title: "Working…",
+    description: "Processing your request.",
+  },
+  "with-action": {
+    variant: "info",
+    title: "Item archived",
+    description: "It was moved out of your inbox.",
+    action: "Undo",
+  },
+  "no-action": {
+    variant: "info",
+    title: "Sync complete",
+    description: "Everything is up to date.",
+  },
+  "title-only": {
+    variant: "success",
+    title: "Copied to clipboard",
+  },
+};
+
+export default function ToastStory() {
+  const [open, setOpen] = useState<ToastKey | null>(null);
+  const spec = open ? SPECS[open] : null;
+  const singleLine = spec ? !spec.description && !spec.action : false;
+
+  return (
+    <StoryShell title="Toast">
+      <ToastProvider>
+        <Demo label="variant (success · danger · info)">
+          <Button variant="secondary" onClick={() => setOpen("success")}>
+            Success
+          </Button>
+          <Button variant="secondary" onClick={() => setOpen("danger")}>
+            Danger
+          </Button>
+          <Button variant="secondary" onClick={() => setOpen("info")}>
+            Info
+          </Button>
+        </Demo>
+
+        <Demo label="action (with · without)">
+          <Button variant="secondary" onClick={() => setOpen("with-action")}>
+            With action
+          </Button>
+          <Button variant="secondary" onClick={() => setOpen("no-action")}>
+            Without action
+          </Button>
+        </Demo>
+
+        <Demo label="description (title only)">
+          <Button variant="secondary" onClick={() => setOpen("title-only")}>
+            Title only
+          </Button>
+        </Demo>
+
+        {spec ? (
+          <Toast
+            key={open}
+            variant={spec.variant}
+            open
+            onOpenChange={(o) => !o && setOpen(null)}
+            duration={4000}
+            className={singleLine ? styles.itemsCenter : undefined}
+          >
+            <ToastTitle>{spec.title}</ToastTitle>
+            {spec.description ? (
+              <ToastDescription>{spec.description}</ToastDescription>
+            ) : null}
+            {spec.action ? (
+              <ToastAction asChild altText={spec.action}>
+                <Button variant="primary" size="sm" className={styles.action}>
+                  {spec.action}
+                </Button>
+              </ToastAction>
+            ) : null}
+            <ToastClose />
+          </Toast>
+        ) : null}
+        <ToastViewport />
+      </ToastProvider>
+    </StoryShell>
+  );
+}

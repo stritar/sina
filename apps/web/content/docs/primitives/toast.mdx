@@ -1,0 +1,42 @@
+---
+title: Toast
+---
+
+import { ToastHero, ToastExamples } from "@/app/components/docs/demos/primitives/toast";
+
+<ToastHero />
+
+`Toast` is a brief, non-blocking notification: "Saved", "Transfer sent", "Copy
+failed". Mount a provider and viewport once, then push toasts as needed.
+
+## Usage
+
+```tsx
+import {
+  ToastProvider, ToastViewport, Toast, ToastTitle, ToastDescription,
+} from "@sina-design-system/core";
+
+<ToastProvider>
+  <Toast variant="success" open={open} onOpenChange={setOpen}>
+    <ToastTitle>Transfer sent</ToastTitle>
+    <ToastDescription>$500 to Beta LLC.</ToastDescription>
+  </Toast>
+  <ToastViewport />
+</ToastProvider>
+```
+
+## Examples
+
+<ToastExamples />
+
+## Props
+
+`ToastProvider` · `ToastViewport` · `Toast` · `ToastTitle` · `ToastDescription` ·
+`ToastAction` · `ToastClose`. `Toast` takes a `variant` of `success`, `danger`, or
+`info`; each renders its matching bold status glyph.
+
+## Accessibility
+
+Toasts are announced to screen readers via Radix's live region, pause on
+hover, and are keyboard-dismissible. Don't put essential, un-repeatable
+information in a toast. It disappears.

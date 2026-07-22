@@ -1,0 +1,55 @@
+---
+title: Standards & citations
+---
+
+Every threshold, format, and required field in the Constitution traces to a
+standard or a regulator, and the citation lives in the code. This page lists
+every standard the fintech rules encode and, for each, what the code actually
+checks.
+
+The enforcement column states the mechanism, not a compliance claim: SINA
+computes an IBAN's mod-97 checksum for real, but it does not screen an address
+against a sanctions list and it does not perform a PCI assessment. Where a
+rule is a thin stand-in for a deeper obligation, the row says so.
+
+Rules fall into three tiers, kept apart in the code:
+
+- **Format**: checksums and code lists. Deterministic; a payload satisfies
+  them or it doesn't.
+- **Regulatory**: thresholds from real regulation. A `flag` records the
+  finding in the [audit trail](/docs/concepts/audit-trail), an `escalate`
+  forces a governed component, a `reject` refuses outright.
+- **SINA policy**: tunable product defaults (dual control, step-up limits).
+  These are not law; tune them to your own risk appetite.
+
+When the gate blocks a request, the `standard` from the matching row travels
+with the violation into the audit record, so an auditor can trace a block to
+the rule that made it.
+
+<Callout variant="enforced" title="This table is generated from the schemas">
+  The catalog lives in the constitution package, not in this page, and a guard
+  test binds the two: a rule citing a standard the catalog omits fails the
+  build, and so does a catalog entry citing something no rule enforces.
+</Callout>
+
+## What the gate enforces, and where it stops
+
+As a render-time gate, SINA acts on a request in five ways: it validates
+structure and format, it flags or escalates on a threshold, it forces a
+disclosure to be acknowledged, it requires a step-up or second approver, and
+it redacts the audit record. Every row below is one of those five moves.
+
+Three kinds of control sit outside that reach. SINA does not screen names or
+addresses against sanctions or PEP lists, it does not make lending or
+eligibility decisions, and it does not hold a money-transmitter license. Each
+needs a service and live data a UI gate never sees; SINA runs in front of
+them and does not replace them. A few gate-shaped rules are simply not built
+yet, such as strong customer authentication for EU flows and open-banking
+consent. To add one, see
+[write a rule](/docs/governance/writing-a-rule).
+
+## Fintech
+
+<StandardsTable industry="fintech" />
+
+<ComplianceNote />

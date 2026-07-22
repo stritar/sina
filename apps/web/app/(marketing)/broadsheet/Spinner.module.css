@@ -1,0 +1,15 @@
+@keyframes bs-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: bs-spin var(--sinamk-duration--spin, 700ms) linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spin {
+    animation: none;
+  }
+}

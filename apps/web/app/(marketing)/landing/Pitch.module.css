@@ -1,0 +1,321 @@
+/*
+ * Pitch — the ruled wireframe grid (Figma node 247:2454, "IN TEN SECONDS").
+ *
+ * The same language as WhySina directly above it: the section is banded into two
+ * ROWS by horizontal hairlines (heading / statement). `.row` is the full-width
+ * transparent shell (its padding is the page gutter); the rule lives on
+ * `.frame`, the bordered content box capped at the frame width, so the hairline
+ * stops at the container. `.frame`'s side borders are the vertical gutter rules.
+ *
+ * There is no `border-top` here: the last WhySina row already draws it, and
+ * Figma likewise has no rule above the heading (the verticals simply continue).
+ *
+ * FRAME CONTRACT: `--sina-space--12` gutter + `96rem` frame width (and the
+ * `max-width: 96rem` gutter-removal breakpoint below) MUST match
+ * LandingNav.module.css, Hero.module.css, HowItWorks.module.css and
+ * WhySina.module.css so the side borders line up into one continuous frame
+ * running down the page.
+ *
+ * The right half is no longer the field alone. Figma's redesign folds the old
+ * footer bar into it: the SINA mark centered in the band, the license line along
+ * its bottom edge, both layered over the field. Below the row, a third empty
+ * `.frame` runs the rails 64px further down and closes them (y=362 to y=426).
+ *
+ * Two deliberate departures from the mockup, both already reconciled:
+ *   1. Figma draws the band at 1440px (rails at x=143/1583 of 1728). We
+ *      re-anchor to the live 96rem frame so the rules stay continuous with the
+ *      sheet above; the column proportions are unchanged.
+ *   2. Figma's right rail stops at y=306 while the left runs to y=362. That is
+ *      mockup drift (the sibling frame 237:2412 has both at the same y), so both
+ *      rails run full height here via `.frame`'s `border-inline`.
+ */
+.row {
+  width: 100%;
+  padding-inline: var(--sina-space--12);
+}
+
+.frame {
+  box-sizing: border-box;
+  max-width: 96rem;
+  margin-inline: auto;
+  /* Figma: 32px above and below the content in every row. */
+  padding-block: var(--sina-space--8);
+  border-inline: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+  border-bottom: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+}
+
+/* The single internal divider, the same mechanism as WhySina's `.ruled` but one
+   rule at the halfway point (Figma puts it at x=864 of a 1728 frame). Painted on
+   the FRAME rather than on a cell so it spans the row's full height regardless
+   of how the copy wraps. Only this row is `split`: the heading band carries the
+   outer rails alone. It runs the FULL row height so it lands on the horizontal
+   rule at both ends (Figma starts it at y=86, one frame-padding below the band
+   rule at y=69, which leaves a visible break where the two rules should meet). */
+.split {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.split::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  inset-block: 0;
+  width: 0;
+  /* Above the glyph field. Its root is `position: absolute; inset: 0` with an
+     OPAQUE background and it starts at exactly this 50% edge, so without a
+     stacking order the field paints over the divider and the rule vanishes. */
+  z-index: 1;
+  border-left: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+  pointer-events: none;
+}
+
+/* Dark: dim the rules toward the near-black page ground so they don't read too
+   bright (mirrors the same treatment on the hero frame). */
+[data-theme="dark"] .frame,
+[data-theme="dark"] .split::before {
+  border-color: color-mix(
+    in srgb,
+    var(--sina-color-border-subtle, #2a2a2a) 60%,
+    transparent
+  );
+}
+
+/* Figma 32px/1.15/-0.5px snapped to the nearest scale steps (no 32px token
+   exists: the scale jumps 30 to 36). */
+.heading {
+  margin: 0;
+  padding-inline: var(--sina-space--4);
+  font-size: var(--sina-text--3xl);
+  font-weight: var(--sina-font-weight--semibold);
+  line-height: var(--sina-leading--tight);
+  letter-spacing: var(--sina-tracking--tight);
+  color: var(--sina-color-text);
+}
+
+/* Figma: content sits 16px inside the rail, and the prose, the coda and the CTA
+   are each 16px apart (text ends y=290, button starts y=306). The end padding
+   keeps the copy 16px clear of the divider, matching the 689px measure Figma
+   gives it inside its 721px half. */
+.textCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sina-space--4);
+  padding-inline: var(--sina-space--4);
+}
+
+/* The glyph field is `position: absolute; inset: 0`, so this cell must be the
+   positioning context and must NOT clip (see GlyphField.module.css). It carries
+   no intrinsic height on purpose: the row is sized entirely by the text column,
+   which is what Figma draws (both halves run y=86 to y=362). The field takes its
+   colours from industry-tint.css via the section's `.broadsheet` scope. */
+.fieldCol {
+  position: relative;
+}
+
+/* The cell sits inside `.frame`'s 32px block padding, so `inset: 0` would stop
+   the field 32px short of the rules. The negative block inset cancels exactly
+   that padding, running the field from the rule above to the rule below. */
+.fieldCanvas {
+  position: absolute;
+  inset: calc(var(--sina-space--8) * -1) 0;
+  z-index: 0;
+}
+
+/* The mark and the attribution, layered over the field. `z-index: 1` is not
+   optional: the field's root is `position: absolute; inset: 0` with an OPAQUE
+   background, so without a stacking order it paints over both (the same reason
+   `.split::before` carries one). The grid cell runs y=85 to y=346 in Figma
+   coordinates and its centre, 215.5, is the band centre, so plain centring puts
+   the 64px mark exactly where Figma does (x=1192, y=184). */
+.fieldContent {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+}
+
+.logo {
+  display: block;
+  width: 4rem;
+  height: 4rem;
+  color: var(--sina-color-text);
+}
+
+/* Figma 251:2599: 12px/1.6 centred, the two spans 8px apart, in the subtle text
+   role (not full text colour). The cell bottom is the frame's padding edge, 32px
+   above the row's rule, so the line drops 16px past it to sit 16px above the
+   rule where Figma puts it (y=346). */
+.meta {
+  position: absolute;
+  inset-inline: 0;
+  bottom: calc(var(--sina-space--4) * -1);
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  gap: var(--sina-space--2);
+  font-size: var(--sina-text--xs);
+  line-height: 1.6;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--sina-color-text-subtle);
+}
+
+/* Underlined at rest, matching Figma; hover promotes it to the marketing text
+   colour. `data-broadsheet` earns the global blue focus outline, so no
+   `:focus-visible` is authored here. */
+.author {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--sinamk-duration--hover, 120ms)
+    var(--sinamk-ease--standard, ease);
+}
+
+.author:hover {
+  color: var(--sinamk-color-text, #353b31);
+}
+
+/* The closing tail (Figma y=362 to y=426): no content, just `.frame`'s side
+   borders carrying the rails 64px down and its bottom border ending them. The
+   dark-mode dimming above already covers it. */
+.tail {
+  height: var(--sina-space--16);
+  padding-block: 0;
+}
+
+/* Both paragraphs are 18px/1.6 regular. Figma bolds the statement; we set it
+   regular on purpose so the band reads as one even block of prose rather than a
+   lede plus a footnote, and the heading above stays the only emphasis. */
+.statement,
+.coda {
+  margin: 0;
+  font-size: var(--sina-text--lg);
+  line-height: var(--sina-leading--relaxed);
+  color: var(--sinamk-color-text-strong, #52564e);
+}
+
+/* The Broadsheet primary button at `lg`, reproduced verbatim from the hero CTA
+   because a link must not nest a button. Follows the label anatomy: no flex gap,
+   the label span carries its own inline padding. `data-broadsheet` on the anchor
+   earns the global blue focus outline, so no `:focus-visible` is authored here. */
+.ctaButton {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  height: var(--sinamk-control-height--lg, 40px);
+  padding-inline: var(--sinamk-control-pad--lg, 12px);
+  border-radius: var(--sinamk-radius--md, 6px);
+  font-size: var(--sinamk-text--lg, 15px);
+  font-weight: var(--sinamk-font-weight--lg, 600);
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--sinamk-color-primary-fg, #ffffff);
+  background: var(--sinamk-color-primary-fill, #353b31);
+  transition: background-color var(--sinamk-duration--hover, 120ms)
+    var(--sinamk-ease--standard, ease);
+}
+
+.ctaButton:hover {
+  background: var(--sinamk-color-primary-fill--hover, #444d3b);
+}
+
+/* The leading glyph slot (Figma 176:1248: FileText bold, 20px). Unpadded, per
+   the Broadsheet label anatomy: the label carries its own inline padding and
+   there is no flex `gap`, so the icon sits 8px from the text and 12px from the
+   rail exactly as the real `ButtonPrimary` does. Mirrors Hero.module.css. */
+.ctaIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ctaIcon svg {
+  display: block;
+  width: var(--sinamk-icon--lg, 20px);
+  height: var(--sinamk-icon--lg, 20px);
+}
+
+.ctaLabel {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--sinamk-label-pad--lg, 8px);
+}
+
+/* At/below the frame's max-width the sheet is viewport-bound, so drop the side
+   gutter and let the frame reach the viewport edges (mirrors Hero.module.css). */
+@media (max-width: 96rem) {
+  .row {
+    padding-inline: 0;
+  }
+}
+
+/* Gutter ladder under the frame cap, so the sheet never touches the viewport
+   edge until there is no room to spare: 48px on large desktops, 32px on small
+   desktops/tablets, and dropped entirely on phones (the base rule above), where
+   every pixel of line length counts. Part of the FRAME CONTRACT: the bounds +
+   values MUST match the other framed sections. */
+@media (min-width: 64rem) and (max-width: 96rem) {
+  .row {
+    padding-inline: var(--sina-space--12);
+  }
+}
+
+@media (min-width: 40rem) and (max-width: 64rem) {
+  .row {
+    padding-inline: var(--sina-space--8);
+  }
+}
+
+/* Collapse to one column. The divider switches off, and the glyph field goes
+   with it rather than stacking a decorative canvas under the copy: on a phone
+   the half it fills is gone, and the statement is the whole point of the band.
+   The mark and the attribution stay, because there is no footer to fall back on
+   and the license has to be readable at every width. They drop out of the
+   overlay into normal flow beneath the CTA. */
+@media (max-width: 60rem) {
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .split::before {
+    display: none;
+  }
+
+  .fieldCanvas {
+    display: none;
+  }
+
+  .fieldContent {
+    position: static;
+    justify-items: center;
+    gap: var(--sina-space--4);
+    padding-block-start: var(--sina-space--8);
+  }
+
+  .meta {
+    position: static;
+    flex-wrap: wrap;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 40rem) {
+  .frame {
+    padding-block: var(--sina-space--3);
+  }
+
+  .heading {
+    font-size: var(--sina-text--2xl);
+  }
+
+  .statement,
+  .coda {
+    font-size: var(--sina-text--base);
+  }
+}

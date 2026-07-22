@@ -1,0 +1,32 @@
+---
+title: Button
+---
+
+import { ButtonHero, ButtonExamples } from "@/app/components/docs/demos/primitives/button";
+import { buttonPropRows } from "@/app/components/docs/props/button.props.mjs";
+
+<ButtonHero />
+
+`Button` triggers an action: submit a form, open a dialog, confirm a step. Use a
+Button for actions and a link for navigation.
+
+## Usage
+
+```tsx
+import { Button } from "@sina-design-system/core";
+
+<Button variant="primary" onClick={submit}>Continue</Button>
+```
+
+## Examples
+
+<ButtonExamples />
+
+## Props
+
+<PropsTable rows={buttonPropRows()} />
+
+## Accessibility
+
+Native `<button>` semantics: focusable, `Enter`/`Space` activate, and `disabled`
+is announced. An icon-only button needs an `aria-label`.

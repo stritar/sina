@@ -1,0 +1,38 @@
+/* ModeToggle — segmented run-mode control */
+
+.track {
+  display: inline-flex;
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-surface-sunken);
+  padding: var(--sina-space--0_5);
+}
+
+.tab {
+  border-radius: var(--sina-radius--sm);
+  padding-inline: var(--sina-space--2);
+  padding-block: var(--sina-space--0_5);
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  transition-property: color, background-color, border-color;
+  transition-duration: var(--sina-duration--fast);
+  transition-timing-function: var(--sina-ease--standard);
+}
+
+.tab:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--sina-color-focus-ring);
+}
+
+.tabActive {
+  background: var(--sina-color-surface);
+  color: var(--sina-color-text);
+  box-shadow: var(--sina-shadow--xs);
+}
+
+.tabInactive {
+  color: var(--sina-color-text-muted);
+}
+
+.tabInactive:hover {
+  color: var(--sina-color-text);
+}

@@ -1,0 +1,15 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "how-it-works",
+    "quickstart",
+    "concepts",
+    "governance",
+    "agents",
+    "primitives",
+    "theming",
+    "guides",
+    "reference"
+  ]
+}

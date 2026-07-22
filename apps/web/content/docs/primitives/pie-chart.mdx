@@ -1,0 +1,35 @@
+---
+title: PieChart
+---
+
+import { PieChartHero, PieChartExamples } from "@/app/components/docs/demos/primitives/pie-chart";
+import { pieChartPropRows } from "@/app/components/docs/props/pie-chart.props.mjs";
+
+<PieChartHero />
+
+`PieChart` shows how a whole splits into parts. Slices draw from the
+`--sina-color-chart--1…8` palette, ordered for color-blind safety. For a
+centered summary figure, use [DonutChart](/docs/primitives/donut-chart).
+
+## Usage
+
+```tsx
+import { PieChart } from "@sina-design-system/core";
+
+<PieChart label="Portfolio allocation" data={{ labels, datasets }} />
+```
+
+## Examples
+
+<PieChartExamples />
+
+## Props
+
+<PropsTable rows={pieChartPropRows()} />
+
+## Accessibility
+
+`"use client"`. The canvas is hidden from assistive tech; `role="img"` plus
+the `label` prop is the accessible path, so keep a text summary of the data
+nearby. The built-in legend is drawn on the canvas and is not readable by a
+screen reader.

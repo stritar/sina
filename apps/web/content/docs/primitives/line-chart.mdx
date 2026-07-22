@@ -1,0 +1,38 @@
+---
+title: LineChart
+---
+
+import { LineChartHero, LineChartExamples } from "@/app/components/docs/demos/primitives/line-chart";
+import { lineChartPropRows } from "@/app/components/docs/props/line-chart.props.mjs";
+
+<LineChartHero />
+
+`LineChart` plots one or more series over time, with hover tooltips styled from
+tokens. Pass `fill` for an area chart.
+
+## Usage
+
+```tsx
+import { LineChart } from "@sina-design-system/core";
+
+<LineChart
+  label="Balance over time"
+  data={{ labels, datasets }}
+  valueFormatter={(n) => `$${n.toLocaleString()}`}
+  fill
+/>
+```
+
+## Examples
+
+<LineChartExamples />
+
+## Props
+
+<PropsTable rows={lineChartPropRows()} />
+
+## Accessibility
+
+A `"use client"` component (canvas). The wrapper is `role="img"` with your
+`label`; keep a text summary nearby as the non-visual path. Animation is disabled
+under reduced motion.

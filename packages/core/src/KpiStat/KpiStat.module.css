@@ -1,0 +1,44 @@
+/* @sina-design-system/core — KpiStat */
+
+:root {
+  --sina-kpi-stat-value: var(--sina-color-text, #353b31);
+  --sina-kpi-stat-comparison-fg: var(--sina-color-text-muted, #52564e);
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--1, 0.25rem);
+}
+
+/* The headline number. Size chosen per `size` prop below. */
+.value {
+  font-weight: var(--sina-font-weight--medium, 500);
+  line-height: var(--sina-leading--tight, 1.1);
+  letter-spacing: var(--sina-tracking--tight, -0.01em);
+  color: var(--sina-kpi-stat-value, #353b31);
+}
+
+.sizeSm {
+  font-size: var(--sina-text--2xl, 1.5rem);
+}
+.sizeMd {
+  font-size: var(--sina-text--3xl, 1.875rem);
+}
+.sizeLg {
+  font-size: var(--sina-text--5xl, 2.5rem);
+}
+
+/* Flex row wrapping the status Badge + the comparison label. */
+.pillRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--2, 0.5rem);
+}
+
+.comparisonLabel {
+  font-size: var(--sina-text--ui, 0.8125rem);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-kpi-stat-comparison-fg, #52564e);
+}

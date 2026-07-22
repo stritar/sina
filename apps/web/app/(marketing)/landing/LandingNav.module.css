@@ -1,0 +1,177 @@
+/*
+ * Landing nav — the top of the framed Broadsheet sheet.
+ *
+ * `.header` is a full-width, transparent shell whose horizontal padding is the
+ * page gutter; the fixed glyph field shows through it. `.inner` is the opaque bar
+ * (`--sina-color-bg`, the wireframe page ground) capped at the frame width, with
+ * side + bottom borders.
+ *
+ * FRAME CONTRACT: `--sina-space--12` gutter + `96rem` inner width (and the
+ * `max-width: 96rem` gutter-removal breakpoint below) MUST match Hero.module.css
+ * so the side borders line up into one continuous vertical frame.
+ */
+.header {
+  width: 100%;
+  padding-inline: var(--sina-space--12);
+  background: transparent;
+}
+
+.inner {
+  box-sizing: border-box;
+  max-width: 96rem;
+  margin-inline: auto;
+  padding: var(--sina-space--4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sina-space--3);
+  background: var(--sina-color-bg, #f5f6f4);
+  border-inline: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+  border-bottom: 1px solid var(--sina-color-border-subtle, #e4e4e4);
+}
+
+/* Dark: the subtle wireframe border reads a touch bright on the near-black
+   ground, so dim the frame outline toward the page. Tune the % to taste. */
+[data-theme="dark"] .inner {
+  border-color: color-mix(
+    in srgb,
+    var(--sina-color-border-subtle, #e4e4e4) 50%,
+    var(--sina-color-bg, #0b0c0b)
+  );
+}
+
+/* Visually-hidden skip link; revealed on keyboard focus. */
+.skip {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.skip:focus-visible {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  clip-path: none;
+  padding: var(--sina-space--1) var(--sina-space--2);
+  outline: 2px solid var(--sinamk-color-focus-ring, #2563eb);
+  outline-offset: 2px;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  color: var(--sinamk-color-text, #353b31);
+  text-decoration: none;
+}
+
+.logo {
+  display: block;
+  height: 32px;
+  width: auto;
+}
+
+.cluster {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--2);
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--2);
+}
+
+/* Button-styled anchors: the Broadsheet label anatomy (padded `.label`, unpadded
+   icon slot, root inline pad) reproduced for a link. `data-broadsheet` earns the
+   global blue focus outline, so no `:focus-visible` is authored here. */
+.navBtn {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  height: var(--sinamk-control-height--md, 32px);
+  padding-inline: var(--sinamk-control-pad--md, 8px);
+  border-radius: var(--sinamk-radius--md, 6px);
+  font-size: var(--sinamk-text--md, 13px);
+  font-weight: var(--sinamk-font-weight--md, 500);
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color var(--sinamk-duration--hover, 120ms)
+    var(--sinamk-ease--standard, ease);
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon svg {
+  display: block;
+  width: var(--sinamk-icon--md, 16px);
+  height: var(--sinamk-icon--md, 16px);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--sinamk-label-pad--md, 6px);
+}
+
+.navBtnPrimary {
+  background: var(--sinamk-color-primary-fill, #353b31);
+  color: var(--sinamk-color-primary-fg, #ffffff);
+}
+
+.navBtnPrimary:hover {
+  background: var(--sinamk-color-primary-fill--hover, #444d3b);
+}
+
+.navBtnSecondary {
+  background: var(--sinamk-color-secondary-fill, #e9ece8);
+  color: var(--sinamk-color-text, #353b31);
+}
+
+.navBtnSecondary:hover {
+  background: var(--sinamk-color-secondary-fill--hover, #dfe4de);
+}
+
+/* At/below the frame's max-width the sheet is viewport-bound, so drop the side
+   gutter and let the frame reach the viewport edges (mirrors Hero.module.css). */
+@media (max-width: 96rem) {
+  .header {
+    padding-inline: 0;
+  }
+}
+
+/* Gutter ladder under the frame cap, so the sheet never touches the viewport
+   edge until there is no room to spare: 48px on large desktops, 32px on small
+   desktops/tablets, and dropped entirely on phones (the base rule above), where
+   every pixel of line length counts. Part of the FRAME CONTRACT: the bounds +
+   values MUST match the other framed sections. */
+@media (min-width: 64rem) and (max-width: 96rem) {
+  .header {
+    padding-inline: var(--sina-space--12);
+  }
+}
+
+@media (min-width: 40rem) and (max-width: 64rem) {
+  .header {
+    padding-inline: var(--sina-space--8);
+  }
+}
+
+/* Narrow: the control cluster wraps onto its own row under the logo (no drawer,
+   consistent with the marketing system). */
+@media (max-width: 40rem) {
+  .inner {
+    gap: var(--sina-space--2);
+  }
+}

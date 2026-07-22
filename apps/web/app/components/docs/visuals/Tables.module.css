@@ -1,0 +1,24 @@
+.wrap {
+  margin: var(--sina-space--5) 0;
+  overflow-x: auto;
+}
+
+/* The base table/th/td styling is inherited from `.prose table`. */
+.wrap table {
+  margin: 0;
+}
+
+.kbd {
+  display: inline-block;
+  margin-right: var(--sina-space--1);
+  padding: 0.1em 0.45em;
+  font-family: var(--sina-font--mono);
+  font-size: 0.85em;
+  line-height: 1.4;
+  color: var(--sina-color-text);
+  background: var(--sina-color-surface-sunken);
+  border: var(--sina-border-width--1) solid var(--sina-color-border);
+  border-bottom-width: var(--sina-border-width--2);
+  border-radius: var(--sina-radius--sm);
+  white-space: nowrap;
+}

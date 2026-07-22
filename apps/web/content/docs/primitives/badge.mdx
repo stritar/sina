@@ -1,0 +1,39 @@
+---
+title: Badge
+---
+
+import { BadgeHero, BadgeExamples } from "@/app/components/docs/demos/primitives/badge";
+import { badgePropRows } from "@/app/components/docs/props/badge.props.mjs";
+
+<BadgeHero />
+
+`Badge` is a small chip that labels the status of something inline: a row, a
+card, a heading.
+
+## Usage
+
+```tsx
+import { Badge } from "@sina-design-system/core";
+
+<Badge intent="success">Verified</Badge>
+<Badge intent="danger" dot>Blocked</Badge>
+```
+
+## Examples
+
+<BadgeExamples />
+
+## Props
+
+<PropsTable rows={badgePropRows()} />
+
+<Callout variant="note" title="Status rules apply">
+  A `danger` or `warning` Badge renders a bold glyph automatically. And a Badge is a
+  status element, so never render it inside an Alert or Toast. Place it as a sibling.
+</Callout>
+
+## Accessibility
+
+Meaning is never carried by color alone. A severity Badge always pairs its tint
+with a glyph or dot plus a text label. A dismissible Badge's close button takes
+an explicit `closeLabel`.

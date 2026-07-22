@@ -1,0 +1,47 @@
+/* Docs frame layout. Consumes --sina-* tokens directly (app-level CSS Modules). */
+
+.shell {
+  --sina-docs-sidebar-width: 16rem;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background: var(--sina-color-bg);
+  color: var(--sina-color-text);
+}
+
+/* Full-bleed: the grid spans the viewport so the sidebar sits flush against the
+   left edge (shadcn-style). Only the content column is centered — that cap lives
+   on `.page` in app/docs/page.module.css, not here. */
+.body {
+  display: grid;
+  grid-template-columns: var(--sina-docs-sidebar-width) minmax(0, 1fr);
+  width: 100%;
+  flex: 1;
+}
+
+.sidebar {
+  position: sticky;
+  top: var(--sina-space--16);
+  align-self: start;
+  height: calc(100vh - var(--sina-space--16));
+  overflow-y: auto;
+  border-right: var(--sina-border-width--1) solid var(--sina-color-border-subtle);
+  padding: var(--sina-space--6) var(--sina-space--4);
+}
+
+/* No padding here — `.page` owns the content column's width and gutters. */
+.main {
+  min-width: 0;
+}
+
+/* Below the layout breakpoint the sidebar column collapses; the mobile Dialog
+   drawer in the header takes over. */
+@media (max-width: 60rem) {
+  .body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sidebar {
+    display: none;
+  }
+}

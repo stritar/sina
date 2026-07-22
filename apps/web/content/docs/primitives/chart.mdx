@@ -1,0 +1,34 @@
+---
+title: Chart
+---
+
+import { ChartHero, ChartExamples } from "@/app/components/docs/demos/primitives/chart";
+import { chartPropRows } from "@/app/components/docs/props/chart.props.mjs";
+
+<ChartHero />
+
+`Chart` is a compact sparkline for inline trends. It's pure SVG driven by
+`currentColor`, so it renders on the server and inherits the surrounding text
+color. For full, interactive charts, use
+[LineChart](/docs/primitives/line-chart) and friends.
+
+## Usage
+
+```tsx
+import { Chart } from "@sina-design-system/core";
+
+<Chart variant="area" data={[3, 5, 4, 8, 7, 11]} label="Balance trend, up" />
+```
+
+## Examples
+
+<ChartExamples />
+
+## Props
+
+<PropsTable rows={chartPropRows()} />
+
+## Accessibility
+
+Renders as `role="img"` with a required label. Degrades to a flat baseline for an
+empty series.

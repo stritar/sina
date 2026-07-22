@@ -1,0 +1,111 @@
+.root {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--sinamk-radius--md, 6px);
+  cursor: pointer;
+  color: var(--_fg);
+  background: var(--_fill);
+  transition: background-color var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease);
+}
+
+/* Per-variant fill/ink — the shared state rules below read these custom props. */
+.root[data-variant="secondary"] {
+  --_fill: var(--sinamk-color-secondary-fill, #e9ece8);
+  --_fill-hover: var(--sinamk-color-secondary-fill--hover, #dfe4de);
+  --_fill-pressed: var(--sinamk-color-secondary-fill--pressed, #d6dbd4);
+  --_fill-disabled: var(--sinamk-color-secondary-fill--disabled, #eef0ec);
+  --_fg: var(--sinamk-color-text, #353b31);
+  --_fg-disabled: var(--sinamk-color-text--disabled, #a3a99d);
+}
+
+.root[data-variant="primary"] {
+  --_fill: var(--sinamk-color-primary-fill, #353b31);
+  --_fill-hover: var(--sinamk-color-primary-fill--hover, #444d3b);
+  --_fill-pressed: var(--sinamk-color-primary-fill--pressed, #2b3028);
+  --_fill-disabled: var(--sinamk-color-primary-fill--disabled, #c2cdc4);
+  --_fg: var(--sinamk-color-primary-fg, #ffffff);
+  --_fg-disabled: var(--sinamk-color-primary-fg--disabled, #8a9a8c);
+}
+
+.root[data-variant="destructive"] {
+  --_fill: var(--sinamk-color-destructive-fill, #b42318);
+  --_fill-hover: var(--sinamk-color-destructive-fill--hover, #a01b12);
+  --_fill-pressed: var(--sinamk-color-destructive-fill--pressed, #8a170f);
+  --_fill-disabled: var(--sinamk-color-destructive-fill--disabled, #e8c5c1);
+  --_fg: var(--sinamk-color-destructive-fg, #ffffff);
+  --_fg-disabled: var(--sinamk-color-destructive-fg--disabled, #b98b85);
+}
+
+/* Ghost is transparent at rest and stays transparent when disabled/loading;
+   it borrows the secondary hover/pressed tints (the ButtonGhost pattern). */
+.root[data-variant="ghost"] {
+  --_fill: transparent;
+  --_fill-hover: var(--sinamk-color-secondary-fill--hover, #dfe4de);
+  --_fill-pressed: var(--sinamk-color-secondary-fill--pressed, #d6dbd4);
+  --_fill-disabled: transparent;
+  --_fg: var(--sinamk-color-text, #353b31);
+  --_fg-disabled: var(--sinamk-color-text--disabled, #a3a99d);
+}
+
+.root[data-size="sm"] {
+  width: var(--sinamk-control-height--sm, 28px);
+  height: var(--sinamk-control-height--sm, 28px);
+  --_icon: var(--sinamk-icon--sm, 14px);
+}
+
+.root[data-size="md"] {
+  width: var(--sinamk-control-height--md, 32px);
+  height: var(--sinamk-control-height--md, 32px);
+  --_icon: var(--sinamk-icon--md, 16px);
+}
+
+.root[data-size="lg"] {
+  width: var(--sinamk-control-height--lg, 40px);
+  height: var(--sinamk-control-height--lg, 40px);
+  --_icon: var(--sinamk-icon--lg, 20px);
+}
+
+.slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.slot svg {
+  display: block;
+  width: var(--_icon);
+  height: var(--_icon);
+}
+
+.root:hover,
+.root[data-force-state="hover"] {
+  background: var(--_fill-hover);
+}
+
+.root:active,
+.root[data-force-state="pressed"] {
+  background: var(--_fill-pressed);
+}
+
+.root[data-force-state="focus"] {
+  outline: 2px solid var(--sinamk-color-focus-ring, #2563eb);
+  outline-offset: 2px;
+}
+
+.root:disabled {
+  cursor: not-allowed;
+  color: var(--_fg-disabled);
+  background: var(--_fill-disabled);
+}
+
+.root[data-loading] {
+  cursor: progress;
+  color: var(--_fg);
+  background: var(--_fill);
+}

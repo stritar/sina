@@ -1,0 +1,106 @@
+---
+title: Write a governance rule
+---
+
+A rule is a strict Zod schema plus a cited policy check, living in
+`@sina-design-system/fintech`. The boundary is hard: pure Zod, no React, no
+UI, with the shared contract coming from `@sina-design-system/governance`.
+This guide mirrors the `/new-schema` skill; to see a finished rule at work,
+read [the $60k wire](/docs/governance/wire-transfer).
+
+<Callout variant="enforced" title="Never invent a limit">
+  Every threshold, format, and required field must trace to a standard or
+  regulator, with the citation in the code: a `// 31 CFR …` comment on the
+  constant and `standard: "…"` on the violation. If you can't cite it, don't
+  encode it. Citing also marks which numbers are law and which are tunable
+  product defaults.
+</Callout>
+
+<Steps>
+  <Step title="Define the schema">
+
+Create `packages/fintech/src/<name>/<name>.schema.ts`, modeled on the
+`wire-transfer` schema. Use a `.strict()` Zod object so smuggled keys are
+rejected rather than ignored, and build on the cited format primitives in
+`src/formats/*`: `currency` (ISO 4217), `amount`, `iban`, `bic`, `routing`,
+`card`. Amounts are integer minor units, never floats.
+
+  </Step>
+  <Step title="Add the policy check">
+
+Each policy check (limits, velocity, dual control) produces a `Violation`
+with a `code`, a `message`, a cited `standard`, and a severity: `flag`
+(record it), `escalate` (force a governed component), or `reject` (refuse
+outright); see [Escalation](/docs/concepts/escalation). An escalation names
+the `requiredComponent`. The rule must return
+[the contract](/docs/concepts/the-contract):
+
+```ts
+// pass
+{ valid: true, violations: [], requiredComponent: null }
+// fail
+{ valid: false, violations: [{ code, message, standard }], requiredComponent: "SecureWireDialog" }
+```
+
+An ungoverned display rule is the same skeleton minus policy and escalation:
+shape-only (`.strict()`, bounded arrays, masked account numbers), mounting a
+presentational component. Use `/new-display-pattern` for that.
+
+  </Step>
+  <Step title="Register the intent">
+
+Add the verb to `src/registry.ts` (and `fintechIntentManifest()`) so
+`evaluateFintechIntent` can route to it. Unregistered verbs are denied as
+`UNKNOWN_INTENT`; a rule that isn't registered doesn't exist.
+
+  </Step>
+  <Step title="Write the fixtures">
+
+Add `fixtures.ts` beside the schema: valid payloads that must pass and
+adversarial payloads that must be blocked, such as an over-limit amount, a
+smuggled extra field, or an unmasked identifier. Both the unit tests and the
+playground consume them. A rule isn't done when it compiles; it's done when
+its hostile fixtures can't get past it.
+
+  </Step>
+  <Step title="Test and verify">
+
+Run `pnpm --filter @sina-design-system/fintech test`, then exercise the rule
+and read the decision (`evaluateFintechIntent` returns the decision envelope;
+the contract lives on `result`):
+
+```ts
+const decision = evaluateFintechIntent({
+  intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 */, currency: "USD", /* … */ },
+});
+
+decision.result.valid;             // false
+decision.result.requiredComponent; // "SecureWireDialog"
+decision.mount;                    // "SecureWireDialog"
+```
+
+Each violation carries a `message` and a `standard`, so you can show the user
+why, with a citation. Lower the amount below the threshold and re-run:
+`valid` flips to `true` and `requiredComponent` is `null`.
+
+  </Step>
+</Steps>
+
+## Add your own currency bands
+
+The stock bands are USD only; a non-USD payload passes format checks and
+carries a `POLICY_BANDS_NOT_EVALUATED` flag instead of silently passing. To
+band another currency, pass `bands` (an array of `WireBand`) on the context
+accepted by `makeWirePolicy` and `evaluateWireTransfer`, so the
+secondary-approval band runs at your own par. Reuse the exported
+`approvalViolations` for the dual-control core (payload binding plus
+separation of duties) rather than reimplementing it, and cite the deviation
+in each violation's `standard` field.
+
+Before you ship, check that you can answer in one sentence each: what the
+rule is, the risk it removes, a request it blocks, a request it passes, and
+what happens on trigger.
+
+Next: [Governed components & display patterns](/docs/governance/components-and-patterns),
+where your escalation lands.

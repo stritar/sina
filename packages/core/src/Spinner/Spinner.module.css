@@ -1,0 +1,38 @@
+/* @sina-design-system/core — Spinner */
+
+:root {
+  --sina-spinner-color: var(--sina-color-text-muted, #52564e);
+}
+
+.root {
+  display: inline-flex;
+  color: var(--sina-spinner-color, #52564e);
+}
+
+/* Glyph box scales with the control. */
+.sm {
+  width: var(--sina-size--icon-sm, 0.875rem);
+  height: var(--sina-size--icon-sm, 0.875rem);
+}
+.md {
+  width: var(--sina-size--xs, 1rem);
+  height: var(--sina-size--xs, 1rem);
+}
+.lg {
+  width: var(--sina-size--sm, 1.5rem);
+  height: var(--sina-size--sm, 1.5rem);
+}
+
+.spin {
+  animation: sinaSpin 1s linear infinite;
+}
+@keyframes sinaSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spin {
+    animation: none;
+  }
+}

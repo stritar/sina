@@ -1,0 +1,84 @@
+/* ConsoleStage — one span row on the interception timeline */
+
+.node {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.nodePass {
+  color: var(--sina-color-success);
+}
+
+.nodeFail {
+  color: var(--sina-color-danger);
+}
+
+.nodeFlag {
+  color: var(--sina-color-warning);
+}
+
+.nodeInfo {
+  color: var(--sina-color-text-muted);
+}
+
+.root {
+  position: relative;
+  padding-left: var(--sina-space--7);
+}
+
+.rail {
+  position: absolute;
+  left: 9.25px;
+  top: var(--sina-space--6);
+  bottom: 0;
+  width: 1.5px;
+  background: var(--sina-color-border);
+}
+
+.nodeSlot {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.body {
+  padding-bottom: var(--sina-space--4);
+}
+
+.toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: var(--sina-space--1_5);
+  border-radius: var(--sina-radius--sm);
+  text-align: left;
+}
+
+.toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--sina-color-focus-ring);
+}
+
+.caret {
+  width: 0.75rem;
+  height: 0.75rem;
+  color: var(--sina-color-text-muted);
+}
+
+.title {
+  font-size: var(--sina-text--ui);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  font-weight: var(--sina-font-weight--medium);
+  color: var(--sina-color-text);
+}
+
+.staticTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--1_5);
+}
+
+.detail {
+  margin-top: var(--sina-space--2);
+}

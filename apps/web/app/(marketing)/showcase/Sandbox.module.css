@@ -1,0 +1,211 @@
+.page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--sinamk-color-bg, #f5f6f4);
+  color: var(--sinamk-color-text, #353b31);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: var(--sinamk-color-surface, #ffffff);
+  border-bottom: 1px solid var(--sinamk-color-border, #dfe4de);
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sinamk-color-text-muted, #6b7268);
+}
+
+.title {
+  margin: 0.25rem 0 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: var(--sinamk-color-text-muted, #6b7268);
+}
+
+.themeToggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--sinamk-color-border, #dfe4de);
+  border-radius: var(--sinamk-radius--md, 6px);
+  background: var(--sinamk-color-surface, #ffffff);
+  color: var(--sinamk-color-text, #353b31);
+  cursor: pointer;
+}
+
+.themeToggle:hover {
+  background: var(--sinamk-color-bg, #f5f6f4);
+}
+
+.themeToggle svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+}
+
+.sidebar {
+  width: 288px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: var(--sinamk-color-surface, #ffffff);
+  border-right: 1px solid var(--sinamk-color-border, #dfe4de);
+  overflow-y: auto;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.groupTitle {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sinamk-color-text-muted, #6b7268);
+}
+
+.segments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.segment {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3125rem 0.625rem;
+  font-size: 0.8125rem;
+  border: 1px solid var(--sinamk-color-border, #dfe4de);
+  border-radius: var(--sinamk-radius--sm, 4px);
+  background: var(--sinamk-color-surface, #ffffff);
+  color: var(--sinamk-color-text-muted, #6b7268);
+  cursor: pointer;
+  user-select: none;
+}
+
+.segment:hover {
+  background: var(--sinamk-color-bg, #f5f6f4);
+}
+
+.segment[data-selected] {
+  background: var(--sinamk-color-text, #353b31);
+  border-color: var(--sinamk-color-text, #353b31);
+  color: var(--sinamk-color-surface, #ffffff);
+}
+
+.segment:has(.srInput:focus-visible) {
+  outline: 2px solid var(--sinamk-color-focus-ring, #2563eb);
+  outline-offset: 2px;
+}
+
+.srInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.switchRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--sinamk-color-focus-ring, #2563eb);
+  cursor: pointer;
+}
+
+.checkbox:focus-visible {
+  outline: 2px solid var(--sinamk-color-focus-ring, #2563eb);
+  outline-offset: 2px;
+}
+
+.textRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.textInput {
+  padding: 0.4375rem 0.625rem;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--sinamk-color-text, #353b31);
+  background: var(--sinamk-color-surface, #ffffff);
+  border: 1px solid var(--sinamk-color-border, #dfe4de);
+  border-radius: var(--sinamk-radius--sm, 4px);
+}
+
+.textInput:focus-visible {
+  outline: 2px solid var(--sinamk-color-focus-ring, #2563eb);
+  outline-offset: 1px;
+}
+
+.preview {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 3rem 2rem;
+  min-height: 60vh;
+}
+
+.stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 48rem) {
+  .body {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--sinamk-color-border, #dfe4de);
+  }
+}

@@ -1,0 +1,76 @@
+/* playground — ScrollArea story */
+
+.viewport {
+  width: 20rem;
+  border-radius: var(--sina-radius--lg);
+  border: var(--sina-border-width--1) solid var(--sina-color-border);
+  background: var(--sina-color-surface);
+  padding: var(--sina-space--4);
+}
+
+.tall {
+  height: 11rem;
+}
+
+.short {
+  height: var(--sina-space--20);
+}
+
+.colStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--2);
+}
+
+.rowMax {
+  display: flex;
+  width: max-content;
+  gap: var(--sina-space--2);
+}
+
+.colMax {
+  display: flex;
+  width: max-content;
+  flex-direction: column;
+  gap: var(--sina-space--2);
+}
+
+.rowItem {
+  display: flex;
+  height: var(--sina-space--7);
+  align-items: center;
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-surface-raised);
+  padding-inline: var(--sina-space--3);
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-muted);
+}
+
+.chip {
+  display: flex;
+  height: var(--sina-space--7);
+  width: var(--sina-space--24);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-surface-raised);
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-muted);
+}
+
+.cell {
+  display: flex;
+  height: var(--sina-space--7);
+  width: var(--sina-space--20);
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-surface-raised);
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-muted);
+}

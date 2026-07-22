@@ -1,0 +1,37 @@
+---
+title: BarChart
+---
+
+import { BarChartHero, BarChartExamples } from "@/app/components/docs/demos/primitives/bar-chart";
+import { barChartPropRows } from "@/app/components/docs/props/bar-chart.props.mjs";
+
+<BarChartHero />
+
+`BarChart` compares values across categories. Flip `horizontal` for long labels,
+and `stacked` to show composition.
+
+## Usage
+
+```tsx
+import { BarChart } from "@sina-design-system/core";
+
+<BarChart
+  label="Spending by category"
+  data={{ labels, datasets }}
+  horizontal
+  valueFormatter={(n) => `$${n}`}
+/>
+```
+
+## Examples
+
+<BarChartExamples />
+
+## Props
+
+<PropsTable rows={barChartPropRows()} />
+
+## Accessibility
+
+Like all canvas charts, it's `"use client"`, `role="img"`, and pairs with a text
+summary as the accessible path.

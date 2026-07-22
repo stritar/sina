@@ -1,0 +1,19 @@
+/* Playground — BarChart story */
+
+.chart280 {
+  height: 280px;
+}
+.chart240 {
+  height: 240px;
+}
+.darkFrame {
+  width: 100%;
+  border-radius: var(--sina-radius--lg);
+  background: var(--sina-color-bg);
+  padding: var(--sina-space--4);
+}
+.darkCard {
+  border-radius: var(--sina-radius--lg);
+  background: var(--sina-color-surface);
+  padding: var(--sina-space--4);
+}

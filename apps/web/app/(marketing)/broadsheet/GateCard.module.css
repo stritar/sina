@@ -1,0 +1,133 @@
+.root {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sinamk-space--sm, 8px);
+  padding: var(--sinamk-space--md, 12px);
+  border: 1px dashed var(--sinamk-color-border, #dfe4de);
+  border-radius: var(--sinamk-radius--lg, 8px);
+  background: var(--sinamk-color-surface, #ffffff);
+  color: var(--sinamk-color-text, #353b31);
+  animation: gate-enter var(--sinamk-duration--enter, 200ms) var(--sinamk-ease--standard, ease)
+    backwards;
+}
+
+.root[data-size="sm"] {
+  --_fs: var(--sinamk-text--sm, 12px);
+}
+
+.root[data-size="md"] {
+  --_fs: var(--sinamk-text--md, 13px);
+}
+
+.root[data-size="lg"] {
+  --_fs: var(--sinamk-text--lg, 15px);
+}
+
+.kicker {
+  color: var(--sinamk-color-text-subtle, #84897e);
+  font-size: var(--sinamk-badge-text--sm, 11px);
+  font-weight: var(--sinamk-font-weight--md, 500);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* Busy line: a slow opacity pulse on the caret clock while the gate decides. */
+.busy {
+  margin: 0;
+  color: var(--sinamk-color-text-muted, #6b7268);
+  font-family: var(--sinamk-font-mono, monospace);
+  font-size: var(--_fs);
+  animation: gate-busy var(--sinamk-duration--caret, 700ms) var(--sinamk-ease--standard, ease)
+    infinite alternate;
+}
+
+.decision {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sinamk-space--lg, 16px);
+}
+
+/* Single column: the verdict badge sits above the mounted component, never beside it. */
+.verdict {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sinamk-space--sm, 8px);
+}
+
+.mount {
+  color: var(--sinamk-color-text-strong, #52564e);
+  font-family: var(--sinamk-font-mono, monospace);
+  font-size: var(--_fs);
+}
+
+.violations {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sinamk-space--sm, 8px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Single column: the code badge sits above its message, never beside it.
+   `align-items: flex-start` keeps the badge at its content width. */
+.violation {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sinamk-space--sm, 8px);
+}
+
+.message {
+  inline-size: 100%;
+  color: var(--sinamk-color-text-muted, #6b7268);
+  font-size: var(--_fs);
+  line-height: 1.5;
+}
+
+.standard {
+  display: block;
+  color: var(--sinamk-color-text-subtle, #84897e);
+  font-size: var(--sinamk-badge-text--sm, 11px);
+  font-style: normal;
+}
+
+.meta {
+  margin: 0;
+  color: var(--sinamk-color-text-subtle, #84897e);
+  font-family: var(--sinamk-font-mono, monospace);
+  font-size: var(--sinamk-text--sm, 12px);
+}
+
+@keyframes gate-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes gate-busy {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    animation: none;
+  }
+
+  .busy {
+    animation: none;
+  }
+}

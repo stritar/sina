@@ -1,0 +1,29 @@
+---
+title: ScrollArea
+---
+
+import { ScrollAreaHero, ScrollAreaExamples } from "@/app/components/docs/demos/primitives/scroll-area";
+
+<ScrollAreaHero />
+
+`ScrollArea` gives a scrollable region a consistent, styled scrollbar across
+browsers, without disabling native keyboard scrolling.
+
+## Usage
+
+```tsx
+import { ScrollArea } from "@sina-design-system/core";
+
+<ScrollArea style={{ height: 240 }}>
+  {/* long content */}
+</ScrollArea>
+```
+
+## Examples
+
+<ScrollAreaExamples />
+
+## Accessibility
+
+Use it for a bounded list or panel that would otherwise overflow. Content stays
+keyboard-scrollable and the scrollbar doesn't shift layout.

@@ -1,0 +1,58 @@
+{
+  "name": "@sina-design-system/theme",
+  "version": "0.3.0",
+  "description": "SINA design tokens — foundational CSS custom properties + reset. No React, no Tailwind.",
+  "license": "MIT",
+  "author": "Denis Stritar",
+  "keywords": [
+    "sina",
+    "design-system",
+    "design-tokens",
+    "css-variables",
+    "theming"
+  ],
+  "homepage": "https://github.com/stritar/sina#readme",
+  "bugs": "https://github.com/stritar/sina/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stritar/sina.git",
+    "directory": "packages/theme"
+  },
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./css": "./theme.css",
+    "./theme.css": "./theme.css",
+    "./reset.css": "./reset.css"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "theme.css",
+    "reset.css"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "@sina-design-system/config": "workspace:*",
+    "eslint": "^9.18.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.3"
+  }
+}

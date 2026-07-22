@@ -1,0 +1,112 @@
+.root {
+  /* Default to blue/solid; the color × variant blocks below override. */
+  --_bg: var(--sinamk-color-badge-blue-bg--solid, #2563eb);
+  --_fg: var(--sinamk-color-badge-blue-fg--solid, #ffffff);
+
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  border: 0;
+  border-radius: var(--sinamk-radius--full, 999px);
+  font-family: inherit;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+  color: var(--_fg);
+  background: var(--_bg);
+}
+
+.root[data-size="sm"] {
+  height: var(--sinamk-badge-height--sm, 18px);
+  padding-inline: var(--sinamk-badge-pad--sm, 4px);
+  font-size: var(--sinamk-badge-text--sm, 11px);
+  font-weight: var(--sinamk-font-weight--sm, 400);
+  --_icon: var(--sinamk-badge-icon--sm, 12px);
+  --_labelpad: var(--sinamk-badge-label-pad--sm, 3px);
+}
+
+.root[data-size="md"] {
+  height: var(--sinamk-badge-height--md, 20px);
+  padding-inline: var(--sinamk-badge-pad--md, 6px);
+  font-size: var(--sinamk-badge-text--md, 12px);
+  font-weight: var(--sinamk-font-weight--md, 500);
+  --_icon: var(--sinamk-badge-icon--md, 14px);
+  --_labelpad: var(--sinamk-badge-label-pad--md, 4px);
+}
+
+.root[data-size="lg"] {
+  height: var(--sinamk-badge-height--lg, 24px);
+  padding-inline: var(--sinamk-badge-pad--lg, 8px);
+  font-size: var(--sinamk-badge-text--lg, 13px);
+  font-weight: var(--sinamk-font-weight--lg, 600);
+  --_icon: var(--sinamk-badge-icon--lg, 16px);
+  --_labelpad: var(--sinamk-badge-label-pad--lg, 5px);
+}
+
+.slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.slot svg {
+  display: block;
+  width: var(--_icon);
+  height: var(--_icon);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--_labelpad);
+}
+
+/* Color × variant — each points --_bg / --_fg at the matching foundation token. */
+.root[data-variant="solid"][data-color="gray"] { --_bg: var(--sinamk-color-badge-gray-bg--solid, #4b5563); --_fg: var(--sinamk-color-badge-gray-fg--solid, #ffffff); }
+.root[data-variant="soft"][data-color="gray"] { --_bg: var(--sinamk-color-badge-gray-bg--soft, #f3f4f6); --_fg: var(--sinamk-color-badge-gray-fg--soft, #374151); }
+
+.root[data-variant="solid"][data-color="red"] { --_bg: var(--sinamk-color-badge-red-bg--solid, #dc2626); --_fg: var(--sinamk-color-badge-red-fg--solid, #ffffff); }
+.root[data-variant="soft"][data-color="red"] { --_bg: var(--sinamk-color-badge-red-bg--soft, #fee2e2); --_fg: var(--sinamk-color-badge-red-fg--soft, #b91c1c); }
+
+.root[data-variant="solid"][data-color="orange"] { --_bg: var(--sinamk-color-badge-orange-bg--solid, #f97316); --_fg: var(--sinamk-color-badge-orange-fg--solid, #431407); }
+.root[data-variant="soft"][data-color="orange"] { --_bg: var(--sinamk-color-badge-orange-bg--soft, #ffedd5); --_fg: var(--sinamk-color-badge-orange-fg--soft, #c2410c); }
+
+.root[data-variant="solid"][data-color="amber"] { --_bg: var(--sinamk-color-badge-amber-bg--solid, #f59e0b); --_fg: var(--sinamk-color-badge-amber-fg--solid, #451a03); }
+.root[data-variant="soft"][data-color="amber"] { --_bg: var(--sinamk-color-badge-amber-bg--soft, #fef3c7); --_fg: var(--sinamk-color-badge-amber-fg--soft, #b45309); }
+
+.root[data-variant="solid"][data-color="yellow"] { --_bg: var(--sinamk-color-badge-yellow-bg--solid, #eab308); --_fg: var(--sinamk-color-badge-yellow-fg--solid, #422006); }
+.root[data-variant="soft"][data-color="yellow"] { --_bg: var(--sinamk-color-badge-yellow-bg--soft, #fef9c3); --_fg: var(--sinamk-color-badge-yellow-fg--soft, #a16207); }
+
+.root[data-variant="solid"][data-color="green"] { --_bg: var(--sinamk-color-badge-green-bg--solid, #15803d); --_fg: var(--sinamk-color-badge-green-fg--solid, #ffffff); }
+.root[data-variant="soft"][data-color="green"] { --_bg: var(--sinamk-color-badge-green-bg--soft, #dcfce7); --_fg: var(--sinamk-color-badge-green-fg--soft, #15803d); }
+
+.root[data-variant="solid"][data-color="teal"] { --_bg: var(--sinamk-color-badge-teal-bg--solid, #0f766e); --_fg: var(--sinamk-color-badge-teal-fg--solid, #ffffff); }
+.root[data-variant="soft"][data-color="teal"] { --_bg: var(--sinamk-color-badge-teal-bg--soft, #ccfbf1); --_fg: var(--sinamk-color-badge-teal-fg--soft, #0f766e); }
+
+.root[data-variant="solid"][data-color="cyan"] { --_bg: var(--sinamk-color-badge-cyan-bg--solid, #0e7490); --_fg: var(--sinamk-color-badge-cyan-fg--solid, #ffffff); }
+.root[data-variant="soft"][data-color="cyan"] { --_bg: var(--sinamk-color-badge-cyan-bg--soft, #cffafe); --_fg: var(--sinamk-color-badge-cyan-fg--soft, #0e7490); }
+
+.root[data-variant="solid"][data-color="blue"] { --_bg: var(--sinamk-color-badge-blue-bg--solid, #2563eb); --_fg: var(--sinamk-color-badge-blue-fg--solid, #ffffff); }
+.root[data-variant="soft"][data-color="blue"] { --_bg: var(--sinamk-color-badge-blue-bg--soft, #dbeafe); --_fg: var(--sinamk-color-badge-blue-fg--soft, #1d4ed8); }
+
+.root[data-variant="solid"][data-color="indigo"] { --_bg: var(--sinamk-color-badge-indigo-bg--solid, #4f46e5); --_fg: var(--sinamk-color-badge-indigo-fg--solid, #ffffff); }
+.root[data-variant="soft"][data-color="indigo"] { --_bg: var(--sinamk-color-badge-indigo-bg--soft, #e0e7ff); --_fg: var(--sinamk-color-badge-indigo-fg--soft, #4338ca); }
+
+.root[data-variant="solid"][data-color="violet"] { --_bg: var(--sinamk-color-badge-violet-bg--solid, #7c3aed); --_fg: var(--sinamk-color-badge-violet-fg--solid, #ffffff); }
+.root[data-variant="soft"][data-color="violet"] { --_bg: var(--sinamk-color-badge-violet-bg--soft, #ede9fe); --_fg: var(--sinamk-color-badge-violet-fg--soft, #6d28d9); }
+
+.root[data-variant="solid"][data-color="pink"] { --_bg: var(--sinamk-color-badge-pink-bg--solid, #db2777); --_fg: var(--sinamk-color-badge-pink-fg--solid, #ffffff); }
+.root[data-variant="soft"][data-color="pink"] { --_bg: var(--sinamk-color-badge-pink-bg--soft, #fce7f3); --_fg: var(--sinamk-color-badge-pink-fg--soft, #be185d); }
+
+/*
+ * Gate verdict palette — solid only, and meaningful (see GateColor in Badge.tsx).
+ * The fallbacks are the fintech/light anchors; on the landing the industry tint
+ * substitutes the token and these chips follow the page.
+ */
+.root[data-variant="solid"][data-color="gate-pass"] { --_bg: var(--sinamk-color-gate-pass-bg--solid, #1d6835); --_fg: var(--sinamk-color-gate-pass-fg--solid, #ffffff); }
+.root[data-variant="solid"][data-color="gate-escalate"] { --_bg: var(--sinamk-color-gate-escalate-bg--solid, #7d4b00); --_fg: var(--sinamk-color-gate-escalate-fg--solid, #ffffff); }
+.root[data-variant="solid"][data-color="gate-reject"] { --_bg: var(--sinamk-color-gate-reject-bg--solid, #8b3b36); --_fg: var(--sinamk-color-gate-reject-fg--solid, #ffffff); }
+.root[data-variant="solid"][data-color="gate-flag"] { --_bg: var(--sinamk-color-gate-flag-bg--solid, #555a52); --_fg: var(--sinamk-color-gate-flag-fg--solid, #ffffff); }

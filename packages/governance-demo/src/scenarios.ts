@@ -1,0 +1,451 @@
+/**
+ * Emulator scenario catalog — the canned intent envelopes the playground feeds
+ * through the router. Sourced from the fintech constitution's own fixtures so the
+ * demo and the CI suite exercise the exact payloads the schemas are tested against
+ * (one source of truth). Covers governed money-movement AND ungoverned reads;
+ * `group` splits them in the picker.
+ *
+ * Design-independent: pure data, no React.
+ */
+
+import {
+  wireFixtures,
+  transactionFixtures,
+  balanceFixtures,
+  spendingFixtures,
+  budgetFixtures,
+  cardFixtures,
+  rewardsFixtures,
+  payeeFixtures,
+  upcomingFixtures,
+  portfolioFixtures,
+  watchlistFixtures,
+  transactionDetailFixtures,
+  accountListFixtures,
+  statementListFixtures,
+  cashflowFixtures,
+  balanceTrendFixtures,
+  activityFeedFixtures,
+  insightFixtures,
+  recurringFixtures,
+  invoiceFixtures,
+  assetDetailFixtures,
+  orderHistoryFixtures,
+  fxQuoteFixtures,
+  cryptoHoldingsFixtures,
+  savingsGoalFixtures,
+  netWorthFixtures,
+  alertsFeedFixtures,
+  searchResultsFixtures,
+  clarifyChoiceFixtures,
+  achFixtures,
+  disclosureFixtures,
+  p2pFixtures,
+  billPayFixtures,
+  recurringSetupFixtures,
+  fxConvertFixtures,
+  cryptoWithdrawFixtures,
+  withdrawFixtures,
+  issueCardFixtures,
+  cardControlFixtures,
+  changeLimitFixtures,
+  securityChangeFixtures,
+  addUserFixtures,
+  kycFixtures,
+  addPayeeFixtures,
+  linkAccountFixtures,
+  disputeFixtures,
+  closeAccountFixtures,
+  placeTradeFixtures,
+  enableMarginFixtures,
+  creditRequestFixtures,
+  INTENTS,
+  type IntentEnvelope,
+} from "@sina-design-system/fintech";
+
+/** What the gate is expected to do — drives picker hints and the CI assertions. */
+export type Expectation = "pass" | "escalate" | "reject";
+
+export interface Scenario {
+  id: string;
+  label: string;
+  description: string;
+  /** Governed money-movement vs. an ungoverned read — groups the picker. */
+  group: "read" | "governed";
+  /** The `{ intent, props }` envelope the model would emit. */
+  envelope: IntentEnvelope;
+  /** Present for a composed multi-read "experience" (dashboard); each is gated independently. */
+  envelopes?: IntentEnvelope[];
+  expectation: Expectation;
+  /** Natural-language phrasing for live mode (sent to the model). */
+  prompt?: string;
+}
+
+const wire = (props: unknown): IntentEnvelope => ({ intent: INTENTS.WIRE_TRANSFER, props });
+
+export const SCENARIOS: Scenario[] = [
+  // ── Ungoverned reads — validate-then-mount a presentational component ──────────
+  {
+    id: "list-transactions",
+    label: "Last 2 transactions",
+    description: "A read carries no money-movement risk: shape-validated, then SINA mounts TransactionList.",
+    group: "read",
+    envelope: { intent: INTENTS.LIST_TRANSACTIONS, props: transactionFixtures.validTwoTransactions },
+    expectation: "pass",
+    prompt: "Show me my last 2 transactions for XYZ Company.",
+  },
+  {
+    id: "account-balance",
+    label: "Account balance",
+    description: "Shape-validated balance read → SINA mounts BalanceCard.",
+    group: "read",
+    envelope: { intent: INTENTS.ACCOUNT_BALANCE, props: balanceFixtures.validBalance },
+    expectation: "pass",
+    prompt: "What's the balance on my checking account?",
+  },
+  {
+    id: "dashboard",
+    label: "Financial dashboard (composed)",
+    description:
+      "One prompt → several reads: balance + recent transactions + spending, each gated independently and composed into a Surface.",
+    group: "read",
+    envelope: { intent: INTENTS.ACCOUNT_BALANCE, props: balanceFixtures.validBalance },
+    envelopes: [
+      { intent: INTENTS.ACCOUNT_BALANCE, props: balanceFixtures.validBalance },
+      { intent: INTENTS.LIST_TRANSACTIONS, props: transactionFixtures.validTwoTransactions },
+      { intent: INTENTS.SPENDING_BREAKDOWN, props: spendingFixtures.validBreakdown },
+    ],
+    expectation: "pass",
+    prompt: "Give me an overview of my finances.",
+  },
+  {
+    id: "spending-breakdown",
+    label: "Spending breakdown",
+    description: "Category spend for a period → SpendingBreakdown (pie chart).",
+    group: "read",
+    envelope: { intent: INTENTS.SPENDING_BREAKDOWN, props: spendingFixtures.validBreakdown },
+    expectation: "pass",
+    prompt: "How did I spend my money this month?",
+  },
+  {
+    id: "budget-progress",
+    label: "Budget progress",
+    description: "Spent-vs-limit per category → BudgetProgress.",
+    group: "read",
+    envelope: { intent: INTENTS.BUDGET_PROGRESS, props: budgetFixtures.validBudgets },
+    expectation: "pass",
+    prompt: "How am I tracking against my budgets?",
+  },
+  {
+    id: "list-cards",
+    label: "Cards",
+    description: "Wallet of cards with masked PAN + status → CardList.",
+    group: "read",
+    envelope: { intent: INTENTS.LIST_CARDS, props: cardFixtures.validCards },
+    expectation: "pass",
+    prompt: "Show me my cards.",
+  },
+  {
+    id: "rewards-summary",
+    label: "Rewards",
+    description: "Points, tier, cashback → RewardsSummary.",
+    group: "read",
+    envelope: { intent: INTENTS.REWARDS_SUMMARY, props: rewardsFixtures.validRewards },
+    expectation: "pass",
+    prompt: "What are my rewards points and tier?",
+  },
+  {
+    id: "list-payees",
+    label: "Payees",
+    description: "Saved payees with verified status → PayeeList.",
+    group: "read",
+    envelope: { intent: INTENTS.LIST_PAYEES, props: payeeFixtures.validPayees },
+    expectation: "pass",
+    prompt: "Show me my saved payees.",
+  },
+  {
+    id: "upcoming-payments",
+    label: "Upcoming payments",
+    description: "Scheduled/pending/overdue payments → UpcomingPayments.",
+    group: "read",
+    envelope: { intent: INTENTS.UPCOMING_PAYMENTS, props: upcomingFixtures.validUpcoming },
+    expectation: "pass",
+    prompt: "What payments are coming up?",
+  },
+  {
+    id: "portfolio-holdings",
+    label: "Portfolio holdings",
+    description: "Positions with day change → PortfolioHoldings (donut chart).",
+    group: "read",
+    envelope: { intent: INTENTS.PORTFOLIO_HOLDINGS, props: portfolioFixtures.validHoldings },
+    expectation: "pass",
+    prompt: "Show me my portfolio.",
+  },
+  {
+    id: "watchlist",
+    label: "Watchlist",
+    description: "Tracked instruments with price + change → Watchlist.",
+    group: "read",
+    envelope: { intent: INTENTS.WATCHLIST, props: watchlistFixtures.validWatchlist },
+    expectation: "pass",
+    prompt: "Show me my watchlist.",
+  },
+
+  // ── Reads are still gated — adversarial payloads are rejected ──────────────────
+  {
+    id: "transactions-fabricated-row",
+    label: "Read · smuggled row action",
+    description: "A fabricated `confirmButton` inside a transaction row → nested .strict() reject.",
+    group: "read",
+    envelope: { intent: INTENTS.LIST_TRANSACTIONS, props: transactionFixtures.fabricatedRowAction },
+    expectation: "reject",
+  },
+  {
+    id: "spending-fabricated",
+    label: "Read · smuggled category key",
+    description: "A fabricated key in a spending category → nested .strict() reject.",
+    group: "read",
+    envelope: { intent: INTENTS.SPENDING_BREAKDOWN, props: spendingFixtures.fabricatedCategoryKey },
+    expectation: "reject",
+  },
+  {
+    id: "budget-zero-limit",
+    label: "Read · zero budget limit",
+    description: "A zero limit → `.min(1)` reject.",
+    group: "read",
+    envelope: { intent: INTENTS.BUDGET_PROGRESS, props: budgetFixtures.zeroLimit },
+    expectation: "reject",
+  },
+  {
+    id: "cards-unmasked",
+    label: "Read · unmasked PAN",
+    description: "A full card number → regex reject (a read never carries a full PAN).",
+    group: "read",
+    envelope: { intent: INTENTS.LIST_CARDS, props: cardFixtures.unmaskedPan },
+    expectation: "reject",
+  },
+  {
+    id: "rewards-fractional",
+    label: "Read · fractional points",
+    description: "Non-integer points → `.int()` reject.",
+    group: "read",
+    envelope: { intent: INTENTS.REWARDS_SUMMARY, props: rewardsFixtures.fractionalPoints },
+    expectation: "reject",
+  },
+  {
+    id: "payees-unmasked",
+    label: "Read · unmasked payee number",
+    description: "A full account number on a payee → regex reject.",
+    group: "read",
+    envelope: { intent: INTENTS.LIST_PAYEES, props: payeeFixtures.unmaskedPayee },
+    expectation: "reject",
+  },
+  {
+    id: "upcoming-bad-status",
+    label: "Read · bad payment status",
+    description: "An out-of-enum status → reject.",
+    group: "read",
+    envelope: { intent: INTENTS.UPCOMING_PAYMENTS, props: upcomingFixtures.badStatus },
+    expectation: "reject",
+  },
+  {
+    id: "portfolio-noninteger",
+    label: "Read · non-integer value",
+    description: "A float holding value (minor units must be integer) → reject.",
+    group: "read",
+    envelope: { intent: INTENTS.PORTFOLIO_HOLDINGS, props: portfolioFixtures.nonIntegerValue },
+    expectation: "reject",
+  },
+  {
+    id: "watchlist-flood",
+    label: "Read · flooded watchlist",
+    description: "101 items → `.max(100)` reject (a hostile stream can't flood the client).",
+    group: "read",
+    envelope: { intent: INTENTS.WATCHLIST, props: watchlistFixtures.floodItems },
+    expectation: "reject",
+  },
+  {
+    id: "unknown-intent",
+    label: "Unknown intent — default deny",
+    description: "No rule is registered for this verb → the router blocks and audits it.",
+    group: "read",
+    envelope: { intent: "teleport_funds", props: {} },
+    expectation: "reject",
+  },
+
+  // ── Governed money movement (policy + escalation) ──────────────────────────────
+  {
+    id: "small",
+    label: "$500 — clean pass",
+    description: "Fully-formed SEPA transfer below every regulatory band.",
+    group: "governed",
+    envelope: wire(wireFixtures.validSmallTransfer),
+    expectation: "pass",
+  },
+  {
+    id: "five-thousand",
+    label: "$5,000 — compliant (SAR flag only)",
+    description: "Travel Rule satisfied; trips an informational SAR flag but still mounts.",
+    group: "governed",
+    envelope: wire(wireFixtures.validFiveThousand),
+    expectation: "pass",
+    prompt: "Wire $5,000 from Acme Corp to Beta LLC for invoice 1042.",
+  },
+  {
+    id: "over-limit",
+    label: "$60,000 — over the $50k approval limit",
+    description: "Full info, but above the secondary-approval threshold → escalate to SecureWireDialog.",
+    group: "governed",
+    envelope: wire(wireFixtures.overLimitTransfer),
+    expectation: "escalate",
+    prompt: "Wire $60,000 from Acme Corp to Beta LLC right away.",
+  },
+  {
+    id: "travel-rule",
+    label: "$4,000 — Travel Rule info missing",
+    description: "Creditor address absent above $3k → escalate.",
+    group: "governed",
+    envelope: wire(wireFixtures.travelRuleMissingInfo),
+    expectation: "escalate",
+  },
+  {
+    id: "approved-sixty",
+    label: "$60,000 — approved by a second manager",
+    description: "Above the $50k limit but carries a valid secondary approval, bound to the exact terms → passes.",
+    group: "governed",
+    envelope: wire(wireFixtures.validApprovedSixtyThousand),
+    expectation: "pass",
+  },
+  {
+    id: "self-approval",
+    label: "$60,000 — self-approved",
+    description: "The initiator approves its own wire (approver === initiator) → hard reject (four-eyes).",
+    group: "governed",
+    envelope: wire(wireFixtures.selfApprovedSixtyThousand),
+    expectation: "reject",
+  },
+  {
+    id: "approve-five-execute-sixty",
+    label: "Approve $5k, execute $60k",
+    description: "An approval bound to $5k terms attached to a $60k wire → payload-binding mismatch, reject.",
+    group: "governed",
+    envelope: wire(wireFixtures.approveFiveExecuteSixty),
+    expectation: "reject",
+  },
+  {
+    id: "fabricated-confirm",
+    label: "Fabricated Confirm button",
+    description: "A smuggled `confirmButton` key → .strict() reject.",
+    group: "governed",
+    envelope: wire(wireFixtures.fabricatedConfirmButton),
+    expectation: "reject",
+  },
+  {
+    id: "smuggled-card",
+    label: "Smuggled card data (CVV)",
+    description: "A smuggled `cvv` → .strict() reject; dropped from the audit log.",
+    group: "governed",
+    envelope: wire(wireFixtures.smuggledCardData),
+    expectation: "reject",
+  },
+
+  // ── Expanded ungoverned read catalog (Phase 6.5) — pass + adversarial per read ──
+  { id: "transaction-detail", label: "Transaction detail", description: "One transaction's full detail. Shape-validated → mount TransactionDetail.", group: "read", envelope: { intent: INTENTS.TRANSACTION_DETAIL, props: transactionDetailFixtures.valid }, expectation: "pass" },
+  { id: "transaction-detail-reject", label: "Transaction detail · adversarial", description: "Unmasked account number → regex reject.", group: "read", envelope: { intent: INTENTS.TRANSACTION_DETAIL, props: transactionDetailFixtures.adversarial }, expectation: "reject" },
+  { id: "account-list", label: "Accounts", description: "The list of accounts with balances → AccountList.", group: "read", envelope: { intent: INTENTS.LIST_ACCOUNTS, props: accountListFixtures.valid }, expectation: "pass" },
+  { id: "account-list-reject", label: "Accounts · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.LIST_ACCOUNTS, props: accountListFixtures.adversarial }, expectation: "reject" },
+  { id: "statement-list", label: "Statements", description: "Available account statements → StatementList.", group: "read", envelope: { intent: INTENTS.LIST_STATEMENTS, props: statementListFixtures.valid }, expectation: "pass" },
+  { id: "statement-list-reject", label: "Statements · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.LIST_STATEMENTS, props: statementListFixtures.adversarial }, expectation: "reject" },
+  { id: "cashflow-summary", label: "Cashflow", description: "Inflow vs outflow for a period → CashflowSummary (bar chart).", group: "read", envelope: { intent: INTENTS.CASHFLOW_SUMMARY, props: cashflowFixtures.valid }, expectation: "pass" },
+  { id: "cashflow-summary-reject", label: "Cashflow · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.CASHFLOW_SUMMARY, props: cashflowFixtures.adversarial }, expectation: "reject" },
+  { id: "balance-trend", label: "Balance trend", description: "Balance over time → BalanceTrend (line chart + KPI).", group: "read", envelope: { intent: INTENTS.BALANCE_TREND, props: balanceTrendFixtures.valid }, expectation: "pass" },
+  { id: "balance-trend-reject", label: "Balance trend · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.BALANCE_TREND, props: balanceTrendFixtures.adversarial }, expectation: "reject" },
+  { id: "activity-feed", label: "Activity feed", description: "Recent account activity → ActivityFeed.", group: "read", envelope: { intent: INTENTS.ACTIVITY_FEED, props: activityFeedFixtures.valid }, expectation: "pass" },
+  { id: "activity-feed-reject", label: "Activity feed · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.ACTIVITY_FEED, props: activityFeedFixtures.adversarial }, expectation: "reject" },
+  { id: "insight-card", label: "Insight", description: "A single financial insight → InsightCard.", group: "read", envelope: { intent: INTENTS.INSIGHT, props: insightFixtures.valid }, expectation: "pass" },
+  { id: "insight-card-reject", label: "Insight · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.INSIGHT, props: insightFixtures.adversarial }, expectation: "reject" },
+  { id: "recurring-list", label: "Subscriptions", description: "Recurring subscriptions/charges → RecurringList.", group: "read", envelope: { intent: INTENTS.LIST_RECURRING, props: recurringFixtures.valid }, expectation: "pass" },
+  { id: "recurring-list-reject", label: "Subscriptions · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.LIST_RECURRING, props: recurringFixtures.adversarial }, expectation: "reject" },
+  { id: "invoice-list", label: "Invoices", description: "B2B invoices → InvoiceList.", group: "read", envelope: { intent: INTENTS.LIST_INVOICES, props: invoiceFixtures.valid }, expectation: "pass" },
+  { id: "invoice-list-reject", label: "Invoices · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.LIST_INVOICES, props: invoiceFixtures.adversarial }, expectation: "reject" },
+  { id: "asset-detail", label: "Asset detail", description: "An asset quote with a price trend → AssetDetail (line chart).", group: "read", envelope: { intent: INTENTS.ASSET_DETAIL, props: assetDetailFixtures.valid }, expectation: "pass" },
+  { id: "asset-detail-reject", label: "Asset detail · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.ASSET_DETAIL, props: assetDetailFixtures.adversarial }, expectation: "reject" },
+  { id: "order-history", label: "Order history", description: "Trade order history → OrderHistory.", group: "read", envelope: { intent: INTENTS.ORDER_HISTORY, props: orderHistoryFixtures.valid }, expectation: "pass" },
+  { id: "order-history-reject", label: "Order history · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.ORDER_HISTORY, props: orderHistoryFixtures.adversarial }, expectation: "reject" },
+  { id: "fx-quote", label: "FX quote", description: "An FX rate quote → FxQuote.", group: "read", envelope: { intent: INTENTS.FX_QUOTE, props: fxQuoteFixtures.valid }, expectation: "pass" },
+  { id: "fx-quote-reject", label: "FX quote · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.FX_QUOTE, props: fxQuoteFixtures.adversarial }, expectation: "reject" },
+  { id: "crypto-holdings", label: "Crypto holdings", description: "Crypto holdings → CryptoHoldings.", group: "read", envelope: { intent: INTENTS.CRYPTO_HOLDINGS, props: cryptoHoldingsFixtures.valid }, expectation: "pass" },
+  { id: "crypto-holdings-reject", label: "Crypto holdings · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.CRYPTO_HOLDINGS, props: cryptoHoldingsFixtures.adversarial }, expectation: "reject" },
+  { id: "savings-goal", label: "Savings goals", description: "Savings-goal progress → SavingsGoal.", group: "read", envelope: { intent: INTENTS.SAVINGS_GOAL, props: savingsGoalFixtures.valid }, expectation: "pass" },
+  { id: "savings-goal-reject", label: "Savings goals · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.SAVINGS_GOAL, props: savingsGoalFixtures.adversarial }, expectation: "reject" },
+  { id: "net-worth", label: "Net worth", description: "Assets - liabilities → NetWorth.", group: "read", envelope: { intent: INTENTS.NET_WORTH, props: netWorthFixtures.valid }, expectation: "pass" },
+  { id: "net-worth-reject", label: "Net worth · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.NET_WORTH, props: netWorthFixtures.adversarial }, expectation: "reject" },
+  { id: "alerts-feed", label: "Alerts", description: "An account alerts feed → AlertsFeed.", group: "read", envelope: { intent: INTENTS.ALERTS_FEED, props: alertsFeedFixtures.valid }, expectation: "pass" },
+  { id: "alerts-feed-reject", label: "Alerts · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.ALERTS_FEED, props: alertsFeedFixtures.adversarial }, expectation: "reject" },
+  { id: "search-results", label: "Search results", description: "Unified search results → SearchResults.", group: "read", envelope: { intent: INTENTS.SEARCH_RESULTS, props: searchResultsFixtures.valid }, expectation: "pass" },
+  { id: "search-results-reject", label: "Search results · adversarial", description: "Hostile shape → gate rejects.", group: "read", envelope: { intent: INTENTS.SEARCH_RESULTS, props: searchResultsFixtures.adversarial }, expectation: "reject" },
+  { id: "clarify-choice", label: "Which Alex? (disambiguation)", description: "Server-resolved candidates for an ambiguous payee → ClarifyChoice; a selection is a hint, the follow-up intent is gated on its own.", group: "read", envelope: { intent: INTENTS.CLARIFY_CHOICE, props: clarifyChoiceFixtures.validWhichAlex }, expectation: "pass", prompt: "Transfer €250 to Alex." },
+  { id: "clarify-choice-reject", label: "Disambiguation · smuggled option action", description: "An execute-on-click smuggled inside an option → nested .strict() reject.", group: "read", envelope: { intent: INTENTS.CLARIFY_CHOICE, props: clarifyChoiceFixtures.smuggledOptionAction }, expectation: "reject" },
+
+  // ── Expanded governed family (Phase 6.5) — escalate (money-shot) + adversarial ──
+  { id: "ach-over-limit", label: "ACH $60k — over the $25k limit", description: "Above the ACH authorization threshold → escalate to GovernedActionDialog.", group: "governed", envelope: { intent: INTENTS.ACH_TRANSFER, props: achFixtures.overLimit }, expectation: "escalate" },
+  { id: "ach-authorized", label: "ACH $60k — authorized", description: "Above the limit but carries a valid cross-party authorization bound to the terms → passes.", group: "governed", envelope: { intent: INTENTS.ACH_TRANSFER, props: achFixtures.validAuthorized }, expectation: "pass" },
+  { id: "disclosure-required", label: "Disclosure — must acknowledge", description: "A mandatory disclosure escalates to MandatoryDisclosure until acknowledged.", group: "governed", envelope: { intent: INTENTS.DISCLOSURE, props: disclosureFixtures.notAcknowledged }, expectation: "escalate" },
+  { id: "p2p-payment", label: "P2P payment — step-up", description: "Above the P2P step-up threshold → escalate to GovernedActionDialog.", group: "governed", envelope: { intent: INTENTS.P2P_PAYMENT, props: p2pFixtures.escalate }, expectation: "escalate" },
+  { id: "p2p-payment-reject", label: "P2P · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.P2P_PAYMENT, props: p2pFixtures.reject }, expectation: "reject" },
+  { id: "bill-pay", label: "Bill pay — over limit", description: "Above the bill-pay authorization threshold → escalate.", group: "governed", envelope: { intent: INTENTS.BILL_PAY, props: billPayFixtures.escalate }, expectation: "escalate" },
+  { id: "bill-pay-reject", label: "Bill pay · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.BILL_PAY, props: billPayFixtures.reject }, expectation: "reject" },
+  { id: "recurring-setup", label: "Recurring setup — over cap", description: "Per-cycle cap exceeded → escalate.", group: "governed", envelope: { intent: INTENTS.RECURRING_SETUP, props: recurringSetupFixtures.escalate }, expectation: "escalate" },
+  { id: "recurring-setup-reject", label: "Recurring setup · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.RECURRING_SETUP, props: recurringSetupFixtures.reject }, expectation: "reject" },
+  { id: "fx-convert", label: "FX convert — over limit", description: "Above the FX authorization threshold → escalate.", group: "governed", envelope: { intent: INTENTS.FX_CONVERT, props: fxConvertFixtures.escalate }, expectation: "escalate" },
+  { id: "fx-convert-reject", label: "FX convert · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.FX_CONVERT, props: fxConvertFixtures.reject }, expectation: "reject" },
+  { id: "crypto-withdraw", label: "Crypto withdraw — Travel Rule", description: "Above the FATF Travel Rule threshold → escalate.", group: "governed", envelope: { intent: INTENTS.CRYPTO_WITHDRAW, props: cryptoWithdrawFixtures.escalate }, expectation: "escalate" },
+  { id: "crypto-withdraw-reject", label: "Crypto withdraw · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.CRYPTO_WITHDRAW, props: cryptoWithdrawFixtures.reject }, expectation: "reject" },
+  { id: "withdraw", label: "Withdraw — over limit", description: "Above the withdrawal authorization threshold → escalate.", group: "governed", envelope: { intent: INTENTS.WITHDRAW, props: withdrawFixtures.escalate }, expectation: "escalate" },
+  { id: "withdraw-reject", label: "Withdraw · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.WITHDRAW, props: withdrawFixtures.reject }, expectation: "reject" },
+  { id: "issue-card", label: "Issue card — identity step-up", description: "Card issuance requires identity step-up → escalate.", group: "governed", envelope: { intent: INTENTS.ISSUE_CARD, props: issueCardFixtures.escalate }, expectation: "escalate" },
+  { id: "issue-card-reject", label: "Issue card · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.ISSUE_CARD, props: issueCardFixtures.reject }, expectation: "reject" },
+  { id: "card-control", label: "Cancel card — step-up", description: "A destructive card action requires step-up → escalate.", group: "governed", envelope: { intent: INTENTS.CARD_CONTROL, props: cardControlFixtures.escalate }, expectation: "escalate" },
+  { id: "card-control-reject", label: "Card control · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.CARD_CONTROL, props: cardControlFixtures.reject }, expectation: "reject" },
+  { id: "change-limit", label: "Change limit — dual-control", description: "A large limit change requires dual-control → escalate.", group: "governed", envelope: { intent: INTENTS.CHANGE_LIMIT, props: changeLimitFixtures.escalate }, expectation: "escalate" },
+  { id: "change-limit-reject", label: "Change limit · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.CHANGE_LIMIT, props: changeLimitFixtures.reject }, expectation: "reject" },
+  { id: "security-change", label: "Security change — 2FA", description: "A security change requires 2FA step-up → escalate.", group: "governed", envelope: { intent: INTENTS.SECURITY_CHANGE, props: securityChangeFixtures.escalate }, expectation: "escalate" },
+  { id: "security-change-reject", label: "Security change · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.SECURITY_CHANGE, props: securityChangeFixtures.reject }, expectation: "reject" },
+  { id: "add-user", label: "Add user — verification", description: "Adding an authorized user requires verification → escalate.", group: "governed", envelope: { intent: INTENTS.ADD_USER, props: addUserFixtures.escalate }, expectation: "escalate" },
+  { id: "add-user-reject", label: "Add user · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.ADD_USER, props: addUserFixtures.reject }, expectation: "reject" },
+  { id: "kyc", label: "KYC — identity", description: "KYC verification requires identity step-up → escalate.", group: "governed", envelope: { intent: INTENTS.KYC, props: kycFixtures.escalate }, expectation: "escalate" },
+  { id: "kyc-reject", label: "KYC · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.KYC, props: kycFixtures.reject }, expectation: "reject" },
+  { id: "add-payee", label: "Add payee — verification", description: "A new payee requires verification → escalate.", group: "governed", envelope: { intent: INTENTS.ADD_PAYEE, props: addPayeeFixtures.escalate }, expectation: "escalate" },
+  { id: "add-payee-reject", label: "Add payee · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.ADD_PAYEE, props: addPayeeFixtures.reject }, expectation: "reject" },
+  { id: "link-account", label: "Link account — consent", description: "Linking an external account requires consent step-up → escalate.", group: "governed", envelope: { intent: INTENTS.LINK_ACCOUNT, props: linkAccountFixtures.escalate }, expectation: "escalate" },
+  { id: "link-account-reject", label: "Link account · smuggled creds", description: "A smuggled `password` → .strict() reject (raw creds never stored).", group: "governed", envelope: { intent: INTENTS.LINK_ACCOUNT, props: linkAccountFixtures.reject }, expectation: "reject" },
+  { id: "dispute", label: "Dispute — step-up", description: "A dispute requires identity + evidence step-up → escalate.", group: "governed", envelope: { intent: INTENTS.DISPUTE, props: disputeFixtures.escalate }, expectation: "escalate" },
+  { id: "dispute-reject", label: "Dispute · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.DISPUTE, props: disputeFixtures.reject }, expectation: "reject" },
+  { id: "close-account", label: "Close account — dual-control", description: "A destructive account closure requires dual-control → escalate.", group: "governed", envelope: { intent: INTENTS.CLOSE_ACCOUNT, props: closeAccountFixtures.escalate }, expectation: "escalate" },
+  { id: "close-account-reject", label: "Close account · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.CLOSE_ACCOUNT, props: closeAccountFixtures.reject }, expectation: "reject" },
+  { id: "place-trade", label: "Place trade — confirmation", description: "A trade requires order-confirmation step-up → escalate.", group: "governed", envelope: { intent: INTENTS.PLACE_TRADE, props: placeTradeFixtures.escalate }, expectation: "escalate" },
+  { id: "place-trade-reject", label: "Place trade · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.PLACE_TRADE, props: placeTradeFixtures.reject }, expectation: "reject" },
+  { id: "enable-margin", label: "Enable margin — disclosure", description: "Margin requires a suitability disclosure → escalate to MandatoryDisclosure.", group: "governed", envelope: { intent: INTENTS.ENABLE_MARGIN, props: enableMarginFixtures.escalate }, expectation: "escalate" },
+  { id: "enable-margin-reject", label: "Enable margin · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.ENABLE_MARGIN, props: enableMarginFixtures.reject }, expectation: "reject" },
+  { id: "credit-request", label: "Credit request — TILA", description: "A credit request requires a TILA disclosure → escalate to MandatoryDisclosure.", group: "governed", envelope: { intent: INTENTS.CREDIT_REQUEST, props: creditRequestFixtures.escalate }, expectation: "escalate" },
+  { id: "credit-request-reject", label: "Credit request · smuggled key", description: "A fabricated key → .strict() reject.", group: "governed", envelope: { intent: INTENTS.CREDIT_REQUEST, props: creditRequestFixtures.reject }, expectation: "reject" },
+];
+
+export function getScenario(id: string): Scenario | undefined {
+  return SCENARIOS.find((scenario) => scenario.id === id);
+}
+
+/**
+ * Resolve a list of picker ids to scenarios, dropping any the catalog doesn't have.
+ *
+ * Lives here, not in `InteractiveDemo`, because `GovernanceDemo` is a Server Component
+ * and calls it directly: a function exported from a `"use client"` module can only be
+ * rendered, never invoked, from the server.
+ */
+export function resolveScenarios(ids: string[] | undefined): Scenario[] | undefined {
+  if (!ids || ids.length === 0) return undefined;
+  const found = ids
+    .map(getScenario)
+    .filter((scenario): scenario is Scenario => scenario !== undefined);
+  return found.length > 0 ? found : undefined;
+}

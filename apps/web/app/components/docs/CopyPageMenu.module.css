@@ -1,0 +1,44 @@
+/* The "Copy Page" split control — two core Buttons welded into one bordered unit.
+   `core` Button exposes no radius hook, so the inner edges are squared off from
+   the consumer. Selectors are scoped under `.split` (0,2,0) so they beat core's
+   own single-class `.root` rule regardless of stylesheet order. */
+
+.split {
+  display: inline-flex;
+  align-items: stretch;
+  flex-shrink: 0;
+}
+
+.split .copy {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Collapse the doubled border between the segments into one hairline. */
+.split .caret {
+  margin-left: calc(var(--sina-border-width--1) * -1);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* Whichever segment is focused or open must paint its full border above its
+   neighbour's, or the shared edge clips the focus ring. */
+.split .copy:hover,
+.split .copy:focus-visible,
+.split .caret:hover,
+.split .caret:focus-visible,
+.split .caret[data-state="open"] {
+  z-index: 1;
+}
+
+.caretIcon {
+  width: var(--sina-size--icon-sm);
+  height: var(--sina-size--icon-sm);
+}
+
+.itemIcon {
+  width: var(--sina-size--icon-sm);
+  height: var(--sina-size--icon-sm);
+  flex-shrink: 0;
+  color: var(--sina-color-text-muted);
+}

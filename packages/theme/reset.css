@@ -1,0 +1,113 @@
+/*
+ * SINA reset — the Preflight subset the primitives assume now that Tailwind's
+ * `@tailwind base` is gone. Everything lives in `@layer reset`; component CSS
+ * (from @sina-design-system/core|fintech-react) and app CSS are UNLAYERED, and
+ * unlayered rules beat any layer — so the reset always loses to real styles.
+ * That is the cascade contract: reset < components < app-by-source-order.
+ *
+ * Apps load this once (in the root layout) before the token stylesheet:
+ *   import "@sina-design-system/theme/reset.css";
+ *   import "@sina-design-system/theme/css";
+ */
+@layer reset {
+  *,
+  ::before,
+  ::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+  }
+
+  html {
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+  }
+
+  body {
+    min-height: 100vh;
+    line-height: inherit;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  ol,
+  ul,
+  menu {
+    list-style: none;
+    padding: 0;
+  }
+
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+    background: transparent;
+    padding: 0;
+    border: 0;
+  }
+
+  button,
+  [role="button"] {
+    cursor: pointer;
+  }
+
+  button {
+    appearance: none;
+    -webkit-appearance: none;
+    text-transform: none;
+  }
+
+  :disabled {
+    cursor: default;
+  }
+
+  img,
+  svg,
+  video,
+  canvas,
+  audio,
+  iframe,
+  embed,
+  object {
+    display: block;
+    vertical-align: middle;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  [hidden] {
+    display: none;
+  }
+}

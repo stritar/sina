@@ -1,0 +1,16 @@
+/* playground — KpiStat story */
+
+.darkFrame {
+  width: 100%;
+  border-radius: var(--sina-radius--lg);
+  background: var(--sina-color-bg);
+  padding: var(--sina-space--4);
+}
+
+.panel {
+  display: flex;
+  gap: var(--sina-space--8);
+  border-radius: var(--sina-radius--lg);
+  background: var(--sina-color-surface);
+  padding: var(--sina-space--4);
+}

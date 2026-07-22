@@ -1,0 +1,56 @@
+{
+  "name": "@sina-design-system/governance",
+  "version": "0.3.0",
+  "description": "SINA governance seam — the shared interception contract, audit emit, and Zod intercept engine every domain constitution implements.",
+  "license": "MIT",
+  "author": "Denis Stritar",
+  "keywords": [
+    "sina",
+    "design-system",
+    "governance",
+    "zod",
+    "validation",
+    "interception",
+    "audit"
+  ],
+  "homepage": "https://github.com/stritar/sina#readme",
+  "bugs": "https://github.com/stritar/sina/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stritar/sina.git",
+    "directory": "packages/governance"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@sina-design-system/config": "workspace:*",
+    "eslint": "^9.18.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.3"
+  }
+}

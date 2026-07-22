@@ -1,0 +1,459 @@
+.figure {
+  margin: var(--sina-space--6) 0;
+}
+
+.caption {
+  margin-top: var(--sina-space--3);
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+  text-align: center;
+}
+
+.arrow {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--sina-color-text-muted);
+}
+
+/* ---- SameModelDiagram ---- */
+.compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sina-space--4);
+  align-items: start;
+}
+
+@media (max-width: 48rem) {
+  .compare {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sina-space--2);
+  padding: var(--sina-space--3) var(--sina-space--4);
+  border: var(--sina-border-width--1) solid var(--p-accent);
+  border-radius: var(--sina-radius--lg);
+  background: color-mix(in srgb, var(--p-accent) 5%, var(--sina-color-surface));
+}
+
+.panelUngoverned {
+  --p-accent: var(--sina-color-danger);
+}
+.panelGoverned {
+  --p-accent: var(--sina-color-success);
+}
+
+.panelTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--2);
+  font-size: var(--sina-text--ui);
+  font-weight: var(--sina-font-weight--medium);
+  letter-spacing: var(--sina-tracking--wide);
+  text-transform: uppercase;
+  color: var(--p-accent);
+}
+
+/* The model → … pipeline, as chips. */
+.pipeline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sina-space--1);
+}
+
+.pipeStep {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sina-space--1);
+}
+
+.chip {
+  padding: 3px var(--sina-space--2);
+  font-size: var(--sina-text--xs);
+  font-weight: var(--sina-font-weight--medium);
+  line-height: 1.25;
+  border: var(--sina-border-width--1) solid var(--sina-color-border);
+  border-radius: var(--sina-radius--full);
+  background: var(--sina-color-surface);
+  color: var(--sina-color-text-muted);
+  white-space: nowrap;
+}
+
+.chipMono {
+  font-family: var(--sina-font--mono);
+  font-weight: var(--sina-font-weight--regular);
+}
+
+.chipGate {
+  border-color: var(--sina-color-primary);
+  background: color-mix(in srgb, var(--sina-color-primary) 8%, var(--sina-color-surface));
+  color: var(--sina-color-primary);
+}
+
+.chipArrow {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--sina-color-text-muted);
+}
+
+/* ---- the fake browser ---- */
+.browser {
+  align-self: stretch;
+  overflow: hidden;
+  border: var(--sina-border-width--1) solid var(--sina-color-border);
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-surface);
+}
+
+.browserBar {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--1);
+  padding: var(--sina-space--2) var(--sina-space--3);
+  background: var(--sina-color-surface-sunken);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: var(--sina-radius--full);
+  background: var(--sina-color-text-subtle);
+}
+
+.browserUrl {
+  margin-left: var(--sina-space--2);
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-muted);
+}
+
+.browserScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sina-space--2);
+  padding: var(--sina-space--4) var(--sina-space--3);
+}
+
+.screenNote {
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-muted);
+  text-align: center;
+}
+
+/* The mock controls — inert on purpose: a diagram, not a live surface. */
+.pushButton {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--sina-text--xs);
+  font-weight: var(--sina-font-weight--medium);
+  border-radius: var(--sina-radius--sm);
+  padding: var(--sina-space--2) var(--sina-space--3);
+  white-space: nowrap;
+}
+
+.pushButtonDanger {
+  padding: var(--sina-space--2) var(--sina-space--4);
+  font-size: var(--sina-text--sm);
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-danger);
+  color: var(--sina-color-danger-fg);
+}
+
+.pushButtonPrimary {
+  background: var(--sina-color-primary);
+  color: var(--sina-color-primary-fg);
+}
+
+.pushButtonQuiet {
+  border: var(--sina-border-width--1) solid var(--sina-color-border);
+  background: var(--sina-color-surface);
+  color: var(--sina-color-text-muted);
+}
+
+/* ---- the forced dialog, on the governed side ---- */
+.dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sina-space--2);
+  width: 100%;
+  padding: var(--sina-space--3);
+  border: var(--sina-border-width--1) solid var(--sina-color-border);
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-surface-raised);
+  box-shadow: var(--sina-shadow--md);
+}
+
+.dialogTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--2);
+  font-size: var(--sina-text--ui);
+  font-weight: var(--sina-font-weight--semibold);
+  color: var(--sina-color-text);
+}
+
+.dialogTerms {
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-muted);
+}
+
+/* The violation the schema raised — bold Warning glyph, per the status-glyph rule. */
+.dialogViolation {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--2);
+  padding: var(--sina-space--1) var(--sina-space--2);
+  font-size: var(--sina-text--xs);
+  font-weight: var(--sina-font-weight--medium);
+  border: var(--sina-border-width--1) solid var(--sina-color-warning);
+  border-left-width: var(--sina-border-width--2);
+  border-radius: var(--sina-radius--sm);
+  background: var(--sina-color-warning-bg);
+  color: var(--sina-color-warning-text);
+}
+
+.dialogActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sina-space--2);
+}
+
+.panelFoot {
+  font-size: var(--sina-text--ui);
+  line-height: 1.4;
+  color: var(--sina-color-text-muted);
+}
+
+/* ---- ArchitectureDiagram ---- */
+.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
+.layer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--sina-space--3) var(--sina-space--4);
+  border: var(--sina-border-width--1) solid var(--sina-color-border);
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-surface);
+  text-align: center;
+}
+
+.layer .arrow {
+  margin: var(--sina-space--2) 0;
+}
+
+.layerName {
+  font-family: var(--sina-font--mono);
+  font-weight: var(--sina-font-weight--semibold);
+  color: var(--sina-color-primary);
+}
+
+.layerRole {
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}
+
+/* ---- EnforcementLadder ---- */
+.ladder {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--2);
+}
+
+.rung {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  align-items: center;
+  gap: var(--sina-space--3);
+  padding: var(--sina-space--3) var(--sina-space--4);
+  border: var(--sina-border-width--1) solid var(--r-accent);
+  border-left-width: var(--sina-border-width--4);
+  border-radius: var(--sina-radius--md);
+  background: color-mix(in srgb, var(--r-accent) 6%, var(--sina-color-surface));
+}
+
+.flag {
+  --r-accent: var(--sina-color-info);
+}
+.escalate {
+  --r-accent: var(--sina-color-warning);
+}
+.reject {
+  --r-accent: var(--sina-color-danger);
+}
+
+.rungLabel {
+  font-family: var(--sina-font--mono);
+  font-weight: var(--sina-font-weight--semibold);
+  color: var(--r-accent);
+}
+
+.rungWhat {
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}
+
+@media (max-width: 34rem) {
+  .rung {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sina-space--1);
+  }
+}
+
+/* ---- TokenTree ---- */
+.tree {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: var(--sina-space--2);
+}
+
+.tier {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 12rem;
+  padding: var(--sina-space--3) var(--sina-space--4);
+  border: var(--sina-border-width--1) solid var(--sina-color-border);
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-surface);
+}
+
+.tierKicker {
+  font-size: var(--sina-text--ui);
+  letter-spacing: var(--sina-tracking--wide);
+  text-transform: uppercase;
+  color: var(--sina-color-text-muted);
+}
+
+.tierValue {
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--sm);
+  font-weight: var(--sina-font-weight--semibold);
+  color: var(--sina-color-primary);
+  word-break: break-all;
+}
+
+.tierNote {
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}
+
+/* ---- PrimitiveAnatomy ---- */
+.anatomy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: var(--sina-space--4);
+  align-items: start;
+}
+
+@media (max-width: 48rem) {
+  .anatomy {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Root-scoped (`.anatomy …`) so they outrank the docs' `.prose ol/li` (0,1,1). */
+.anatomy .parts {
+  margin: 0;
+  padding-left: var(--sina-space--6);
+  list-style: decimal;
+}
+
+.anatomy .part {
+  margin: 0 0 var(--sina-space--2);
+}
+
+.partLabel {
+  display: block;
+  font-weight: var(--sina-font-weight--semibold);
+  color: var(--sina-color-text);
+}
+
+.partDesc {
+  display: block;
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}
+
+.anatomyCode > :first-child {
+  margin-top: 0;
+}
+
+/* ---- BeforeAfter ---- */
+.beforeAfter {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sina-space--4);
+  margin: var(--sina-space--5) 0;
+}
+
+@media (max-width: 48rem) {
+  .beforeAfter {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ba {
+  padding: var(--sina-space--3) var(--sina-space--4);
+  border: var(--sina-border-width--1) solid var(--ba-accent);
+  border-radius: var(--sina-radius--md);
+  background: color-mix(in srgb, var(--ba-accent) 5%, var(--sina-color-surface));
+}
+
+.baBefore {
+  --ba-accent: var(--sina-color-danger);
+}
+.baAfter {
+  --ba-accent: var(--sina-color-success);
+}
+
+/* Root-scoped (`.ba …`) so it outranks the docs' `.prose p` (0,1,1). */
+.ba .baTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--2);
+  margin: 0 0 var(--sina-space--2);
+  font-size: var(--sina-text--sm);
+  font-weight: var(--sina-font-weight--semibold);
+  color: var(--ba-accent);
+}
+
+.baBody {
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}
+
+.baBody > :first-child {
+  margin-top: 0;
+}
+.baBody > :last-child {
+  margin-bottom: 0;
+}
+
+/* Stack the horizontal flow on narrow screens and turn the arrows to point down. */
+@media (max-width: 34rem) {
+  .tree {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .tree .arrow svg {
+    transform: rotate(90deg);
+  }
+}

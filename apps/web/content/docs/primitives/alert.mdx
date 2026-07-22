@@ -1,0 +1,41 @@
+---
+title: Alert
+---
+
+import { AlertHero, AlertExamples } from "@/app/components/docs/demos/primitives/alert";
+import { alertPropRows } from "@/app/components/docs/props/alert.props.mjs";
+
+<AlertHero />
+
+`Alert` communicates a persistent, inline status: a warning above a form, a
+success confirmation, an error explanation.
+
+## Usage
+
+```tsx
+import { Alert } from "@sina-design-system/core";
+
+<Alert variant="warning" title="Approval required">
+  This transfer needs a second approver before it can proceed.
+</Alert>
+```
+
+## Examples
+
+<AlertExamples />
+
+## Props
+
+<PropsTable rows={alertPropRows()} />
+
+<Callout variant="warning" title="Two rules for status">
+  Warning and danger alerts **always** render a bold glyph. You can swap it but
+  not remove it. And never nest one status element inside another: a Badge belongs
+  *beside* an Alert, not inside it.
+</Callout>
+
+## Accessibility
+
+Danger alerts use `role="alert"` (announced assertively); the rest use
+`role="status"` (polite). Meaning is carried by icon + title + text, never by
+color alone.

@@ -1,0 +1,62 @@
+{
+  "name": "@sina-design-system/fintech",
+  "version": "0.3.0",
+  "description": "SINA Fintech constitution — pure Zod schemas that validate LLM intents before render.",
+  "license": "MIT",
+  "author": "Denis Stritar",
+  "keywords": [
+    "sina",
+    "design-system",
+    "governance",
+    "fintech",
+    "zod",
+    "validation",
+    "constitution"
+  ],
+  "homepage": "https://github.com/stritar/sina#readme",
+  "bugs": "https://github.com/stritar/sina/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stritar/sina.git",
+    "directory": "packages/fintech"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./standards": {
+      "types": "./dist/standards.d.ts",
+      "default": "./dist/standards.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@sina-design-system/governance": "workspace:*",
+    "zod": "^3.24.1",
+    "zod-to-json-schema": "^3.24.1"
+  },
+  "devDependencies": {
+    "@sina-design-system/config": "workspace:*",
+    "eslint": "^9.18.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.3"
+  }
+}

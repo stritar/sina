@@ -1,0 +1,31 @@
+---
+title: TextField
+---
+
+import { TextFieldHero, TextFieldExamples } from "@/app/components/docs/demos/primitives/text-field";
+import { textFieldPropRows } from "@/app/components/docs/props/text-field.props.mjs";
+
+<TextFieldHero />
+
+`TextField` is a text input with all the Field wiring built in. Set `multiline`
+for a textarea.
+
+## Usage
+
+```tsx
+import { TextField } from "@sina-design-system/core";
+
+<TextField label="Name" placeholder="Ada Lovelace" />
+<TextField label="Notes" multiline />
+```
+
+## Examples
+
+<TextFieldExamples />
+
+## Props
+
+<PropsTable rows={textFieldPropRows()} />
+
+It accepts the usual native input/textarea attributes (`placeholder`, `value`,
+`onChange`, and so on).

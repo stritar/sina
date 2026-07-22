@@ -1,0 +1,41 @@
+---
+title: Select
+---
+
+import { SelectHero, SelectExamples } from "@/app/components/docs/demos/primitives/select";
+
+<SelectHero />
+
+`Select` is a compound listbox for picking one value. Use it when the options are
+known and fit a dropdown; for a long, searchable list, reach for
+[Combobox](/docs/primitives/combobox).
+
+## Usage
+
+```tsx
+import {
+  Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
+} from "@sina-design-system/core";
+
+<Select value={rail} onValueChange={setRail}>
+  <SelectTrigger><SelectValue placeholder="Payment rail" /></SelectTrigger>
+  <SelectContent>
+    <SelectItem value="ach">ACH</SelectItem>
+    <SelectItem value="wire">Wire</SelectItem>
+  </SelectContent>
+</Select>
+```
+
+## Examples
+
+<SelectExamples />
+
+## Parts
+
+`Select` · `SelectTrigger` · `SelectValue` · `SelectContent` · `SelectItem` ·
+`SelectGroup` · `SelectLabel` · `SelectSeparator`.
+
+## Accessibility
+
+Adheres to the ARIA listbox pattern: arrow keys move, typeahead jumps, `Enter`
+selects, `Esc` closes, and focus returns to the trigger. All handled for you.

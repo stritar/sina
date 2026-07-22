@@ -1,0 +1,42 @@
+---
+title: Dialog
+---
+
+import { DialogHero, DialogExamples } from "@/app/components/docs/demos/primitives/dialog";
+
+<DialogHero />
+
+`Dialog` is a modal that traps focus, closes on `Esc`, and returns focus to the
+trigger. It's the foundation the governed components (like `SecureWireDialog`)
+build on.
+
+## Usage
+
+```tsx
+import {
+  Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogClose,
+} from "@sina-design-system/core";
+
+<Dialog open={open} onOpenChange={setOpen}>
+  <DialogContent>
+    <DialogTitle>Confirm</DialogTitle>
+    <DialogDescription>This can't be undone.</DialogDescription>
+    <DialogClose asChild><Button variant="secondary">Cancel</Button></DialogClose>
+  </DialogContent>
+</Dialog>
+```
+
+## Examples
+
+<DialogExamples />
+
+## Parts
+
+`Dialog` · `DialogTrigger` · `DialogContent` · `DialogTitle` · `DialogDescription`
+· `DialogClose`.
+
+## Accessibility
+
+`role="dialog"` with `aria-modal`, a title wired via `aria-labelledby`, a focus
+trap, `Esc` to close, and focus restoration on close. `DialogTitle` is required;
+it's the accessible name.

@@ -1,0 +1,82 @@
+---
+title: For AI agents
+---
+
+This page covers both sides of SINA's agent story: how to integrate an agent
+so its output goes through the gate, and the machine-readable resources an
+agent (or coding assistant) can consume directly.
+
+A prompt or style guide is advisory: the model can misread it, forget it, or
+be steered around it. The gate is code that runs on your server between the
+model's request and your render, so following the rules stops being the
+model's responsibility.
+
+## What the agent sends
+
+You give the model a menu of intent verbs. `fintechIntentManifest()` from
+`@sina-design-system/fintech` returns one entry per verb, each carrying a
+`propsSchema` (JSON Schema derived from the exact Zod object the gate runs)
+you can drop into an LLM tool definition:
+
+```ts
+[
+  { intent: "wire_transfer", kind: "governed", summary: "Move money by wire", propsSchema: { /* … */ } },
+  { intent: "list_transactions", kind: "display", summary: "Show recent activity", propsSchema: { /* … */ } },
+  // … 50 verbs in total
+]
+```
+
+The model picks a verb and supplies props. It describes a goal, not a screen.
+
+## What the governed integration withholds
+
+- **Component names.** The manifest lists verbs. SINA maps a verb to a
+  component after the gate runs, so the model's output has no field in which
+  to request a specific component.
+- **Real data for reads.** When the model asks to show a balance or a
+  transaction list, your server supplies the values. The model picks what to
+  show, not what the numbers are.
+
+Applied to the wire example: the model cannot select the confirm dialog (it
+has no component vocabulary), cannot approve the transfer in the same payload
+(the approver must differ from the initiator, and the initiator id is set by
+your server, not the payload), and cannot get a small approval attached to a
+larger amount (the approval binds to a hash of the exact terms, recomputed
+server-side). Those are properties of the rule code, and they hold only where
+requests actually go through the gate.
+
+## Try it
+
+This demo runs the real gate on a server when you press Run. The opening
+scenario streams a fabricated "Confirm" button; strict parsing rejects the
+extra field before any value is read. Swap scenarios to see where the boundary
+falls.
+
+<GovernanceDemo
+  scenario="fabricated-confirm"
+  scenarios={["fabricated-confirm", "small", "over-limit", "self-approval"]}
+/>
+
+The emulator has three modes: mock (a recorded request), direct (hand-written
+JSON), and live (a real model). The decision is identical in all three because
+the gate does not know where a request came from. The full walkthrough is
+[the $60k wire](/docs/governance/wire-transfer).
+
+## Docs your agent can read
+
+Point a coding assistant at these and it can consume the docs without
+scraping:
+
+| Resource | What it is |
+|---|---|
+| `/llms.txt` | An index of every docs page with links to raw Markdown. |
+| Per-page `.md` | Every page has a raw-Markdown twin under `/llms/docs/…`. |
+| `/dsds/manifest.dsds.json` | The system as structured JSON: components, tokens, patterns, guides. |
+
+The JSON catalog follows the draft
+[Design System Documentation Schema](https://designsystemdocspec.org) (DSDS
+0.15.2). One manifest links an entity file for every primitive (props
+included), every design token (values in a W3C Design Tokens file), every
+fintech intent, and every guide. Pattern entities carry the same `propsSchema`
+as the manifest above, so a tool can load the verb menu straight into its own
+definitions.

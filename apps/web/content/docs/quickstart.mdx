@@ -1,0 +1,139 @@
+---
+title: Quickstart
+---
+
+<Prereqs>
+- **Node 20+** and a package manager (pnpm, npm, or yarn).
+- A React app that can run server code (a Next.js App Router project is ideal).
+- You do **not** need an AI agent or an LLM key.
+</Prereqs>
+
+## Install
+
+<Tabs>
+  <Tab label="pnpm">
+
+```bash
+pnpm add @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+  </Tab>
+  <Tab label="npm">
+
+```bash
+npm install @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+  </Tab>
+  <Tab label="yarn">
+
+```bash
+yarn add @sina-design-system/theme @sina-design-system/core \
+  @sina-design-system/fintech @sina-design-system/fintech-react \
+  @sina-design-system/governance
+```
+
+  </Tab>
+</Tabs>
+
+Installing only `theme` + `core` is enough for the primitives; the other three
+packages are the governance layer.
+
+## Wire the stylesheets
+
+Import the token and component styles once, in this order. The reset is
+layered, so your app's own styles always win over it.
+
+```ts
+// app/layout.tsx
+import "@sina-design-system/theme/reset.css";
+import "@sina-design-system/theme/css";
+import "@sina-design-system/core/styles.css";
+import "@sina-design-system/fintech-react/styles.css";
+```
+
+## Render a primitive
+
+```tsx
+// app/page.tsx
+import { Button } from "@sina-design-system/core";
+
+export default function Page() {
+  return <Button variant="primary">It works</Button>;
+}
+```
+
+If the button renders unstyled, a stylesheet import above is missing or out of
+order. The [primitives gallery](/docs/primitives) shows everything else `core`
+ships.
+
+## Run the gate once
+
+The governance check is a plain server-side function call: an intent envelope
+in, a decision out. Try it in a route handler (any server-only module works):
+
+```ts
+// app/api/gate/route.ts
+import { evaluateFintechIntent } from "@sina-design-system/fintech";
+
+export async function POST(request: Request) {
+  const envelope = await request.json(); // { intent, props } from your agent
+  const decision = evaluateFintechIntent(envelope);
+  return Response.json(decision);
+}
+```
+
+POST a small wire to it:
+
+```json
+{
+  "intent": "wire_transfer",
+  "props": {
+    "amount": 50000,
+    "currency": "USD",
+    "debtor": { "name": "Acme Corp", "account": { "scheme": "sepa", "iban": "DE89370400440532013000" } },
+    "creditor": { "name": "Beta LLC", "account": { "scheme": "sepa", "iban": "DE89370400440532013000" } }
+  }
+}
+```
+
+`amount` is in minor units, so this is a $500.00 transfer. It clears every
+policy band and the decision reports a clean pass (`intent` and `props` are
+echoed back alongside these fields):
+
+```json
+{
+  "result": { "valid": true, "violations": [], "requiredComponent": null },
+  "mount": null
+}
+```
+
+Change `amount` to `6000000` ($60,000) and the same call escalates:
+`result.requiredComponent` becomes `"SecureWireDialog"`, the second-approver
+dialog from `@sina-design-system/fintech-react`, and `mount` names it as the
+only component allowed to continue. That decision-to-component step is your
+app's job; [How SINA works](/docs/how-it-works) shows where it sits.
+
+Keep the call server-side. The same function runs in the browser, but there it
+is advisory: only the server copy is out of reach of the page and the model.
+
+## Next steps
+
+<CardGrid columns={2}>
+  <Card href="/docs/how-it-works" title="How it works">
+    The intent, the decision shape, and where validation runs.
+  </Card>
+  <Card href="/docs/governance/wire-transfer" title="The $60k wire, end to end">
+    The worked example: blocked, escalated, approved, re-gated.
+  </Card>
+  <Card href="/docs/primitives" title="Primitives">
+    The accessible components, usable with no governance at all.
+  </Card>
+  <Card href="/docs/guides/adopt-incrementally" title="Adopt incrementally">
+    Govern one intent first, or use the primitives with no gate.
+  </Card>
+</CardGrid>

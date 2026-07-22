@@ -1,0 +1,67 @@
+---
+title: Glossary & FAQ
+---
+
+## Glossary
+
+| Term | Meaning |
+|---|---|
+| **Intent** | The AI's request to show UI: a verb plus props, never a component. |
+| **Constitution** | The full set of rules (schemas) that decide what's allowed. |
+| **Gate** | The server-side check every intent passes through. |
+| **Interception** | Running an intent through the gate before anything mounts. |
+| **Validate, then mount** | SINA's core rule: check on the server first, render second. |
+| **Interception contract** | The uniform result shape: `{ valid, violations, requiredComponent }`. |
+| **Violation** | One thing the gate found, with a message, a severity, and a cited standard. |
+| **Decision** | The router's envelope around a result: `{ intent, props, result, mount }`. |
+| **Mount** | The component name a decision allows your app to render (`null` = nothing). |
+| **Severity** | How hard a violation acts: `flag`, `escalate`, or `reject`. |
+| **Escalation** | Redirecting a blocked request to a stricter component instead of refusing. |
+| **Governed** | A rule for an action, with policy and possible escalation. |
+| **Display / ungoverned** | A rule for a read: shape-checked and masked, never escalated. |
+| **Redaction** | Stripping/masking sensitive data before it's stored in the audit log. |
+| **Audit event** | The record every decision emits. |
+| **Four-eyes** | The rule that an approver must differ from the initiator. |
+| **Payload binding** | Tying an approval to the exact terms, recomputed on the server. |
+| **Minor units** | Money as whole integers (cents), per ISO 4217. No floats. |
+| **Primitive** | A headless, accessible core component (Button, Dialog, …). |
+| **Token** | A named design value (color, size, font) as a `--sina-*` variable. |
+| **Brand-open / governance-locked** | Token roles you may re-theme vs. ones reserved for safety. |
+| **Manifest** | The list of intent verbs the AI may emit. |
+
+## FAQ
+
+**Do I need an AI or an LLM key to use SINA?**
+No. You can call the gate with a plain object, and the docs run it live with no
+key. If you only want the components, [use the primitives
+alone](/docs/guides/adopt-incrementally).
+
+**Is SINA only for fintech?**
+The shipped rules are fintech-only. The
+[governance seam](/docs/reference/packages) is domain-agnostic, so
+[another domain can be added](/docs/guides/extend-sina); none is built or
+currently planned.
+
+**Does it work outside Next.js?**
+The gate needs somewhere to run a server-side check. Next.js App Router is the
+smoothest fit, but any server that can run the check works. The components are
+plain React.
+
+**Is it production-ready?**
+It's an early 0.x project: public APIs may change between minors. The gate and
+primitives are tested (including an adversarial suite and automated
+accessibility checks); the audit trail is a defined contract with a no-op
+sink. Evaluate accordingly; current version and status live in
+[Releases & stability](/docs/reference/changelog).
+
+**What's the license?**
+MIT, free. SINA exists so startups and individuals can adopt a governed design
+system without building the governance layer themselves.
+
+**Does the gate add latency?**
+It's a synchronous server-side check, a schema parse plus policy, measured in
+milliseconds. There's no model call in the gate itself.
+
+**Does SINA run the AI?**
+No. You run your agent; SINA governs its output. The model proposes intent, and
+SINA decides what renders.

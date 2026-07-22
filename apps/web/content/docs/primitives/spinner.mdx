@@ -1,0 +1,32 @@
+---
+title: Spinner
+---
+
+import { SpinnerHero, SpinnerExamples } from "@/app/components/docs/demos/primitives/spinner";
+import { spinnerPropRows } from "@/app/components/docs/props/spinner.props.mjs";
+
+<SpinnerHero />
+
+`Spinner` signals that something is happening but you don't know how long it'll
+take. For a known duration, use [Progress](/docs/primitives/progress) instead.
+
+## Usage
+
+```tsx
+import { Spinner } from "@sina-design-system/core";
+
+<Spinner size="md" label="Loading transactions" />
+```
+
+## Examples
+
+<SpinnerExamples />
+
+## Props
+
+<PropsTable rows={spinnerPropRows()} />
+
+## Accessibility
+
+The animation respects `prefers-reduced-motion`. Always pass a `label` so the wait
+is announced, not silent.

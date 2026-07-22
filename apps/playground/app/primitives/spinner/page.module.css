@@ -1,0 +1,19 @@
+/* Spinner story — co-located styles (no Tailwind). */
+
+.column {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: var(--sina-space--3);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--4);
+}
+
+.caption {
+  font-size: var(--sina-text--xs);
+  color: var(--sina-color-text-subtle);
+}

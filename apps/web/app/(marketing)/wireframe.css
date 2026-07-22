@@ -1,0 +1,171 @@
+/**
+ * Phase 9 wireframe scope — the deliberate black/gray/white landing skin.
+ *
+ * Tier-1 CSS-variable override (ROADMAP §6): the landing reassigns the semantic
+ * `--sina-color-*` roles to achromatic values inside its own scope, so every
+ * core component it renders goes grayscale without touching a primitive. The
+ * scope is `body:has(.sina-wireframe)` rather than the marker div itself so
+ * Radix portals (the language menu) and the body background follow too — the
+ * `body { background: var(--sina-color-bg) }` base rule in theme.css picks the
+ * override up automatically.
+ *
+ * This file authors raw hex for the landing's token override. The other two raw-hex
+ * files on the marketing side are landing/industry-tint.css (generated; it re-hues
+ * this ramp per industry, and therefore WINS over everything below) and the
+ * decorative glyph-field palette it also generates.
+ *
+ * Both variants here are held to WCAG AA by construction (muted #444444 on white
+ * is above 9:1; dark muted #c0c0c0 on #161616 is above 9:1). `text-subtle` is a
+ * 3:1 role, not a 4.5:1 one — it is reserved for decorative / large / icon use,
+ * matching the policy in packages/theme/src/tokens.test.ts. It is set a touch
+ * darker than the 4.5:1 boundary so the per-industry re-hue has headroom.
+ *
+ * Two contracts carried over from the real theme (see packages/theme/theme.css):
+ * - The status `*-fill` roles stay LIGHT in both modes (each fill carries its
+ *   own surface, and the black status ink must keep AA on it). They get five
+ *   distinct gray steps plus a revealed `status-border` outline, because color
+ *   no longer distinguishes severity — the bold glyph and the outline do.
+ * - The shadow color is true black in both modes.
+ */
+
+body:has(.sina-wireframe) {
+  color-scheme: light;
+
+  /* Surfaces */
+  --sina-color-bg: #f5f6f4;
+  --sina-color-surface: #ffffff;
+  --sina-color-surface-raised: #ffffff;
+  --sina-color-surface-sunken: #f4f4f4;
+  /* The hero emulator column only. A dedicated role because that panel is the
+     one landing surface that must read as its own sheet rather than as a card
+     on the page: an off-white in light, a lift off the near-black ground in
+     dark. Unlike the achromatic surfaces above it is authored ALREADY tinted,
+     so the generator hue-rotates it (null chroma budget) and fintech round-trips
+     to this hex byte-for-byte. Every other landing card stays on
+     `--sina-color-surface`. */
+  --sina-color-surface-emulator: #fafbf9;
+
+  /* Text */
+  --sina-color-text: #111111;
+  --sina-color-text-muted: #444444;
+  --sina-color-text-subtle: #717171;
+  --sina-color-text-inverse: #ffffff;
+
+  /* Borders */
+  --sina-color-border: #c9c9c9;
+  --sina-color-border-subtle: #e4e4e4;
+
+  /* Actions */
+  --sina-color-primary: #111111;
+  --sina-color-primary--hover: #333333;
+  --sina-color-primary--active: #000000;
+  --sina-color-primary-fg: #ffffff;
+  --sina-color-secondary: #efefef;
+  --sina-color-secondary--hover: #e2e2e2;
+  --sina-color-secondary-fg: #111111;
+
+  /* Status inks (consumed as fg/border) — severity rides on the glyph, not hue */
+  --sina-color-danger: #111111;
+  --sina-color-danger-fg: #ffffff;
+  --sina-color-danger-bg: #f4f4f4;
+  --sina-color-success: #111111;
+  --sina-color-success-fg: #ffffff;
+  --sina-color-success-bg: #f4f4f4;
+  --sina-color-warning: #111111;
+  --sina-color-warning-fg: #ffffff;
+  --sina-color-warning-bg: #f4f4f4;
+  --sina-color-warning-text: #444444;
+  --sina-color-info: #111111;
+  --sina-color-info-fg: #ffffff;
+  --sina-color-info-bg: #f4f4f4;
+  --sina-color-neutral-bg: #f4f4f4;
+
+  /* Status fills — theme-invariant light grays (black ink stays AA in both
+     modes), five distinct steps + a revealed outline so badges/alerts stay
+     tellable apart without hue. */
+  --sina-color-neutral-fill: #ececec;
+  --sina-color-info-fill: #dedede;
+  --sina-color-success-fill: #f2f2f2;
+  --sina-color-warning-fill: #d2d2d2;
+  --sina-color-danger-fill: #c4c4c4;
+  --sina-color-status-border--neutral: #111111;
+  --sina-color-status-border--info: #111111;
+  --sina-color-status-border--success: #111111;
+  --sina-color-status-border--warning: #111111;
+  --sina-color-status-border--danger: #111111;
+
+  /* Accessibility + governance surfaces */
+  --sina-color-focus-ring: #000000;
+  --sina-color-surface-secure: #f4f4f4;
+
+  /* Elevation — true black in both modes, and deliberately NOT tinted per
+     industry (see the governance-locked roles in industry-tint.css). */
+  --sina-shadow-color: #000000;
+}
+
+/* Inverted dark wireframe — white/gray on black, same fills (see header note). */
+[data-theme="dark"] body:has(.sina-wireframe) {
+  color-scheme: dark;
+
+  --sina-color-bg: #0b0c0b;
+  --sina-color-surface: #161616;
+  --sina-color-surface-raised: #1f1f1f;
+  --sina-color-surface-sunken: #0a0a0a;
+  /* The dark counterpart of the emulator sheet. Light moved the panel DOWN off
+     white, so dark moves it UP off the near-black ground by the same intent:
+     the sheet reads as its own plane either way. It sits between `surface` and
+     `surface-raised`, so the panel never competes with a genuinely raised
+     element inside it. */
+  --sina-color-surface-emulator: #1c1c1b;
+
+  --sina-color-text: #f5f5f5;
+  --sina-color-text-muted: #c0c0c0;
+  --sina-color-text-subtle: #8a8a8a;
+  --sina-color-text-inverse: #111111;
+
+  --sina-color-border: #3d3d3d;
+  --sina-color-border-subtle: #2a2a2a;
+
+  --sina-color-primary: #f5f5f5;
+  --sina-color-primary--hover: #dddddd;
+  --sina-color-primary--active: #ffffff;
+  --sina-color-primary-fg: #111111;
+  --sina-color-secondary: #242424;
+  --sina-color-secondary--hover: #303030;
+  --sina-color-secondary-fg: #f5f5f5;
+
+  --sina-color-danger: #f5f5f5;
+  --sina-color-danger-fg: #111111;
+  --sina-color-danger-bg: #1f1f1f;
+  --sina-color-success: #f5f5f5;
+  --sina-color-success-fg: #111111;
+  --sina-color-success-bg: #1f1f1f;
+  --sina-color-warning: #f5f5f5;
+  --sina-color-warning-fg: #111111;
+  --sina-color-warning-bg: #1f1f1f;
+  --sina-color-warning-text: #c0c0c0;
+  --sina-color-info: #f5f5f5;
+  --sina-color-info-fg: #111111;
+  --sina-color-info-bg: #1f1f1f;
+  --sina-color-neutral-bg: #242424;
+
+  --sina-color-focus-ring: #ffffff;
+  --sina-color-surface-secure: #1f1f1f;
+}
+
+/* The marker + page frame. Layout stays in the section CSS Modules. */
+.sina-wireframe {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  /* Transparent so the page sits on the body ground (var(--sina-color-bg), set by
+     the base rule in theme.css). The glyph field is no longer a page-wide backdrop:
+     it is scoped to the hero's left box (see Hero.tsx). */
+  background: transparent;
+  color: var(--sina-color-text);
+  /* Landing type is set large and light on a near-black/near-white ground, where
+     subpixel rendering fattens the strokes. Grayscale AA keeps the weights true. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

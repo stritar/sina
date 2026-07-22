@@ -1,0 +1,5 @@
+/* TextField story — co-located styles (no Tailwind). */
+
+.field {
+  width: 18rem;
+}

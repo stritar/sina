@@ -1,0 +1,22 @@
+/* playground — DonutChart story */
+
+.chart300 {
+  height: 300px;
+}
+
+.chart260 {
+  height: 260px;
+}
+
+.darkFrame {
+  width: 100%;
+  border-radius: var(--sina-radius--lg);
+  background: var(--sina-color-bg);
+  padding: var(--sina-space--4);
+}
+
+.panel {
+  border-radius: var(--sina-radius--lg);
+  background: var(--sina-color-surface);
+  padding: var(--sina-space--4);
+}

@@ -1,0 +1,74 @@
+---
+title: Introduction
+---
+
+SINA is a design system for React applications where an AI agent generates part
+of the interface. It has two halves that work separately:
+
+- **Design tokens and accessible primitives** (`@sina-design-system/theme`,
+  `core`): a component library you can adopt on its own, with no AI involved.
+- **A server-side governance layer** (`@sina-design-system/governance`,
+  `fintech`, `fintech-react`): Zod schemas and policy rules that validate an
+  agent's proposal before your application renders a component from it.
+
+The governed flow in one paragraph: the agent proposes an
+<Term term="intent">intent</Term> (a verb plus data, such as `wire_transfer`
+with an amount and recipient), your server evaluates it against the
+<Term term="constitution">Constitution</Term> (your rules, written as schemas),
+and your application mounts the component the resulting decision names. The
+agent's output never selects a component directly.
+[How SINA works](/docs/how-it-works) traces a request through each step.
+
+<SameModelDiagram />
+
+## What SINA does, and what it leaves to you
+
+SINA validates the shape and policy of a proposed interface before your app
+renders it, and it records each decision as an
+[audit event](/docs/concepts/audit-trail). It does not execute business
+actions. Blocking a wire-transfer *dialog* is not the same as blocking a wire
+*transfer*: authentication, authorization, and the API call that moves money
+remain your backend's job, and you decide where to connect the gate's decision
+to them.
+
+## What ships today
+
+The packages are at 0.3.0, an early 0.x release: public APIs may change
+between minors. Included now:
+
+- The token system and around 30 primitives, each with a jest-axe test.
+- The [interception contract](/docs/concepts/the-contract) and rule engine.
+- A fintech rule set covering 50 intent verbs, with
+  [three governed components](/docs/governance/components-and-patterns) for
+  the escalation paths.
+- An audit event shape whose default sink is still a no-op (a durable sink is
+  planned).
+
+[Releases & stability](/docs/reference/changelog) has the full status.
+
+## Who it's for
+
+Frontend engineers adding agent-generated UI to a React app that has a server
+to run the check on (a Next.js App Router project fits well). SINA is free
+(MIT). The shipped rules cover fintech: money movement, accounts, cards. Other
+domains mean [writing your own rules](/docs/guides/extend-sina) against the
+same contract. If you have no agent or no server, the primitives
+[still work on their own](/docs/guides/adopt-incrementally); you just don't
+get the governance.
+
+## Start here
+
+<CardGrid columns={2}>
+  <Card href="/docs/how-it-works" eyebrow="5 min" title="How SINA works">
+    One request traced from agent proposal to rendered component.
+  </Card>
+  <Card href="/docs/quickstart" eyebrow="10 min" title="Quickstart">
+    Install the packages, render a primitive, run the gate once.
+  </Card>
+  <Card href="/docs/governance/wire-transfer" eyebrow="Live demo" title="The $60k wire, end to end">
+    The worked example: a real check passing a safe transfer and escalating an unsafe one.
+  </Card>
+  <Card href="/docs/primitives" eyebrow="Gallery" title="Primitives">
+    The component library, live on every page.
+  </Card>
+</CardGrid>

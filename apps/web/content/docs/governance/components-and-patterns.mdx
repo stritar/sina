@@ -1,0 +1,107 @@
+---
+title: Governed components & display patterns
+wordBudget: 780
+---
+
+The Constitution's rules resolve to two kinds of UI. **Governed components**
+render an escalation, the stricter flow a rule forces. **Display patterns**
+render a clean read. Neither validates anything itself; each renders the
+decision the gate already made ([How it works](/docs/how-it-works)).
+
+## The three governed components
+
+The registry's governed rules escalate to just three components. The rules
+differ; the destinations are shared, so there is one interaction pattern to
+test instead of one per flow.
+
+- **`SecureWireDialog`**: forced when a wire needs a second approver. It runs
+  the four-eyes loop: review the exact terms, collect a *different* approver's
+  identity, confirm with a one-time code, re-check on the server. A denied
+  re-check keeps the dialog open. See
+  [the $60k wire](/docs/governance/wire-transfer).
+- **`GovernedActionDialog`**: forced when another authorization-gated action
+  escalates: ACH, P2P, bill pay, FX, card operations, limit changes, account
+  opening, trades. Same shape as the wire dialog, with the terms derived from
+  the action.
+- **`MandatoryDisclosure`**: forced when the user must acknowledge required
+  text: margin suitability, a lending (TILA) disclosure, an FX-spread notice.
+  The text comes from the rule, not the model, so the model cannot soften or
+  shorten a required notice.
+
+<Callout variant="note" title="The same phases every time">
+  All three share one state machine (review, collect, pending, resolved), so
+  there is one set of states to test and one accessible experience across
+  every governed flow.
+</Callout>
+
+On a clean pass a governed verb mounts nothing (`mount: null`); your app owns
+the confirm step. See [Escalation](/docs/concepts/escalation).
+
+## Display patterns
+
+A real app spends most of its time showing things. A display rule has no
+limits or approvals, but it still checks shape (strict parse), bounds (lists
+are capped), and privacy (identifiers must be masked). Pass all three and the
+decision mounts a presentational component: `TransactionList`, `BalanceCard`,
+`PortfolioHoldings`, and their siblings, one per kind of read.
+
+Two properties do the safety work here. **Provenance**: the model only picks
+what to show and sends selection hints; your server resolves the actual rows
+from its own store. A model-authored row would validate and still defeat the
+purpose, because SINA checks shape, not truth. And reads are **read-only**:
+no display component renders a raw action button. Acting from a list (dispute
+a charge, pay a bill) is a new intent that re-enters the gate.
+
+## The intent registry
+
+The model picks a verb from `fintechIntentManifest()`; the registry maps it
+to its rule and its component. The proposal format has no field for a
+component name.
+
+| Intent | Kind | Mounts / escalates to |
+|---|---|---|
+| `wire_transfer` | Governed | `SecureWireDialog` |
+| `ach_transfer` · `p2p_payment` · `bill_pay` · `fx_convert` · `withdraw` | Governed | `GovernedActionDialog` |
+| `add_payee` · `link_account` · `kyc` · `change_limit` · `issue_card` · `card_control` · `security_change` | Governed | `GovernedActionDialog` |
+| `place_trade` · `enable_margin` · `credit_request` | Governed | `GovernedActionDialog` · `MandatoryDisclosure` |
+| `disclosure` | Governed | `MandatoryDisclosure` |
+| `list_transactions` | Display | `TransactionList` |
+| `account_balance` | Display | `BalanceCard` |
+| `portfolio_holdings` | Display | `PortfolioHoldings` |
+| `clarify_choice` | Display | `ClarifyChoice` |
+| `spending_breakdown` · `budget_progress` · `list_cards` · `list_payees` · … | Display | presentational reads |
+
+The table shows the shape; the shipped registry has 50 verbs, and
+`fintechIntentManifest()` returns every one with its props as JSON Schema.
+
+<Callout variant="note" title="Unknown verbs are denied">
+  An intent that isn't in the registry is rejected as `UNKNOWN_INTENT`, and
+  still audited.
+</Callout>
+
+## The `@sina-design-system/fintech` catalog
+
+The schemas live in `@sina-design-system/fintech`: pure Zod, no React, no UI.
+One entry point routes everything (the contract lives on `result`):
+
+```ts
+import { evaluateFintechIntent } from "@sina-design-system/fintech";
+
+const decision = evaluateFintechIntent({
+  intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 in minor units */, /* … */ },
+});
+decision.result;  // { valid, violations, requiredComponent }
+decision.mount;   // the component name to render, or null
+```
+
+| Group | Contents |
+|---|---|
+| Governed schemas | `wire-transfer`, `ach-transfer`, `p2p-payment`, `bill-pay`, `fx-convert`, `add-payee`, `kyc`, `issue-card`, `card-control`, `change-limit`, `place-trade`, `credit-request`, … |
+| Display schemas | `transaction-list`, `account-balance`, `portfolio-holdings`, `spending-breakdown`, … |
+| Format primitives | `currency` (ISO 4217), `amount` (integer minor units), `iban` (ISO 13616), `bic` (ISO 9362), `routing` (ABA), `card` (Luhn), `masked-account`, `step-up` |
+| Cited thresholds | `thresholds.ts`: every numeric limit as a named constant with its citation |
+| Fixtures | each schema ships valid + adversarial payloads in `fixtures.ts` |
+
+The authoritative catalog is `packages/fintech/PATTERNS.md`. To add to it:
+[Write a governance rule](/docs/governance/writing-a-rule).

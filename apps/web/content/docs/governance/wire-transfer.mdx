@@ -1,0 +1,113 @@
+---
+title: "Worked example: the $60k wire"
+---
+
+<YouWillLearn>
+- What the gate finds in an over-limit wire, and which standard each finding cites
+- How the forced approval dialog works, and which server-side checks back it
+- Where SINA's job ends and your backend's begins
+</YouWillLearn>
+
+This is the canonical walkthrough the rest of the docs point at: a single
+$60,000 wire followed from request to resolution. The demos on this page run
+the real gate code on a server; the account data is canned, and no money moves
+anywhere. Every other governed flow is a variation on this one.
+
+## The request
+
+The agent proposes a transfer: an intent and props, never a component
+([How it works](/docs/how-it-works)).
+
+```ts
+{ intent: "wire_transfer",
+  props: { amount: 6000000 /* $60,000 in cents */, currency: "USD", /* … */ } }
+```
+
+## The structure check
+
+First the strict parse. Every field is checked against the schema: the amount
+is an integer in minor units, the currency code is on the supported list, the
+account identifiers pass their checksums. Any field the schema doesn't
+declare, like a smuggled `confirmButton` or a stray `cvv`, rejects the whole
+payload. This request is well formed, so it moves on.
+
+## The policy check finds three things
+
+The shape is valid, so policy runs. It records three violations, each citing
+its source:
+
+| Finding | Severity | Standard |
+|---|---|---|
+| Reportable transaction (CTR) | `flag` | FinCEN, 31 CFR 1010.311 |
+| Suspicious-activity review (SAR) | `flag` | FinCEN, 31 CFR Ch. X |
+| Over the $50,000 approval threshold | `escalate` | SINA dual-control policy |
+
+The two flags are informational. The escalation is what acts: it makes the
+result invalid and names `requiredComponent: "SecureWireDialog"`, the only
+component allowed to continue ([Escalation](/docs/concepts/escalation)). An
+[audit event](/docs/concepts/audit-trail) is emitted here with the redacted
+payload, all three violations, and the decided component.
+
+<Callout variant="note" title="The bands are defined in USD">
+  Every band above assumes `currency: "USD"`. A wire in another currency
+  passes the structure check, skips the bands, and carries a
+  `POLICY_BANDS_NOT_EVALUATED` flag in the decision and the audit trail, so
+  the pass is never silent. To band your own currency, pass custom `bands` or
+  chain a rule: see [Write a governance rule](/docs/governance/writing-a-rule).
+</Callout>
+
+## The forced dialog
+
+Your app mounts `SecureWireDialog` (from `@sina-design-system/fintech-react`)
+instead of a confirm button. The dialog walks a second person through:
+
+1. **Review** the exact terms (amount, recipient) in a read-only summary.
+2. **Identify** as the approver, with an id and name.
+3. **Confirm** with a one-time code.
+
+On submit, the evidence goes back to the server and the rule runs again. The
+dialog validates nothing itself; it collects the approval.
+
+On that second pass the server enforces two checks. **Four-eyes**: the
+approver id must differ from the initiator id, which your server supplies (it
+is never read from the payload), so the initiator cannot approve their own
+wire. **Payload binding**: the approval carries a hash of the exact terms,
+recomputed server-side, so an approval for $5,000 cannot be attached to a
+$60,000 execution. Both failures are hard rejects.
+
+In the demo below the initiator tries to approve their own wire, and the
+four-eyes check refuses it:
+
+<GovernanceDemo scenario="self-approval" />
+
+## The approved pass
+
+A valid approval clears the gate on the second pass: a different manager,
+bound to the exact $60,000 terms. A second audit event records who approved
+and on what terms. Try both outcomes: approve as a different manager and the
+decision flips; approve as the initiator and it refuses.
+
+<GovernanceDemo
+  scenario="over-limit"
+  scenarios={["over-limit", "small", "self-approval", "fabricated-confirm"]}
+  comparison
+/>
+
+## What this did and did not do
+
+SINA prevented the plain confirm UI from rendering without a second approver,
+and produced an approval bound to the exact terms. It did not move money: the
+gate governs what renders, and executing the transfer is your backend's call.
+The decision and the approval evidence are yours to hand to that endpoint, and
+re-running the same rule there is cheap insurance. One current gap, noted in
+[the audit trail](/docs/concepts/audit-trail): audit events are emitted but
+the default sink discards them until you wire one.
+
+<Recap>
+Over-limit wire, strict parse passes, three violations (two flags, one
+escalation), `SecureWireDialog`, a different approver plus one-time code,
+server re-checks four-eyes and payload binding, approved or refused, with an
+audit event at each decision. The raw confirm never mounts.
+</Recap>
+
+Next: [write a governance rule](/docs/governance/writing-a-rule) of your own.

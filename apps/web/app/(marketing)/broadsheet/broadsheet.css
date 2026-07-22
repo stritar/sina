@@ -1,0 +1,399 @@
+/**
+ * Broadsheet foundation — the marketing design system's token layer.
+ *
+ * This is the ONLY Broadsheet file allowed to author raw values (the landing's
+ * raw hex lives in wireframe.css, plus the decorative glyph-field palette in
+ * landing/glyph-field/GlyphField.module.css). Every marketing
+ * component *.module.css consumes these `--sinamk-*` tokens through
+ * `var(--sinamk-*, <fallback>)` and never writes a raw color/length/duration.
+ * If a component needs a value with no token here, add a token (with sign-off),
+ * do not hard-code it — the `/broadsheet-foundations` rule.
+ *
+ * Tokens are scoped to the `.broadsheet` marker (plus a dark variant) so the
+ * marketing palette never leaks into the product `--sina-*` roles. The one
+ * `[data-broadsheet]:focus-visible` rule auto-assigns the blue accessibility
+ * outline to every marketing component — components never author focus styles.
+ */
+
+.broadsheet {
+  color-scheme: light;
+
+  /* Secondary button surface (sage, from the SINA-marketing Figma) */
+  --sinamk-color-secondary-fill: #e9ece8;
+  --sinamk-color-secondary-fill--hover: #dfe4de;
+  --sinamk-color-secondary-fill--pressed: #d6dbd4;
+  --sinamk-color-secondary-fill--disabled: #eef0ec;
+
+  /* Secondary surface tint — a deeper sage panel that frames a lighter well
+     (the InstallCommand container; matches the SINA-marketing Figma variable) */
+  --sinamk-color-secondary--hover: #dde0d9;
+
+  /* Primary button surface (forest green + white ink, matched to the core primitive) */
+  --sinamk-color-primary-fill: #353b31;
+  --sinamk-color-primary-fill--hover: #444d3b;
+  --sinamk-color-primary-fill--pressed: #2b3028;
+  --sinamk-color-primary-fill--disabled: #c2cdc4;
+  --sinamk-color-primary-fg: #ffffff;
+  --sinamk-color-primary-fg--disabled: #8a9a8c;
+
+  /* Destructive button surface (danger red, white ink) */
+  --sinamk-color-destructive-fill: #b42318;
+  --sinamk-color-destructive-fill--hover: #a01b12;
+  --sinamk-color-destructive-fill--pressed: #8a170f;
+  --sinamk-color-destructive-fill--disabled: #e8c5c1;
+  --sinamk-color-destructive-fg: #ffffff;
+  --sinamk-color-destructive-fg--disabled: #b98b85;
+
+  /* Ink */
+  --sinamk-color-text: #353b31;
+  --sinamk-color-text-strong: #52564e;
+  --sinamk-color-text-muted: #6b7268;
+  --sinamk-color-text-subtle: #84897e;
+  --sinamk-color-text--disabled: #a3a99d;
+  --sinamk-color-text-danger: #b42318;
+
+  /* Page chrome (the showcase reads these) */
+  --sinamk-color-bg: #f5f6f4;
+  --sinamk-color-surface: #ffffff;
+  --sinamk-color-border: #dfe4de;
+
+  /* Form-field surface (input / select trigger) */
+  --sinamk-color-field-bg: #ffffff;
+  --sinamk-color-field-bg--disabled: #f0f2ed;
+  --sinamk-color-field-border: #cdd4c9;
+  --sinamk-color-field-border--hover: #b6bfb1;
+  --sinamk-color-field-border--invalid: #b42318;
+  --sinamk-color-field-placeholder: #8a9280;
+
+  /* Code-block surface + monospace stack (theme-invariant font) */
+  --sinamk-color-code-bg: #eef1ec;
+  --sinamk-font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Popover (dropdown) surface + elevation (the only shadow in the system) */
+  --sinamk-color-popover-surface: #ffffff;
+  --sinamk-shadow-popover: 0 2px 6px rgba(24, 28, 22, 0.08), 0 12px 28px rgba(24, 28, 22, 0.14);
+
+  /* Tooltip chip — intentionally near-black in both themes (theme-invariant). */
+  --sinamk-color-tooltip-surface: #1c1c1c;
+  --sinamk-color-tooltip-fg: #ffffff;
+
+  /* The one accessibility focus color */
+  --sinamk-color-focus-ring: #2563eb;
+
+  /* Spacing scale (card / block padding, larger than control-pad) */
+  --sinamk-space--sm: 8px;
+  --sinamk-space--md: 12px;
+  --sinamk-space--lg: 16px;
+
+  /* Radius */
+  --sinamk-radius--sm: 4px;
+  --sinamk-radius--md: 6px;
+  --sinamk-radius--lg: 8px;
+  --sinamk-radius--xl: 24px;
+  --sinamk-radius--full: 999px;
+
+  /* Control size scale (medium = the Figma example) */
+  --sinamk-control-height--sm: 28px;
+  --sinamk-control-height--md: 32px;
+  --sinamk-control-height--lg: 40px;
+  --sinamk-control-pad--sm: 6px;
+  --sinamk-control-pad--md: 8px;
+  --sinamk-control-pad--lg: 12px;
+  --sinamk-text--sm: 12px;
+  --sinamk-text--md: 13px;
+  --sinamk-text--lg: 15px;
+  --sinamk-icon--sm: 14px;
+  --sinamk-icon--md: 16px;
+  --sinamk-icon--lg: 20px;
+  --sinamk-label-pad--sm: 4px;
+  --sinamk-label-pad--md: 6px;
+  --sinamk-label-pad--lg: 8px;
+
+  /* Badge size scale — badges are labels, not buttons; deliberately smaller than the control scale */
+  --sinamk-badge-height--sm: 18px;
+  --sinamk-badge-height--md: 20px;
+  --sinamk-badge-height--lg: 24px;
+  --sinamk-badge-pad--sm: 4px;
+  --sinamk-badge-pad--md: 6px;
+  --sinamk-badge-pad--lg: 8px;
+  --sinamk-badge-text--sm: 11px;
+  --sinamk-badge-text--md: 12px;
+  --sinamk-badge-text--lg: 13px;
+  --sinamk-badge-icon--sm: 12px;
+  --sinamk-badge-icon--md: 14px;
+  --sinamk-badge-icon--lg: 16px;
+  --sinamk-badge-label-pad--sm: 3px;
+  --sinamk-badge-label-pad--md: 4px;
+  --sinamk-badge-label-pad--lg: 5px;
+
+  /* Label weight climbs with size (Regular / Medium / SemiBold) */
+  --sinamk-font-weight--sm: 400;
+  --sinamk-font-weight--md: 500;
+  --sinamk-font-weight--lg: 600;
+
+  /* Motion */
+  --sinamk-duration--hover: 120ms;
+  --sinamk-duration--spin: 700ms;
+  --sinamk-duration--enter: 200ms;
+  --sinamk-duration--caret: 700ms;
+  --sinamk-ease--standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /*
+   * Badge palette — a vibrant, purpose-agnostic set of 12 hues, each in two
+   * variants. `--solid` is a bright fill + its own ink and is theme-invariant
+   * (a solid badge carries its own surface, so it holds on any page — not
+   * redefined in the dark block below). `--soft` is a pale tint + saturated ink
+   * and IS theme-aware (the dark block inverts it: deep tint + bright ink).
+   * Warm hues (orange/amber/yellow) keep a bright fill with a deep same-hue ink
+   * so small text clears WCAG AA; the darker hues take white ink.
+   */
+  --sinamk-color-badge-gray-bg--solid: #4b5563;
+  --sinamk-color-badge-gray-fg--solid: #ffffff;
+  --sinamk-color-badge-gray-bg--soft: #f3f4f6;
+  --sinamk-color-badge-gray-fg--soft: #374151;
+
+  --sinamk-color-badge-red-bg--solid: #dc2626;
+  --sinamk-color-badge-red-fg--solid: #ffffff;
+  --sinamk-color-badge-red-bg--soft: #fee2e2;
+  --sinamk-color-badge-red-fg--soft: #b91c1c;
+
+  --sinamk-color-badge-orange-bg--solid: #f97316;
+  --sinamk-color-badge-orange-fg--solid: #431407;
+  --sinamk-color-badge-orange-bg--soft: #ffedd5;
+  --sinamk-color-badge-orange-fg--soft: #c2410c;
+
+  --sinamk-color-badge-amber-bg--solid: #f59e0b;
+  --sinamk-color-badge-amber-fg--solid: #451a03;
+  --sinamk-color-badge-amber-bg--soft: #fef3c7;
+  --sinamk-color-badge-amber-fg--soft: #b45309;
+
+  --sinamk-color-badge-yellow-bg--solid: #eab308;
+  --sinamk-color-badge-yellow-fg--solid: #422006;
+  --sinamk-color-badge-yellow-bg--soft: #fef9c3;
+  --sinamk-color-badge-yellow-fg--soft: #a16207;
+
+  --sinamk-color-badge-green-bg--solid: #15803d;
+  --sinamk-color-badge-green-fg--solid: #ffffff;
+  --sinamk-color-badge-green-bg--soft: #dcfce7;
+  --sinamk-color-badge-green-fg--soft: #15803d;
+
+  --sinamk-color-badge-teal-bg--solid: #0f766e;
+  --sinamk-color-badge-teal-fg--solid: #ffffff;
+  --sinamk-color-badge-teal-bg--soft: #ccfbf1;
+  --sinamk-color-badge-teal-fg--soft: #0f766e;
+
+  --sinamk-color-badge-cyan-bg--solid: #0e7490;
+  --sinamk-color-badge-cyan-fg--solid: #ffffff;
+  --sinamk-color-badge-cyan-bg--soft: #cffafe;
+  --sinamk-color-badge-cyan-fg--soft: #0e7490;
+
+  --sinamk-color-badge-blue-bg--solid: #2563eb;
+  --sinamk-color-badge-blue-fg--solid: #ffffff;
+  --sinamk-color-badge-blue-bg--soft: #dbeafe;
+  --sinamk-color-badge-blue-fg--soft: #1d4ed8;
+
+  --sinamk-color-badge-indigo-bg--solid: #4f46e5;
+  --sinamk-color-badge-indigo-fg--solid: #ffffff;
+  --sinamk-color-badge-indigo-bg--soft: #e0e7ff;
+  --sinamk-color-badge-indigo-fg--soft: #4338ca;
+
+  --sinamk-color-badge-violet-bg--solid: #7c3aed;
+  --sinamk-color-badge-violet-fg--solid: #ffffff;
+  --sinamk-color-badge-violet-bg--soft: #ede9fe;
+  --sinamk-color-badge-violet-fg--soft: #6d28d9;
+
+  --sinamk-color-badge-pink-bg--solid: #db2777;
+  --sinamk-color-badge-pink-fg--solid: #ffffff;
+  --sinamk-color-badge-pink-bg--soft: #fce7f3;
+  --sinamk-color-badge-pink-fg--soft: #be185d;
+
+  /*
+   * Gate palette — the ONE meaningful colour set on the marketing side, and the
+   * deliberate exception to two rules the badge palette above obeys.
+   *
+   * 1. It is theme-aware, not theme-invariant. Light is a deep fill + white ink
+   *    (the shape of `--sinamk-color-primary-fill`); dark inverts to a muted
+   *    pastel fill + the near-black `primary-fg` ink, exactly as the primary
+   *    button does. A single theme-invariant solid would have read as a sticker
+   *    on one of the two grounds.
+   * 2. It is industry-tinted. `gen-industry-tints.mjs` pulls each FILL a
+   *    fraction of the way toward the industry hue (see `GATE_TINT`) so the
+   *    verdict chips belong to whichever page they sit on, while the INK is
+   *    pushed through untouched and is byte-identical across all three
+   *    industries. Surfaces harmonize; the verdict signal does not move.
+   *
+   * Chroma is uniform across the pass/escalate/reject triad (0.11 light, 0.09
+   * dark) and roughly half the badge palette's, which is what makes these read
+   * as editorial rather than as vivid status stickers. Uniform C is also load
+   * bearing for the tint: it is what lets the hue blend hold luminance parity
+   * token by token, so one contrast matrix covers all three industries.
+   * `flag` is the near-achromatic neutral of the set.
+   */
+  --sinamk-color-gate-pass-bg--solid: #1d6835;
+  --sinamk-color-gate-pass-fg--solid: #ffffff;
+
+  --sinamk-color-gate-escalate-bg--solid: #7d4b00;
+  --sinamk-color-gate-escalate-fg--solid: #ffffff;
+
+  --sinamk-color-gate-reject-bg--solid: #8b3b36;
+  --sinamk-color-gate-reject-fg--solid: #ffffff;
+
+  --sinamk-color-gate-flag-bg--solid: #555a52;
+  --sinamk-color-gate-flag-fg--solid: #ffffff;
+
+  /*
+   * Segment selector's chosen pill.
+   *
+   * Aliases the primary pair rather than restating it, so the control keeps the
+   * exact ButtonPrimary look it has always had and cannot drift from it. The
+   * point of the indirection is that it gives the pill a SLOT of its own: the
+   * landing repoints these two per industry (see gen-industry-tints.mjs) so the
+   * chosen segment matches the emulator's industry chip, while /showcase and
+   * every other Broadsheet surface keep the sage primary.
+   *
+   * One declaration covers both themes. Custom-property substitution resolves
+   * at use time on the element, and the dark block below redefines
+   * `--sinamk-color-primary-*` on that same element, so the alias follows the
+   * flip without a dark restatement.
+   */
+  --sinamk-color-segment-fill--active: var(--sinamk-color-primary-fill);
+  --sinamk-color-segment-fg--active: var(--sinamk-color-primary-fg);
+}
+
+/* Dark Broadsheet — a first pass (sage on charcoal), pending marketing sign-off. */
+[data-theme="dark"] .broadsheet {
+  color-scheme: dark;
+
+  --sinamk-color-secondary-fill: #2b312a;
+  --sinamk-color-secondary-fill--hover: #333a31;
+  --sinamk-color-secondary-fill--pressed: #232821;
+  --sinamk-color-secondary-fill--disabled: #21261f;
+
+  /* Secondary surface tint (dark) — a subtle sage panel above the dark page,
+     lighter than the code well so the frame still reads */
+  --sinamk-color-secondary--hover: #313830;
+
+  --sinamk-color-primary-fill: #b9c4b1;
+  --sinamk-color-primary-fill--hover: #94a389;
+  --sinamk-color-primary-fill--pressed: #6f7e63;
+  --sinamk-color-primary-fill--disabled: #2b312a;
+  --sinamk-color-primary-fg: #21251e;
+  --sinamk-color-primary-fg--disabled: #767c71;
+
+  --sinamk-color-destructive-fill: #d64530;
+  --sinamk-color-destructive-fill--hover: #e15a45;
+  --sinamk-color-destructive-fill--pressed: #b83a28;
+  --sinamk-color-destructive-fill--disabled: #3a2420;
+  --sinamk-color-destructive-fg: #ffffff;
+  --sinamk-color-destructive-fg--disabled: #8a6a64;
+
+  --sinamk-color-text: #e7ebe3;
+  --sinamk-color-text-strong: #c8cdc1;
+  --sinamk-color-text-muted: #a3a99d;
+  --sinamk-color-text-subtle: #8b917f;
+  --sinamk-color-text--disabled: #767c71;
+  --sinamk-color-text-danger: #f2a29a;
+
+  --sinamk-color-bg: #131512;
+  --sinamk-color-surface: #1c1f1a;
+  --sinamk-color-border: #333a31;
+
+  /* Form-field surface (dark) */
+  --sinamk-color-field-bg: #1c1f1a;
+  --sinamk-color-field-bg--disabled: #21261f;
+  --sinamk-color-field-border: #414a3d;
+  --sinamk-color-field-border--hover: #4d5648;
+  --sinamk-color-field-border--invalid: #d64530;
+  --sinamk-color-field-placeholder: #7c8377;
+
+  /* Code-block surface (dark) — font-mono is theme-invariant, not repeated */
+  --sinamk-color-code-bg: #141712;
+
+  /* Popover surface lifted a step from surface; shadow is true-black at higher alpha */
+  --sinamk-color-popover-surface: #22261f;
+  --sinamk-shadow-popover: 0 2px 6px rgba(0, 0, 0, 0.4), 0 12px 28px rgba(0, 0, 0, 0.55);
+
+  /* Tooltip chip stays near-black with white ink in dark mode too (theme-invariant). */
+  --sinamk-color-tooltip-surface: #1c1c1c;
+  --sinamk-color-tooltip-fg: #ffffff;
+
+  --sinamk-color-focus-ring: #6c9bff;
+
+  /*
+   * Badge `--soft` inverts in dark: a deep tint surface + a bright saturated ink
+   * (the `--solid` tokens are theme-invariant, so they are not repeated here).
+   */
+  --sinamk-color-badge-gray-bg--soft: #1f2937;
+  --sinamk-color-badge-gray-fg--soft: #d1d5db;
+
+  --sinamk-color-badge-red-bg--soft: #450a0a;
+  --sinamk-color-badge-red-fg--soft: #fca5a5;
+
+  --sinamk-color-badge-orange-bg--soft: #431407;
+  --sinamk-color-badge-orange-fg--soft: #fdba74;
+
+  --sinamk-color-badge-amber-bg--soft: #451a03;
+  --sinamk-color-badge-amber-fg--soft: #fcd34d;
+
+  --sinamk-color-badge-yellow-bg--soft: #422006;
+  --sinamk-color-badge-yellow-fg--soft: #fde047;
+
+  --sinamk-color-badge-green-bg--soft: #052e16;
+  --sinamk-color-badge-green-fg--soft: #86efac;
+
+  --sinamk-color-badge-teal-bg--soft: #042f2e;
+  --sinamk-color-badge-teal-fg--soft: #5eead4;
+
+  --sinamk-color-badge-cyan-bg--soft: #083344;
+  --sinamk-color-badge-cyan-fg--soft: #67e8f9;
+
+  --sinamk-color-badge-blue-bg--soft: #172554;
+  --sinamk-color-badge-blue-fg--soft: #93c5fd;
+
+  --sinamk-color-badge-indigo-bg--soft: #1e1b4b;
+  --sinamk-color-badge-indigo-fg--soft: #a5b4fc;
+
+  --sinamk-color-badge-violet-bg--soft: #2e1065;
+  --sinamk-color-badge-violet-fg--soft: #c4b5fd;
+
+  --sinamk-color-badge-pink-bg--soft: #500724;
+  --sinamk-color-badge-pink-fg--soft: #f9a8d4;
+
+  /*
+   * Gate `--solid` inverts in dark, unlike badge `--solid`: a muted pastel fill
+   * carrying the near-black `primary-fg` ink. See the rationale in the light
+   * block above.
+   */
+  --sinamk-color-gate-pass-bg--solid: #8ec899;
+  --sinamk-color-gate-pass-fg--solid: #21251e;
+
+  --sinamk-color-gate-escalate-bg--solid: #dbae76;
+  --sinamk-color-gate-escalate-fg--solid: #21251e;
+
+  --sinamk-color-gate-reject-bg--solid: #eca199;
+  --sinamk-color-gate-reject-fg--solid: #21251e;
+
+  --sinamk-color-gate-flag-bg--solid: #b4b9b1;
+  --sinamk-color-gate-flag-fg--solid: #21251e;
+}
+
+/*
+ * The single, global blue focus outline for the marketing system. Any element
+ * carrying `data-broadsheet` gets it on keyboard focus, so components never
+ * write their own :focus-visible. This is the "Marketing components inherit one
+ * global blue focus outline" rule.
+ */
+[data-broadsheet]:focus-visible {
+  outline: 2px solid var(--sinamk-color-focus-ring, #2563eb);
+  outline-offset: 2px;
+}
+
+/* Foundation owns motion: reduced-motion collapses the hover transition, the
+   chat entrance, and the caret/checking pulse. */
+@media (prefers-reduced-motion: reduce) {
+  .broadsheet {
+    --sinamk-duration--hover: 0ms;
+    --sinamk-duration--enter: 0ms;
+    --sinamk-duration--caret: 0ms;
+  }
+}

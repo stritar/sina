@@ -1,0 +1,7 @@
+/* Point the SINA font tokens at the next/font self-hosted faces (see layout.tsx).
+   Reset + tokens + component CSS are imported in layout.tsx. App styling is
+   authored as co-located CSS Modules (no Tailwind). */
+:root {
+  --sina-font--sans: var(--font-rubik), ui-sans-serif, system-ui, sans-serif;
+  --sina-font--mono: var(--font-ibm-plex-mono), ui-monospace, monospace;
+}

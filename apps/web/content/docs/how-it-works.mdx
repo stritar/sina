@@ -1,0 +1,115 @@
+---
+title: How SINA works
+---
+
+The governed flow has three steps. An agent proposes an intent. Your server
+validates it against the Constitution. Your application mounts the component
+the resulting decision names. This page traces one request, a $60,000 wire,
+through all three.
+
+## 1. The agent proposes an intent
+
+An <Term term="intent">intent</Term> is a verb plus props: plain JSON the model
+emits, usually through a tool call.
+
+```ts
+const envelope = {
+  intent: "wire_transfer",
+  props: {
+    amount: 6_000_000, // minor units: $60,000.00
+    currency: "USD",
+    debtor: { name: "Acme Corp", account: { scheme: "sepa", iban: "DE89…" } },
+    creditor: { name: "Beta LLC", account: { scheme: "sepa", iban: "DE89…" } },
+  },
+};
+```
+
+Note what the proposal is not. It names no component and contains no JSX; the
+verbs the model can choose from come from a manifest that only lists intents
+([For AI agents](/docs/agents)). It is also not an executed action: at this
+point no money has moved and nothing has rendered.
+
+## 2. The server evaluates it
+
+A server-only module (a route handler or server action) passes the envelope to
+the rule registered for that verb. For the shipped fintech rules the entry
+point is `evaluateFintechIntent` from `@sina-design-system/fintech`:
+
+```ts
+import { evaluateFintechIntent } from "@sina-design-system/fintech";
+
+const decision = evaluateFintechIntent(envelope);
+```
+
+The rule checks two layers in order:
+
+1. **Structure.** The payload must parse against a strict Zod schema. Unknown
+   fields fail parsing, so a smuggled `confirmButton` or `cvv` field is
+   rejected before any value is read.
+2. **Policy.** The parsed values are checked against thresholds. $60,000 is
+   over the $50,000 dual-control threshold, a SINA policy default (not a
+   regulation), so this wire needs a second approver.
+
+## 3. The decision comes back
+
+Every rule returns the same shape, the
+[interception contract](/docs/concepts/the-contract). For this wire the result
+is (messages abridged):
+
+```json
+{
+  "valid": false,
+  "violations": [
+    { "code": "SAR_REVIEW", "severity": "flag" },
+    { "code": "CTR_REPORTABLE", "severity": "flag" },
+    { "code": "AMOUNT_REQUIRES_APPROVAL", "severity": "escalate" }
+  ],
+  "requiredComponent": "SecureWireDialog"
+}
+```
+
+A `flag` is informational and never blocks. `escalate` and `reject` make the
+result invalid; an escalation also names the one component allowed to continue
+the flow. Each violation carries the standard it cites, so a block is
+traceable to a written rule.
+
+## 4. Your application mounts the decision
+
+The decision's `mount` field is a component name, or `null`: the
+`requiredComponent` when a rule escalated, the verb's registered display
+component on a clean pass, and `null` on a reject. Your app maps that string
+to a React component and renders it. SINA does not render anything on its own;
+`@sina-design-system/fintech-react` ships the components the fintech rules
+name, and none of them validate anything client-side. They render the decision
+and, for escalations, collect approver evidence for a second server round-trip.
+
+Each evaluation also emits an [audit event](/docs/concepts/audit-trail) with
+the payload redacted first.
+
+## Where each part runs
+
+- **The agent** produces the envelope. It can run anywhere.
+- **The gate** (`governance` + `fintech`) runs on your server. A check in the
+  browser is UX sugar: the user, an extension, or the model's own output can
+  bypass it. The server copy is the one that counts.
+- **Your application** maps `mount` to a component and renders it.
+- **Your backend** executes the business action. SINA gating the dialog does
+  not gate your transfer API; wire the same rule, or the approval evidence it
+  produced, into the endpoint that actually moves money.
+
+Why before render, on the server? React streams UI to the client, and streamed
+output cannot be reliably revoked. Checking after mount would mean the unsafe
+version was already on screen. So the check runs first, in the one place the
+application author controls.
+
+<ArchitectureDiagram />
+
+<Recap>
+The model proposes an intent; the server evaluates it against the Constitution;
+the app mounts only what the decision names. Safe requests become components,
+unsafe ones are rejected or escalated to a governed component.
+</Recap>
+
+Next: the full worked example in
+[the $60k wire, end to end](/docs/governance/wire-transfer), or the exact
+decision type in [the interception contract](/docs/concepts/the-contract).

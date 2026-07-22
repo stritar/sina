@@ -1,0 +1,9 @@
+/* Toast story — co-located styles (no Tailwind). */
+
+.itemsCenter {
+  align-items: center;
+}
+
+.action {
+  align-self: flex-start;
+}

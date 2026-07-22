@@ -1,0 +1,30 @@
+/* playground — LineChart story */
+
+.chart280 {
+  height: 280px;
+}
+
+.chart320 {
+  height: 320px;
+}
+
+.chart240 {
+  height: 240px;
+}
+
+.chart160 {
+  height: 160px;
+}
+
+.darkFrame {
+  width: 100%;
+  border-radius: var(--sina-radius--lg);
+  background: var(--sina-color-bg);
+  padding: var(--sina-space--4);
+}
+
+.panel {
+  border-radius: var(--sina-radius--lg);
+  background: var(--sina-color-surface);
+  padding: var(--sina-space--4);
+}

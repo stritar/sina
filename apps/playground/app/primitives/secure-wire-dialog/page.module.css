@@ -1,0 +1,14 @@
+/* SecureWireDialog story — co-located styles (no Tailwind). */
+
+.note {
+  max-width: 65ch;
+  font-size: var(--sina-text--ui);
+  line-height: 1.125rem;
+  letter-spacing: -0.006em;
+  color: var(--sina-color-text-muted);
+}
+
+.code {
+  font-family: var(--sina-font--mono);
+  color: var(--sina-color-text);
+}

@@ -1,0 +1,50 @@
+---
+title: The audit trail
+---
+
+Every evaluation emits an <Term term="audit event">audit event</Term>: what
+was asked, what was decided, and which rules fired. Current status, stated
+plainly: the event shape is fixed and every decision emits one, but the
+default sink is a no-op, so nothing is persisted until you (or a planned
+release) wire a real sink via `setAuditSink`.
+
+## The shape
+
+```ts
+interface AuditEvent {
+  timestamp: string;
+  decisionId: string;
+  version: string;         // the rule's constitution version
+  payload: unknown;        // redacted first (see below)
+  result: InterceptionResult;
+  violations: Violation[];
+  decidedComponent: string | null;
+}
+```
+
+Because each violation can carry its `standard`, the record says which rule
+blocked a request and where that rule comes from, not just that it was
+blocked.
+
+## Redaction happens first
+
+The payload is redacted before the event is emitted, per each rule's
+redaction config:
+
+- **Dropped**: card security codes (CVV), PINs, second factors.
+- **Masked** to the last four digits: card numbers (PAN).
+- **Hashed** to a short fingerprint: account and IBAN numbers, and approver
+  ids. Enough to correlate two events; the number itself is not stored.
+
+Redaction runs inside `emitAudit`, not as a separate step a caller could
+skip, so a hostile payload's sensitive fields don't reach the sink even when
+the request is rejected.
+
+<Callout variant="note" title="Two honest caveats">
+  The fingerprint is a non-cryptographic FNV-1a hash, planned to become a
+  keyed hash when the durable sink lands. And until you set a sink, events are
+  discarded: define your retention story before relying on the trail for
+  compliance.
+</Callout>
+
+Next: [For AI agents](/docs/agents).

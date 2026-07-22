@@ -1,0 +1,46 @@
+/* @sina-design-system/core — Progress */
+
+:root {
+  --sina-progress-track: var(--sina-color-secondary, #e5e7e2);
+  --sina-progress-bar: var(--sina-color-primary, #353b31);
+}
+
+.root {
+  position: relative;
+  height: var(--sina-space--1_5, 0.375rem);
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--sina-radius--full, 9999px);
+  background: var(--sina-progress-track, #e5e7e2);
+}
+
+.indicator {
+  height: 100%;
+  border-radius: var(--sina-radius--full, 9999px);
+  background: var(--sina-progress-bar, #353b31);
+  transition-property: transform;
+  transition-duration: var(--sina-duration--base, 200ms);
+  transition-timing-function: var(--sina-ease--standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+/* Indeterminate: a one-third bar that pulses. Reduced motion fills the track
+   and drops the animation. */
+.indeterminate {
+  width: 33.333%;
+  animation: sinaProgressPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes sinaProgressPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .indeterminate {
+    width: 100%;
+    animation: none;
+  }
+}

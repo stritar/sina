@@ -1,0 +1,82 @@
+.root {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: var(--sinamk-space--md, 12px);
+  border: 1px solid var(--sinamk-color-border, #dfe4de);
+  border-radius: var(--sinamk-radius--lg, 8px);
+  background: var(--sinamk-color-bg, #f5f6f4);
+  overflow-y: auto;
+  /* Reserve the scrollbar track up front. A thread grows turn by turn, so the
+     bar appears mid-conversation; without a stable gutter that reflows every
+     bubble sideways at the exact moment a new one lands. `both-edges` because
+     the hero strips this component's padding: a right-only gutter would leave
+     the turns visibly off-centre in the panel. */
+  scrollbar-gutter: stable both-edges;
+  /* Branded scrollbar, on the standard properties rather than the -webkit-
+     pseudo-elements: those need raw pixel widths, these need none. `thin` also
+     narrows the gutter reserved above, so the thread reads more compact. The
+     thumb is the field border, which industry-tint.css swaps per industry, so
+     the bar picks up the sage / azure / sand the rest of the panel wears. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--sinamk-color-field-border, #cdd4c9) transparent;
+  overscroll-behavior: contain;
+}
+
+/* The bar is a background detail until the reader is actually over the thread.
+   Hover only, deliberately: the keyboard focus ring is the global
+   [data-broadsheet] rule's job, and a component module must never author one. */
+.root:hover {
+  scrollbar-color: var(--sinamk-color-field-border--hover, #b6bfb1) transparent;
+}
+
+.root[data-size="sm"] {
+  block-size: 260px;
+}
+
+.root[data-size="md"] {
+  block-size: 340px;
+}
+
+.root[data-size="lg"] {
+  block-size: 420px;
+}
+
+/* Stretch to a flex-column host (e.g. the hero panel) instead of a fixed
+   height, so the thread fills the available space and scrolls internally. */
+.root[data-size="fill"] {
+  block-size: 100%;
+  flex: 1 1 auto;
+  min-block-size: 0;
+}
+
+/* Bottom-anchor the conversation: margin-top auto pins a short thread to the
+   bottom edge, so the chat fills upward like a real messenger. */
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sinamk-space--sm, 8px);
+  margin-block-start: auto;
+  /* Never shrink to the scroll box. `.root` is a flex column, so `.inner` is a
+     flex item: with the default `flex-shrink: 1` it compresses to the container
+     the moment the turns outgrow it, and the `overflow-y: clip` below then eats
+     the difference. The thread's own scroll extent stays exactly one viewport,
+     so the scrollbar never appears and the conversation cannot be scrolled at
+     all. The automatic minimum size would normally stop that, but it only
+     applies to items whose overflow is `visible` — `clip` opts out of it, so
+     the floor has to be stated. (`min-block-size: 0` belongs on the scroll
+     container as a flex ITEM, where `.root[data-size="fill"]` already sets it;
+     on the content box it just re-authorised the collapse.) */
+  flex-shrink: 0;
+  /* A landing bubble animates in from `translateY(4px)` (ChatBubble), and a
+     transform still counts toward the scroll container's overflow: on a thread
+     that otherwise fits, the last turn pushes 4px past the bottom edge and the
+     scrollbar flashes on for the length of the enter animation. Clipping the
+     block axis here keeps that transient out of the scrollable area, so the bar
+     appears only when the turns genuinely overflow. `overflow-clip-margin`
+     hands the 4px back visually (and leaves room for a focus ring), because
+     clipped ink never contributes to an ancestor's scroll extent either way.
+     Inline stays visible, so nothing is cut at the sides. */
+  overflow-y: clip;
+  overflow-clip-margin: var(--sinamk-space--sm, 8px);
+}

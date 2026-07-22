@@ -1,0 +1,96 @@
+/* ScenarioPicker — segmented scenario selector with quick-pick chips */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sina-space--2);
+}
+
+.track {
+  display: inline-flex;
+  border-radius: var(--sina-radius--md);
+  background: var(--sina-color-surface-sunken);
+  padding: var(--sina-space--0_5);
+}
+
+.tab {
+  border-radius: var(--sina-radius--sm);
+  padding-inline: var(--sina-space--2);
+  padding-block: var(--sina-space--0_5);
+  font-family: var(--sina-font--mono);
+  font-size: var(--sina-text--xs);
+  transition-property: color, background-color, border-color;
+  transition-duration: var(--sina-duration--fast);
+  transition-timing-function: var(--sina-ease--standard);
+}
+
+.tab:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--sina-color-focus-ring);
+}
+
+.tab:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.tabActive {
+  background: var(--sina-color-surface);
+  color: var(--sina-color-text);
+  box-shadow: var(--sina-shadow--xs);
+}
+
+.tabInactive {
+  color: var(--sina-color-text-muted);
+}
+
+.tabInactive:hover {
+  color: var(--sina-color-text);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sina-space--1_5);
+}
+
+.chip {
+  border-radius: var(--sina-radius--full);
+  border: var(--sina-border-width--1) solid var(--sina-color-border);
+  background: var(--sina-color-surface);
+  padding-inline: var(--sina-space--2);
+  padding-block: var(--sina-space--0_5);
+  font-size: var(--sina-text--xs);
+  transition-property: color, background-color, border-color;
+  transition-duration: var(--sina-duration--fast);
+  transition-timing-function: var(--sina-ease--standard);
+}
+
+.chip:hover {
+  background: var(--sina-overlay--hover);
+}
+
+.chip:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--sina-color-focus-ring);
+}
+
+.chip:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.chipDefault {
+  border-color: var(--sina-color-border);
+  color: var(--sina-color-text-muted);
+}
+
+.expectPass {
+  border-color: color-mix(in srgb, var(--sina-color-success) 40%, transparent);
+  color: var(--sina-color-success);
+}
+
+.expectDanger {
+  border-color: color-mix(in srgb, var(--sina-color-danger) 40%, transparent);
+  color: var(--sina-color-danger);
+}

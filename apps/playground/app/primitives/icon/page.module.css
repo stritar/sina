@@ -1,0 +1,21 @@
+/* playground — Icon story */
+
+.textDefault {
+  color: var(--sina-color-text);
+}
+
+.textDanger {
+  color: var(--sina-color-danger);
+}
+
+.textSuccess {
+  color: var(--sina-color-success);
+}
+
+.textWarning {
+  color: var(--sina-color-warning);
+}
+
+.textInfo {
+  color: var(--sina-color-info);
+}

@@ -1,0 +1,112 @@
+/*
+ * Segment selector — a segmented control on the sage secondary-fill track.
+ * The chosen segment is a solid primary pill (forest-green fill, white ink),
+ * the same primary-fill/fg pair as `ButtonPrimary`, with no ring or border.
+ * The track's outer radius follows the pill's inner radius: it is computed as
+ * `seg-radius + track-pad`, so the corners stay concentric. Sizes (sm/md/lg)
+ * reuse the control height, padding, text, and icon scale so the selector
+ * lines up with a `ButtonSecondary` beside it. Segments carry a text label
+ * with an optional left icon. The keyboard focus outline is the global
+ * `[data-broadsheet]` rule — never authored here.
+ */
+
+.root {
+  /* Inner (segment) radius; the track's outer radius is derived from it below. */
+  --_seg-radius: var(--sinamk-radius--md, 6px);
+  --_track-pad: 2px;
+
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--_track-pad);
+  margin: 0;
+  padding: var(--_track-pad);
+  border-radius: calc(var(--_seg-radius) + var(--_track-pad));
+  background: var(--sinamk-color-secondary-fill, #e9ece8);
+}
+
+.root[data-size="sm"] {
+  height: var(--sinamk-control-height--sm, 28px);
+  font-size: var(--sinamk-text--sm, 12px);
+  font-weight: var(--sinamk-font-weight--sm, 400);
+  --_icon: var(--sinamk-icon--sm, 14px);
+  --_pad: var(--sinamk-control-pad--sm, 6px);
+  --_labelpad: var(--sinamk-label-pad--sm, 4px);
+}
+
+.root[data-size="md"] {
+  height: var(--sinamk-control-height--md, 32px);
+  font-size: var(--sinamk-text--md, 13px);
+  font-weight: var(--sinamk-font-weight--md, 500);
+  --_icon: var(--sinamk-icon--md, 16px);
+  --_pad: var(--sinamk-control-pad--md, 8px);
+  --_labelpad: var(--sinamk-label-pad--md, 6px);
+}
+
+.root[data-size="lg"] {
+  height: var(--sinamk-control-height--lg, 40px);
+  font-size: var(--sinamk-text--lg, 15px);
+  font-weight: var(--sinamk-font-weight--lg, 600);
+  --_icon: var(--sinamk-icon--lg, 20px);
+  --_pad: var(--sinamk-control-pad--lg, 12px);
+  --_labelpad: var(--sinamk-label-pad--lg, 8px);
+}
+
+.segment {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  margin: 0;
+  padding-inline: var(--_pad);
+  border: 0;
+  border-radius: var(--_seg-radius);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+  color: var(--sinamk-color-text, #353b31);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease),
+    color var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease);
+}
+
+.slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.slot svg {
+  display: block;
+  width: var(--_icon);
+  height: var(--_icon);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--_labelpad);
+}
+
+/* Hover an inactive segment: hint with the secondary hover fill. */
+.segment:hover:not([data-active]) {
+  background: var(--sinamk-color-secondary-fill--hover, #dfe4de);
+}
+
+/*
+ * The chosen segment: a solid pill, no ring. Its own slot rather than the
+ * primary pair directly — broadsheet.css aliases it TO that pair, so the look
+ * is unchanged, but the landing can repoint just this pill at the active
+ * industry's accent without dragging every primary control with it.
+ */
+.segment[data-active] {
+  color: var(--sinamk-color-segment-fg--active, #ffffff);
+  background: var(--sinamk-color-segment-fill--active, #353b31);
+}

@@ -1,0 +1,72 @@
+/*
+ * Root-scoped: `.prose` element selectors (0,1,1) outrank a single component
+ * class, so every rule here hangs off `.root` to win the cascade.
+ */
+.root {
+  margin: var(--sina-space--6) 0;
+}
+
+.root .tier + .tier {
+  margin-top: var(--sina-space--7);
+}
+
+.root .heading {
+  margin: 0;
+  font-size: var(--sina-text--lg);
+  font-weight: var(--sina-font-weight--semibold);
+  color: var(--sina-color-text);
+}
+
+.root .blurb {
+  margin: var(--sina-space--1) 0 0;
+  font-size: var(--sina-text--sm);
+  color: var(--sina-color-text-muted);
+}
+
+.root .wrap {
+  margin: var(--sina-space--3) 0 0;
+  overflow-x: auto;
+}
+
+.root .wrap table {
+  margin: 0;
+}
+
+/* The row header carries the citation; the sub-line carries what/who. */
+.root .standard {
+  min-width: 11rem;
+  text-align: left;
+  vertical-align: top;
+  font-family: var(--sina-font--mono);
+  font-size: 0.9em;
+  font-weight: var(--sina-font-weight--semibold);
+  color: var(--sina-color-text);
+}
+
+.root .meta {
+  display: block;
+  margin-top: var(--sina-space--1);
+  font-family: var(--sina-font--sans);
+  font-size: 0.85em;
+  font-weight: var(--sina-font-weight--regular);
+  color: var(--sina-color-text-muted);
+}
+
+.root td {
+  vertical-align: top;
+}
+
+.root .where {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.root .where li + li {
+  margin-top: var(--sina-space--1);
+}
+
+.root .where code {
+  font-size: 0.85em;
+  white-space: nowrap;
+}

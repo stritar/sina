@@ -1,0 +1,85 @@
+---
+title: Adopt incrementally
+---
+
+You don't have to govern everything on day one, or govern anything at all.
+There are two ways in, and the first upgrades cleanly into the second.
+
+## Path 1: primitives only
+
+SINA's governance is optional. If you just want accessible, themeable React
+components with Radix quality, without wiring one yourself, use the primitives
+alone. No gate, no server check.
+
+<Steps>
+  <Step title="Install two packages">
+
+```bash
+pnpm add @sina-design-system/theme @sina-design-system/core
+```
+
+  </Step>
+  <Step title="Import the styles">
+
+```ts
+// app/layout.tsx
+import "@sina-design-system/theme/reset.css";
+import "@sina-design-system/theme/css";
+import "@sina-design-system/core/styles.css";
+```
+
+  </Step>
+  <Step title="Use the components">
+
+```tsx
+import { Button } from "@sina-design-system/core";
+
+<Button variant="primary">Save</Button>
+```
+
+Accessible primitives, styled by [tokens](/docs/theming/tokens), rebrandable
+with [theming](/docs/theming). Browse the set in the
+[Primitives gallery](/docs/primitives).
+
+  </Step>
+</Steps>
+
+<Callout variant="note" title="What you're skipping">
+  Without the gate, nothing validates AI intent, which is fine if you're not
+  generating UI with AI yet. Add [governance](/docs/governance) later and you
+  keep every component; nothing gets replaced.
+</Callout>
+
+## Path 2: govern one intent at a time
+
+Rules are independent, so governance can start with a single flow:
+
+<Steps>
+  <Step title="Pick one high-value intent">
+
+Choose the flow where a mistake is most expensive, usually money movement.
+Route just that one through the gate. Everything else stays exactly as it is.
+
+  </Step>
+  <Step title="Watch what it blocks">
+
+Run real (or recorded) requests through it and read the decisions. Tune the
+policy thresholds to match your product's risk appetite; see
+[Writing a rule](/docs/governance/writing-a-rule).
+
+  </Step>
+  <Step title="Expand to the next flow">
+
+Because every rule returns the same
+[contract](/docs/concepts/the-contract), the render code you wrote the first
+time works for the second.
+
+  </Step>
+</Steps>
+
+<Callout variant="note" title="Cost of a governed intent">
+  One server-side function call per governed request. Reads and ungoverned
+  flows are untouched, and you can stop at one flow. Every threshold is a
+  named, cited constant, so "why did this block" has a specific answer,
+  reviewable in a pull request.
+</Callout>

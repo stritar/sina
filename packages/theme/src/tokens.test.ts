@@ -1,0 +1,299 @@
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { describe, expect, it } from "vitest";
+
+const read = (rel: string) =>
+  readFileSync(fileURLToPath(new URL(`../${rel}`, import.meta.url)), "utf8");
+
+const themeCss = read("theme.css");
+
+/** Every `--sina-*` custom property DEFINED in a CSS string (`--sina-x: value;`). */
+const definedNames = (css: string) =>
+  [...css.matchAll(/(--sina-[\w-]+)\s*:/g)].map((m) => m[1]);
+
+const declaredVars = new Set(definedNames(themeCss));
+
+describe("token set", () => {
+  it("declares at least the full token set", () => {
+    expect(declaredVars.size).toBeGreaterThan(80);
+  });
+});
+
+/* ----------------------------------------------------------------------- */
+/* Hex authoring rule — colors are written in hex, never channels/rgb/named */
+/* (CLAUDE.md "Conventions"). Opacity comes from the preset's color-mix.    */
+/* ----------------------------------------------------------------------- */
+
+describe("color tokens are authored in hex", () => {
+  it("every literal --sina-color-* / --sina-shadow-color value is #rrggbb(aa)", () => {
+    const offenders = [
+      ...themeCss.matchAll(
+        /(--sina-(?:color-[\w-]+|shadow-color))\s*:\s*([^;]+);/g,
+      ),
+    ]
+      .map(([, name, value]) => ({ name, value: value.trim() }))
+      .filter(({ value }) => !value.startsWith("var(")) // aliases are references
+      .filter(({ value }) => !/^#([0-9a-f]{6}|[0-9a-f]{8})$/i.test(value));
+
+    expect(offenders).toEqual([]);
+  });
+});
+
+/* ----------------------------------------------------------------------- */
+/* Naming grammar — interaction STATES are `--` modifiers (TOKEN_NAMING.md).*/
+/* A state word joined by a single dash (`-hover`) is the violation; the     */
+/* correct form is `--hover`. `focus` is deliberately absent so the atomic   */
+/* role `focus-ring` passes. Scans theme.css + every component token layer.  */
+/* ----------------------------------------------------------------------- */
+
+const STATE_WORDS = [
+  "hover",
+  "active",
+  "pressed",
+  "disabled",
+  "selected",
+  "checked",
+  "open",
+  "expanded",
+  "invalid",
+];
+
+/** All `--sina-*` names defined across a package's `*.module.css` files. */
+function moduleCssNames(pkgSrc: string): { name: string; file: string }[] {
+  const base = fileURLToPath(new URL(pkgSrc, import.meta.url));
+  const out: { name: string; file: string }[] = [];
+  const walk = (dir: string) => {
+    for (const entry of readdirSync(dir)) {
+      const p = join(dir, entry);
+      if (statSync(p).isDirectory()) walk(p);
+      else if (entry.endsWith(".module.css"))
+        for (const n of definedNames(readFileSync(p, "utf8")))
+          out.push({ name: n, file: p.slice(base.length + 1) });
+    }
+  };
+  walk(base);
+  return out;
+}
+
+describe("token naming grammar — states use a double dash", () => {
+  // Single dash before a state word → violation; `--<state>` passes.
+  const singleDashState = new RegExp(
+    `(^|[^-])-(?:${STATE_WORDS.join("|")})($|[^a-z])`,
+  );
+
+  const allNames = [
+    ...definedNames(themeCss).map((name) => ({ name, file: "theme.css" })),
+    ...moduleCssNames("../../core/src"),
+    ...moduleCssNames("../../fintech-react/src"),
+  ];
+
+  it("no token joins a state word with a single dash", () => {
+    const offenders = allNames.filter(({ name }) => singleDashState.test(name));
+    expect(offenders).toEqual([]);
+  });
+});
+
+/* ----------------------------------------------------------------------- */
+/* Theme blocks — every semantic role is declared in `:root` (light); the    */
+/* dark block redeclares the ones that must flip. A role ABSENT from the     */
+/* dark block silently keeps its light value in dark mode, which is the bug  */
+/* class the parity + dark-contrast suites below exist to catch.             */
+/* ----------------------------------------------------------------------- */
+
+function themeBlock(label: string, selector: RegExp): string {
+  const m = themeCss.match(selector);
+  if (!m) throw new Error(`theme.css: no ${label} block`);
+  return m[1];
+}
+
+const LIGHT = themeBlock("light (:root)", /:root\s*\{([\s\S]*?)\n\}/);
+const DARK = themeBlock(
+  "dark",
+  /\.dark,\s*\[data-theme="dark"\]\s*\{([\s\S]*?)\n\}/,
+);
+
+/* ----------------------------------------------------------------------- */
+/* Light/dark parity — a semantic role must flip, alias, or be declared     */
+/* theme-invariant. No silent third option.                                  */
+/* ----------------------------------------------------------------------- */
+
+/** Raw ramp steps are constant across themes by design (`chart--N` is not a ramp). */
+const RAMP_STEP = /^--sina-color-(brand|neutral|danger|success|warning|info)--\d+$/;
+
+/**
+ * Roles that are deliberately identical in both themes. Each vivid `-fill`
+ * carries its own surface (so its black `status-fg--*` ink holds in light AND
+ * dark — see the AAA assertions above), and the `*-border--*` tokens are
+ * transparent placeholders a themer opts into. Everything else must flip.
+ */
+const STATUSES = ["neutral", "info", "success", "warning", "danger"];
+const THEME_INVARIANT = new Set([
+  ...STATUSES.map((s) => `--sina-color-${s}-fill`),
+  ...STATUSES.map((s) => `--sina-color-status-fg--${s}`),
+  ...STATUSES.map((s) => `--sina-color-status-border--${s}`),
+  "--sina-color-button-border--primary",
+  "--sina-color-button-border--danger",
+]);
+
+describe("light/dark parity", () => {
+  const darkNames = new Set(definedNames(DARK));
+
+  /** Light-block color roles that carry a literal value (aliases follow their target). */
+  const lightRoles = [
+    ...LIGHT.matchAll(/(--sina-color-[\w-]+)\s*:\s*([^;]+);/g),
+  ]
+    .filter(([, , value]) => !value.trim().startsWith("var(")) // aliases auto-follow
+    .map(([, name]) => name)
+    .filter((name) => !RAMP_STEP.test(name));
+
+  it.each(lightRoles.filter((n) => !THEME_INVARIANT.has(n)))(
+    "%s is redefined in the dark block",
+    (name) => {
+      expect(darkNames).toContain(name);
+    },
+  );
+
+  // Elevation and the modal scrim are the two non-`--sina-color-*` roles that
+  // must also flip: a shadow tuned for light is invisible on a dark page, and a
+  // scrim that tracks a semantic role inverts into a white wash.
+  it.each(["--sina-shadow-color", "--sina-overlay--scrim"])(
+    "%s is redefined in the dark block",
+    (name) => {
+      expect(darkNames).toContain(name);
+    },
+  );
+});
+
+/* ----------------------------------------------------------------------- */
+/* WCAG 2.2 contrast — honoring the "Enforcing: WCAG-2.2" promise.         */
+/* ----------------------------------------------------------------------- */
+
+/** Read a semantic color role's RGB channels from one theme block (`#rrggbb`). */
+function channels(role: string, scope: string): [number, number, number] {
+  const m = scope.match(
+    new RegExp(`--sina-color-${role}:\\s*#([0-9a-fA-F]{6})\\b`),
+  );
+  if (!m) throw new Error(`no literal hex for --sina-color-${role}`);
+  const hex = m[1];
+  return [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16)) as [
+    number,
+    number,
+    number,
+  ];
+}
+
+/** Relative luminance per WCAG 2.x. */
+function luminance([r, g, b]: [number, number, number]): number {
+  const lin = (v: number) => {
+    const s = v / 255;
+    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+}
+
+/**
+ * Resolve a role against a theme the way the cascade does: in dark, a role the
+ * dark block overrides takes the dark value — one it does NOT override falls
+ * through to its light value. So this measures what a user actually sees, not
+ * what the dark block happens to declare.
+ */
+const scopeFor = (role: string, dark: boolean) =>
+  dark && new RegExp(`--sina-color-${role}:`).test(DARK) ? DARK : LIGHT;
+
+function contrast(a: string, b: string, dark = false): number {
+  const la = luminance(channels(a, scopeFor(a, dark)));
+  const lb = luminance(channels(b, scopeFor(b, dark)));
+  const [hi, lo] = la > lb ? [la, lb] : [lb, la];
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+describe("WCAG 2.2 AA contrast (light theme)", () => {
+  // Normal text ≥ 4.5:1
+  it.each([
+    ["text", "bg"],
+    ["text", "surface"],
+    ["text-muted", "bg"],
+    ["text-muted", "surface"],
+    ["primary-fg", "primary"],
+    ["danger-fg", "danger"],
+    // Vivid status fills carry per-status ink (status-fg--<status>) — Badge/Alert/Toast.
+    ["status-fg--neutral", "neutral-fill"],
+    ["status-fg--info", "info-fill"],
+    ["status-fg--success", "success-fill"],
+    ["status-fg--warning", "warning-fill"],
+    ["status-fg--danger", "danger-fill"],
+  ])("%s on %s meets AA (4.5:1)", (fg, bg) => {
+    expect(contrast(fg, bg)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  // Focus indicator must be perceivable (WCAG 2.2 §2.4.11/§2.4.13) ≥ 3:1.
+  // (Decorative hairline borders are intentionally subtle and exempt.)
+  it("focus-ring meets non-text contrast on bg (3:1)", () => {
+    expect(contrast("focus-ring", "bg")).toBeGreaterThanOrEqual(3);
+  });
+
+  // text-subtle is reserved for decorative / large / icon use (never normal body
+  // text — that's text-muted, guarded at 4.5:1 above). It must still clear the
+  // WCAG non-text / large-text floor (3:1) on both the page bg and cards.
+  it.each([
+    ["text-subtle", "bg"],
+    ["text-subtle", "surface"],
+  ])("%s meets non-text/large contrast on %s (3:1)", (fg, bg) => {
+    expect(contrast(fg, bg)).toBeGreaterThanOrEqual(3);
+  });
+
+  // Chart marks are non-text graphics (WCAG 1.4.11) — every categorical series
+  // color must clear 3:1 against the card surface charts render on.
+  it.each([1, 2, 3, 4, 5, 6, 7, 8])(
+    "chart--%i meets non-text contrast on surface (3:1)",
+    (slot) => {
+      expect(contrast(`chart--${slot}`, "surface")).toBeGreaterThanOrEqual(3);
+    },
+  );
+});
+
+describe("WCAG 2.2 AA contrast (dark theme)", () => {
+  // Normal text ≥ 4.5:1. The status roles are the ones that bite: they are
+  // consumed as FOREGROUND and BORDER color (Field's error text, the invalid
+  // TextField/CurrencyField/CredentialField border, TransactionList's credit
+  // amount), so a light-tuned "ink on white" value is unreadable on a dark card.
+  it.each([
+    ["text", "bg"],
+    ["text", "surface"],
+    ["text-muted", "bg"],
+    ["text-muted", "surface"],
+    ["primary-fg", "primary"],
+    ["danger-fg", "danger"],
+    ["danger", "surface"],
+    ["success", "surface"],
+    ["warning", "surface"],
+    ["info", "surface"],
+    ["warning-text", "warning-bg"],
+  ])("%s on %s meets AA (4.5:1)", (fg, bg) => {
+    expect(contrast(fg, bg, true)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("focus-ring meets non-text contrast on bg (3:1)", () => {
+    expect(contrast("focus-ring", "bg", true)).toBeGreaterThanOrEqual(3);
+  });
+
+  // text-subtle: decorative / large / icon only — must clear the 3:1 floor here too.
+  it.each([
+    ["text-subtle", "bg"],
+    ["text-subtle", "surface"],
+  ])("%s meets non-text/large contrast on %s (3:1)", (fg, bg) => {
+    expect(contrast(fg, bg, true)).toBeGreaterThanOrEqual(3);
+  });
+
+  // The dark chart ramp is a distinct, lifted set — validated here against the
+  // dark surface rather than the "out-of-band" process that never existed.
+  it.each([1, 2, 3, 4, 5, 6, 7, 8])(
+    "chart--%i meets non-text contrast on surface (3:1)",
+    (slot) => {
+      expect(contrast(`chart--${slot}`, "surface", true)).toBeGreaterThanOrEqual(
+        3,
+      );
+    },
+  );
+});

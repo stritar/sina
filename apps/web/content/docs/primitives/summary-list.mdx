@@ -1,0 +1,38 @@
+---
+title: SummaryList
+---
+
+import { SummaryListHero, SummaryListExamples } from "@/app/components/docs/demos/primitives/summary-list";
+import { summaryListPropRows } from "@/app/components/docs/props/summary-list.props.mjs";
+
+<SummaryListHero />
+
+`SummaryList` renders labelled values as a proper `<dl>`. It's what a governed
+dialog uses to show the exact terms you're approving.
+
+## Usage
+
+```tsx
+import { SummaryList } from "@sina-design-system/core";
+
+<SummaryList
+  items={[
+    { label: "Amount", value: "$60,000.00", emphasis: true },
+    { label: "To", value: "Beta LLC" },
+    { label: "Rail", value: "Wire" },
+  ]}
+/>
+```
+
+## Examples
+
+<SummaryListExamples />
+
+## Props
+
+<PropsTable rows={summaryListPropRows()} />
+
+## Accessibility
+
+Rendered as `<dl>`/`<dt>`/`<dd>`, so the label/value relationship is exposed to
+assistive tech.

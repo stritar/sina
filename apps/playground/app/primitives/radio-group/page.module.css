@@ -1,0 +1,21 @@
+/* playground — RadioGroup story */
+
+/* Static focus ring, mirroring the house focus style so the "focus" specimen
+   reads as focused without keyboard interaction. */
+.focusRing {
+  box-shadow:
+    0 0 0 1px var(--sina-color-bg),
+    0 0 0 3px var(--sina-color-focus-ring);
+}
+
+.rowCenter {
+  display: flex;
+  align-items: center;
+  gap: var(--sina-space--6);
+}
+
+.rowStart {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sina-space--6);
+}

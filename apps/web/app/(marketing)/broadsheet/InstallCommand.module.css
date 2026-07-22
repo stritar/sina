@@ -1,0 +1,137 @@
+.root {
+  /* Lighter sage card; the command wraps directly on it (no inner well). */
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sinamk-control-pad--md, 8px);
+  max-inline-size: 100%;
+  padding: var(--sinamk-space--lg, 16px);
+  border-radius: var(--sinamk-radius--lg, 8px);
+  background: var(--sinamk-color-secondary-fill, #e9ece8);
+}
+
+/* Per-size drives only the command font size; the card padding stays generous
+   at every size, and the manager Select scales itself from its own `size`. */
+.root[data-size="sm"] {
+  --_fs: var(--sinamk-text--sm, 12px);
+}
+
+.root[data-size="md"] {
+  --_fs: var(--sinamk-text--md, 13px);
+}
+
+.root[data-size="lg"] {
+  --_fs: var(--sinamk-text--lg, 15px);
+}
+
+/* The whole command is the click-to-copy control. Full button reset; it carries
+   data-broadsheet, so the global blue outline handles focus (no :focus here). */
+.command {
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--sinamk-radius--sm, 4px);
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  appearance: none;
+}
+
+.code {
+  display: block;
+  color: var(--sinamk-color-text-subtle, #84897e);
+  font-family: var(--sinamk-font-mono, monospace);
+  font-size: var(--_fs);
+  line-height: 2;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  transition: color var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease);
+}
+
+/* Unreleased state: the card keeps its normal surface and ink; the only signal
+   is the tooltip, which turns amber and reads "Coming soon" instead of offering
+   a copy the visitor cannot use. Copy stays off (see the component). */
+.root[data-coming-soon] .command {
+  cursor: default;
+}
+
+/* The `npm ` prompt prefix reads stronger than the muted command body. */
+.prefix {
+  color: var(--sinamk-color-text-strong, #52564e);
+  transition: color var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease);
+}
+
+/* Hovering anywhere on the card pulls both text layers to the darkest ink token
+   so the command reads as active/emphasized on interaction. */
+.root:hover .code,
+.root:hover .prefix {
+  color: var(--sinamk-color-text, #353b31);
+}
+
+.managerSlot {
+  flex-shrink: 0;
+}
+
+/* Hover/focus tooltip anchored above the command. Visibility is toggled from JS
+   (the data-open attribute), never a focus pseudo-class, which marketing modules
+   must not author. The shadow rgba lives only in broadsheet.css; consume via a
+   keyword-fallback alias so the foundations color guard never sees a raw rgba(). */
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: var(--sinamk-space--lg, 16px);
+  z-index: 20;
+  box-sizing: border-box;
+  padding-block: var(--sinamk-label-pad--sm, 4px);
+  padding-inline: var(--sinamk-label-pad--md, 6px);
+  border: 1px solid var(--sinamk-color-tooltip-surface, #1c1c1c);
+  border-radius: var(--sinamk-radius--md, 6px);
+  background: var(--sinamk-color-tooltip-surface, #1c1c1c);
+  box-shadow: var(--sinamk-shadow-popover, none);
+  color: var(--sinamk-color-tooltip-fg, #ffffff);
+  font-family: inherit;
+  font-size: var(--sinamk-text--sm, 12px);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease),
+    visibility var(--sinamk-duration--hover, 120ms) var(--sinamk-ease--standard, ease);
+}
+
+.tooltip[data-open] {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* "Coming soon" reuses the tooltip chip but in the amber badge pair, so the
+   unreleased state reads as a status rather than an offer to copy. Same solid
+   fill + deep same-hue ink the Badge uses, which carries its own contrast. */
+.tooltip[data-coming-soon] {
+  border-color: var(--sinamk-color-badge-amber-bg--solid, #f59e0b);
+  background: var(--sinamk-color-badge-amber-bg--solid, #f59e0b);
+  color: var(--sinamk-color-badge-amber-fg--solid, #451a03);
+  font-weight: 600;
+}
+
+/* Visually-hidden polite live region announcing the copy result. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
