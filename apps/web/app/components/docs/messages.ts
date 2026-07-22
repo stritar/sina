@@ -8,6 +8,7 @@ export const messages = {
     openNav: "Open navigation",
     home: "SINA home",
     github: "SINA on GitHub",
+    githubLabel: "GitHub",
     drawerTitle: "Documentation",
     drawerDescription: "Site navigation",
   },

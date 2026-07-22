@@ -60,16 +60,18 @@ export function DocsHeader({ tree }: { tree: Root }) {
 
       <div className={styles.right}>
         <Search />
-        <a
-          className={styles.github}
-          href={GITHUB_URL}
-          target="_blank"
-          rel="noreferrer noopener"
-          aria-label={messages.header.github}
-          title={messages.header.github}
-        >
-          <GithubLogo weight="bold" className={styles.githubIcon} aria-hidden="true" />
-        </a>
+        <Button variant="secondary" size="sm" asChild className={styles.github}>
+          <a
+            href={GITHUB_URL}
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label={messages.header.github}
+            title={messages.header.github}
+          >
+            <GithubLogo weight="bold" className={styles.githubIcon} aria-hidden="true" />
+            <span className={styles.githubLabel}>{messages.header.githubLabel}</span>
+          </a>
+        </Button>
         <ThemeToggle />
       </div>
 
