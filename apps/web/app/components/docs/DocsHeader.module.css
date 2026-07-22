@@ -44,6 +44,37 @@
   color: var(--sina-color-text-muted);
 }
 
+/* Source link: an icon-only anchor sized to the theme toggle's pill so the two
+   sit level in the right cluster. Muted until hover, like the toggle segments. */
+.github {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--sina-space--8);
+  height: var(--sina-space--8);
+  border-radius: var(--sina-radius--full);
+  color: var(--sina-color-text-muted);
+  text-decoration: none;
+  transition:
+    color var(--sina-duration--fast),
+    background var(--sina-duration--fast);
+}
+
+.github:hover {
+  background: var(--sina-color-secondary);
+  color: var(--sina-color-text);
+}
+
+.github:focus-visible {
+  outline: var(--sina-border-width--2) solid var(--sina-color-focus-ring);
+  outline-offset: var(--sina-border-width--2);
+}
+
+.githubIcon {
+  width: var(--sina-size--icon-sm);
+  height: var(--sina-size--icon-sm);
+}
+
 .menuButton {
   display: none;
 }

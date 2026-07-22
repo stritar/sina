@@ -8,14 +8,12 @@
 
 export type Industry = "fintech" | "healthcare" | "defense";
 
-export const NPM_ORG_URL = "https://www.npmjs.com/org/sina-design-system";
-
 export const LINKEDIN_URL = "https://www.linkedin.com/in/denisstritar/";
 
 export const nav = {
   wordmark: "SINA",
   docs: "Docs",
-  npm: "npm",
+  github: "GitHub",
   skip: "Skip to content",
 } as const;
 

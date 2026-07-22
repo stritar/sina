@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { Root } from "fumadocs-core/page-tree";
+import { GithubLogo } from "@phosphor-icons/react/dist/ssr";
 import {
   Button,
   Dialog,
@@ -11,6 +12,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@sina-design-system/core";
+import { GITHUB_URL } from "@/lib/links";
 import { Sidebar } from "./Sidebar";
 import { Search } from "./Search";
 import { ThemeToggle } from "./ThemeToggle";
@@ -58,6 +60,16 @@ export function DocsHeader({ tree }: { tree: Root }) {
 
       <div className={styles.right}>
         <Search />
+        <a
+          className={styles.github}
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noreferrer noopener"
+          aria-label={messages.header.github}
+          title={messages.header.github}
+        >
+          <GithubLogo weight="bold" className={styles.githubIcon} aria-hidden="true" />
+        </a>
         <ThemeToggle />
       </div>
 

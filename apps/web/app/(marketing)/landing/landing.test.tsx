@@ -138,6 +138,19 @@ describe("landing page", () => {
     expect(screen.getByRole("link", { name: "Denis Stritar" })).toBeTruthy();
   });
 
+  it("points the secondary nav link at the public repo, not npm", () => {
+    // The repo went public, so the source link replaced the npm org link. It
+    // opens in a new tab and must keep its leading GithubLogo glyph.
+    render(<MarketingHome />);
+
+    const github = screen.getByRole("link", { name: "GitHub" });
+    expect(github.getAttribute("href")).toBe("https://github.com/stritar/sina");
+    expect(github.getAttribute("target")).toBe("_blank");
+    expect(github.getAttribute("rel")).toContain("noreferrer");
+    expect(github.querySelector("svg")).not.toBeNull();
+    expect(screen.queryByRole("link", { name: "npm" })).toBeNull();
+  });
+
   it("gives every docs CTA the leading FileText glyph", () => {
     // Figma 176:1248. There are two on the page (hero + pitch) and they must not
     // drift apart, so this asserts across all of them rather than one by name.

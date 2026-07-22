@@ -7,6 +7,7 @@ export const messages = {
     section: "Docs",
     openNav: "Open navigation",
     home: "SINA home",
+    github: "SINA on GitHub",
     drawerTitle: "Documentation",
     drawerDescription: "Site navigation",
   },

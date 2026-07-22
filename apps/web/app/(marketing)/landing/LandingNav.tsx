@@ -1,17 +1,19 @@
 import Link from "next/link";
-import { Code, FileText } from "@phosphor-icons/react/dist/ssr";
+import { FileText, GithubLogo } from "@phosphor-icons/react/dist/ssr";
 import { SinaLogo } from "@/app/components/docs/visuals/SinaLogo";
+import { GITHUB_URL } from "@/lib/links";
 import { ThemeSwitcher } from "../broadsheet";
-import { nav, NPM_ORG_URL } from "./copy";
+import { nav } from "./copy";
 import styles from "./LandingNav.module.css";
 import "../broadsheet/broadsheet.css";
 
 /**
  * Landing chrome, framed to match the hero: the SINA brand mark, Docs (primary)
- * and the public npm org (secondary) as button-styled links, plus the marketing
- * theme switcher. Docs/npm are anchors, not the Broadsheet `<button>` components,
- * because a link must not nest a button; they reproduce the button anatomy in the
- * module and carry `data-broadsheet` to earn the global blue focus outline.
+ * and the public source repo (secondary) as button-styled links, plus the
+ * marketing theme switcher. Both are anchors, not the Broadsheet `<button>`
+ * components, because a link must not nest a button; they reproduce the button
+ * anatomy in the module and carry `data-broadsheet` to earn the global blue
+ * focus outline.
  *
  * The whole header is a `.broadsheet` scope, so the `--sinamk-*` tokens (and the
  * dark overrides) resolve for the bar + the SinaLogo's `currentColor`. The inner
@@ -47,14 +49,15 @@ export function LandingNav() {
             </Link>
             <a
               className={`${styles.navBtn} ${styles.navBtnSecondary}`}
-              href={NPM_ORG_URL}
-              rel="noreferrer"
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noreferrer noopener"
               data-broadsheet=""
             >
               <span className={styles.icon} aria-hidden="true">
-                <Code />
+                <GithubLogo weight="bold" />
               </span>
-              <span className={styles.label}>{nav.npm}</span>
+              <span className={styles.label}>{nav.github}</span>
             </a>
           </nav>
           <ThemeSwitcher />
