@@ -182,6 +182,18 @@ describe("docs chrome a11y", () => {
     expect(await axe(container)).toHaveNoViolations();
   });
 
+  it("DocsHeader's search trigger carries both a label and a glyph", () => {
+    const { getByRole } = render(<DocsHeader tree={tree} />);
+
+    // A phone hides the label and shows the glyph (CSS, invisible to jsdom), so
+    // BOTH have to be in the markup and the name has to survive the label going
+    // away — hence the aria-label. Visible text is contained in it (WCAG 2.5.3).
+    const search = getByRole("button", { name: "Search documentation" });
+    expect(search.tagName).toBe("BUTTON");
+    expect(search.textContent).toContain("Search");
+    expect(search.querySelector("svg")).not.toBeNull();
+  });
+
   it("CopyPageMenu has no axe violations and copies the page's raw markdown", async () => {
     const user = userEvent.setup();
     const writeText = vi.fn().mockResolvedValue(undefined);

@@ -13,7 +13,7 @@ export const messages = {
     drawerDescription: "Site navigation",
   },
   search: {
-    trigger: "Search…",
+    trigger: "Search",
     placeholder: "Search docs…",
     title: "Search documentation",
     description: "Search the SINA docs by keyword.",

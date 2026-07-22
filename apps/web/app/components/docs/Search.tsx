@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useDocsSearch } from "fumadocs-core/search/client";
+import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import {
   Button,
   Dialog,
@@ -27,8 +28,15 @@ export function Search() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="sm" className={styles.trigger}>
-          {messages.search.trigger}
+        {/* Same anatomy as the header's GitHub link: `asChild`, so the icon slot and
+            the label are the caller's own elements and each can be hidden on its own
+            (label on a phone, glyph on desktop). The Button folds its label padding
+            onto the root here, which is what lets the phone square center the glyph. */}
+        <Button variant="secondary" size="sm" asChild className={styles.trigger}>
+          <button type="button" aria-label={messages.search.title} title={messages.search.title}>
+            <MagnifyingGlass weight="bold" className={styles.triggerIcon} aria-hidden="true" />
+            <span className={styles.triggerLabel}>{messages.search.trigger}</span>
+          </button>
         </Button>
       </DialogTrigger>
       <DialogContent className={styles.panel}>

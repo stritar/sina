@@ -1,8 +1,45 @@
+/* Search trigger: a wide, quiet placeholder field on desktop; on a phone it
+   collapses to the same square icon button the header's GitHub link becomes, so
+   the bar keeps room for the wordmark. Anatomy mirrors that link: unpadded icon
+   slot, padded label (the Button wears the secondary skin via `asChild`, which
+   folds its own label padding onto the root). */
 .trigger {
   min-width: 12rem;
   justify-content: flex-start;
+}
+
+/* Desktop shows the label alone; the glyph is the phone's stand-in for it. */
+.triggerIcon {
+  display: none;
+  flex-shrink: 0;
+  width: var(--sina-size--icon-sm);
+  height: var(--sina-size--icon-sm);
+}
+
+.triggerLabel {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--sina-space--1);
   color: var(--sina-color-text-muted);
   font-weight: var(--sina-font-weight--regular);
+}
+
+/* Phones: swap the label for the glyph and let the button go square, level with
+   the GitHub button and the theme toggle. */
+@media (max-width: 40rem) {
+  .trigger {
+    min-width: 0;
+    aspect-ratio: 1;
+    justify-content: center;
+  }
+
+  .triggerIcon {
+    display: block;
+  }
+
+  .triggerLabel {
+    display: none;
+  }
 }
 
 .panel {
