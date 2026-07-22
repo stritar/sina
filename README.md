@@ -67,4 +67,4 @@ Early, and honest about it: this is 0.x and public APIs may change in any minor 
 
 ## License
 
-MIT. Free to use, fork, and build on.. See [LICENSE](LICENSE).
+MIT. Free to use, fork, and build on. See [LICENSE](LICENSE).
