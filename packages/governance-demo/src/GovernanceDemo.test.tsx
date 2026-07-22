@@ -35,11 +35,24 @@ function mount(ui: React.ReactElement) {
   return render(<GateTransportProvider transport={realTransport}>{ui}</GateTransportProvider>);
 }
 
+/**
+ * How long to wait for a lazy mount to appear. The registry mounts every governed
+ * component through `React.lazy`, so the trigger only exists once the dynamic
+ * `fintech-react → core` import chain resolves — on a cold or loaded runner that is
+ * seconds, not milliseconds. Kept under the 20s per-test budget in vitest.config.ts so
+ * this wait, not the test timeout, is what reports a genuine failure to mount.
+ */
+const LAZY_MOUNT_TIMEOUT = 15000;
+
 /** Drive the dialog exactly as a reader would: review → collect → OTP → approve. */
 async function approveAs(approverId: string, approverName: string) {
   const user = userEvent.setup();
   await user.click(
-    await screen.findByRole("button", { name: /Review wire transfer/i }, { timeout: 5000 }),
+    await screen.findByRole(
+      "button",
+      { name: /Review wire transfer/i },
+      { timeout: LAZY_MOUNT_TIMEOUT },
+    ),
   );
   await user.click(await screen.findByRole("button", { name: /Request approval/i }));
 
@@ -57,7 +70,11 @@ describe("GovernanceDemo", () => {
     const { container } = mount(<GovernanceDemo scenario="over-limit" />);
     expect(container.textContent).toContain("SecureWireDialog");
     // The forced component is lazy — wait for it, or axe runs against an empty fallback.
-    await screen.findByRole("button", { name: /Review wire transfer/i }, { timeout: 5000 });
+    await screen.findByRole(
+      "button",
+      { name: /Review wire transfer/i },
+      { timeout: LAZY_MOUNT_TIMEOUT },
+    );
     expect(await axe(container)).toHaveNoViolations();
   });
 
