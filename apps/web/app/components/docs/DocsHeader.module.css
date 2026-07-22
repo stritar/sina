@@ -44,35 +44,25 @@
   color: var(--sina-color-text-muted);
 }
 
-/* Source link: an icon-only anchor sized to the theme toggle's pill so the two
-   sit level in the right cluster. Muted until hover, like the toggle segments. */
+/* Source link: the secondary Button skin worn by an anchor (`asChild`), so it
+   sits level with the Search trigger and the theme toggle. The Button owns the
+   fill, radius, height and focus ring; only the anchor reset lives here.
+   Anatomy: unpadded icon slot, padded label (the Button's own icon+label
+   spacing, which `asChild` folds onto the caller). */
 .github {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--sina-space--8);
-  height: var(--sina-space--8);
-  border-radius: var(--sina-radius--full);
-  color: var(--sina-color-text-muted);
   text-decoration: none;
-  transition:
-    color var(--sina-duration--fast),
-    background var(--sina-duration--fast);
-}
-
-.github:hover {
-  background: var(--sina-color-secondary);
-  color: var(--sina-color-text);
-}
-
-.github:focus-visible {
-  outline: var(--sina-border-width--2) solid var(--sina-color-focus-ring);
-  outline-offset: var(--sina-border-width--2);
 }
 
 .githubIcon {
+  flex-shrink: 0;
   width: var(--sina-size--icon-sm);
   height: var(--sina-size--icon-sm);
+}
+
+.githubLabel {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: var(--sina-space--1);
 }
 
 .menuButton {
@@ -122,5 +112,17 @@
   .section,
   .divider {
     display: none;
+  }
+}
+
+/* Phones: drop the source link's label and let the button go square, so the bar
+   keeps room for the wordmark and search. */
+@media (max-width: 40rem) {
+  .githubLabel {
+    display: none;
+  }
+
+  .github {
+    aspect-ratio: 1;
   }
 }

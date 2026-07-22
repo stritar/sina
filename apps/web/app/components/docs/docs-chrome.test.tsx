@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import type { Root } from "fumadocs-core/page-tree";
 import type { TOCItemType } from "fumadocs-core/toc";
+import { GITHUB_URL } from "@/lib/links";
 
 // Sidebar reads the active route via usePathname; mock it (no Next router in vitest).
 vi.mock("next/navigation", () => ({ usePathname: () => "/docs" }));
@@ -37,6 +38,7 @@ beforeAll(() => {
 
 import { Sidebar } from "./Sidebar";
 import { DocsTOC } from "./DocsTOC";
+import { DocsHeader } from "./DocsHeader";
 import { ThemeToggle } from "./ThemeToggle";
 import { CopyPageMenu } from "./CopyPageMenu";
 import { DocsArticle } from "./DocsArticle";
@@ -159,6 +161,25 @@ describe("docs chrome a11y", () => {
     expect(document.documentElement.getAttribute("data-theme")).toBe("light");
 
     vi.unstubAllGlobals();
+  });
+
+  it("DocsHeader carries the labelled source link and the theme switcher", async () => {
+    const { container, getByRole } = render(<DocsHeader tree={tree} />);
+
+    // The source link wears the secondary Button skin (asChild), so it is still
+    // one anchor — never a button nested in a link. Query by role/text: the core
+    // primitives render with hashed dist CSS-module class names here.
+    const github = getByRole("link", { name: "SINA on GitHub" });
+    expect(github.tagName).toBe("A");
+    expect(github.getAttribute("href")).toBe(GITHUB_URL);
+    expect(github.getAttribute("target")).toBe("_blank");
+    expect(github.getAttribute("rel")).toContain("noopener");
+    // Visible label, matching the landing header. The accessible name contains
+    // it, so WCAG 2.5.3 (label in name) holds.
+    expect(github.textContent).toContain("GitHub");
+
+    getByRole("radiogroup", { name: "Theme" });
+    expect(await axe(container)).toHaveNoViolations();
   });
 
   it("CopyPageMenu has no axe violations and copies the page's raw markdown", async () => {

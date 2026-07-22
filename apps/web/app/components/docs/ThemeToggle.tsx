@@ -115,7 +115,7 @@ export function ThemeToggle() {
             onClick={() => select(m)}
             onKeyDown={(event) => onKeyDown(event, index)}
           >
-            <Icon weight="fill" className={styles.icon} aria-hidden="true" />
+            <Icon weight="bold" className={styles.icon} aria-hidden="true" />
           </button>
         );
       })}
