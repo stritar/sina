@@ -116,8 +116,20 @@
 }
 
 /* Phones: drop the source link's label and let the button go square, so the bar
-   keeps room for the wordmark and search. */
+   keeps room for the wordmark and search (which collapses to its own square icon
+   button at this width). Tighter gutters and cluster gaps too: the menu button,
+   wordmark, two square buttons and the three-segment theme toggle only clear a
+   320px viewport once the 24px gutters come down. */
 @media (max-width: 40rem) {
+  .header {
+    padding: 0 var(--sina-space--4);
+  }
+
+  .left,
+  .right {
+    gap: var(--sina-space--2);
+  }
+
   .githubLabel {
     display: none;
   }
