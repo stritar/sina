@@ -30,7 +30,7 @@
 
 **The governed design system for AI agents.**
 
-[![npm](https://img.shields.io/npm/v/%40sina-design-system%2Fcore?label=npm)](https://www.npmjs.com/org/sina-design-system)
+[![npm](https://img.shields.io/npm/v/%40sina-design-system%2Fcore?label=npm&color=cb3837&logo=npm)](https://www.npmjs.com/package/@sina-design-system/core)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 An LLM never renders anything in SINA. The model emits intent as JSON, Zod schemas validate that intent on the server, and only then does an accessible React component mount. A refusal doesn't render an error; it renders the stricter component the rule requires.
