@@ -30,18 +30,27 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
   icons: {
     icon: [
-      // SVG first: browsers that understand it prefer it at every size. The .ico is
-      // the legacy fallback, and what Safari uses. Both are the SAME plated artwork,
-      // on purpose — see scripts/generate-favicons.mjs for why the set carries no
-      // `prefers-color-scheme` variant.
+      // SVG first: browsers that understand it prefer it at every size, and it is the
+      // only asset that carries BOTH appearances itself (a `prefers-color-scheme`
+      // rule in an embedded <style>). The .ico is the legacy fallback and what Safari
+      // uses; a raster cannot self-adapt, so it ships as a light/dark pair selected by
+      // the `media` attribute below. `favicon.ico` must keep that exact name — it is
+      // what a browser fetches from the well-known path before it has parsed any HTML.
       // The `?v=` query is a cache-buster: browsers cache favicons aggressively, so
       // an icon from an earlier build lingers in the tab until the URL changes. Bump
       // it here AND in public/site.webmanifest whenever an asset is regenerated.
-      { url: "/icon.svg?v=3", type: "image/svg+xml" },
-      { url: "/favicon.ico?v=3", sizes: "16x16 32x32 48x48" },
+      { url: "/icon.svg?v=4", type: "image/svg+xml" },
+      { url: "/favicon.ico?v=4", sizes: "16x16 32x32 48x48" },
+      {
+        url: "/favicon-dark.ico?v=4",
+        sizes: "16x16 32x32 48x48",
+        media: "(prefers-color-scheme: dark)",
+      },
     ],
-    apple: [{ url: "/apple-touch-icon.png?v=3", sizes: "180x180", type: "image/png" }],
-    other: [{ rel: "mask-icon", url: "/safari-pinned-tab.svg?v=3", color: "#353b31" }],
+    // No dark variant for either of these: iOS ignores `media` on apple-touch-icon
+    // and Safari re-colors the mask icon itself. See scripts/generate-favicons.mjs.
+    apple: [{ url: "/apple-touch-icon.png?v=4", sizes: "180x180", type: "image/png" }],
+    other: [{ rel: "mask-icon", url: "/safari-pinned-tab.svg?v=4", color: "#353b31" }],
   },
 };
 

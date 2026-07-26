@@ -7,10 +7,22 @@
  * outputs are committed, the mark changes ~never, and `sharp` is a heavy native
  * dependency we don't want in the `apps/web` install or the Cloudflare build.
  *
- *   npm i --no-save sharp && node scripts/generate-favicons.mjs
+ * `npm i --no-save sharp` does NOT work here — npm chokes on the `workspace:*` deps
+ * in package.json. Install it out of tree and borrow it for the run instead:
+ *
+ *   D=$(mktemp -d) && (cd "$D" && npm init -y >/dev/null && npm i sharp)
+ *   ln -sfn "$D/node_modules/sharp" node_modules/sharp
+ *   ln -sfn "$D/node_modules/@img"  node_modules/@img
+ *   node scripts/generate-favicons.mjs
+ *   rm -f node_modules/sharp node_modules/@img
  *
  * `SYMBOL_PATH` below is the single source of truth: the vector `icon.svg` is
  * emitted here too, so it can never drift from the rasters.
+ *
+ * The set is THEME-ADAPTIVE: a bare mark on transparency whose ink follows the
+ * color scheme. Read the block under INK_DARK before changing any of it — two
+ * assets are deliberately NOT plateless, and the reasons are platform behaviour,
+ * not taste.
  */
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -39,30 +51,39 @@ const BBOX = { x: 0, y: 4.99942, w: 32, h: 22.91448 };
 
 // Ink and plate come from the SINA-marketing Figma file, section "favicons" (node
 // 255:2615). Figma is the authority on both values; each lands on a theme token.
-const INK = "#353b31"; //   --sina-color-neutral--900
-const PLATE = "#f5f6f4"; // --sina-color-neutral--50
+const INK = "#353b31"; //     --sina-color-neutral--900 — the light-scheme ink
+const INK_DARK = "#f5f6f4"; // --sina-color-neutral--50 — dark `--sina-color-text`
+const PLATE = "#f5f6f4"; //   --sina-color-neutral--50
 //
-// EVERY asset is PLATED — an opaque light square under the dark mark — and there is
-// deliberately only ONE appearance, with no theme adaptation anywhere. This replaces
-// an earlier plateless set whose only adaptive asset was icon.svg, via an embedded
-// `prefers-color-scheme` query. Do not reintroduce either the transparency or the
-// query. The reasons are not stylistic:
+// The set is a bare mark on TRANSPARENCY whose ink flips with the color scheme, and
+// every surface that can carry a light/dark pair does:
 //
-//   1. A favicon's backdrop is the BROWSER CHROME, not the page. Chrome's theme can
-//      be dark while the OS is light (and vice versa), and no CSS media query can
-//      observe that — `prefers-color-scheme` reports the OS. A light-OS user on a
-//      dark Chrome theme was served the dark mark on a dark tab strip at ~1:1
-//      contrast, so the icon rendered invisible. That is the bug this set fixes.
-//   2. The .ico, apple-touch-icon and PWA rasters can carry no query at all, so they
-//      only ever had one ink regardless.
-//   3. Bookmarks, history, search results, link unfurls, the iOS home screen and the
-//      Android launcher all composite onto a backdrop we never get to know. Alpha
-//      there is a coin flip; iOS specifically composites onto BLACK.
+//   * icon.svg self-adapts, via a `prefers-color-scheme` rule in an embedded <style>.
+//   * favicon.ico ships as a PAIR — favicon.ico (dark ink) and favicon-dark.ico
+//     (light ink) — chosen by a `media` attribute on the <link> in app/layout.tsx.
+//     A raster cannot self-adapt, so link-level selection is the only lever.
+//   * apple-touch-icon and the manifest icons have no dark channel at ALL. iOS
+//     ignores `media` on apple-touch-icon and the webmanifest has no scheme axis, so
+//     those get exactly one ink.
 //
-// A light plate is the right way round: on a dark tab strip it reads as a bright
-// chip, and on a light one it recedes into the strip while the dark mark still
-// reads. A dark plate would sit at ~1:1 against Chrome's own dark strip, doing no
-// work in exactly the case being fixed.
+// KNOWN TRADEOFF, accepted deliberately. This is close to a set that shipped before
+// and was rolled back for a plated one, and the reason it was rolled back is still
+// true: a favicon's backdrop is the BROWSER CHROME, not the page, and Chrome's theme
+// can be dark while the OS is light. No media query can observe that —
+// `prefers-color-scheme` reports the OS. So a light-OS user on a dark Chrome theme
+// still gets the #353b31 mark on a dark tab strip at ~1:1 and sees nothing. The flip
+// fixes the OS-dark case; it does not fix the chrome/OS mismatch, and nothing in CSS
+// can. Do not "rediscover" this and re-plate the set without saying so out loud.
+//
+// TWO ASSETS STAY OPAQUE, because plateless there is malformed rather than merely
+// risky:
+//
+//   1. icon-maskable-512.png — the maskable spec requires the image to fill its
+//      canvas; the launcher supplies the shape and crops into it. A transparent
+//      maskable shows wallpaper through the mask. Plated, radius 0, inset 0.55.
+//   2. apple-touch-icon.png — iOS composites alpha onto BLACK before applying its
+//      superellipse. It is transparent as asked, but carries the LIGHT ink, which is
+//      the only ink that survives that flattening. A dark mark there disappears.
 
 /**
  * Centers the mark inside a `size` square, scaled so its WIDTH occupies `inset`
@@ -75,18 +96,24 @@ function place(size, inset) {
   return `translate(${tx.toFixed(4)} ${ty.toFixed(4)}) scale(${scale.toFixed(6)})`;
 }
 
-// Corner radius of the plate, as a fraction of the side. Applied to the assets a
-// browser draws AS-IS (the tab favicon and the `purpose: "any"` PWA icons). The
-// assets the platform masks itself — apple-touch-icon and the maskable PWA icon —
-// pass 0, because pre-rounding those double-rounds the corners.
-const PLATE_RADIUS = 0.2;
-
-/** A flat, single-color SVG of the mark, optionally on an opaque background. */
-function markSvg({ size, ink, bg = null, inset = 0.9, radius = 0 }) {
+/**
+ * An SVG of the mark, transparent unless `bg` is given.
+ *
+ * Pass `inkDark` for the self-adapting vector: the fill moves out of the path's
+ * attribute and into an embedded <style>, so the file carries both appearances and
+ * the browser picks one. Everything sharp() rasterizes must use the single-ink form
+ * instead — sharp resolves no media queries, so it would silently bake the
+ * light-scheme rule into both members of a "pair".
+ */
+function markSvg({ size, ink, inkDark = null, bg = null, inset = 0.9, radius = 0 }) {
   const backdrop = bg
     ? `<rect width="${size}" height="${size}" rx="${radius}" fill="${bg}"/>`
     : "";
-  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">${backdrop}<g transform="${place(size, inset)}"><path fill="${ink}" d="${SYMBOL_PATH}"/></g></svg>`;
+  const style = inkDark
+    ? `<style>path{fill:${ink}}@media(prefers-color-scheme:dark){path{fill:${inkDark}}}</style>`
+    : "";
+  const fill = inkDark ? "" : `fill="${ink}" `;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">${style}${backdrop}<g transform="${place(size, inset)}"><path ${fill}d="${SYMBOL_PATH}"/></g></svg>`;
 }
 
 const png = (svg, size) =>
@@ -128,68 +155,71 @@ const write = async (path, data) => {
 };
 
 // 1. The vector icon. Modern browsers prefer this over the .ico at any size, so it
-//    is what most people actually see in the tab.
+//    is what most people actually see in the tab, and it is the ONE asset that can
+//    carry both appearances in a single file.
 //
 //    It goes through `markSvg` like every raster below, which is the point: one
-//    helper, one appearance, no way for the vector to drift from the bitmaps. The
-//    earlier hand-written version reproduced the Figma frame full-bleed, keeping the
-//    mark's own vertical offset (5.0 above, 4.09 below, deliberately not optically
-//    centred). A plate supersedes that: the mark is now centred inside the plate,
-//    and the plate is the thing bounded by the 32x32 box.
-await write(join(PUBLIC, "icon.svg"), markSvg({
-  size: 32,
-  ink: INK,
-  bg: PLATE,
-  inset: 0.72,
-  radius: 32 * PLATE_RADIUS,
-}) + "\n");
+//    helper, no way for the vector to drift from the bitmaps. The earlier
+//    hand-written version reproduced the Figma frame full-bleed, keeping the mark's
+//    own vertical offset (5.0 above, 4.09 below, deliberately not optically centred).
+//    Centring supersedes that: the mark is centred in the 32x32 box.
+await write(
+  join(PUBLIC, "icon.svg"),
+  markSvg({ size: 32, ink: INK, inkDark: INK_DARK, inset: 0.82 }) + "\n",
+);
 
 // 2. favicon.ico — the legacy fallback, and what a browser requests before it has
 //    parsed any HTML. Safari also prefers it over the SVG.
 //
-//    Plated, same as everything else. The inset drops from 0.82 to 0.72 to leave a
-//    visible plate margin around the mark at 16px.
-await write(
-  join(PUBLIC, "favicon.ico"),
-  buildIco(
-    await Promise.all(
-      [16, 32, 48].map(async (size) => ({
-        size,
-        data: await png(
-          markSvg({ size, ink: INK, bg: PLATE, inset: 0.72, radius: size * PLATE_RADIUS }),
-          size,
-        ),
-      })),
-    ),
-  ),
-);
-
-// 3. iOS home screen. Plated, and SQUARE — radius 0. iOS applies its own superellipse
-//    mask, so a pre-rounded asset shows the mask cutting inside our corners. The
-//    plate also settles the old alpha problem: iOS composites transparency onto
-//    BLACK, which used to swallow the dark mark entirely.
-await write(
-  join(PUBLIC, "apple-touch-icon.png"),
-  await png(markSvg({ size: 180, ink: INK, bg: PLATE, inset: 0.6 }), 180),
-);
-
-// 4. Android / PWA install icons, `purpose: "any"`. An "any" icon draws straight onto
-//    the launcher or task switcher with no mask applied, so it carries its own
-//    rounded plate and never has to survive an unknown wallpaper.
-for (const size of [192, 512]) {
+//    Shipped as a PAIR. `favicon.ico` keeps its name and its dark ink: it is the
+//    default, and it is the file the browser fetches from the well-known /favicon.ico
+//    path before any <link> exists to redirect it. `favicon-dark.ico` carries the
+//    light ink and is reached only through the `media` attribute in app/layout.tsx.
+for (const [name, ink] of [
+  ["favicon.ico", INK],
+  ["favicon-dark.ico", INK_DARK],
+]) {
   await write(
-    join(PUBLIC, `icon-${size}.png`),
-    await png(
-      markSvg({ size, ink: INK, bg: PLATE, inset: 0.68, radius: size * PLATE_RADIUS }),
-      size,
+    join(PUBLIC, name),
+    buildIco(
+      await Promise.all(
+        [16, 32, 48].map(async (size) => ({
+          size,
+          data: await png(markSvg({ size, ink, inset: 0.82 }), size),
+        })),
+      ),
     ),
   );
 }
 
+// 3. iOS home screen. SQUARE — radius 0 — because iOS applies its own superellipse
+//    mask and a pre-rounded asset shows the mask cutting inside our corners.
+//
+//    Transparent, with the LIGHT ink. iOS has no dark channel here (it ignores
+//    `media` on apple-touch-icon), and it composites alpha onto BLACK, so this is the
+//    one ink that survives being flattened. See the tradeoff block above.
+await write(
+  join(PUBLIC, "apple-touch-icon.png"),
+  await png(markSvg({ size: 180, ink: INK_DARK, inset: 0.8 }), 180),
+);
+
+// 4. Android / PWA install icons, `purpose: "any"`. An "any" icon draws straight onto
+//    the launcher or task switcher with no mask applied. The webmanifest has no
+//    color-scheme axis, so these get one ink; the light one, on the same reasoning as
+//    apple-touch — the backdrops we cannot see skew dark.
+for (const size of [192, 512]) {
+  await write(
+    join(PUBLIC, `icon-${size}.png`),
+    await png(markSvg({ size, ink: INK_DARK, inset: 0.8 }), size),
+  );
+}
+
 // 5. `purpose: "maskable"` — Android crops this to an arbitrary shape (circle,
-//    squircle, teardrop) and only guarantees the centre 80% circle survives. The
-//    plate is full-bleed with radius 0 (the launcher supplies the shape) and the
-//    mark is held to 55% of the side so no crop can clip it.
+//    squircle, teardrop) and only guarantees the centre 80% circle survives. The ONE
+//    asset that keeps a plate: the spec requires a maskable icon to fill its canvas,
+//    so transparency here shows wallpaper through the mask. Full-bleed with radius 0
+//    (the launcher supplies the shape) and the mark held to 55% of the side so no
+//    crop can clip it.
 await write(
   join(PUBLIC, "icon-maskable-512.png"),
   await png(markSvg({ size: 512, ink: INK, bg: PLATE, inset: 0.55 }), 512),
@@ -204,5 +234,7 @@ await write(
 );
 
 console.log(`Wrote ${written.length} icon assets:\n${written.map((w) => `  ${w}`).join("\n")}`);
-console.log(`\nMark ${INK} on an opaque ${PLATE} plate. One appearance, no theme adaptation.`);
+console.log(`\nBare mark on transparency: ${INK} light / ${INK_DARK} dark.`);
+console.log(`icon.svg self-adapts; favicon.ico + favicon-dark.ico pair via the <link> media attr.`);
+console.log(`apple-touch + PWA "any" carry ${INK_DARK} only; the maskable keeps its ${PLATE} plate.`);
 console.log("Remember to bump the ?v= cache-buster in app/layout.tsx AND public/site.webmanifest.");

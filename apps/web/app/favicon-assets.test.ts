@@ -4,39 +4,50 @@ import { inflateSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
 
 /**
- * Guard: the favicon set stays declared, in step, and VISIBLE.
+ * Guard: the favicon set stays declared, in step, and ADAPTIVE.
  *
- * Three failure modes, all of which have bitten this site:
+ * The set is a bare mark on transparency whose ink follows the color scheme. Every
+ * surface that can carry a light/dark pair does: icon.svg self-adapts via an embedded
+ * `prefers-color-scheme` rule, and favicon.ico ships as a pair chosen by the `media`
+ * attribute on the <link>. apple-touch-icon and the manifest icons have no dark
+ * channel at all and carry one ink. Regenerate with `scripts/generate-favicons.mjs`,
+ * never by hand.
  *
- *   1. A declared icon points at a file that isn't there. Nothing warns; the tab
- *      just falls back to a letter tile.
+ * Failure modes these encode, all of which have bitten this site:
+ *
+ *   1. A declared icon points at a file that isn't there. Nothing warns; the tab just
+ *      falls back to a letter tile.
  *   2. `app/layout.tsx` and `public/site.webmanifest` drift on the `?v=` cache-buster.
  *      Browsers cache favicons hard, so a half-bumped set means some surfaces keep
  *      showing the old artwork indefinitely.
- *   3. The artwork goes back to being a bare mark on TRANSPARENCY. This is the one
- *      that actually shipped: every asset was a #353b31 mark on alpha, adapting only
- *      via a `prefers-color-scheme` query inside icon.svg. But a favicon sits on the
- *      BROWSER CHROME, not the page, and no media query can observe the chrome's
- *      theme — `prefers-color-scheme` reports the OS. A light-OS user running a dark
- *      Chrome theme got the dark mark on a dark tab strip at ~1:1 contrast, so the
- *      icon was fetched, drawn, and invisible. The .ico and PNGs couldn't carry a
- *      query at all, and iOS composites alpha onto black.
+ *   3. The pair collapses. Emitting two .ico files proves nothing on its own — if the
+ *      generator passes the same ink twice, or the `media` attribute is dropped from
+ *      the <link>, the set still looks well-formed while doing nothing. So the inks
+ *      are compared pixel-to-pixel, and the media attribute is asserted directly.
+ *   4. The theme query is stripped from icon.svg, silently reverting it to one ink.
  *
- * So the set is now plated and has exactly ONE appearance. These tests encode that:
- * the assets must be opaque, and icon.svg must carry no theme query. Regenerate with
- * `scripts/generate-favicons.mjs`, never by hand.
+ * NOT guarded, because CSS cannot express it: a favicon sits on the BROWSER CHROME,
+ * and Chrome's theme can be dark while the OS is light. `prefers-color-scheme` reports
+ * the OS, so a light-OS user on a dark Chrome theme still gets the dark mark on a dark
+ * strip. That tradeoff was taken knowingly; see the block in generate-favicons.mjs.
  */
 
 // vitest runs with cwd = apps/web (the package root).
 const WEB = process.cwd();
 const PUBLIC = join(WEB, "public");
 
-const PLATE = [0xf5, 0xf6, 0xf4] as const; // --sina-color-neutral--50
+const INK = [0x35, 0x3b, 0x31] as const; //      --sina-color-neutral--900, light scheme
+const INK_DARK = [0xf5, 0xf6, 0xf4] as const; // --sina-color-neutral--50, dark scheme
+const PLATE = [0xf5, 0xf6, 0xf4] as const; //    --sina-color-neutral--50
 
-/** Assets a browser draws as-is, so they carry their own rounded plate corners. */
-const ROUNDED = ["favicon.ico", "icon.svg", "icon-192.png", "icon-512.png"];
-/** Assets the platform masks itself, so the plate is full-bleed and 100% opaque. */
-const FULL_BLEED = ["apple-touch-icon.png", "icon-maskable-512.png"];
+/** Plateless rasters: a bare mark on alpha, one ink, no dark channel available. */
+const TRANSPARENT_PNGS = ["apple-touch-icon.png", "icon-192.png", "icon-512.png"];
+/**
+ * The one asset that keeps an opaque plate. Not a stylistic exception: the maskable
+ * spec requires the image to fill its canvas, because the launcher crops into it. A
+ * transparent maskable shows wallpaper through the mask.
+ */
+const MASKABLE = "icon-maskable-512.png";
 
 // ---------------------------------------------------------------------------
 // Minimal decoders. Only the shapes `generate-favicons.mjs` emits are supported
@@ -128,15 +139,37 @@ function transparentShare({ width, height, data }: Pixels): number {
   return clear / (width * height);
 }
 
+/**
+ * The mark's ink, read off the most opaque pixel. PNG alpha is straight, not
+ * premultiplied, so a partially-covered edge pixel still carries the pure ink in RGB
+ * — which matters at 16px, where a stroke this thin may never reach alpha 255.
+ */
+function inkOf({ data }: Pixels): number[] {
+  let best = -1;
+  let at = 0;
+  for (let i = 3; i < data.length; i += 4) {
+    const alpha = data[i] ?? 0;
+    if (alpha > best) {
+      best = alpha;
+      at = i - 3;
+    }
+  }
+  expect(best, "the mark has to draw something").toBeGreaterThan(0);
+  return [...data.subarray(at, at + 3)];
+}
+
 // ---------------------------------------------------------------------------
 
-const readIconUrls = async () => {
+/** The `icons: { … }` literal from app/layout.tsx, as source text. */
+const readIconsBlock = async () => {
   const layout = await readFile(join(WEB, "app", "layout.tsx"), "utf8");
-  const icons = layout.slice(layout.indexOf("icons: {"), layout.indexOf("};"));
-  return [...icons.matchAll(/url:\s*"([^"]+)"/g)]
+  return layout.slice(layout.indexOf("icons: {"), layout.indexOf("};"));
+};
+
+const readIconUrls = async () =>
+  [...(await readIconsBlock()).matchAll(/url:\s*"([^"]+)"/g)]
     .map((m) => m[1])
     .filter((url): url is string => url !== undefined);
-};
 
 const readManifest = async () =>
   JSON.parse(await readFile(join(PUBLIC, "site.webmanifest"), "utf8")) as {
@@ -170,47 +203,70 @@ describe("favicon assets", () => {
     expect([...versions][0]).toMatch(/^\d+$/);
   });
 
-  it("icon.svg is plated and carries no theme query", async () => {
+  it("icon.svg is plateless and carries both inks behind a theme query", async () => {
     const svg = await readFile(join(PUBLIC, "icon.svg"), "utf8");
 
-    expect(svg).toMatch(/<rect[^>]*fill="#f5f6f4"/);
-    // The whole point of the plate: one appearance, no dependence on a signal that
-    // describes the OS rather than the browser chrome the icon actually sits on.
-    expect(svg, "the favicon must not adapt to prefers-color-scheme").not.toContain(
+    expect(svg, "a plate would defeat the flip").not.toContain("<rect");
+    expect(svg, "the vector is the one asset that adapts on its own").toContain(
       "prefers-color-scheme",
     );
+    // Both appearances have to be in the file, or the query has nothing to switch to.
+    expect(svg).toContain("#353b31");
+    expect(svg).toContain("#f5f6f4");
   });
 
-  it.each(FULL_BLEED)("%s is fully opaque (the platform supplies the mask)", async (name) => {
+  it("layout.tsx selects the dark .ico with a media attribute", async () => {
+    const block = await readIconsBlock();
+    // A raster can't self-adapt, so this attribute is the whole mechanism. Drop it and
+    // the browser takes the last matching icon — the dark ink, in every scheme.
+    const dark = [
+      ...block.matchAll(/\{[^{}]*media:\s*"\(prefers-color-scheme:\s*dark\)"[^{}]*\}/g),
+    ].map((m) => m[0]);
+
+    expect(dark, "exactly one icon entry may be dark-scheme scoped").toHaveLength(1);
+    expect(dark[0]).toContain("/favicon-dark.ico");
+  });
+
+  it.each(TRANSPARENT_PNGS)("%s is a bare mark on transparency", async (name) => {
     const image = decodePng(await readFile(join(PUBLIC, name)));
+
+    // The mark is thin loops inside a 0.8 inset, so most of the canvas is clear.
+    expect(transparentShare(image)).toBeGreaterThan(0.5);
+    expect(pixelAt(image, 0, 0), "corner must be fully clear").toEqual([0, 0, 0, 0]);
+    // One ink, and it has to be the light one: iOS flattens alpha onto BLACK, and the
+    // Android backdrops we never get to see skew dark.
+    expect(inkOf(image)).toEqual([...INK_DARK]);
+  });
+
+  it(`${MASKABLE} keeps its plate (the maskable spec requires a filled canvas)`, async () => {
+    const image = decodePng(await readFile(join(PUBLIC, MASKABLE)));
+
     expect(transparentShare(image)).toBe(0);
     expect(pixelAt(image, 0, 0)).toEqual([...PLATE, 255]);
   });
 
-  it.each(ROUNDED.filter((n) => n.endsWith(".png")))("%s sits on an opaque plate", async (name) => {
-    const image = decodePng(await readFile(join(PUBLIC, name)));
+  it("favicon.ico and favicon-dark.ico are a real pair", async () => {
+    const light = decodeIco(await readFile(join(PUBLIC, "favicon.ico")));
+    const dark = decodeIco(await readFile(join(PUBLIC, "favicon-dark.ico")));
 
-    // Only the four rounded corners may be clear: rx = 20% of the side leaves
-    // 4 * r^2 * (1 - pi/4), about 3.4% of the image.
-    expect(transparentShare(image)).toBeLessThan(0.08);
-    // Top-centre is inside the plate and clear of the mark.
-    expect(pixelAt(image, image.width >> 1, Math.round(image.height * 0.08))).toEqual([
-      ...PLATE,
-      255,
-    ]);
-  });
-
-  it("favicon.ico ships 16/32/48 and each is plated", async () => {
-    const images = decodeIco(await readFile(join(PUBLIC, "favicon.ico")));
-
-    expect(images.map((i) => i.width)).toEqual([16, 32, 48]);
-    for (const image of images) {
-      expect(transparentShare(image), `${image.width}px entry`).toBeLessThan(0.08);
-      expect(pixelAt(image, image.width >> 1, Math.round(image.height * 0.08))).toEqual([
-        ...PLATE,
-        255,
-      ]);
+    for (const [label, images] of [
+      ["favicon.ico", light],
+      ["favicon-dark.ico", dark],
+    ] as const) {
+      expect(images.map((i) => i.width), label).toEqual([16, 32, 48]);
+      for (const image of images) {
+        expect(pixelAt(image, 0, 0), `${label} ${image.width}px corner`).toEqual([0, 0, 0, 0]);
+      }
     }
+
+    // The point of the pair. Two files with the same ink would pass everything above
+    // while adapting to nothing.
+    light.forEach((image, i) => {
+      const twin = dark[i];
+      expect(twin).toBeDefined();
+      expect(inkOf(image), `${image.width}px light entry`).toEqual([...INK]);
+      expect(inkOf(twin as Pixels), `${image.width}px dark entry`).toEqual([...INK_DARK]);
+    });
   });
 
   it("safari-pinned-tab.svg stays a single flat path", async () => {
